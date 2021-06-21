@@ -47,6 +47,9 @@ export interface WysiwygFieldOptions extends FieldOptions {
 export interface InputFieldOptions extends FieldOptions {
   type?: 'text' | 'number' | 'email' | 'password' | 'tel' | 'url';
   autofocus?: boolean;
+  suffix?: string;
+  prefix?: string;
+  align?: 'left' | 'right';
 }
 
 export interface MultiLangInputFieldOptions extends InputFieldOptions {
@@ -82,6 +85,10 @@ export interface AutocompleteOptions extends FieldOptions {
 
 export interface RadioButtonsFieldOptions extends FieldOptions {
   radioOptions: ValueLabel[];
+}
+
+export interface CheckboxFieldOptions extends FieldOptions {
+  disabledIndeterminate?: boolean;
 }
 
 export interface DatepickerFieldOptions extends FieldOptions {
@@ -156,7 +163,8 @@ export interface FormField<
     | DateRangePickerFieldOptions
     | FileFieldOptions
     | FilePreviewFieldOptions
-    | MultiLangInputFieldOptions,
+    | MultiLangInputFieldOptions
+    | CheckboxFieldOptions,
 > {
   attribute?: string;
   editType: EditType;
