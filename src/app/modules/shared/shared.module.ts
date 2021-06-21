@@ -10,9 +10,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { RouterModule } from '@angular/router';
 import { MarkdownModule } from 'ngx-markdown';
 
-import { Lab900FormsModule } from 'lib/src/lib/forms.module';
-import { Lab900NavListModule } from '@lab900/ui';
-import { Lab900PageHeaderModule } from '@lab900/ui';
+import { Lab900FormsModule } from '@lab900/forms';
+import { Lab900NavListModule, Lab900PageHeaderModule } from '@lab900/ui';
 
 import { ExampleViewerComponent } from './components/example-viewer/example-viewer.component';
 import { ShowcasePageComponent } from './components/showcase-page/showcase-page.component';
