@@ -1,9 +1,9 @@
 import { AbstractControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { FormField } from './FormField';
 import { Observable, Subscription } from 'rxjs';
 import * as _ from 'lodash';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { FormComponent } from './IFormComponent';
+import { FormComponent } from '../components/AbstractFormComponent';
+import { Lab900FormField } from './lab900-form-field.type';
 
 export const areValuesEqual = (val1: any, val2: any): boolean => {
   if (typeof val1 === 'object' && typeof val2 === 'object') {
@@ -14,6 +14,7 @@ export const areValuesEqual = (val1: any, val2: any): boolean => {
 
 export interface IFieldConditions<T = any> {
   dependOn: string;
+  externalFormId?: string;
   hideIfHasValue?: boolean;
   showIfHasValue?: boolean;
   disableIfHasValue?: boolean;
@@ -22,7 +23,7 @@ export interface IFieldConditions<T = any> {
   showIfEquals?: ((value: T) => boolean) | T;
   disableIfEquals?: ((value: T) => boolean) | T;
   enabledIfEquals?: ((value: T) => boolean) | T;
-  onChangeFn?: (value: T, currentControl: AbstractControl, currentScheme: FormField) => any;
+  onChangeFn?: (value: T, currentControl: AbstractControl, currentScheme: Lab900FormField) => any;
   conditionalOptions?: (value: T, currentControl: AbstractControl) => any[] | Observable<any[]>;
   skipIfNotExists?: boolean;
   validators?: (value: T) => ValidatorFn[];
@@ -33,6 +34,8 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
     return this.group.get(this.schema.attribute);
   }
   public dependOn: string;
+  public externalFormId?: string;
+
   public hideIfHasValue?: boolean;
   public showIfHasValue?: boolean;
   public disableIfHasValue?: boolean;
@@ -41,7 +44,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
   public showIfEquals?: ((value: T) => boolean) | T;
   public disableIfEquals?: ((value: T) => boolean) | T;
   public enabledIfEquals?: ((value: T) => boolean) | T;
-  public onChangeFn?: (value: T, currentControl: AbstractControl, currentScheme: FormField) => any;
+  public onChangeFn?: (value: T, currentControl: AbstractControl, currentScheme: Lab900FormField) => any;
   public conditionalOptions?: (value: T) => any;
   public skipIfNotExists = false;
   public validators?: (value: T) => ValidatorFn[];
@@ -50,13 +53,17 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
   public prevValue: T;
 
   private readonly group: FormGroup;
-  private readonly schema: FormField;
-  public constructor(private readonly component: FormComponent<any>, fieldConditions?: IFieldConditions) {
+  private readonly schema: Lab900FormField;
+  public constructor(
+    private readonly component: FormComponent<any>,
+    private externalForms?: Record<string, FormGroup>,
+    fieldConditions?: IFieldConditions,
+  ) {
     this.group = component.group;
     this.schema = component.schema;
     if (fieldConditions) {
       Object.assign(this, fieldConditions);
-      this.dependControl = this.getDependControl(this.group);
+      this.dependControl = this.getDependControl(this.getDependGroup());
       if (!this.skipIfNotExists && !this.dependControl) {
         throw new Error(`Can't create conditional form field: no control with name ${this.dependOn} found`);
       }
@@ -69,6 +76,18 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
 
   private static hasValue(value: any): boolean {
     return value !== null && typeof value !== 'undefined';
+  }
+
+  public getDependGroup(): FormGroup {
+    if (this.externalFormId) {
+      this.skipIfNotExists = true;
+      if (this.externalForms?.[this.externalFormId]) {
+        return this.externalForms[this.externalFormId];
+      } else {
+        throw new Error(`Can't create conditional form field: no externForm with id ${this.externalFormId} found`);
+      }
+    }
+    return this.group;
   }
 
   public getDependControl(group: FormGroup): AbstractControl {
