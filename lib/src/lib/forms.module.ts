@@ -59,6 +59,8 @@ import { MultiLangInputFieldComponent } from './components/form-fields/multi-lan
 import { MatMenuModule } from '@angular/material/menu';
 import { LanguagePickerComponent } from './components/language-picker/language-picker.component';
 import { MultiLangFieldControlComponent } from './components/form-fields/multi-lang-input/multi-lang-field-control/multi-lang-field-control.component';
+import { MatSelectInfiniteScrollModule } from 'ng-mat-select-infinite-scroll';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 const customFields = [
   UnknownFieldComponent,
@@ -129,6 +131,8 @@ const customFields = [
     MatProgressSpinnerModule,
     MatTooltipModule,
     MatMenuModule,
+    MatSelectInfiniteScrollModule,
+    NgxMatSelectSearchModule,
   ],
   exports: [Lab900Form, FormDialogDirective, AuthImageDirective, AutofocusDirective],
 })
