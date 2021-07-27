@@ -1,6 +1,6 @@
-import { EditType, Form } from '@lab900/forms';
+import { EditType, Lab900FormConfig } from '@lab900/forms';
 
-export const formConditionalsExample: Form = {
+export const formConditionalsExample: Lab900FormConfig = {
   fields: [
     {
       attribute: 'role',
@@ -49,7 +49,6 @@ export const formConditionalsExample: Form = {
             {
               dependOn: 'country',
               conditionalOptions: (country: string) => {
-                console.log(country);
                 switch (country) {
                   case 'BEL':
                     return [
@@ -77,7 +76,6 @@ export const formConditionalsExample: Form = {
             {
               dependOn: 'language',
               conditionalOptions: (language: string) => {
-                console.log(language);
                 switch (language) {
                   case 'NL':
                     return [{ label: 'Belgian Fries', value: 'fries' }];

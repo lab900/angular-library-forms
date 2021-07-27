@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { EditType, Form } from '@lab900/forms';
+import { Component } from '@angular/core';
+import { EditType, Lab900FormConfig } from '@lab900/forms';
 import { Validators } from '@angular/forms';
 
 @Component({
@@ -7,7 +7,7 @@ import { Validators } from '@angular/forms';
   template: '<lab900-form #lab900FormContainer [schema]="schema"></lab900-form>',
 })
 export class FormCondtionalValidationExampleComponent {
-  public schema: Form = {
+  public schema: Lab900FormConfig = {
     fields: [
       {
         attribute: 'markAsRequired',
@@ -24,6 +24,30 @@ export class FormCondtionalValidationExampleComponent {
         title: 'Input Field?',
         options: {
           colspan: 6,
+        },
+        conditions: [
+          {
+            dependOn: 'markAsRequired',
+            validators: (v) => {
+              if (v === true) {
+                return [Validators.required];
+              }
+              return [];
+            },
+          },
+        ],
+      },
+      {
+        attribute: 'selectField',
+        editType: EditType.Select,
+        title: 'Select Field?',
+        options: {
+          colspan: 6,
+          selectOptions: [
+            { value: 'a', label: 'Option a' },
+            { value: 'b', label: 'Option b' },
+            { value: 'c', label: 'Option c' },
+          ],
         },
         conditions: [
           {

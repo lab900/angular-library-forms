@@ -1,17 +1,18 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
-import { FormComponent } from '../../../models/IFormComponent';
-import { SelectFieldOptions, ValueLabel } from '../../../models/FormField';
+import { FormComponent } from '../../AbstractFormComponent';
 import { TranslateService } from '@ngx-translate/core';
 import { isObservable, Observable, of, Subject } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { IFieldConditions } from '../../../models/IFieldConditions';
+import { FormFieldSelect } from './field-select.model';
+import { ValueLabel } from '../../../models/form-field-base';
 
 @Component({
   selector: 'lab900-select-field',
   templateUrl: './select-field.component.html',
 })
-export class SelectFieldComponent extends FormComponent<SelectFieldOptions> implements OnInit {
-  private conditionalChange = new Subject();
+export class SelectFieldComponent extends FormComponent<FormFieldSelect> implements OnInit {
+  private conditionalOptionsChange = new Subject();
 
   @HostBinding('class')
   public classList = 'lab900-form-field';
@@ -34,7 +35,7 @@ export class SelectFieldComponent extends FormComponent<SelectFieldOptions> impl
   public constructor(translateService: TranslateService) {
     super(translateService);
     this.addSubscription(
-      this.conditionalChange.pipe(switchMap(({ condition, value }) => this.getConditionalOptions(condition, value))),
+      this.conditionalOptionsChange.pipe(switchMap(({ condition, value }) => this.getConditionalOptions(condition, value))),
       (options: ValueLabel[]) => {
         this.selectOptions = options;
         this.loading = false;
@@ -66,9 +67,7 @@ export class SelectFieldComponent extends FormComponent<SelectFieldOptions> impl
         if (!firstRun || !value) {
           this.fieldControl.reset();
         }
-        this.conditionalChange.next({ condition, value });
-      } else {
-        this.selectOptions = [];
+        this.conditionalOptionsChange.next({ condition, value });
       }
     });
   }
