@@ -7,6 +7,7 @@ ssh-add git_ssh_key || exit
 ssh-add -l
 mkdir test
 cd test || exit
+mkdir ~/.ssh
 ssh-keyscan -H "github.com" >> ~/.ssh/known_hosts
 git clone git@github.com:lab900/angular-library-forms.git || exit
 cd ..
