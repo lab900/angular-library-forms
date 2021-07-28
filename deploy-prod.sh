@@ -1,52 +1,13 @@
 #!/bin/sh
 # Used in automatic deploy on main branch
 eval "$(ssh-agent)" || exit
-echo "-----BEGIN OPENSSH PRIVATE KEY-----
-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
------END OPENSSH PRIVATE KEY-----
-" > git_ssh_key
+echo "$2" > git_ssh_key
 chmod 400 git_ssh_key || exit
 ssh-add git_ssh_key || exit
-ssh-add -l
-mkdir test
-cd test || exit
 mkdir ~/.ssh
 ssh-keyscan -H "github.com" >> ~/.ssh/known_hosts
+mkdir test
+cd test || exit
 git clone git@github.com:lab900/angular-library-forms.git || exit
 cd ..
 npm i -g @angular/cli || exit
