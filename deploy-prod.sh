@@ -7,7 +7,9 @@ ssh-add git_ssh_key || exit
 ssh-add -l
 mkdir test
 cd test || exit
-git clone git@github.com:lab900/angular-library-forms.git
+ssh-keyscan -H "github.com" >> ~/.ssh/known_hosts
+git clone git@github.com:lab900/angular-library-forms.git || exit
+cd ..
 npm i -g @angular/cli || exit
 npm i || exit
 npm run build:forms:prod || exit
