@@ -1,11 +1,11 @@
 #!/bin/sh
 # Used in automatic deploy on main branch
-cd lib || exit
-cd ..
 eval "$(ssh-agent)" || exit
-chmod 400 /workspace/git_ssh_key || exit
-cat /workspace/git_ssh_key
-ssh-add /workspace/git_ssh_key || exit
+echo "$2"
+echo "$2" > git_ssh_key
+chmod 400 git_ssh_key || exit
+cat git_ssh_key
+ssh-add git_ssh_key || exit
 npm i -g @angular/cli
 npm i
 npm run build:forms:prod || exit

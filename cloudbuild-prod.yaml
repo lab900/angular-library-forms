@@ -4,9 +4,7 @@ steps:
   dir: /workspace
   args:
     - -c
-    - |
-      echo $$GIT_SSH_KEY > /workspace/git_ssh_key
-      ./deploy-prod.sh $$NPM_TOKEN
+    - ./deploy-prod.sh $$NPM_TOKEN $$GIT_SSH_KEY
   secretEnv: ['NPM_TOKEN', 'GIT_SSH_KEY']
 - name: gcr.io/cloud-builders/gcloud
   entrypoint: bash
