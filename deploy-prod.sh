@@ -8,6 +8,7 @@ mkdir ~/.ssh
 ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 printf "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 cat ~/.ssh/config
+cat ~/.ssh/known_hosts
 mkdir test
 cd test || exit
 git clone git@github.com:lab900/angular-library-forms.git || exit
