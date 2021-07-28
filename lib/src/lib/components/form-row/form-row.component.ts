@@ -16,11 +16,11 @@ export class FormRowComponent extends FormComponent<FormRow> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
-  constructor(translateService: TranslateService) {
+  public constructor(translateService: TranslateService) {
     super(translateService);
   }
 
-  get visible(): boolean {
+  public get visible(): boolean {
     if (this.options && this.options.visibleFn) {
       return this.options.visibleFn(this);
     }
@@ -29,8 +29,16 @@ export class FormRowComponent extends FormComponent<FormRow> {
 
   public rowIsReadonly(field: Lab900FormField): boolean {
     return field.options?.readonly != null
-      ? FormFieldUtils.isReadOnly(field.options, this.group.value, this.readonly)
-      : FormFieldUtils.isReadOnly(this.options, this.group.value, this.readonly);
+      ? FormFieldUtils.isReadOnly(
+          field.options,
+          this.group.value,
+          this.readonly
+        )
+      : FormFieldUtils.isReadOnly(
+          this.options,
+          this.group.value,
+          this.readonly
+        );
   }
 
   public isHidden(field: Lab900FormField): boolean {

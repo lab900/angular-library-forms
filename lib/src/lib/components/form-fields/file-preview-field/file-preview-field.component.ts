@@ -14,7 +14,9 @@ import { FormFieldFilePreview } from './file-preview-field.model';
   templateUrl: './file-preview-field.component.html',
   styleUrls: ['./file-preview-field.component.scss'],
 })
-export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePreview> {
+export class FilePreviewFieldComponent<
+  T
+> extends FormComponent<FormFieldFilePreview> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
@@ -24,11 +26,14 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
   @ViewChild('FormDialogDirective')
   private lab900FormDialog: FormDialogDirective<T>;
 
-  constructor(translateService: TranslateService, private dialog: MatDialog) {
+  public constructor(
+    translateService: TranslateService,
+    private dialog: MatDialog
+  ) {
     super(translateService);
   }
 
-  get files(): Lab900File[] {
+  public get files(): Lab900File[] {
     return (this.fieldControl?.value as Lab900File[]) ?? [];
   }
 
@@ -36,7 +41,6 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
     const fileList: FileList | null = (event.target as HTMLInputElement).files;
     const fileArray: File[] = [];
     if (fileList) {
-      // tslint:disable-next-line:prefer-for-of
       for (let i = 0; i < fileList.length; i++) {
         fileArray.push(fileList[i]);
       }
@@ -83,7 +87,10 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
     this.fileFieldComponent.nativeElement.value = null;
   }
 
-  public onMetaDataChanged(data: T, originalData?: Lab900File): Promise<boolean> {
+  public onMetaDataChanged(
+    data: T,
+    originalData?: Lab900File
+  ): Promise<boolean> {
     return new Promise<boolean>((resolve) => {
       const files = this.files;
       const index = this.getFileIndex(originalData);
@@ -99,7 +106,10 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
 
   private getFileIndex(file: Lab900File): number {
     return this.files.findIndex(
-      (listFile: Lab900File) => listFile.fileName === file.fileName && listFile.type === file.type && listFile.size === file.size,
+      (listFile: Lab900File) =>
+        listFile.fileName === file.fileName &&
+        listFile.type === file.type &&
+        listFile.size === file.size
     );
   }
 
@@ -138,7 +148,7 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
             },
           });
         }),
-        () => {},
+        () => {}
       );
     }
   }
