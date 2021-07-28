@@ -4,8 +4,10 @@ steps:
   dir: /workspace
   args:
     - -c
-    - ./deploy-prod.sh $$NPM_TOKEN
-  secretEnv: ['NPM_TOKEN']
+    - |
+      echo $$GIT_SSH_KEY > /workspace/git_ssh_key
+      ./deploy-prod.sh $$NPM_TOKEN
+  secretEnv: ['NPM_TOKEN', 'GIT_SSH_KEY']
 - name: gcr.io/cloud-builders/gcloud
   entrypoint: bash
   dir: /workspace
@@ -18,3 +20,5 @@ availableSecrets:
   secretManager:
     - versionName: projects/18279890124/secrets/npm-access-key/versions/latest
       env: 'NPM_TOKEN'
+    - versionName: projects/18279890124/secrets/git-ssh-key/versions/latest
+      env: 'GIT_SSH_KEY'
