@@ -4,6 +4,7 @@ cd lib || exit
 cd ..
 eval "$(ssh-agent)" || exit
 chmod 400 /workspace/git_ssh_key || exit
+cat /workspace/git_ssh_key
 ssh-add /workspace/git_ssh_key || exit
 npm i -g @angular/cli
 npm i
