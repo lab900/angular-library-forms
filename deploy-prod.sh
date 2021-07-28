@@ -1,13 +1,15 @@
 #!/bin/sh
 # Used in automatic deploy on main branch
 eval "$(ssh-agent)" || exit
-echo "$2"
 echo "$2" > git_ssh_key
 chmod 400 git_ssh_key || exit
-cat git_ssh_key
 ssh-add git_ssh_key || exit
-npm i -g @angular/cli
-npm i
+ssh-add -l
+mkdir test
+cd test || exit
+git clone git@github.com:lab900/angular-library-forms.git
+npm i -g @angular/cli || exit
+npm i || exit
 npm run build:forms:prod || exit
 npm run deploy:showcase || exit
 cd dist/@lab900/forms || exit
