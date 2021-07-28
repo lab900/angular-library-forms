@@ -1,11 +1,11 @@
 #!/bin/sh
 # Used in automatic deploy on main branch
-ping github.com || exit
-eval "$(ssh-agent)" || exit
 echo "$2" > git_ssh_key
 chmod 400 git_ssh_key || exit
+eval "$(ssh-agent)" || exit
 ssh-add git_ssh_key || exit
 mkdir ~/.ssh
+ssh-keygen -R github.com
 ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 mkdir test
 cd test || exit
