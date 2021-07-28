@@ -6,7 +6,7 @@ echo "$2" > git_ssh_key
 chmod 400 git_ssh_key || exit
 ssh-add git_ssh_key || exit
 mkdir ~/.ssh
-ssh-keyscan -H "github.com" >> ~/.ssh/known_hosts
+ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 mkdir test
 cd test || exit
 git clone git@github.com:lab900/angular-library-forms.git || exit
