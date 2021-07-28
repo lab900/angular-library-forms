@@ -5,8 +5,9 @@ chmod 400 git_ssh_key || exit
 eval "$(ssh-agent)" || exit
 ssh-add git_ssh_key || exit
 mkdir ~/.ssh
-ssh-keygen -R github.com
 ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+printf "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+cat ~/.ssh/config
 mkdir test
 cd test || exit
 git clone git@github.com:lab900/angular-library-forms.git || exit
