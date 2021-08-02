@@ -1,17 +1,20 @@
 export class FileInput {
-  // tslint:disable-next-line:variable-name
-  private _fileNames: string;
+  private readonly _fileNames: string;
 
-  // tslint:disable-next-line:variable-name
-  constructor(private _files: File[] | null, private delimiter: string = ', ') {
-    this._fileNames = (this._files || []).map((f: File) => f.name).join(delimiter);
+  public constructor(
+    private _files: File[] | null,
+    private delimiter: string = ', '
+  ) {
+    this._fileNames = (this._files || [])
+      .map((f: File) => f.name)
+      .join(delimiter);
   }
 
-  get files(): File[] {
+  public get files(): File[] {
     return this._files || [];
   }
 
-  get fileNames(): string {
+  public get fileNames(): string {
     return this._fileNames;
   }
 }

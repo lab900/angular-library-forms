@@ -1,8 +1,17 @@
-import { AfterViewInit, Component, ElementRef, HostBinding, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  HostBinding,
+  ViewChild,
+} from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { BehaviorSubject, isObservable, Observable, of } from 'rxjs';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import {
+  MatAutocomplete,
+  MatAutocompleteSelectedEvent,
+} from '@angular/material/autocomplete';
 import { TranslateService } from '@ngx-translate/core';
 import { debounceTime, switchMap } from 'rxjs/operators';
 import { ValueLabel } from '../../../models/form-field-base';
@@ -12,7 +21,10 @@ import { FormFieldAutocompleteMulti } from './autocomplete-multiple-field.model'
   selector: 'lab900-autocomplete-multiple-field',
   templateUrl: './autocomplete-multiple-field.component.html',
 })
-export class AutocompleteMultipleFieldComponent extends FormComponent<FormFieldAutocompleteMulti> implements AfterViewInit {
+export class AutocompleteMultipleFieldComponent
+  extends FormComponent<FormFieldAutocompleteMulti>
+  implements AfterViewInit
+{
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
@@ -27,7 +39,7 @@ export class AutocompleteMultipleFieldComponent extends FormComponent<FormFieldA
   public inputChange: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   public get selectedOptions(): any[] {
-    return this.group.controls[this.schema.attribute]?.value ?? [];
+    return this.group.controls[this.fieldAttribute]?.value ?? [];
   }
 
   public constructor(translateService: TranslateService) {
@@ -44,13 +56,17 @@ export class AutocompleteMultipleFieldComponent extends FormComponent<FormFieldA
   }
 
   private initFilteredOptionsListener(): void {
-    const debounce: number = this.options.debounceTime ?? (isObservable(this.options.autocompleteOptions('', this.fieldControl)) ? 300 : 0);
+    const debounce: number =
+      this.options.debounceTime ??
+      (isObservable(this.options.autocompleteOptions('', this.fieldControl))
+        ? 300
+        : 0);
     this.filteredOptions = this.inputChange.pipe(
       debounceTime(debounce),
       switchMap((input: string) => {
         const res = this.options.autocompleteOptions(input, this.fieldControl);
         return isObservable(res) ? res : of(res);
-      }),
+      })
     );
   }
 
@@ -72,9 +88,9 @@ export class AutocompleteMultipleFieldComponent extends FormComponent<FormFieldA
   }
 
   private updateControlValue(val: any[]): void {
-    this.group.controls[this.schema.attribute].setValue(val);
-    this.group.controls[this.schema.attribute].updateValueAndValidity();
-    this.group.controls[this.schema.attribute].markAsDirty();
-    this.group.controls[this.schema.attribute].markAsTouched();
+    this.group.controls[this.fieldAttribute].setValue(val);
+    this.group.controls[this.fieldAttribute].updateValueAndValidity();
+    this.group.controls[this.fieldAttribute].markAsDirty();
+    this.group.controls[this.fieldAttribute].markAsTouched();
   }
 }

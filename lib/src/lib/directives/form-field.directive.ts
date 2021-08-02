@@ -112,12 +112,16 @@ export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
 
   public statusChangeSubscription: Subscription;
 
-  public constructor(private resolver: ComponentFactoryResolver, private container: ViewContainerRef) {}
+  public constructor(
+    private resolver: ComponentFactoryResolver,
+    private container: ViewContainerRef
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (this.component && changes.readonly) {
       const { previousValue } = changes.readonly;
-      const hadPrevious = previousValue !== null && typeof previousValue !== 'undefined';
+      const hadPrevious =
+        previousValue !== null && typeof previousValue !== 'undefined';
       if (hadPrevious && changes.readonly?.previousValue !== this.readonly) {
         this.createComponent();
       } else {
@@ -140,7 +144,10 @@ export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
   private createComponent(): void {
     this.container.clear();
     const c =
-      this.readonly && ![EditType.Row, EditType.Select, EditType.FilePreview].includes(this.schema.editType)
+      this.readonly &&
+      ![EditType.Row, EditType.Select, EditType.FilePreview].includes(
+        this.schema.editType
+      )
         ? ReadonlyFieldComponent
         : mapToComponent(this.schema);
     const component = this.resolver.resolveComponentFactory<FormComponent>(c);
@@ -150,7 +157,16 @@ export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
 
   private setComponentProps(): void {
     this.component.instance.schema = this.schema;
-    this.component.instance.group = this.group;
+    if (this.schema?.attribute?.includes('.')) {
+      const attributeMap = this.schema?.attribute.split('.');
+      this.component.instance.fieldAttribute = attributeMap.pop();
+      this.component.instance.group = this.group.get(
+        attributeMap.join('.')
+      ) as FormGroup;
+    } else {
+      this.component.instance.fieldAttribute = this.schema.attribute;
+      this.component.instance.group = this.group;
+    }
     this.component.instance.readonly = this.readonly;
     this.component.instance.availableLanguages = this.availableLanguages;
     this.component.instance.language = this.language;
@@ -162,7 +178,7 @@ export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
       const supportedTypes = Object.keys(EditType).join(', ');
       throw new Error(
         `Trying to use an unsupported type (${this.schema.editType}).
-        Supported types: ${supportedTypes}`,
+        Supported types: ${supportedTypes}`
       );
     }
   }
