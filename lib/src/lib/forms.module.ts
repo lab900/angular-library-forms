@@ -40,6 +40,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { TranslateModule } from '@ngx-translate/core';
 import { IconFieldComponent } from './components/form-fields/icon-field/icon-field.component';
 import { ButtonToggleFieldComponent } from './components/form-fields/button-toggle-field/button-toggle-field.component';
+import { SlideToggleFieldComponent } from './components/form-fields/slide-toggle-field/slide-toggle-field.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { IconComponent } from './components/icon/icon.component';
 import { AutocompleteMultipleFieldComponent } from './components/form-fields/autocomplete-multiple-field/autocomplete-multiple-field.component';
@@ -59,6 +60,7 @@ import { MultiLangInputFieldComponent } from './components/form-fields/multi-lan
 import { MatMenuModule } from '@angular/material/menu';
 import { LanguagePickerComponent } from './components/language-picker/language-picker.component';
 import { MultiLangFieldControlComponent } from './components/form-fields/multi-lang-input/multi-lang-field-control/multi-lang-field-control.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 const customFields = [
   UnknownFieldComponent,
@@ -77,6 +79,7 @@ const customFields = [
   AutocompleteMultipleFieldComponent,
   IconFieldComponent,
   ButtonToggleFieldComponent,
+  SlideToggleFieldComponent,
   ReadonlyFieldComponent,
   DateRangeFieldComponent,
   DateTimeFieldComponent,
@@ -128,6 +131,7 @@ const customFields = [
     NgxMatTimepickerModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
+    MatSlideToggleModule,
     MatMenuModule,
   ],
   exports: [Lab900Form, FormDialogDirective, AuthImageDirective, AutofocusDirective],
