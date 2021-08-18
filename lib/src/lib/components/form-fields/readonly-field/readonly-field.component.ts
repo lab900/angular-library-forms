@@ -16,15 +16,18 @@ export class ReadonlyFieldComponent extends FormComponent implements OnDestroy {
     super(translateService);
     setTimeout(() => {
       if (this.group?.controls) {
-        this.setValue(this.group.controls[this.schema.attribute].value);
-        this.addSubscription(this.group.controls[this.schema.attribute].valueChanges, (value: any) =>
-          setTimeout(() => this.setValue(value)),
+        this.setValue(this.group.controls[this.fieldAttribute].value);
+        this.addSubscription(
+          this.group.controls[this.fieldAttribute].valueChanges,
+          (value: any) => setTimeout(() => this.setValue(value))
         );
       }
     });
   }
 
   private setValue(value: any): void {
-    this.value = this.options?.readonlyDisplay ? this.options?.readonlyDisplay(this.group.value) : value;
+    this.value = this.options?.readonlyDisplay
+      ? this.options?.readonlyDisplay(this.group.value)
+      : value;
   }
 }

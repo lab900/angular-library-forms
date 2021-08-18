@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnInit } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormArray } from '@angular/forms';
 import { Lab900FormBuilderService } from '../../../services/form-builder.service';
@@ -12,7 +12,7 @@ import { FormFieldRepeater } from './repeater-field.model';
   styleUrls: ['./repeater-field.component.scss'],
   animations: [matFormFieldAnimations.transitionMessages],
 })
-export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> implements OnInit {
+export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
@@ -33,19 +33,14 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> imp
   }
 
   public get repeaterArray(): FormArray {
-    return this.group.get(this.schema.attribute) as FormArray;
+    return this.group.get(this.fieldAttribute) as FormArray;
   }
 
-  public constructor(private fb: Lab900FormBuilderService, translateService: TranslateService) {
+  public constructor(
+    private fb: Lab900FormBuilderService,
+    translateService: TranslateService
+  ) {
     super(translateService);
-  }
-
-  public ngOnInit(): void {
-    if (this.minRows && this.repeaterArray.controls.length < this.minRows) {
-      for (let index = 0; index < this.minRows; index++) {
-        this.addToArray();
-      }
-    }
   }
 
   public addToArray(): void {

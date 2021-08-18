@@ -2,7 +2,10 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule } from '@angular/material/form-field';
+import {
+  MAT_FORM_FIELD_DEFAULT_OPTIONS,
+  MatFormFieldModule,
+} from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -27,7 +30,11 @@ import { SelectFieldComponent } from './components/form-fields/select-field/sele
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CheckboxFieldComponent } from './components/form-fields/checkbox-field/checkbox-field.component';
-import { defaultFormModuleSettings, Lab900FormModuleSettings, LAB900_FORM_MODULE_SETTINGS } from './models/Lab900FormModuleSettings';
+import {
+  defaultFormModuleSettings,
+  Lab900FormModuleSettings,
+  LAB900_FORM_MODULE_SETTINGS,
+} from './models/Lab900FormModuleSettings';
 import { TextareaFieldComponent } from './components/form-fields/textarea-field/textarea-field.component';
 import { FormRowComponent } from './components/form-row/form-row.component';
 import { RepeaterFieldComponent } from './components/form-fields/repeater-field/repeater-field.component';
@@ -40,6 +47,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { TranslateModule } from '@ngx-translate/core';
 import { IconFieldComponent } from './components/form-fields/icon-field/icon-field.component';
 import { ButtonToggleFieldComponent } from './components/form-fields/button-toggle-field/button-toggle-field.component';
+import { SlideToggleFieldComponent } from './components/form-fields/slide-toggle-field/slide-toggle-field.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { IconComponent } from './components/icon/icon.component';
 import { AutocompleteMultipleFieldComponent } from './components/form-fields/autocomplete-multiple-field/autocomplete-multiple-field.component';
@@ -47,7 +55,11 @@ import { MatChipsModule } from '@angular/material/chips';
 import { NgxMaskModule } from 'ngx-mask';
 import { ReadonlyFieldComponent } from './components/form-fields/readonly-field/readonly-field.component';
 import { DateRangeFieldComponent } from './components/form-fields/date-range-field/date-range-field.component';
-import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+import {
+  NgxMatDatetimePickerModule,
+  NgxMatNativeDateModule,
+  NgxMatTimepickerModule,
+} from '@angular-material-components/datetime-picker';
 import { DateTimeFieldComponent } from './components/form-fields/date-time-field/date-time-field.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FilePreviewFieldComponent } from './components/form-fields/file-preview-field/file-preview-field.component';
@@ -59,6 +71,9 @@ import { MultiLangInputFieldComponent } from './components/form-fields/multi-lan
 import { MatMenuModule } from '@angular/material/menu';
 import { LanguagePickerComponent } from './components/language-picker/language-picker.component';
 import { MultiLangFieldControlComponent } from './components/form-fields/multi-lang-input/multi-lang-field-control/multi-lang-field-control.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSelectInfiniteScrollModule } from 'ng-mat-select-infinite-scroll';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 const customFields = [
   UnknownFieldComponent,
@@ -77,6 +92,7 @@ const customFields = [
   AutocompleteMultipleFieldComponent,
   IconFieldComponent,
   ButtonToggleFieldComponent,
+  SlideToggleFieldComponent,
   ReadonlyFieldComponent,
   DateRangeFieldComponent,
   DateTimeFieldComponent,
@@ -128,13 +144,33 @@ const customFields = [
     NgxMatTimepickerModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
+    MatSlideToggleModule,
     MatMenuModule,
+    MatSelectInfiniteScrollModule,
+    NgxMatSelectSearchModule,
   ],
-  exports: [Lab900Form, FormDialogDirective, AuthImageDirective, AutofocusDirective],
+  exports: [
+    Lab900Form,
+    FormDialogDirective,
+    AuthImageDirective,
+    AutofocusDirective,
+    SelectFieldComponent,
+  ],
 })
 export class Lab900FormsModule {
-  public static forRoot(settings: Lab900FormModuleSettings = defaultFormModuleSettings): ModuleWithProviders<FormsModule> {
-    const formSetting: Lab900FormModuleSettings = { ...defaultFormModuleSettings, ...settings };
+  public static forRoot(
+    settings: Lab900FormModuleSettings = defaultFormModuleSettings
+  ): ModuleWithProviders<FormsModule> {
+    const formSetting: Lab900FormModuleSettings = {
+      formField: {
+        ...defaultFormModuleSettings.formField,
+        ...(settings?.formField ?? {}),
+      },
+      fieldMask: {
+        ...defaultFormModuleSettings.fieldMask,
+        ...(settings?.fieldMask ?? {}),
+      },
+    };
     return {
       ngModule: Lab900FormsModule,
       providers: [

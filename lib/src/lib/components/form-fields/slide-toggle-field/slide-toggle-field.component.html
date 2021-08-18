@@ -1,0 +1,24 @@
+<div
+  [formGroup]="group"
+  *ngIf="!fieldIsHidden"
+  class="lab900-slide-toggle-field mat-form-field-wrapper"
+  id="lab900-slide-toggle-field-{{ fieldAttribute }}"
+>
+  <div *ngIf="schema.title" class="lab900-slide-toggle-field__title">
+    <mat-label>{{ schema.title | translate }}</mat-label>
+  </div>
+  <mat-slide-toggle
+    [disabled]="fieldIsReadonly"
+    [formControlName]="fieldAttribute"
+    [required]="fieldIsRequired"
+    [color]="options?.color || 'primary'"
+    [labelPosition]="options?.labelPosition"
+  >
+    {{ options?.label | translate }}
+  </mat-slide-toggle>
+  <mat-error
+    class="lab900-slide-toggle-field__error"
+    *ngIf="touched && !valid && !fieldIsReadonly"
+    >{{ getErrorMessage() | async }}</mat-error
+  >
+</div>

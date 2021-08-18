@@ -42,6 +42,10 @@ export const showcaseFormsNavItems: NavItemGroup[] = [
             route: 'form-field-button-toggle',
           },
           {
+            label: 'Slide Toggle',
+            route: 'form-field-slide-toggle',
+          },
+          {
             label: 'Select',
             route: 'form-field-select',
           },
@@ -64,6 +68,10 @@ export const showcaseFormsNavItems: NavItemGroup[] = [
           {
             label: 'Multi language',
             route: 'form-field-multi-lang',
+          },
+          {
+            label: 'Nested groups',
+            route: 'form-field-nested-groups',
           },
         ],
       },

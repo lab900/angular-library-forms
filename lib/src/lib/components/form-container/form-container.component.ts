@@ -1,17 +1,18 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { FormGroup, FormArray } from '@angular/forms';
+import { FormArray, FormGroup } from '@angular/forms';
 import { Lab900FormConfig } from '../../models/Lab900FormConfig';
 import { Lab900FormBuilderService } from '../../services/form-builder.service';
 import { areValuesEqual } from '../../models/IFieldConditions';
 import { ValueLabel } from '../../models/form-field-base';
 import { Lab900FormField } from '../../models/lab900-form-field.type';
+import { EditType } from '../../models/editType';
 
 @Component({
   selector: 'lab900-form[schema]',
   templateUrl: './form-container.component.html',
   styleUrls: ['./form-container.component.scss'],
 })
-// tslint:disable-next-line:component-class-suffix
+// eslint-disable-next-line @angular-eslint/component-class-suffix
 export class Lab900Form<T> implements OnChanges {
   @Input()
   public schema!: Lab900FormConfig;
@@ -49,10 +50,16 @@ export class Lab900Form<T> implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.schema && this.schema?.fields) {
-      this.form = this.fb.createFormGroup<T>(this.schema.fields, null, this.data);
+      this.form = this.fb.createFormGroup<T>(
+        this.schema.fields,
+        null,
+        this.data
+      );
     }
     if (!changes?.data?.isFirstChange() && this.data) {
-      setTimeout(() => this.patchValues(this.data, changes?.data?.previousValue));
+      setTimeout(() =>
+        this.patchValues(this.data, changes?.data?.previousValue)
+      );
     }
   }
 
@@ -61,8 +68,10 @@ export class Lab900Form<T> implements OnChanges {
       const control = this.form.controls[key];
       if (control && !areValuesEqual(data[key], prevData?.[key])) {
         if (control instanceof FormArray) {
-          const fieldSchema = this.schema.fields.find((field: Lab900FormField) => field.attribute === key);
-          if (data[key] && fieldSchema) {
+          const fieldSchema = this.schema.fields.find(
+            (field: Lab900FormField) => field.attribute === key
+          );
+          if (data[key] && fieldSchema?.editType === EditType.Repeater) {
             this.fb.createFormArray(data, fieldSchema, control);
           }
         } else {
@@ -77,8 +86,10 @@ export class Lab900Form<T> implements OnChanges {
       const control = this.form.controls[key];
       if (control) {
         if (control instanceof FormArray) {
-          const fieldSchema = this.schema.fields.find((field: Lab900FormField) => field.attribute === key);
-          if (data[key] && fieldSchema) {
+          const fieldSchema = this.schema.fields.find(
+            (field: Lab900FormField) => field.attribute === key
+          );
+          if (data[key] && fieldSchema?.editType === EditType.Repeater) {
             this.fb.createFormArray(data, fieldSchema, control);
           }
         }
