@@ -33,6 +33,10 @@ export interface FormFieldSelectOptions extends FormFieldBaseOptions {
      * @default false
      */
     clearOnClose?: boolean;
+    /**
+     * The threshold time before firing the search event
+     */
+    debounceTime?: number;
   };
   infiniteScroll?: {
     enabled: boolean;
