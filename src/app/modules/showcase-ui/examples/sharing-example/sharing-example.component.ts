@@ -23,6 +23,6 @@ export class SharingExampleComponent {
     { username: 'testUser' },
   ];
 
-  public userLabelFn = (user: any) => user.username;
-  public userImageFn = (user: any) => user.profileImage || '';
+  public userLabelFn = (user: any): string => user.username;
+  public userImageFn = (user: any): string => user.profileImage || '';
 }
