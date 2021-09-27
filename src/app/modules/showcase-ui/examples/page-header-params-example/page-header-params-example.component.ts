@@ -3,7 +3,11 @@ import { PageHeaderNavItem, ActionButton } from '@lab900/ui';
 
 @Component({
   selector: 'lab900-page-header-params-example',
-  template: `<lab900-page-header [pageTitle]="pageTitle" [navItems]="navItems" [actions]="actions"></lab900-page-header>`,
+  template: `<lab900-page-header
+    [pageTitle]="pageTitle"
+    [navItems]="navItems"
+    [actions]="actions"
+  ></lab900-page-header>`,
 })
 export class PageHeaderParamsExampleComponent {
   public pageTitle = 'Example page header';

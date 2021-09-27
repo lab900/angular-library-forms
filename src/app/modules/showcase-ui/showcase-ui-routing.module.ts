@@ -27,17 +27,34 @@ const routes: Routes = [
     component: MarkdownPageComponent,
     data: { filePath: 'guides/ui/getting-started.md' },
   },
-  new ShowcaseRoute('sharing', 'Sharing', [new ShowcaseExample(SharingExampleComponent, 'Sharing list')]),
-  new ShowcaseRoute('buttons', 'Buttons', [new ShowcaseExample(ButtonExampleComponent, 'Buttons')]),
-  new ShowcaseRoute('data-list', 'Data list', [new ShowcaseExample(DataListExampleComponent, 'Data list')]),
-  new ShowcaseRoute('alerts', 'Alerts', [new ShowcaseExample(AlertsExampleComponent, 'Alerts')]),
-  new ShowcaseRoute('nav-list', 'Nav list', [new ShowcaseExample(NavListExampleComponent, 'Nav list')]),
-  new ShowcaseRoute('table', 'Table', [new ShowcaseExample(TableExampleComponent, 'Table')]),
+  new ShowcaseRoute('sharing', 'Sharing', [
+    new ShowcaseExample(SharingExampleComponent, 'Sharing list'),
+  ]),
+  new ShowcaseRoute('buttons', 'Buttons', [
+    new ShowcaseExample(ButtonExampleComponent, 'Buttons'),
+  ]),
+  new ShowcaseRoute('data-list', 'Data list', [
+    new ShowcaseExample(DataListExampleComponent, 'Data list'),
+  ]),
+  new ShowcaseRoute('alerts', 'Alerts', [
+    new ShowcaseExample(AlertsExampleComponent, 'Alerts'),
+  ]),
+  new ShowcaseRoute('nav-list', 'Nav list', [
+    new ShowcaseExample(NavListExampleComponent, 'Nav list'),
+  ]),
+  new ShowcaseRoute('table', 'Table', [
+    new ShowcaseExample(TableExampleComponent, 'Table'),
+  ]),
   new ShowcaseRoute('page-header', 'Page header', [
-    new ShowcaseExample(PageHeaderParamsExampleComponent, 'Page header from request params'),
+    new ShowcaseExample(
+      PageHeaderParamsExampleComponent,
+      'Page header from request params'
+    ),
     new ShowcaseExample(PageHeaderExampleComponent, 'Page header'),
   ]),
-  new ShowcaseRoute('merger', 'Merger', [new ShowcaseExample(MergerExampleComponent, 'Merger')]),
+  new ShowcaseRoute('merger', 'Merger', [
+    new ShowcaseExample(MergerExampleComponent, 'Merger'),
+  ]),
 ];
 
 @NgModule({

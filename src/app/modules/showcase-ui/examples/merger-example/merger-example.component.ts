@@ -10,10 +10,23 @@ import { MergerDataExample } from './models/merger-data-example.model';
   selector: 'lab900-merger-example',
   template: `
     <div fxLayoutAlign="flex-end center" style="margin-bottom: 1rem">
-      <button mat-flat-button color="primary" (click)="mergerComponent.reset()">{{ 'reset' | translate }}</button>
+      <button mat-flat-button color="primary" (click)="mergerComponent.reset()">
+        {{ 'reset' | translate }}
+      </button>
     </div>
-    <lab900-merger [leftObject]="exampleData[0]" [rightObject]="exampleData[1]" [schema]="exampleSchema"></lab900-merger>
-    <button style="margin-right: 1rem" mat-raised-button color="primary" (click)="showResult()">{{ 'log_result' | translate }}</button>
+    <lab900-merger
+      [leftObject]="exampleData[0]"
+      [rightObject]="exampleData[1]"
+      [schema]="exampleSchema"
+    ></lab900-merger>
+    <button
+      style="margin-right: 1rem"
+      mat-raised-button
+      color="primary"
+      (click)="showResult()"
+    >
+      {{ 'log_result' | translate }}
+    </button>
   `,
 })
 export class MergerExampleComponent {

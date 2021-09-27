@@ -2,7 +2,11 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'lab900-sharing-example',
-  template: `<lab900-sharing [users]="users" [userLabelFn]="userLabelFn" [userImageFn]="userImageFn"></lab900-sharing>`,
+  template: `<lab900-sharing
+    [users]="users"
+    [userLabelFn]="userLabelFn"
+    [userImageFn]="userImageFn"
+  ></lab900-sharing>`,
 })
 export class SharingExampleComponent {
   public users = [

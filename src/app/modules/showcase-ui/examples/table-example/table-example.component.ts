@@ -26,7 +26,10 @@ import { ActionButton, Lab900Sort, Paging, TableCell } from '@lab900/ui';
     <div *lab900TableHeaderContent>Custom header</div>
     <div *lab900TableCustomCell="let data">
       <div *ngIf="data.cell.key === 'active'">
-        <mat-checkbox color="primary" [checked]="data.element?.active"></mat-checkbox>
+        <mat-checkbox
+          color="primary"
+          [checked]="data.element?.active"
+        ></mat-checkbox>
       </div>
     </div>
     <div *lab900TableEmpty>
@@ -183,7 +186,10 @@ export class TableExampleComponent {
 
   public sortChange(sort: Lab900Sort[]): void {
     sort.forEach((s) => {
-      this.mockData.sort((a: any, b: any) => (a[s.id] < b[s.id] ? -1 : 1) * (s.direction === 'asc' ? 1 : -1));
+      this.mockData.sort(
+        (a: any, b: any) =>
+          (a[s.id] < b[s.id] ? -1 : 1) * (s.direction === 'asc' ? 1 : -1)
+      );
       this.mockData = [...this.mockData];
     });
   }
