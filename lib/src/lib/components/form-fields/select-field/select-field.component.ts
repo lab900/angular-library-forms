@@ -86,7 +86,7 @@ export class SelectFieldComponent
 
     this.addSubscription(
       this.optionsFilter$.pipe(
-        debounceTime(this.options?.search?.debounceTime ?? 0),
+        debounceTime(this.options?.search?.debounceTime ?? 275),
         filter(() => !!this.optionsFn$.value),
         tap(() => (this.loading = true)),
         switchMap((optionsFilter) =>
