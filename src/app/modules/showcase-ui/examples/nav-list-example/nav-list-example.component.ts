@@ -3,7 +3,8 @@ import { NavItemGroup } from '@lab900/ui';
 
 @Component({
   selector: 'lab900-nav-list-example',
-  template: '<div style="width: 300px"><lab900-nav-list [navItemGroups]="navItemGroups" [showLevelArrows]="true"></lab900-nav-list></div>',
+  template:
+    '<div style="width: 300px"><lab900-nav-list [navItemGroups]="navItemGroups" [showLevelArrows]="true"></lab900-nav-list></div>',
 })
 export class NavListExampleComponent {
   public navItemGroups: NavItemGroup[] = [

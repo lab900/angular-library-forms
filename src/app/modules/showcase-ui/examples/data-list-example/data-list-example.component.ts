@@ -56,7 +56,13 @@ const dummyData: any[] = [
 @Component({
   selector: 'lab900-data-list-example',
   template: `
-    <lab900-data-list [data]="data" [actions]="actions" [dataListSharing]="sharing" [paging]="paging" (pageChange)="changePage($event)">
+    <lab900-data-list
+      [data]="data"
+      [actions]="actions"
+      [dataListSharing]="sharing"
+      [paging]="paging"
+      (pageChange)="changePage($event)"
+    >
       <div *lab900DataListEmpty>if this list is empty this appears</div>
       <div *lab900DataListItemInfo="let data">
         {{ data.title }}
@@ -106,6 +112,9 @@ export class DataListExampleComponent implements OnInit {
   }
 
   public paginate(data: any[], page: number): any[] {
-    return data.slice((page - 1) * this.paging.pageSize, page * this.paging.pageSize);
+    return data.slice(
+      (page - 1) * this.paging.pageSize,
+      page * this.paging.pageSize
+    );
   }
 }

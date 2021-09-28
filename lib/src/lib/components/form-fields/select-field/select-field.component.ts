@@ -2,7 +2,14 @@ import { Component, HostBinding, OnInit } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, isObservable, of, Subject } from 'rxjs';
-import { catchError, filter, switchMap, take, tap } from 'rxjs/operators';
+import {
+  catchError,
+  debounceTime,
+  filter,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs/operators';
 import {
   FormFieldSelect,
   FormFieldSelectOptionsFilter,
@@ -79,6 +86,7 @@ export class SelectFieldComponent
 
     this.addSubscription(
       this.optionsFilter$.pipe(
+        debounceTime(this.options?.search?.debounceTime ?? 300),
         filter(() => !!this.optionsFn$.value),
         tap(() => (this.loading = true)),
         switchMap((optionsFilter) =>
