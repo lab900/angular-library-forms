@@ -56,13 +56,8 @@ export class AutocompleteMultipleFieldComponent
   }
 
   private initFilteredOptionsListener(): void {
-    const debounce: number =
-      this.options.debounceTime ??
-      (isObservable(this.options.autocompleteOptions('', this.fieldControl))
-        ? 300
-        : 0);
     this.filteredOptions = this.inputChange.pipe(
-      debounceTime(debounce),
+      debounceTime(this.options.debounceTime ?? 300),
       switchMap((input: string) => {
         const res = this.options.autocompleteOptions(input, this.fieldControl);
         return isObservable(res) ? res : of(res);
