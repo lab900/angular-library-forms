@@ -11,7 +11,7 @@ export interface FieldMask extends Partial<IConfig> {
 }
 
 export interface FormFieldInputOptions extends FormFieldBaseOptions {
-  type?: 'text' | 'number' | 'email' | 'password' | 'tel' | 'url';
+  type?: 'text' | 'number' | 'email' | 'password' | 'tel' | 'url' | 'time';
   autofocus?: boolean;
   suffix?: string;
   prefix?: string;
