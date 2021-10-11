@@ -112,6 +112,14 @@ export class FormFieldInputsExampleComponent {
           align: 'right',
         },
       },
+      {
+        attribute: 'timeField',
+        title: 'Time',
+        editType: EditType.Input,
+        options: {
+          type: 'time',
+        },
+      },
     ],
   };
 
