@@ -46,10 +46,8 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
   public addToArray(): void {
     const formGroup = this.fb.createFormGroup(this.schema.nestedFields);
     this.repeaterArray.push(formGroup);
-    if (formGroup.dirty) {
-      this.repeaterArray.markAsDirty();
-      this.repeaterArray.markAsTouched();
-    }
+    this.repeaterArray.markAsDirty();
+    this.repeaterArray.markAsTouched();
   }
 
   public removeFromArray(index: number): void {
