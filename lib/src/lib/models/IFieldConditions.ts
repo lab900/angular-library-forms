@@ -135,13 +135,15 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
     if (Object.keys(this.dependControls)?.length) {
       Object.entries(this.dependControls).forEach(([key, control]) => {
         this.runAll(key, this.getDependControlValues(), true, callback);
-        subs.push(
-          control.valueChanges
-            .pipe(debounceTime(100), distinctUntilChanged())
-            .subscribe((v) =>
-              this.runAll(key, this.getDependControlValues(), false, callback)
-            )
-        );
+        if (control != null) {
+          subs.push(
+            control.valueChanges
+              .pipe(debounceTime(100), distinctUntilChanged())
+              .subscribe((v) =>
+                this.runAll(key, this.getDependControlValues(), false, callback)
+              )
+          );
+        }
       });
     }
     return subs;
