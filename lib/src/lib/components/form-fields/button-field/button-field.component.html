@@ -1,0 +1,25 @@
+<div
+  [formGroup]="group"
+  *ngIf="!fieldIsHidden"
+  class="lab900-button-field button-field mat-form-field-wrapper"
+  id="lab900-button-field-{{ fieldAttribute }}"
+>
+  <div *ngIf="schema.title" class="lab900-button-field__label">
+    <mat-label>{{ schema.title | translate }}</mat-label>
+  </div>
+  <lab900-button
+    [type]="options.type"
+    [color]="options.color"
+    [disabled]="options.disabled"
+    (click)="handleClick($event)"
+    [label]="options.label"
+    [matTooltip]="options.tooltip?.text | translate"
+    [matTooltipPosition]="
+      options.tooltip?.position ? options.tooltip?.position : 'above'
+    "
+    [prefixIcon]="options.prefixIcon"
+    [suffixIcon]="options.suffixIcon"
+    [svgIcon]="options.svgIcon"
+    [containerClass]="options.containerClass"
+  ></lab900-button>
+</div>

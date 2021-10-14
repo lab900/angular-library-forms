@@ -14,6 +14,7 @@ import { FormFieldAutocompleteExampleComponent } from './examples/form-field-aut
 import { FormFieldAutocompleteMultipleExampleComponent } from './examples/form-field-autocomplete-example/form-field-autocomplete-multiple-example.component';
 import { FormFieldRepeaterAdvancedExampleComponent } from './examples/form-field-repeater-advanced-example/form-field-repeater-advanced-example.component';
 import { FormFieldButtonToggleExampleComponent } from './examples/form-field-button-toggle-example/form-field-button-toggle-example.component';
+import { FormFieldButtonExampleComponent } from './examples/form-field-button-example/form-field-button-example.component';
 import { FormFieldSlideToggleExampleComponent } from './examples/form-field-slide-toggle-example/form-field-slide-toggle-example.component';
 import { FormContainerExampleComponent } from './examples/form-container-example/form-container-example.component';
 import { FormContainerReadonlyExampleComponent } from './examples/form-container-example/form-container-readonly-example.component';
@@ -40,6 +41,7 @@ const examples = [
   FormFieldAutocompleteExampleComponent,
   FormFieldAutocompleteMultipleExampleComponent,
   FormFieldButtonToggleExampleComponent,
+  FormFieldButtonExampleComponent,
   FormFieldSlideToggleExampleComponent,
   FormContainerExampleComponent,
   FormConditionalsExampleComponent,

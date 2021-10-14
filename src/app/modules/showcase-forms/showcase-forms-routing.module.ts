@@ -11,6 +11,7 @@ import { FormFieldRadioButtonsExampleComponent } from './examples/form-field-rad
 import { FormFieldRangeSliderExampleComponent } from './examples/form-field-range-slider-example/form-field-range-slider-example.component';
 import { FormFieldRepeaterAdvancedExampleComponent } from './examples/form-field-repeater-advanced-example/form-field-repeater-advanced-example.component';
 import { FormFieldButtonToggleExampleComponent } from './examples/form-field-button-toggle-example/form-field-button-toggle-example.component';
+import { FormFieldButtonExampleComponent } from './examples/form-field-button-example/form-field-button-example.component';
 import { FormFieldSlideToggleExampleComponent } from './examples/form-field-slide-toggle-example/form-field-slide-toggle-example.component';
 import { FormContainerExampleComponent } from './examples/form-container-example/form-container-example.component';
 import { FormContainerReadonlyExampleComponent } from './examples/form-container-example/form-container-readonly-example.component';
@@ -112,6 +113,9 @@ const routes: Routes = [
   ]),
   new ShowcaseRoute('form-field-button-toggle', 'Form Fields: Button Toggle', [
     new ShowcaseExample(FormFieldButtonToggleExampleComponent, 'Button Toggle'),
+  ]),
+  new ShowcaseRoute('form-field-button', 'Form Fields: Button', [
+    new ShowcaseExample(FormFieldButtonExampleComponent, 'Button'),
   ]),
   new ShowcaseRoute('form-field-slide-toggle', 'Form Fields: Slide Toggle', [
     new ShowcaseExample(FormFieldSlideToggleExampleComponent, 'Slide Toggle'),
