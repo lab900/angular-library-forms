@@ -47,6 +47,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { TranslateModule } from '@ngx-translate/core';
 import { IconFieldComponent } from './components/form-fields/icon-field/icon-field.component';
 import { ButtonToggleFieldComponent } from './components/form-fields/button-toggle-field/button-toggle-field.component';
+import { ButtonFieldComponent } from './components/form-fields/button-field/button-field.component';
 import { SlideToggleFieldComponent } from './components/form-fields/slide-toggle-field/slide-toggle-field.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { IconComponent } from './components/icon/icon.component';
@@ -74,6 +75,7 @@ import { MultiLangFieldControlComponent } from './components/form-fields/multi-l
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectInfiniteScrollModule } from 'ng-mat-select-infinite-scroll';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { Lab900ButtonModule } from '@lab900/ui';
 
 const customFields = [
   UnknownFieldComponent,
@@ -92,6 +94,7 @@ const customFields = [
   AutocompleteMultipleFieldComponent,
   IconFieldComponent,
   ButtonToggleFieldComponent,
+  ButtonFieldComponent,
   SlideToggleFieldComponent,
   ReadonlyFieldComponent,
   DateRangeFieldComponent,
@@ -148,6 +151,7 @@ const customFields = [
     MatMenuModule,
     MatSelectInfiniteScrollModule,
     NgxMatSelectSearchModule,
+    Lab900ButtonModule,
   ],
   exports: [
     Lab900Form,

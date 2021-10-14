@@ -51,6 +51,7 @@ export const myFormSchema: Form = {
 | [`EditType.AutocompleteMultiple`](forms/form-field-autocomplete) | ?                                                      |
 | [`EditType.SlideToggle`](forms/form-field-button-toggle)         | Radio buttons that are styled as buttons,              |
 | [`EditType.ButtonToggle`](forms/form-field-slide-toggle)         | Slide Toggle,                                          |
+| [`EditType.Button`](forms/form-field-button)                     | Button,                                                |
 | `EditType.Icon`                                                  | ?                                                      |
 
 ### Readonly mode
