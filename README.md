@@ -13,7 +13,7 @@ View the [showcase](https://lab900.github.io/angular-libraries/) for guides & ex
 
 ## Getting started
 
-- [Forms library](https://lab900.github.io/angular-libraries/forms/getting-started)
+- [Forms library](https://lab900.github.io/angular-library-forms/)
 
 ## Dev setup
 
