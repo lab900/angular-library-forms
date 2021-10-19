@@ -29,6 +29,7 @@ export class FormFieldInputsExampleComponent {
           autofocus: true,
           minLength: 5,
           maxLength: 15,
+          showLengthIndicator: false,
         },
         icon: { name: 'search', position: 'left' },
       },
@@ -37,6 +38,11 @@ export class FormFieldInputsExampleComponent {
         title: 'Text Input',
         editType: EditType.Input,
         icon: { name: 'search', position: 'right' },
+        options: {
+          required: (data) => {
+            return !data?.emailInput;
+          },
+        },
       },
       {
         attribute: 'emailInput',
@@ -104,6 +110,14 @@ export class FormFieldInputsExampleComponent {
           prefix: '$',
           suffix: '.00',
           align: 'right',
+        },
+      },
+      {
+        attribute: 'timeField',
+        title: 'Time',
+        editType: EditType.Input,
+        options: {
+          type: 'time',
         },
       },
     ],
