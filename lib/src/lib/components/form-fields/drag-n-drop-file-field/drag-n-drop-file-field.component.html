@@ -1,0 +1,54 @@
+<div>
+  <div class="upload-file__container">
+    <div class="upload-sds-file__uploader-container__instructions-container">
+      <mat-icon
+        class="
+          upload-sds-file__uploader-container__instructions-container__upload-icon
+        "
+        >upload_file</mat-icon
+      >
+      <span
+        class="
+          upload-sds-file__uploader-container__instructions-container__DD-text
+        "
+      >
+        {{ 'PRODUCT.APPROVAL_FLOW.DRAG_DROP_SDS_FILE' | translate }}
+      </span>
+      <div
+        class="
+          upload-sds-file__uploader-container__instructions-container__or-text-container
+        "
+      >
+        <hr />
+        <span>{{ 'PRODUCT.APPROVAL_FLOW.DRAG_DROP_OR' | translate }}</span>
+        <hr />
+      </div>
+      <button
+        (click)="fileField.click()"
+        color="primary"
+        class="upload-button"
+        mat-flat-button
+      >
+        {{ 'PRODUCT.APPROVAL_FLOW.DRAG_DROP_BROWSE_FILES_BUTTON' | translate }}
+      </button>
+    </div>
+    <input
+      #fileField
+      (change)="handleUploadFromButton($event.target)"
+      hidden
+      type="file"
+    />
+  </div>
+
+  <!-- <div class="upload-sds-file__file-list">
+    <div>
+      <span class="material-icons-outlined upload-sds-file__file-list__file-icon">
+        description
+      </span>
+      {{ fileToUpload.name }} - {{ formatBytes(fileToUpload.size) }}
+      <button mat-icon-button (click)="fileToUpload = null" class="upload-sds-file__file-list__delete-icon">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div> -->
+</div>

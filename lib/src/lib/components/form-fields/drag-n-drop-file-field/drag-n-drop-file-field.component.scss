@@ -1,0 +1,147 @@
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.upload-button {
+  text-overflow: ellipsis;
+}
+
+.upload-file {
+  padding: 30px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  &__container {
+    display: flex;
+    flex: 1;
+    min-height: 100px;
+    padding: 15px;
+    border: 2px dashed #dee1f0;
+    background-color: rgba(222, 225, 240, 0.2) !important;
+    border-radius: 10px;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.upload-sds-file {
+  &__info-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+
+    mat-icon {
+      color: #a1a8ca;
+      font-size: 40px;
+      width: fit-content;
+      height: fit-content;
+      margin-right: 15px;
+    }
+
+    &__text {
+      font-weight: bold;
+    }
+  }
+
+  &__uploader-container {
+    display: flex;
+    flex: 1;
+    min-height: 100px;
+    padding: 15px;
+    border: 2px dashed #dee1f0;
+    background-color: rgba(222, 225, 240, 0.2) !important;
+    border-radius: 10px;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+
+    &__instructions-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      &__upload-icon {
+        font-size: 40px;
+        width: fit-content;
+        height: fit-content;
+        margin-bottom: 20px;
+      }
+
+      &__DD-text {
+        font-weight: bold;
+        color: rgba(8, 40, 82, 0.7);
+        margin-bottom: 15px;
+      }
+
+      &__or-text-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        color: rgba(8, 40, 82, 0.4);
+
+        span {
+          margin-left: 10px;
+          margin-right: 10px;
+        }
+
+        hr {
+          height: 1px;
+          width: 65px;
+          border: 0;
+          background: rgba(8, 40, 82, 0.4);
+        }
+      }
+    }
+  }
+
+  &__file-list {
+    flex: 1;
+
+    > div {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+      margin-bottom: 50px;
+      background-color: rgba(222, 225, 240, 0.2);
+      padding: 5px;
+      width: fit-content;
+      border: 1px solid #dee4f0;
+      border-radius: 5px;
+
+      &__file-icon {
+        font-size: 30px;
+        width: fit-content;
+        height: fit-content;
+        margin-right: 15px;
+      }
+
+      &__delete-icon {
+        margin-bottom: 5px;
+        margin-left: 15px;
+      }
+    }
+  }
+
+  &__spinner-container {
+    flex: 1;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__add-sds-button {
+    padding-top: 30px;
+
+    button {
+      display: block;
+      width: 100%;
+    }
+  }
+}

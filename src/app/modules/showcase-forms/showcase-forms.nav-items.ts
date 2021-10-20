@@ -70,6 +70,10 @@ export const showcaseFormsNavItems: NavItemGroup[] = [
             route: 'form-field-file-upload',
           },
           {
+            label: 'File Drag N Drop',
+            route: 'form-field-drag-n-drop-file-upload',
+          },
+          {
             label: 'Multi language',
             route: 'form-field-multi-lang',
           },
