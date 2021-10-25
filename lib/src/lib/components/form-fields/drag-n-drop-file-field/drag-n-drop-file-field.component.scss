@@ -4,19 +4,19 @@
   flex-direction: column;
 }
 
-.upload-button {
-  text-overflow: ellipsis;
-}
-
 .upload-file {
-  padding: 30px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  &--compact {
+    display: flex;
+  }
 
   &__container {
+    &--compact {
+      width: 50%;
+      flex: 0 0 auto;
+    }
+
     display: flex;
-    flex: 1;
+    flex: 1 0 auto;
     min-height: 100px;
     padding: 15px;
     border: 2px dashed #dee1f0;
@@ -25,123 +25,110 @@
     box-sizing: border-box;
     align-items: center;
     justify-content: center;
+
+    transition: border-style 0.5s ease-in-out;
+
+    &:hover {
+      border: 2px solid #dee1f0;
+    }
   }
 }
 
-.upload-sds-file {
-  &__info-container {
+.file-list {
+  &--full {
+    margin: 10px -5px;
+  }
+
+  &--compact {
+    margin: 0px 0px;
+  }
+
+  max-height: 200px;
+  overflow: auto;
+  display: flex;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  flex: 1 1 auto;
+}
+
+.file {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #dee1f0;
+  height: 50px;
+  flex: 1 1 250px;
+  margin: 5px 5px;
+
+  background-color: rgba(222, 225, 240, 0.2) !important;
+  border-radius: 10px;
+  width: 100%;
+
+  &__icon {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
+    justify-content: center;
+  }
+
+  &__info {
+    display: grid;
+    width: calc(100% - 100px);
+  }
+}
+
+.instructions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+
+  &__upload-icon {
+    font-size: 40px;
+    width: fit-content;
+    height: fit-content;
     margin-bottom: 20px;
-
-    mat-icon {
-      color: #a1a8ca;
-      font-size: 40px;
-      width: fit-content;
-      height: fit-content;
-      margin-right: 15px;
-    }
-
-    &__text {
-      font-weight: bold;
-    }
   }
 
-  &__uploader-container {
+  &__DD-text {
+    font-weight: bold;
+    color: rgba(8, 40, 82, 0.7);
+    margin-bottom: 15px;
+  }
+
+  &__or-text-container {
     display: flex;
-    flex: 1;
-    min-height: 100px;
-    padding: 15px;
-    border: 2px dashed #dee1f0;
-    background-color: rgba(222, 225, 240, 0.2) !important;
-    border-radius: 10px;
-    box-sizing: border-box;
+    flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
+    width: 100%;
+    margin-bottom: 15px;
+    color: rgba(8, 40, 82, 0.4);
 
-    &__instructions-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+    span {
+      margin-left: 10px;
+      margin-right: 10px;
+      max-width: 50px;
+    }
 
-      &__upload-icon {
-        font-size: 40px;
-        width: fit-content;
-        height: fit-content;
-        margin-bottom: 20px;
-      }
-
-      &__DD-text {
-        font-weight: bold;
-        color: rgba(8, 40, 82, 0.7);
-        margin-bottom: 15px;
-      }
-
-      &__or-text-container {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-        color: rgba(8, 40, 82, 0.4);
-
-        span {
-          margin-left: 10px;
-          margin-right: 10px;
-        }
-
-        hr {
-          height: 1px;
-          width: 65px;
-          border: 0;
-          background: rgba(8, 40, 82, 0.4);
-        }
-      }
+    hr {
+      flex: 1 1 65px;
+      height: 1px;
+      border: 0;
+      background: rgba(8, 40, 82, 0.4);
     }
   }
 
-  &__file-list {
-    flex: 1;
-
-    > div {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      margin-top: 10px;
-      margin-bottom: 50px;
-      background-color: rgba(222, 225, 240, 0.2);
-      padding: 5px;
-      width: fit-content;
-      border: 1px solid #dee4f0;
-      border-radius: 5px;
-
-      &__file-icon {
-        font-size: 30px;
-        width: fit-content;
-        height: fit-content;
-        margin-right: 15px;
-      }
-
-      &__delete-icon {
-        margin-bottom: 5px;
-        margin-left: 15px;
-      }
-    }
+  &__upload-button {
+    max-width: 100%;
+    min-width: 100px;
   }
+}
 
-  &__spinner-container {
-    flex: 1;
-    align-items: center;
-    display: flex;
-    justify-content: center;
-  }
-
-  &__add-sds-button {
-    padding-top: 30px;
-
-    button {
-      display: block;
-      width: 100%;
-    }
-  }
+.text-ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }

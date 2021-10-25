@@ -1,54 +1,58 @@
-<div>
-  <div class="upload-file__container">
-    <div class="upload-sds-file__uploader-container__instructions-container">
-      <mat-icon
-        class="
-          upload-sds-file__uploader-container__instructions-container__upload-icon
-        "
-        >upload_file</mat-icon
-      >
-      <span
-        class="
-          upload-sds-file__uploader-container__instructions-container__DD-text
-        "
-      >
-        {{ 'PRODUCT.APPROVAL_FLOW.DRAG_DROP_SDS_FILE' | translate }}
+<div [ngClass]="{ 'upload-file--compact': options.compact }">
+  <div
+    lab900DropFile
+    class="upload-file__container"
+    [ngClass]="{
+      'upload-file__container--compact': options.compact && !!files?.length
+    }"
+    (fileDropped)="handleFileList($event)"
+    (click)="fileField.click()"
+  >
+    <div class="instructions">
+      <mat-icon class="instructions__upload-icon">upload_file</mat-icon>
+      <span class="instructions__DD-text">
+        {{ options.dropFilesText || 'Drop Files' | translate }}
       </span>
-      <div
-        class="
-          upload-sds-file__uploader-container__instructions-container__or-text-container
-        "
-      >
+      <div class="instructions__or-text-container">
         <hr />
-        <span>{{ 'PRODUCT.APPROVAL_FLOW.DRAG_DROP_OR' | translate }}</span>
+        <span class="text-ellipsis">{{ 'OR' | translate }}</span>
         <hr />
       </div>
       <button
-        (click)="fileField.click()"
+        (click)="fileField.click(); $event.stopPropagation()"
         color="primary"
-        class="upload-button"
+        class="instructions__upload-button text-ellipsis"
         mat-flat-button
       >
-        {{ 'PRODUCT.APPROVAL_FLOW.DRAG_DROP_BROWSE_FILES_BUTTON' | translate }}
+        {{ options.dropFilesButton || 'Upload Files' | translate }}
       </button>
     </div>
     <input
       #fileField
-      (change)="handleUploadFromButton($event.target)"
+      (change)="handleInput($event.target)"
       hidden
       type="file"
+      [multiple]="options.maxFiles > 1"
     />
   </div>
 
-  <!-- <div class="upload-sds-file__file-list">
-    <div>
-      <span class="material-icons-outlined upload-sds-file__file-list__file-icon">
-        description
-      </span>
-      {{ fileToUpload.name }} - {{ formatBytes(fileToUpload.size) }}
-      <button mat-icon-button (click)="fileToUpload = null" class="upload-sds-file__file-list__delete-icon">
+  <div
+    class="file-list"
+    [ngClass]="{
+      'file-list--compact': options.compact,
+      'file-list--full': !options.compact
+    }"
+    *ngIf="!!files?.length"
+  >
+    <div class="file" *ngFor="let file of files">
+      <span class="file__icon"><mat-icon>description</mat-icon></span>
+      <div class="file__info">
+        <div class="text-ellipsis">{{ file.name }}</div>
+        {{ formatBytes(file.size) }}
+      </div>
+      <button mat-icon-button class="file__icon" (click)="deleteFile(file)">
         <mat-icon>delete</mat-icon>
       </button>
     </div>
-  </div> -->
+  </div>
 </div>

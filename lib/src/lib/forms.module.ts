@@ -69,6 +69,7 @@ import { ImagePreviewModalComponent } from './components/image-preview-modal/ima
 import { LanguagePickerComponent } from './components/language-picker/language-picker.component';
 import { AuthImageDirective } from './directives/auth-image.directive';
 import { AutofocusDirective } from './directives/auto-focus.directive';
+import { FileDropDirective } from './directives/file-drop.directive';
 import { FormDialogDirective } from './directives/form-dialog.directive';
 import { FormFieldDirective } from './directives/form-field.directive';
 import {
@@ -117,6 +118,7 @@ const customFields = [
     ImagePreviewModalComponent,
     AuthImageDirective,
     AutofocusDirective,
+    FileDropDirective,
     MultiLangInputFieldComponent,
     LanguagePickerComponent,
     MultiLangFieldControlComponent,

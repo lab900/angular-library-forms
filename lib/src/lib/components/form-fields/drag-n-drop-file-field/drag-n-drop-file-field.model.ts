@@ -6,6 +6,9 @@ import {
 
 export interface FormFieldDragNDropFileOptions extends FormFieldBaseOptions {
   maxFiles: number;
+  compact?: boolean;
+  dropFilesText?: string;
+  dropFilesButton?: string;
 }
 
 export interface FormFieldDragNDropFilePreview<

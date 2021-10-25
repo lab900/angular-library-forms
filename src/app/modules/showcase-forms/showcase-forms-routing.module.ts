@@ -15,6 +15,7 @@ import { FormFieldButtonExampleComponent } from './examples/form-field-button-ex
 import { FormFieldButtonToggleExampleComponent } from './examples/form-field-button-toggle-example/form-field-button-toggle-example.component';
 import { FormFieldDateRangePickerExampleComponent } from './examples/form-field-date-range-picker-example/form-field-date-range-picker-example.component';
 import { FormFieldDateTimePickerExampleComponent } from './examples/form-field-date-time-picker-example/form-field-date-time-picker-example.component';
+import { FormFieldDragNDropFileExampleFullWidthComponent } from './examples/form-field-drag-n-drop-file-example/form-field-drag-n-drop-file-example-full-width.component';
 import { FormFieldDragNDropFileExampleComponent } from './examples/form-field-drag-n-drop-file-example/form-field-drag-n-drop-file-example.component';
 import { FormFieldFileUploadExampleComponent } from './examples/form-field-file-upload-example/form-field-file-upload-example.component';
 import { FormFieldInputsExampleComponent } from './examples/form-field-inputs-example/form-field-inputs-example.component';
@@ -141,6 +142,10 @@ const routes: Routes = [
       new ShowcaseExample(
         FormFieldDragNDropFileExampleComponent,
         'Drag And Drop'
+      ),
+      new ShowcaseExample(
+        FormFieldDragNDropFileExampleFullWidthComponent,
+        'Drag And Drop Full Width'
       ),
     ]
   ),
