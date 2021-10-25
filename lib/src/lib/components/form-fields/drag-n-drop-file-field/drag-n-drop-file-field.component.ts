@@ -60,8 +60,6 @@ export class DragNDropFileFieldComponent<
   }
 
   private setFieldControlValue(files: Lab900File[]): void {
-    console.log('Setting field to:');
-    console.table(files);
     this.fieldControl.setValue(files);
     this.fieldControl.markAsDirty();
     this.fieldControl.markAsTouched();
