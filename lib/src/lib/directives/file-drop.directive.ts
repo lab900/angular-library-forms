@@ -17,7 +17,7 @@ export class FileDropDirective {
   public fileDropped = new EventEmitter<FileList>();
 
   @HostBinding('style.box-shadow')
-  private shadow = FileDropDirective.SHADOW_OFF;
+  public shadow = FileDropDirective.SHADOW_OFF;
 
   // Dragover Event
   @HostListener('dragover', ['$event'])
