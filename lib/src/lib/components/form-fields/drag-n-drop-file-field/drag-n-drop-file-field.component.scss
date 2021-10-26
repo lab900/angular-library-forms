@@ -2,14 +2,20 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .upload-file {
+  width: 100%;
+  padding-bottom: 1.34375em;
+
   &--compact {
     display: flex;
   }
 
   &__container {
+    width: 100%;
+
     &--compact {
       width: 50%;
       flex: 0 0 auto;

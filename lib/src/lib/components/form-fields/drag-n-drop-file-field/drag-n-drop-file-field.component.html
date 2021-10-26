@@ -1,4 +1,7 @@
-<div [ngClass]="{ 'upload-file--compact': options.compact }">
+<div
+  class="upload-file"
+  [ngClass]="{ 'upload-file--compact': options.compact }"
+>
   <div
     lab900DropFile
     class="upload-file__container"
@@ -10,7 +13,7 @@
   >
     <div class="instructions">
       <mat-icon class="instructions__upload-icon">upload_file</mat-icon>
-      <span class="instructions__DD-text">
+      <span class="instructions__DD-text text-ellipsis">
         {{ options.dropFilesText || 'Drop Files' | translate }}
       </span>
       <div class="instructions__or-text-container">
