@@ -12,33 +12,34 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { FormComponent } from '../components/AbstractFormComponent';
+import { AutocompleteFieldComponent } from '../components/form-fields/autocomplete-field/autocomplete-field.component';
+import { AutocompleteMultipleFieldComponent } from '../components/form-fields/autocomplete-multiple-field/autocomplete-multiple-field.component';
+import { ButtonFieldComponent } from '../components/form-fields/button-field/button-field.component';
+import { ButtonToggleFieldComponent } from '../components/form-fields/button-toggle-field/button-toggle-field.component';
 import { CheckboxFieldComponent } from '../components/form-fields/checkbox-field/checkbox-field.component';
 import { DateFieldComponent } from '../components/form-fields/date-field/date-field.component';
-import { FileFieldComponent } from '../components/form-fields/file-field/file-field.component';
-import { InputFieldComponent } from '../components/form-fields/input-field/input-field.component';
-import { TextareaFieldComponent } from '../components/form-fields/textarea-field/textarea-field.component';
-import { SelectFieldComponent } from '../components/form-fields/select-field/select-field.component';
-import { UnknownFieldComponent } from '../components/form-fields/unknown-field/unknown-field.component';
-import { WysiwygFieldComponent } from '../components/form-fields/wysiwyg-field/wysiwyg-field.component';
-import { EditType } from '../models/editType';
-import { FormRowComponent } from '../components/form-row/form-row.component';
-import { RepeaterFieldComponent } from '../components/form-fields/repeater-field/repeater-field.component';
-import { RadioButtonsFieldComponent } from '../components/form-fields/radio-buttons-field/radio-buttons-field.component';
-import { RangeSliderFieldComponent } from '../components/form-fields/range-slider-field/range-slider-field.component';
-import { AutocompleteFieldComponent } from '../components/form-fields/autocomplete-field/autocomplete-field.component';
-import { IconFieldComponent } from '../components/form-fields/icon-field/icon-field.component';
-import { ButtonToggleFieldComponent } from '../components/form-fields/button-toggle-field/button-toggle-field.component';
-import { ButtonFieldComponent } from '../components/form-fields/button-field/button-field.component';
-import { SlideToggleFieldComponent } from '../components/form-fields/slide-toggle-field/slide-toggle-field.component';
-import { AutocompleteMultipleFieldComponent } from '../components/form-fields/autocomplete-multiple-field/autocomplete-multiple-field.component';
-import { ReadonlyFieldComponent } from '../components/form-fields/readonly-field/readonly-field.component';
 import { DateRangeFieldComponent } from '../components/form-fields/date-range-field/date-range-field.component';
 import { DateTimeFieldComponent } from '../components/form-fields/date-time-field/date-time-field.component';
+import { FileFieldComponent } from '../components/form-fields/file-field/file-field.component';
 import { FilePreviewFieldComponent } from '../components/form-fields/file-preview-field/file-preview-field.component';
+import { IconFieldComponent } from '../components/form-fields/icon-field/icon-field.component';
+import { InputFieldComponent } from '../components/form-fields/input-field/input-field.component';
 import { MultiLangInputFieldComponent } from '../components/form-fields/multi-lang-input/multi-lang-input-field.component';
-import { Lab900FormField } from '../models/lab900-form-field.type';
-import { FormComponent } from '../components/AbstractFormComponent';
+import { RadioButtonsFieldComponent } from '../components/form-fields/radio-buttons-field/radio-buttons-field.component';
+import { RangeSliderFieldComponent } from '../components/form-fields/range-slider-field/range-slider-field.component';
+import { ReadonlyFieldComponent } from '../components/form-fields/readonly-field/readonly-field.component';
+import { RepeaterFieldComponent } from '../components/form-fields/repeater-field/repeater-field.component';
+import { SelectFieldComponent } from '../components/form-fields/select-field/select-field.component';
+import { SlideToggleFieldComponent } from '../components/form-fields/slide-toggle-field/slide-toggle-field.component';
+import { TextareaFieldComponent } from '../components/form-fields/textarea-field/textarea-field.component';
+import { UnknownFieldComponent } from '../components/form-fields/unknown-field/unknown-field.component';
+import { WysiwygFieldComponent } from '../components/form-fields/wysiwyg-field/wysiwyg-field.component';
+import { FormRowComponent } from '../components/form-row/form-row.component';
+import { EditType } from '../models/editType';
 import { ValueLabel } from '../models/form-field-base';
+import { Lab900FormField } from '../models/lab900-form-field.type';
+import { DragNDropFileFieldComponent } from './../components/form-fields/drag-n-drop-file-field/drag-n-drop-file-field.component';
 
 const mapToComponent = (field: Lab900FormField): Type<FormComponent> => {
   switch (field.editType) {
@@ -84,6 +85,8 @@ const mapToComponent = (field: Lab900FormField): Type<FormComponent> => {
       return DateTimeFieldComponent;
     case EditType.MultiLangInput:
       return MultiLangInputFieldComponent;
+    case EditType.DragNDrop:
+      return DragNDropFileFieldComponent;
     default:
       return UnknownFieldComponent;
   }

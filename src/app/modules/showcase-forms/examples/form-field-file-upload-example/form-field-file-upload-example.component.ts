@@ -1,11 +1,11 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, ViewChild } from '@angular/core';
 import {
   EditType,
-  Lab900FormConfig,
-  Lab900Form,
   Lab900File,
+  Lab900Form,
+  Lab900FormConfig,
 } from '@lab900/forms';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'lab900-form-field-file-upload-example',

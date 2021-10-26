@@ -1,0 +1,134 @@
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.upload-file {
+  &--compact {
+    display: flex;
+  }
+
+  &__container {
+    &--compact {
+      width: 50%;
+      flex: 0 0 auto;
+    }
+
+    display: flex;
+    flex: 1 0 auto;
+    min-height: 100px;
+    padding: 15px;
+    border: 2px dashed #dee1f0;
+    background-color: rgba(222, 225, 240, 0.2) !important;
+    border-radius: 10px;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+
+    transition: border-style 0.5s ease-in-out;
+
+    &:hover {
+      border: 2px solid #dee1f0;
+    }
+  }
+}
+
+.file-list {
+  &--full {
+    margin: 10px -5px;
+  }
+
+  &--compact {
+    margin: 0px 0px;
+  }
+
+  max-height: 200px;
+  overflow: auto;
+  display: flex;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  flex: 1 1 auto;
+}
+
+.file {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #dee1f0;
+  height: 50px;
+  flex: 1 1 250px;
+  margin: 5px 5px;
+
+  background-color: rgba(222, 225, 240, 0.2) !important;
+  border-radius: 10px;
+  width: 100%;
+
+  &__icon {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__info {
+    display: grid;
+    width: calc(100% - 100px);
+  }
+}
+
+.instructions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+
+  &__upload-icon {
+    font-size: 40px;
+    width: fit-content;
+    height: fit-content;
+    margin-bottom: 20px;
+  }
+
+  &__DD-text {
+    font-weight: bold;
+    color: rgba(8, 40, 82, 0.7);
+    margin-bottom: 15px;
+  }
+
+  &__or-text-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 15px;
+    color: rgba(8, 40, 82, 0.4);
+
+    span {
+      margin-left: 10px;
+      margin-right: 10px;
+      max-width: 50px;
+    }
+
+    hr {
+      flex: 1 1 65px;
+      height: 1px;
+      border: 0;
+      background: rgba(8, 40, 82, 0.4);
+    }
+  }
+
+  &__upload-button {
+    max-width: 100%;
+    min-width: 100px;
+  }
+}
+
+.text-ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
