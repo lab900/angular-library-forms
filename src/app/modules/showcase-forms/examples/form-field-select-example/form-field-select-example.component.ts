@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { EditType, Lab900FormConfig } from '@lab900/forms';
+import { ValueLabel } from '@lab900/forms';
 
 @Component({
   selector: 'lab900-form-field-select-example',
@@ -16,6 +17,7 @@ export class FormFieldSelectExampleComponent {
             attribute: 'somePropName',
             editType: EditType.Select,
             options: {
+              displayOptionFn: (value: ValueLabel) => value.label,
               placeholder: 'select yes or no',
               selectOptions: [
                 {
@@ -38,6 +40,7 @@ export class FormFieldSelectExampleComponent {
             title: 'Select yes or no',
             editType: EditType.Select,
             options: {
+              displayOptionFn: (value: ValueLabel) => value.label,
               selectOptions: [
                 {
                   value: true,
@@ -62,6 +65,7 @@ export class FormFieldSelectExampleComponent {
             title: 'Select yes or no',
             editType: EditType.Select,
             options: {
+              displayOptionFn: (value: ValueLabel) => value.label,
               colspan: 6,
               selectOptions: [
                 {

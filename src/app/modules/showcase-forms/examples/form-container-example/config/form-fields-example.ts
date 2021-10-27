@@ -1,4 +1,5 @@
 import { Lab900FormConfig, EditType } from '@lab900/forms';
+import { ValueLabel } from '@lab900/forms';
 
 export const formFieldsExample: Lab900FormConfig = {
   fields: [
@@ -66,6 +67,7 @@ export const formFieldsExample: Lab900FormConfig = {
           attribute: 'languages',
           editType: EditType.Select,
           options: {
+            displayOptionFn: (value: ValueLabel) => value.label,
             infoTooltip: { text: 'dlfdsjflk klsdfjsd kjdfl sdjf ds' },
             colspan: 12,
             selectOptions: [

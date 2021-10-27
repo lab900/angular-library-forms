@@ -24,7 +24,7 @@
       selectable
       (removed)="remove(i)"
     >
-      <div [innerHTML]="options.displayInputFn(opt) | translate"></div>
+      <div [innerHTML]="options.displayOptionFn(opt) | translate"></div>
       <mat-icon *ngIf="!fieldIsReadonly" matChipRemove>cancel</mat-icon>
     </mat-chip>
     <input
@@ -40,16 +40,12 @@
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
     <mat-option
       *ngFor="let option of filteredOptions | async"
-      [value]="option?.value"
-      [disabled]="option?.disabled"
+      [value]="option"
+      [disabled]="
+        options?.disabledOptionFn ? options.disabledOptionFn(option) : false
+      "
     >
-      <div
-        *ngIf="options?.displayOptionFn"
-        [innerHTML]="options.displayOptionFn(option) | translate"
-      ></div>
-      <ng-container *ngIf="!options?.displayOptionFn">{{
-        option.label | translate
-      }}</ng-container>
+      <div [innerHTML]="options.displayOptionFn(option) | translate"></div>
     </mat-option>
   </mat-autocomplete>
 </mat-form-field>

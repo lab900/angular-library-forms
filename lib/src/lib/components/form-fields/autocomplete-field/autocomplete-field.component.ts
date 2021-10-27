@@ -16,8 +16,8 @@ import { FormFieldAutocomplete } from './autocomplete-field.model';
   selector: 'lab900-autocomplete-field',
   templateUrl: './autocomplete-field.component.html',
 })
-export class AutocompleteFieldComponent
-  extends FormComponent<FormFieldAutocomplete>
+export class AutocompleteFieldComponent<T>
+  extends FormComponent<FormFieldAutocomplete<T>>
   implements AfterViewInit
 {
   @HostBinding('class')
@@ -26,7 +26,7 @@ export class AutocompleteFieldComponent
   @ViewChild('input')
   public autoCompleteInput: ElementRef;
 
-  public filteredOptions: Observable<ValueLabel[]>;
+  public filteredOptions: Observable<T[]>;
 
   public inputChange: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
@@ -48,7 +48,7 @@ export class AutocompleteFieldComponent
       debounceTime(this.options.debounceTime ?? 300),
       switchMap((input: string) => {
         const res = this.options.autocompleteOptions(input, this.fieldControl);
-        return isObservable(res) ? res : of(res);
+        return isObservable<T[]>(res) ? res : of(res);
       })
     );
   }

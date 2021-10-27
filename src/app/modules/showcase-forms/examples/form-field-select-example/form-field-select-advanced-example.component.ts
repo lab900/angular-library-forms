@@ -1,20 +1,24 @@
 import { Component } from '@angular/core';
 import {
   EditType,
-  Lab900FormConfig,
   FormFieldSelectOptionsFilter,
-  ValueLabel,
+  Lab900FormConfig,
 } from '@lab900/forms';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-const tolkienBook: any = {
+interface Book {
+  key: string;
+  title: string;
+}
+
+const tolkienBook: Book = {
   key: '/works/OL27500W',
   title: 'The letters of J.R.R. Tolkien',
 };
 
-const compare = (a: any, b: any): boolean =>
+const compare = (a: Book, b: Book): boolean =>
   a?.key && b?.key && a.key === b.key;
 
 @Component({
@@ -22,7 +26,16 @@ const compare = (a: any, b: any): boolean =>
   template: '<lab900-form [schema]="formSchema" [data]="data"></lab900-form>',
 })
 export class FormFieldSelectAdvancedExampleComponent {
-  public data: any = { books2: tolkienBook };
+  public data: {
+    books2: Book;
+    books3: Book[];
+  } = {
+    books2: {
+      title: 'Song of Ice and Fire',
+      key: '/works/OL21242192W',
+    },
+    books3: [tolkienBook],
+  };
   public formSchema: Lab900FormConfig = {
     fields: [
       {
@@ -35,7 +48,7 @@ export class FormFieldSelectAdvancedExampleComponent {
             editType: EditType.Select,
             options: {
               compareWith: compare,
-              displayOptionFn: (o) => o?.value?.title,
+              displayOptionFn: (o: Book) => o?.title,
               selectOptions: this.getSelectOptions.bind(this),
               colspan: 4,
               infiniteScroll: {
@@ -49,7 +62,7 @@ export class FormFieldSelectAdvancedExampleComponent {
             editType: EditType.Select,
             options: {
               compareWith: compare,
-              displayOptionFn: (o) => o?.value?.title,
+              displayOptionFn: (o: Book) => o?.title,
               selectOptions: this.getSelectOptions.bind(this),
               colspan: 4,
               infiniteScroll: {
@@ -66,7 +79,7 @@ export class FormFieldSelectAdvancedExampleComponent {
             editType: EditType.Select,
             options: {
               compareWith: compare,
-              displayOptionFn: (o) => o?.value?.title,
+              displayOptionFn: (o: Book) => o?.title,
               customTriggerFn: (value: any[]) => {
                 return value?.length + ' selected';
               },
@@ -92,12 +105,14 @@ export class FormFieldSelectAdvancedExampleComponent {
             title: 'Select a author',
             editType: EditType.Select,
             options: {
+              displayOptionFn: (value: Book) => value.title,
+              disabledOptionFn: (value: Book) => value.key === 'martin',
               selectOptions: [
-                { value: 'twain', label: 'Twain' },
-                { value: 'tolkien', label: 'Tolkien' },
+                { key: 'twain', title: 'Twain' },
+                { key: 'tolkien', title: 'Tolkien' },
                 {
-                  value: 'martin',
-                  label: 'George R. R. Martin',
+                  key: 'martin',
+                  title: 'George R. R. Martin',
                   disabled: true,
                 },
               ],
@@ -109,6 +124,7 @@ export class FormFieldSelectAdvancedExampleComponent {
             title: 'Search a book',
             editType: EditType.Select,
             options: {
+              displayOptionFn: (value: Book) => value.title,
               selectOptions: this.getSelectOptions.bind(this),
               compareWith: compare,
               colspan: 6,
@@ -139,7 +155,7 @@ export class FormFieldSelectAdvancedExampleComponent {
   public getSelectOptions(
     filter?: FormFieldSelectOptionsFilter,
     author?: string
-  ): Observable<ValueLabel[]> {
+  ): Observable<{ title: string; key: string }[]> {
     return this.http
       .get<{ docs: any[] }>('https://openlibrary.org/search.json', {
         params: {
@@ -149,13 +165,6 @@ export class FormFieldSelectAdvancedExampleComponent {
           offset: String((filter?.page || 0) * 10),
         },
       })
-      .pipe(
-        map((res) =>
-          res?.docs?.map((d) => ({
-            label: d.title,
-            value: d,
-          }))
-        )
-      );
+      .pipe(map((res) => res?.docs));
   }
 }

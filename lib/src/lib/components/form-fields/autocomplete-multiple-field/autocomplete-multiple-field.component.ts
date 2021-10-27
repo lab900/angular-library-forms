@@ -21,8 +21,8 @@ import { FormFieldAutocompleteMulti } from './autocomplete-multiple-field.model'
   selector: 'lab900-autocomplete-multiple-field',
   templateUrl: './autocomplete-multiple-field.component.html',
 })
-export class AutocompleteMultipleFieldComponent
-  extends FormComponent<FormFieldAutocompleteMulti>
+export class AutocompleteMultipleFieldComponent<T>
+  extends FormComponent<FormFieldAutocompleteMulti<T, string>>
   implements AfterViewInit
 {
   @HostBinding('class')
@@ -33,7 +33,7 @@ export class AutocompleteMultipleFieldComponent
   @ViewChild('auto')
   private matAutocomplete: MatAutocomplete;
 
-  public filteredOptions: Observable<ValueLabel[]>;
+  public filteredOptions: Observable<T[]>;
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 
   public inputChange: BehaviorSubject<string> = new BehaviorSubject<string>('');
@@ -60,7 +60,7 @@ export class AutocompleteMultipleFieldComponent
       debounceTime(this.options.debounceTime ?? 300),
       switchMap((input: string) => {
         const res = this.options.autocompleteOptions(input, this.fieldControl);
-        return isObservable(res) ? res : of(res);
+        return isObservable<T>(res) ? res : of(res);
       })
     );
   }

@@ -30,20 +30,16 @@
   <mat-icon matSuffix *ngIf="!fieldIsReadonly">search</mat-icon>
   <mat-autocomplete
     #auto="matAutocomplete"
-    [displayWith]="options.displayInputFn"
+    [displayWith]="options.displayOptionFn"
   >
     <mat-option
       *ngFor="let option of filteredOptions | async"
-      [value]="option?.value"
-      [disabled]="option?.disabled"
+      [value]="option"
+      [disabled]="
+        options?.disabledOptionFn ? options.disabledOptionFn(option) : false
+      "
     >
-      <div
-        *ngIf="options?.displayOptionFn"
-        [innerHTML]="options.displayOptionFn(option) | translate"
-      ></div>
-      <ng-container *ngIf="!options?.displayOptionFn">{{
-        option.label | translate
-      }}</ng-container>
+      <div [innerHTML]="options.displayOptionFn(option) | translate"></div>
     </mat-option>
   </mat-autocomplete>
 </mat-form-field>

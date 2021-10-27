@@ -1,4 +1,5 @@
 import { EditType, Lab900FormConfig } from '@lab900/forms';
+import { ValueLabel } from '@lab900/forms';
 
 export const formConditionalsExample: Lab900FormConfig = {
   fields: [
@@ -8,6 +9,7 @@ export const formConditionalsExample: Lab900FormConfig = {
       title: 'Role',
       options: {
         colspan: 6,
+        displayOptionFn: (value: ValueLabel) => value.label,
         selectOptions: [
           { label: '', value: null },
           { label: 'user', value: 'user' },
@@ -25,6 +27,7 @@ export const formConditionalsExample: Lab900FormConfig = {
           title: 'Country',
           options: {
             colspan: 6,
+            displayOptionFn: (value: ValueLabel) => value.label,
           },
           conditions: [
             {
@@ -47,6 +50,7 @@ export const formConditionalsExample: Lab900FormConfig = {
           title: 'Language',
           options: {
             colspan: 6,
+            displayOptionFn: (value: ValueLabel) => value.label,
           },
           conditions: [
             {
@@ -79,6 +83,7 @@ export const formConditionalsExample: Lab900FormConfig = {
           title: 'Favourite food',
           options: {
             colspan: 6,
+            displayOptionFn: (value: ValueLabel) => value.label,
           },
           conditions: [
             {
