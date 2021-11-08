@@ -21,7 +21,6 @@ export class FormFieldAutocompleteMultipleExampleComponent {
         editType: EditType.AutocompleteMultiple,
         options: {
           autocompleteOptions: (value: string) => of(this.filter(value)),
-          displayInputFn: (user: { name: string }) => user?.name ?? '',
           displayOptionFn: (user: ValueLabel) => user?.label,
         },
       },

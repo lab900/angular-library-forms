@@ -11,19 +11,17 @@ export interface FormFieldSelectOptionsFilter {
   searchQuery?: string;
 }
 
-export type FormFieldSelectOptionsFn = (
+export type FormFieldSelectOptionsFn<T> = (
   filter?: FormFieldSelectOptionsFilter
-) => ValueLabel[] | Observable<ValueLabel[]>;
+) => T[] | Observable<T[]>;
 
-export interface FormFieldSelectOptions extends FormFieldBaseOptions {
+export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
   multiple?: boolean;
-  selectOptions?:
-    | FormFieldSelectOptionsFn
-    | ValueLabel[]
-    | Observable<ValueLabel[]>;
-  compareWith?: (o1: any, o2: any) => boolean;
-  displayOptionFn?: (option: ValueLabel) => string;
-  customTriggerFn?: (value: any) => string;
+  selectOptions?: FormFieldSelectOptionsFn<T> | T[] | Observable<T[]>;
+  compareWith?: (o1: T, o2: T) => boolean;
+  displayOptionFn: (option: T) => string;
+  disabledOptionFn?: (option: T) => boolean;
+  customTriggerFn?: (value: T) => string;
   search?: {
     enabled: boolean;
     placeholder?: string;
@@ -53,7 +51,7 @@ export interface FormFieldSelectOptions extends FormFieldBaseOptions {
   };
 }
 
-export interface FormFieldSelect<T extends string | number = string>
-  extends FormFieldBase<T, FormFieldSelectOptions> {
+export interface FormFieldSelect<T, R extends string | number = string>
+  extends FormFieldBase<R, FormFieldSelectOptions<T>> {
   editType: EditType.Select;
 }

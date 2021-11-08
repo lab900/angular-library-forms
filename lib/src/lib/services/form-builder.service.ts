@@ -48,7 +48,7 @@ export class Lab900FormBuilderService {
     if (field.options?.pattern) {
       validators.push(Validators.pattern(field.options.pattern));
     }
-    if ((field as FormFieldAutocomplete).options?.requireMatch) {
+    if ((field as FormFieldAutocomplete<any>).options?.requireMatch) {
       validators.push(requireMatchValidator());
     }
     return validators;

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { EditType, Lab900FormConfig } from '@lab900/forms';
+import { ValueLabel } from '@lab900/forms';
 
 @Component({
   selector: 'lab900-form-conditional-with-external-form-example',
@@ -22,6 +23,7 @@ export class FormCondtionalWithExternalFormExampleComponent {
         editType: EditType.Select,
         title: 'Type',
         options: {
+          displayOptionFn: (value: ValueLabel) => value.label,
           colspan: 6,
           selectOptions: [
             { value: 'a', label: 'a value' },

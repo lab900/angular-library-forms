@@ -15,16 +15,15 @@ import {
   FormFieldSelectOptionsFilter,
   FormFieldSelectOptionsFn,
 } from './field-select.model';
-import { ValueLabel } from '../../../models/form-field-base';
-import { coerceArray } from '@lab900/ui';
 import { IFieldConditions } from '../../../models/IFieldConditions';
+import { coerceArray } from '@lab900/ui';
 
 @Component({
   selector: 'lab900-select-field',
   templateUrl: './select-field.component.html',
 })
-export class SelectFieldComponent
-  extends FormComponent<FormFieldSelect>
+export class SelectFieldComponent<T>
+  extends FormComponent<FormFieldSelect<T>>
   implements OnInit
 {
   /*
@@ -37,14 +36,16 @@ export class SelectFieldComponent
     condition: IFieldConditions;
     value: string;
   }>();
-  private optionsFn$ = new BehaviorSubject<FormFieldSelectOptionsFn>(() => []);
+  private optionsFn$ = new BehaviorSubject<FormFieldSelectOptionsFn<T>>(
+    () => []
+  );
   public optionsFilter$ =
     new BehaviorSubject<FormFieldSelectOptionsFilter | null>(null);
 
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
-  public selectOptions: ValueLabel[];
+  public selectOptions: T[];
 
   public loading = true;
 
@@ -52,8 +53,8 @@ export class SelectFieldComponent
     if (this.selectOptions && this.fieldControl.value) {
       return this.selectOptions.find((opt) =>
         this.options?.compareWith
-          ? this.options?.compareWith(opt.value, this.fieldControl.value)
-          : this.defaultCompare(opt.value, this.fieldControl.value)
+          ? this.options?.compareWith(opt, this.fieldControl.value)
+          : this.defaultCompare(opt, this.fieldControl.value)
       );
     }
     return null;
@@ -63,7 +64,7 @@ export class SelectFieldComponent
     super(translateService);
   }
 
-  public defaultCompare = (o1: any, o2: any): boolean => o1 === o2;
+  public defaultCompare = (o1: T, o2: T): boolean => o1 === o2;
 
   public ngOnInit(): void {
     if (this.options?.selectOptions) {
@@ -111,7 +112,7 @@ export class SelectFieldComponent
            */
           this.selectOptions = this.selectOptions.concat(
             options.filter((o) =>
-              this.selectOptions.some((so) => compare(o, so))
+              this.selectOptions.some((so) => !compare(o, so))
             )
           );
         } else {
@@ -122,7 +123,7 @@ export class SelectFieldComponent
           const value = coerceArray(this.conditionalItemToSelectWhenExists);
           const compare = this.options?.compareWith || this.defaultCompare;
           const inOptions = this.selectOptions.some((o) =>
-            value.some((v) => compare(o.value, v))
+            value.some((v) => compare(o, v))
           );
           if (inOptions) {
             this.fieldControl.setValue(this.conditionalItemToSelectWhenExists);
@@ -138,17 +139,10 @@ export class SelectFieldComponent
           const value = coerceArray(this.fieldControl.value);
           const compare = this.options?.compareWith || this.defaultCompare;
           const inOptions = this.selectOptions.some((o) =>
-            value.some((v) => compare(o.value, v))
+            value.some((v) => compare(o, v))
           );
           if (!inOptions) {
-            this.selectOptions = value
-              .map((v) => ({
-                value: v,
-                label: this.options?.displayOptionFn
-                  ? this.options.displayOptionFn(v)
-                  : v,
-              }))
-              .concat(this.selectOptions);
+            this.selectOptions = value.concat(this.selectOptions);
           }
         }
 
@@ -199,7 +193,7 @@ export class SelectFieldComponent
     }
   }
 
-  private updateOptionsFn(optionsFn: FormFieldSelectOptionsFn): void {
+  private updateOptionsFn(optionsFn: FormFieldSelectOptionsFn<T>): void {
     this.optionsFn$.next(optionsFn);
     this.optionsFilter$.next({ page: 0, searchQuery: '' });
   }

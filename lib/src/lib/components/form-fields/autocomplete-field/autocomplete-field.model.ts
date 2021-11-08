@@ -7,18 +7,18 @@ import { Observable } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
 import { EditType } from '../../../models/editType';
 
-export interface FormFieldAutocompleteOptions extends FormFieldBaseOptions {
-  displayInputFn: (option: any) => string; // the value of the ValueLabel will be passed here
-  displayOptionFn: (option: ValueLabel) => string;
+export interface FormFieldAutocompleteOptions<T> extends FormFieldBaseOptions {
+  displayOptionFn: (option: T) => string;
+  disabledOptionFn?: (option: T) => boolean;
   autocompleteOptions?: (
     searchTerm: string,
     currentControl: AbstractControl
-  ) => ValueLabel[] | Observable<ValueLabel[]>;
+  ) => T[] | Observable<T[]>;
   debounceTime?: number;
   requireMatch?: boolean;
 }
 
-export interface FormFieldAutocomplete<T extends string | number = string>
-  extends FormFieldBase<T, FormFieldAutocompleteOptions> {
+export interface FormFieldAutocomplete<T, R extends string | number = string>
+  extends FormFieldBase<R, FormFieldAutocompleteOptions<T>> {
   editType: EditType.Autocomplete;
 }

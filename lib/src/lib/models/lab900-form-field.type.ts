@@ -21,11 +21,11 @@ import { WysiwgFieldModel } from '../components/form-fields/wysiwyg-field/wysiwg
 import { FormRow } from '../components/form-row/form-row.model';
 import { FormFieldDragNDropFilePreview } from './../components/form-fields/drag-n-drop-file-field/drag-n-drop-file-field.model';
 
-export type Lab900FormField<T extends string | number = string> =
+export type Lab900FormField<R = any, T extends string | number = string> =
   | FormFieldInput<T>
   | FormFieldMultiLang<T>
   | WysiwgFieldModel<T>
-  | FormFieldSelect<T>
+  | FormFieldSelect<R, T>
   | CheckboxFieldModel<T>
   | FormFieldRadioButtons<T>
   | FormFieldFilePreview<T>
@@ -40,7 +40,7 @@ export type Lab900FormField<T extends string | number = string> =
   | FormFieldDatePicker<T>
   | FormFieldDateTimePicker<T>
   | FormFieldDateRange<T>
-  | FormFieldAutocomplete<T>
-  | FormFieldAutocompleteMulti<T>
+  | FormFieldAutocomplete<R, T>
+  | FormFieldAutocompleteMulti<R, T>
   | FormFieldRepeater<T>
   | FormFieldTextarea<T>;

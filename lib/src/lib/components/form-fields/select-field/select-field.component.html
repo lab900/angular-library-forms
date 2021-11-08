@@ -51,16 +51,12 @@
     </mat-option>
     <mat-option
       *ngFor="let item of selectOptions"
-      [value]="item.value"
-      [disabled]="item.disabled"
+      [value]="item"
+      [disabled]="
+        options?.disabledOptionFn ? options.disabledOptionFn(item) : false
+      "
     >
-      <div
-        *ngIf="options?.displayOptionFn"
-        [innerHTML]="options.displayOptionFn(item) | translate"
-      ></div>
-      <ng-container *ngIf="!options?.displayOptionFn">{{
-        item.label | translate
-      }}</ng-container>
+      <div [innerHTML]="options?.displayOptionFn(item) | translate"></div>
     </mat-option>
   </mat-select>
   <mat-hint
