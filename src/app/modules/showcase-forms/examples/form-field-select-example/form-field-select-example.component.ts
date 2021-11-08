@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { EditType, Lab900FormConfig } from '@lab900/forms';
-import { ValueLabel } from '@lab900/forms';
+import { EditType, Lab900FormConfig, ValueLabel } from '@lab900/forms';
 
 @Component({
   selector: 'lab900-form-field-select-example',
