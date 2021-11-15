@@ -96,7 +96,16 @@ export class SelectFieldComponent<T>
             switchMap((getOptions) => {
               const values = getOptions(optionsFilter);
               return (isObservable(values) ? values : of(values)).pipe(
-                catchError(() => of([]))
+                catchError(() => of([])),
+                tap((options) => {
+                  if (
+                    options.length === 1 &&
+                    !this.fieldControl.value &&
+                    this.schema.options?.autoselectOnlyOption
+                  ) {
+                    this.fieldControl.setValue(options[0]);
+                  }
+                })
               );
             })
           )
