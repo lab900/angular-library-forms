@@ -88,7 +88,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
       this.addSubscription(this.group.valueChanges, (value) => {
         this.setFieldProperties();
         if (this.schema?.options?.onChangeFn) {
-          this.schema?.options?.onChangeFn(value);
+          this.schema?.options?.onChangeFn(value, this.fieldControl);
         }
       });
       if (this.schema?.conditions?.length) {

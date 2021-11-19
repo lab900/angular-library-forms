@@ -1,4 +1,4 @@
-import { ValidatorFn } from '@angular/forms';
+import { AbstractControl, ValidatorFn } from '@angular/forms';
 import { IFieldConditions } from './IFieldConditions';
 import { Lab900FormField } from './lab900-form-field.type';
 
@@ -47,6 +47,6 @@ export interface FormFieldBaseOptions {
   readonlyLabel?: string;
   readonlyDisplay?: (data?: any) => any;
   visibleFn?: (item: any) => boolean;
-  onChangeFn?: (value: any) => void;
+  onChangeFn?: (value: any, currentControl?: AbstractControl) => void;
   infoTooltip?: { text: string; icon?: string };
 }
