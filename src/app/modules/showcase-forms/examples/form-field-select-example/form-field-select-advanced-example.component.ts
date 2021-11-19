@@ -102,7 +102,7 @@ export class FormFieldSelectAdvancedExampleComponent {
         nestedFields: [
           {
             attribute: 'author',
-            title: 'Select a author',
+            title: 'Select an author',
             editType: EditType.Select,
             options: {
               displayOptionFn: (value: Book) => value.title,
