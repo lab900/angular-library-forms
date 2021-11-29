@@ -11,7 +11,31 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
+  public value: any;
+
   public constructor(translateService: TranslateService) {
     super(translateService);
+    setTimeout(() => {
+      if (this.group?.controls) {
+        this.setValue(this.group.controls[this.fieldAttribute].value);
+        this.addSubscription(
+          this.group.controls[this.fieldAttribute].valueChanges,
+          (value: any) => setTimeout(() => this.setValue(value))
+        );
+      }
+    });
+  }
+
+  private setValue(value: any): void {
+    this.value = this.options?.readonlyDisplay
+      ? this.options?.readonlyDisplay(this.group.value)
+      : value;
+  }
+
+  public get label(): string {
+    const option = this.options.buttonOptions.find(
+      (o) => o.value === this.value
+    );
+    return option?.label ?? `${this.value}`;
   }
 }

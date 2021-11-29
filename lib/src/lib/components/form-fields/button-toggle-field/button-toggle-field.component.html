@@ -1,6 +1,6 @@
 <div
   [formGroup]="group"
-  *ngIf="!fieldIsHidden"
+  *ngIf="!fieldIsHidden && !fieldIsReadonly"
   class="lab900-button-toggle-field button-toggle-field mat-form-field-wrapper"
   id="lab900-button-toggle-field-{{ fieldAttribute }}"
 >
@@ -35,4 +35,13 @@
     *ngIf="touched && !valid && !fieldIsReadonly"
     >{{ getErrorMessage() | async }}</mat-error
   >
+</div>
+
+<div class="lab900-readonly-field" *ngIf="fieldIsReadonly && !fieldIsHidden">
+  <span
+    *ngIf="options?.readonlyLabel || schema.title"
+    class="lab900-readonly-field__label"
+    >{{ options?.readonlyLabel || schema.title | translate }}</span
+  >
+  <div [innerHTML]="label || '-' | translate"></div>
 </div>
