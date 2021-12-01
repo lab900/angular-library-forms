@@ -43,7 +43,7 @@ const routes: Routes = [
   {
     path: 'getting-started',
     component: MarkdownPageComponent,
-    data: { filePath: 'guides/forms/getting-started.md' },
+    data: { filePath: 'guides/getting-started.md' },
   },
   new ShowcaseRoute(
     'form-container',
@@ -56,7 +56,7 @@ const routes: Routes = [
         'form-container-example'
       ),
     ],
-    'guides/forms/creating-forms.md'
+    'guides/creating-forms.md'
   ),
   new ShowcaseRoute(
     'conditional-forms',
@@ -75,7 +75,7 @@ const routes: Routes = [
         'Conditionals across multiple forms'
       ),
     ],
-    'guides/forms/TODO.md'
+    'guides/TODO.md'
   ),
   new ShowcaseRoute('form-field-autocomplete', 'Form Fields: Autocomplete', [
     new ShowcaseExample(FormFieldAutocompleteExampleComponent, 'Autocomplete'),
