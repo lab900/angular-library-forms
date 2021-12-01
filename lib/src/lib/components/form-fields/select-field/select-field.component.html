@@ -75,7 +75,11 @@
     >{{ options?.readonlyLabel || schema.title | translate }}</span
   >
   <div *ngIf="!loading || !fieldControl.value">
-    {{ selectedOption?.label || '-' | translate }}
+    {{
+      selectedOption
+        ? (options?.displayOptionFn(selectedOption) | translate)
+        : '-'
+    }}
   </div>
   <div *ngIf="loading && fieldControl.value">
     {{ 'form.field.loading' | translate }}
