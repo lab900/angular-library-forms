@@ -49,7 +49,7 @@ export class SelectFieldComponent<T>
 
   public loading = true;
 
-  public get selectedOption(): any {
+  public get selectedOption(): T {
     if (this.selectOptions && this.fieldControl.value) {
       return this.selectOptions.find((opt) =>
         this.options?.compareWith
