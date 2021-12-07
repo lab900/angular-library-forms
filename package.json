@@ -47,7 +47,7 @@
     "@angular/platform-browser-dynamic": "~12.2.14",
     "@angular/router": "~12.2.14",
     "@kolkov/angular-editor": "^1.1.4",
-    "@lab900/ui": "^3.0.4-alpha.16",
+    "@lab900/ui": "^4.0.0",
     "@ngx-translate/core": "^13.0.0",
     "@types/nouislider": "^9.0.7",
     "lodash": "^4.17.20",
@@ -58,7 +58,7 @@
     "ngx-mat-select-search": "^3.3.0",
     "nouislider": "^14.7.0",
     "rxjs": "~6.6.7",
-    "tslib": "^2.0.0",
+    "tslib": "^2.3.1",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
