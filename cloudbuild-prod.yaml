@@ -1,5 +1,5 @@
 steps:
-- name: node:14.16.1-slim
+- name: node:16.13.1-slim
   entrypoint: sh
   dir: /workspace
   args:

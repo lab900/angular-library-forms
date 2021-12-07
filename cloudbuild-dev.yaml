@@ -5,7 +5,7 @@ steps:
     - -c
     - expr $$FORMS_VERSION_ALPHA + 1 > /workspace/forms_version_alpha.txt
   secretEnv: ['FORMS_VERSION_ALPHA']
-- name: node:14.16.1-slim
+- name: node:16.13.1-slim
   entrypoint: sh
   dir: /workspace
   args:
