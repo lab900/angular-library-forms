@@ -22,6 +22,7 @@ export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
   displayOptionFn: (option: T) => string;
   disabledOptionFn?: (option: T) => boolean;
   customTriggerFn?: (value: T) => string;
+  autoselectOnlyOption?: boolean;
   search?: {
     enabled: boolean;
     placeholder?: string;

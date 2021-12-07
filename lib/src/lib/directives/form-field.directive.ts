@@ -151,9 +151,12 @@ export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
     this.container.clear();
     const c =
       this.readonly &&
-      ![EditType.Row, EditType.Select, EditType.FilePreview].includes(
-        this.schema.editType
-      )
+      ![
+        EditType.Row,
+        EditType.Select,
+        EditType.FilePreview,
+        EditType.ButtonToggle,
+      ].includes(this.schema.editType)
         ? ReadonlyFieldComponent
         : mapToComponent(this.schema);
     const component = this.resolver.resolveComponentFactory<FormComponent>(c);

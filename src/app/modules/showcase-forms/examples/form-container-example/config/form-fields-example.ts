@@ -60,6 +60,24 @@ export const formFieldsExample: Lab900FormConfig = {
       ],
     },
     {
+      attribute: 'buttonGroupAttribute',
+      title: 'Select yes or no',
+      editType: EditType.ButtonToggle,
+      options: {
+        required: true,
+        buttonOptions: [
+          {
+            value: true,
+            label: 'yes',
+          },
+          {
+            value: false,
+            label: 'no',
+          },
+        ],
+      },
+    },
+    {
       editType: EditType.Row,
       nestedFields: [
         {

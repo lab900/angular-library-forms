@@ -53,6 +53,21 @@ export class FormFieldSelectExampleComponent {
               colspan: 6,
             },
           },
+          {
+            attribute: 'thirdPropName',
+            title: 'Only item is auto-selected',
+            editType: EditType.Select,
+            options: {
+              displayOptionFn: (value: ValueLabel) => value.label,
+              selectOptions: [
+                {
+                  value: 'only',
+                  label: 'only',
+                },
+              ],
+              autoselectOnlyOption: true,
+            },
+          },
         ],
       },
       {

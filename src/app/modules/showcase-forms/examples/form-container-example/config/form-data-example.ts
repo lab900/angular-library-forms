@@ -6,4 +6,5 @@ export const formDataExample = {
   },
   firstname: 'Example',
   languages: 'DUT',
+  buttonGroupAttribute: true,
 };

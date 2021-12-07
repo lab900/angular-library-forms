@@ -4,7 +4,7 @@ import { showcaseFormsNavItems } from './modules/showcase-forms/showcase-forms.n
 import { TranslateService } from '@ngx-translate/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { repository } from '../../package.json';
+import packageInfo from '../../package.json';
 import { MatDrawer, MatDrawerMode } from '@angular/material/sidenav';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { NavigationEnd, Router } from '@angular/router';
@@ -23,7 +23,7 @@ export class AppComponent
 {
   private unsub = new Subject<void>();
   public readonly languages = ['en', 'nl'];
-  public readonly gitUrl = repository;
+  public readonly gitUrl = packageInfo.repository;
   public readonly navItemsGroups: NavItemGroup[] = [...showcaseFormsNavItems];
   public language = 'en';
   public sideNavMode: MatDrawerMode = 'side';
