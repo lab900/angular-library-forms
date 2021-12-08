@@ -87,6 +87,7 @@ const customFields = [
   InputFieldComponent,
   SelectFieldComponent,
   FileFieldComponent,
+  FilePreviewFieldComponent,
   DragNDropFileFieldComponent,
   CheckboxFieldComponent,
   DateFieldComponent,
@@ -117,7 +118,6 @@ const customFields = [
     MatRangeSliderFieldComponent,
     ...customFields,
     IconComponent,
-    FilePreviewFieldComponent,
     ImagePreviewModalComponent,
     AuthImageDirective,
     AutofocusDirective,
@@ -194,7 +194,6 @@ export class Lab900FormsModule {
           provide: LAB900_FORM_MODULE_SETTINGS,
           useValue: formSetting,
         },
-        FormFieldMappingService,
         {
           provide: LAB900_FORM_FIELD_TYPES,
           useValue: customFields.reduce((obj, item: Type<FormComponent>) => {
