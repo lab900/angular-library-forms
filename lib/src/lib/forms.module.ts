@@ -5,7 +5,7 @@ import {
 } from '@angular-material-components/datetime-picker';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule, Type } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -76,8 +76,11 @@ import {
   defaultFormModuleSettings,
   Lab900FormModuleSettings,
   LAB900_FORM_MODULE_SETTINGS,
+  LAB900_FORM_FIELD_TYPES,
 } from './models/Lab900FormModuleSettings';
 import { Lab900FormBuilderService } from './services/form-builder.service';
+import { FormFieldMappingService } from './services/form-field-mapping.service';
+import { FormComponent } from './components/AbstractFormComponent';
 
 const customFields = [
   UnknownFieldComponent,
@@ -190,6 +193,16 @@ export class Lab900FormsModule {
         {
           provide: LAB900_FORM_MODULE_SETTINGS,
           useValue: formSetting,
+        },
+        FormFieldMappingService,
+        {
+          provide: LAB900_FORM_FIELD_TYPES,
+          useValue: customFields.reduce((obj, item: Type<FormComponent>) => {
+            return {
+              ...obj,
+              [item.name]: item,
+            };
+          }, {}),
         },
       ],
     };
