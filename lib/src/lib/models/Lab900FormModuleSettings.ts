@@ -5,6 +5,9 @@ import { IConfig } from 'ngx-mask';
 export const LAB900_FORM_MODULE_SETTINGS =
   new InjectionToken<Lab900FormModuleSettings>('lab900FormModuleSetting');
 
+export const LAB900_FORM_FIELD_TYPES =
+  new InjectionToken<Lab900FormModuleSettings>('lab900FormFieldTypes');
+
 export interface Lab900FormFieldOptions extends MatFormFieldDefaultOptions {
   showLengthIndicator?: boolean;
 }

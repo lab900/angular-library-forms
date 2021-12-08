@@ -30,7 +30,7 @@
   <mat-icon matSuffix *ngIf="!fieldIsReadonly">search</mat-icon>
   <mat-autocomplete
     #auto="matAutocomplete"
-    [displayWith]="options.displayOptionFn"
+    [displayWith]="options.displayInputFn || options.displayOptionFn"
   >
     <mat-option
       *ngFor="let option of filteredOptions | async"

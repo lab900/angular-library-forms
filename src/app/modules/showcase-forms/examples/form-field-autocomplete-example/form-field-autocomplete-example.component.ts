@@ -33,6 +33,7 @@ export class FormFieldAutocompleteExampleComponent {
           required: true,
           autocompleteOptions: (value: string) => of(this.filter(value)),
           debounceTime: 500,
+          displayInputFn: (user: ValueLabel) => user?.label ?? '',
           displayOptionFn: (user: ValueLabel) => {
             const userName = user?.label ?? '';
             const image =
@@ -49,6 +50,7 @@ export class FormFieldAutocompleteExampleComponent {
           autocompleteOptions: (value: string) => of(this.filter(value)),
           debounceTime: 500,
           requireMatch: true,
+          displayInputFn: (user: ValueLabel) => user?.label ?? '',
           displayOptionFn: (user: ValueLabel) => {
             const userName = user?.label ?? '';
             const image =

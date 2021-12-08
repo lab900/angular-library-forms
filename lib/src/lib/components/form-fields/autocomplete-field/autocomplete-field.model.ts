@@ -9,6 +9,7 @@ import { EditType } from '../../../models/editType';
 
 export interface FormFieldAutocompleteOptions<T> extends FormFieldBaseOptions {
   displayOptionFn: (option: T) => string;
+  displayInputFn?: (option: T) => string;
   disabledOptionFn?: (option: T) => boolean;
   autocompleteOptions?: (
     searchTerm: string,
