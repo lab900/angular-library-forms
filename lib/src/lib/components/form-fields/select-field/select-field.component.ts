@@ -206,4 +206,18 @@ export class SelectFieldComponent<T>
     this.optionsFn$.next(optionsFn);
     this.optionsFilter$.next({ page: 0, searchQuery: '' });
   }
+
+  public getReadOnlyDisplay(): string {
+    if (this.options?.readonlyDisplay) {
+      return this.options.readonlyDisplay(this.fieldControl.value);
+    }
+
+    // if no readonlyDisplay is defined, show the single selected value
+    // does not work with multi select > use readonlyDisplay in that case
+    return this.selectedOption
+      ? this.translateService.instant(
+          this.options?.displayOptionFn(this.selectedOption)
+        )
+      : '-';
+  }
 }
