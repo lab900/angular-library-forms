@@ -39,7 +39,6 @@ export class FormFieldSelectExampleComponent {
             title: 'Select yes or no',
             editType: EditType.Select,
             options: {
-              displayOptionFn: (value: ValueLabel) => value.label,
               selectOptions: [
                 {
                   value: true,
@@ -58,7 +57,6 @@ export class FormFieldSelectExampleComponent {
             title: 'Only item is auto-selected',
             editType: EditType.Select,
             options: {
-              displayOptionFn: (value: ValueLabel) => value.label,
               selectOptions: [
                 {
                   value: 'only',
@@ -79,7 +77,6 @@ export class FormFieldSelectExampleComponent {
             title: 'Select yes or no',
             editType: EditType.Select,
             options: {
-              displayOptionFn: (value: ValueLabel) => value.label,
               colspan: 6,
               selectOptions: [
                 {

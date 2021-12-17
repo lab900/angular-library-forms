@@ -33,12 +33,12 @@ export class AutocompleteMultipleFieldComponent<T>
   @ViewChild('auto')
   private matAutocomplete: MatAutocomplete;
 
-  public filteredOptions: Observable<T[]>;
+  public filteredOptions: Observable<ValueLabel<T>[]>;
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 
   public inputChange: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
-  public get selectedOptions(): any[] {
+  public get selectedOptions(): T[] {
     return this.group.controls[this.fieldAttribute]?.value ?? [];
   }
 
@@ -60,7 +60,7 @@ export class AutocompleteMultipleFieldComponent<T>
       debounceTime(this.options.debounceTime ?? 300),
       switchMap((input: string) => {
         const res = this.options.autocompleteOptions(input, this.fieldControl);
-        return isObservable<T[]>(res) ? res : of(res);
+        return isObservable<ValueLabel<T>[]>(res) ? res : of(res);
       })
     );
   }
@@ -82,7 +82,7 @@ export class AutocompleteMultipleFieldComponent<T>
     this.group.markAsDirty();
   }
 
-  private updateControlValue(val: any[]): void {
+  private updateControlValue(val: T[]): void {
     this.group.controls[this.fieldAttribute].setValue(val);
     this.group.controls[this.fieldAttribute].updateValueAndValidity();
     this.group.controls[this.fieldAttribute].markAsDirty();

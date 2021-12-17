@@ -3,6 +3,7 @@ import {
   EditType,
   FormFieldSelectOptionsFilter,
   Lab900FormConfig,
+  ValueLabel,
 } from '@lab900/forms';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -48,9 +49,9 @@ export class FormFieldSelectAdvancedExampleComponent {
             editType: EditType.Select,
             options: {
               compareWith: compare,
-              displayOptionFn: (o: Book) => o?.title,
               selectOptions: this.getSelectOptions.bind(this),
               colspan: 4,
+              displaySelectedOptionFn: (o: Book) => o?.title,
               infiniteScroll: {
                 enabled: true,
               },
@@ -62,9 +63,9 @@ export class FormFieldSelectAdvancedExampleComponent {
             editType: EditType.Select,
             options: {
               compareWith: compare,
-              displayOptionFn: (o: Book) => o?.title,
               selectOptions: this.getSelectOptions.bind(this),
               colspan: 4,
+              displaySelectedOptionFn: (o: Book) => o?.title,
               infiniteScroll: {
                 enabled: true,
               },
@@ -79,13 +80,13 @@ export class FormFieldSelectAdvancedExampleComponent {
             editType: EditType.Select,
             options: {
               compareWith: compare,
-              displayOptionFn: (o: Book) => o?.title,
-              customTriggerFn: (value: any[]) => {
+              customTriggerFn: (value: Book[]) => {
                 return value?.length + ' selected';
               },
               selectOptions: this.getSelectOptions.bind(this),
               colspan: 4,
               multiple: true,
+              displaySelectedOptionFn: (o: Book) => o?.title,
               infiniteScroll: {
                 enabled: true,
               },
@@ -105,14 +106,12 @@ export class FormFieldSelectAdvancedExampleComponent {
             title: 'Select an author',
             editType: EditType.Select,
             options: {
-              displayOptionFn: (value: Book) => value.title,
-              disabledOptionFn: (value: Book) => value.key === 'martin',
               selectOptions: [
-                { key: 'twain', title: 'Twain' },
-                { key: 'tolkien', title: 'Tolkien' },
+                { value: 'twain', label: 'Twain' },
+                { value: 'tolkien', label: 'Tolkien' },
                 {
-                  key: 'martin',
-                  title: 'George R. R. Martin',
+                  value: 'martin',
+                  label: 'George R. R. Martin',
                   disabled: true,
                 },
               ],
@@ -124,10 +123,10 @@ export class FormFieldSelectAdvancedExampleComponent {
             title: 'Search a book',
             editType: EditType.Select,
             options: {
-              displayOptionFn: (value: Book) => value.title,
               selectOptions: this.getSelectOptions.bind(this),
               compareWith: compare,
               colspan: 6,
+              displaySelectedOptionFn: (value: Book) => value.title,
               infiniteScroll: {
                 enabled: true,
               },
@@ -155,7 +154,7 @@ export class FormFieldSelectAdvancedExampleComponent {
   public getSelectOptions(
     filter?: FormFieldSelectOptionsFilter,
     author?: string
-  ): Observable<{ title: string; key: string }[]> {
+  ): Observable<ValueLabel<{ title: string; key: string }>[]> {
     return this.http
       .get<{ docs: any[] }>('https://openlibrary.org/search.json', {
         params: {
@@ -165,6 +164,13 @@ export class FormFieldSelectAdvancedExampleComponent {
           offset: String((filter?.page || 0) * 10),
         },
       })
-      .pipe(map((res) => res?.docs));
+      .pipe(
+        map((res) =>
+          res?.docs?.map((d) => ({
+            label: d.title,
+            value: d,
+          }))
+        )
+      );
   }
 }
