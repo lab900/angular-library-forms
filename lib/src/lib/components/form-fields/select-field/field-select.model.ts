@@ -19,10 +19,18 @@ export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
   multiple?: boolean;
   selectOptions?: FormFieldSelectOptionsFn<T> | T[] | Observable<T[]>;
   compareWith?: (o1: T, o2: T) => boolean;
-  displayOptionFn: (option: T) => string;
-  disabledOptionFn?: (option: T) => boolean;
+  /**
+   *
+   * @deprecated Labels are set in the selectOptions ValueLabels
+   */
+  displayOptionFn?: (option: ValueLabel<T>) => string;
   customTriggerFn?: (value: T) => string;
   autoselectOnlyOption?: boolean;
+  /**
+   * The function to display the current value of the select if this item is not present in the select options.
+   * @param option Expects the current value of the field, not a ValueLabel!
+   */
+  displaySelectedOptionFn?: (option: T) => string;
   search?: {
     enabled: boolean;
     placeholder?: string;
