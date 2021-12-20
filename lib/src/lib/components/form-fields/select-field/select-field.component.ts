@@ -157,7 +157,7 @@ export class SelectFieldComponent<T>
             if (!this.options?.displaySelectedOptionFn) {
               label = "ERROR: Can't display";
               console.error(
-                'Please define a displaySelectedOptionFn to display your currently selected option since it is not included in the current options'
+                `Please define a displaySelectedOptionFn to display your currently selected option for the field with attribute ${this.fieldAttribute} since it is not included in the current options`
               );
             }
             this.selectOptions = value
