@@ -13,11 +13,14 @@ export interface FormFieldSelectOptionsFilter {
 
 export type FormFieldSelectOptionsFn<T> = (
   filter?: FormFieldSelectOptionsFilter
-) => T[] | Observable<T[]>;
+) => ValueLabel<T>[] | Observable<ValueLabel<T>[]>;
 
 export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
   multiple?: boolean;
-  selectOptions?: FormFieldSelectOptionsFn<T> | T[] | Observable<T[]>;
+  selectOptions?:
+    | FormFieldSelectOptionsFn<T>
+    | ValueLabel<T>[]
+    | Observable<ValueLabel<T>[]>;
   compareWith?: (o1: T, o2: T) => boolean;
   /**
    *
