@@ -64,6 +64,20 @@
       ></div>
     </mat-option>
   </mat-select>
+  <button
+    *ngIf="showClearButton()"
+    matSuffix
+    mat-icon-button
+    type="button"
+    aria-label="Clear"
+    (click)="
+      $event.stopPropagation();
+      options?.clearFieldButton?.click(this.fieldControl)
+    "
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+
   <mat-hint
     *ngIf="hint && !(schema.options.hint.hideHintOnValidValue && select.value)"
     ><span [innerHTML]="hint | translate: hintValueTranslateData"></span
