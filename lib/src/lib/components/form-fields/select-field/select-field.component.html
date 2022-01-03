@@ -81,14 +81,7 @@
   >
   <div
     *ngIf="!loading || !fieldControl.value"
-    [innerHTML]="
-      selectedOption
-        ? ((options?.displayOptionFn
-            ? options?.displayOptionFn(selectedOption.value)
-            : selectedOption.label
-          ) | translate)
-        : '-'
-    "
+    [innerHTML]="getReadOnlyDisplay()"
   ></div>
   <div *ngIf="loading && fieldControl.value">
     {{ 'form.field.loading' | translate }}

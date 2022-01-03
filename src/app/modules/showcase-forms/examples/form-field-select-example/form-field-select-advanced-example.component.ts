@@ -102,7 +102,7 @@ export class FormFieldSelectAdvancedExampleComponent {
                 books
                   .map((book) => book.title)
                   .filter((x) => !!x)
-                  .join(`,\n`),
+                  .join('<br>'),
             },
           },
         ],

@@ -221,17 +221,23 @@ export class SelectFieldComponent<T>
     this.optionsFilter$.next({ page: 0, searchQuery: '' });
   }
 
+  // if no readonlyDisplay is defined, show the single selected value
+  // does not work with multi select > use readonlyDisplay in that case
   public getReadOnlyDisplay(): string {
     if (this.options?.readonlyDisplay) {
       return this.options.readonlyDisplay(this.fieldControl.value);
     }
 
-    // if no readonlyDisplay is defined, show the single selected value
-    // does not work with multi select > use readonlyDisplay in that case
-    return this.selectedOption
-      ? this.translateService.instant(
+    if (this.selectedOption) {
+      if (this.options?.displayOptionFn) {
+        return this.translateService.instant(
           this.options?.displayOptionFn(this.selectedOption)
-        )
-      : '-';
+        );
+      } else {
+        return this.translateService.instant(this.selectedOption.label);
+      }
+    } else {
+      return '-';
+    }
   }
 }
