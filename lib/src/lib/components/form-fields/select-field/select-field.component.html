@@ -51,12 +51,17 @@
     </mat-option>
     <mat-option
       *ngFor="let item of selectOptions"
-      [value]="item"
-      [disabled]="
-        options?.disabledOptionFn ? options.disabledOptionFn(item) : false
-      "
+      [value]="item.value"
+      [disabled]="item.disabled"
     >
-      <div [innerHTML]="options?.displayOptionFn(item) | translate"></div>
+      <div
+        *ngIf="options?.displayOptionFn"
+        [innerHTML]="options.displayOptionFn(item) | translate"
+      ></div>
+      <div
+        *ngIf="!options?.displayOptionFn"
+        [innerHTML]="item.label | translate"
+      ></div>
     </mat-option>
   </mat-select>
   <mat-hint
@@ -76,10 +81,15 @@
   >
   <div
     *ngIf="!loading || !fieldControl.value"
-    class="lab900-readonly-field__content"
-  >
-    {{ getReadOnlyDisplay() }}
-  </div>
+    [innerHTML]="
+      selectedOption
+        ? ((options?.displayOptionFn
+            ? options?.displayOptionFn(selectedOption.value)
+            : selectedOption.label
+          ) | translate)
+        : '-'
+    "
+  ></div>
   <div *ngIf="loading && fieldControl.value">
     {{ 'form.field.loading' | translate }}
   </div>

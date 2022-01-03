@@ -218,6 +218,7 @@ export class Lab900FormsModule {
             ReadonlyFieldComponent,
             DateRangeFieldComponent,
             DateTimeFieldComponent,
+            MultiLangInputFieldComponent,
           },
         },
       ],

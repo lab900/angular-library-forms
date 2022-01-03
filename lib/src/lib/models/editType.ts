@@ -6,7 +6,7 @@ export enum EditType {
   Input = 'Input',
   /**
    *
-   * @deprecated in favor of {@link FilePreview}
+   * @deprecated Deprecated in favor of {@link FilePreview}
    */
   File = 'File',
   FilePreview = 'FilePreview',
@@ -16,7 +16,15 @@ export enum EditType {
   RadioButtons = 'RadioButtons',
   RangeSlider = 'RangeSlider',
   Row = 'Row',
+  /**
+   *
+   * @deprecated Please use {@link Select} instead with search option
+   */
   Autocomplete = 'Autocomplete',
+  /**
+   *
+   * @deprecated Please use {@link Select} instead with search option
+   */
   AutocompleteMultiple = 'AutocompleteMultiple',
   Icon = 'Icon',
   ButtonToggle = 'ButtonToggle',

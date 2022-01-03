@@ -68,7 +68,7 @@ export class FilePreviewFieldComponent<
     };
 
     reader.onerror = (event: any) => {
-      console.log('File could not be read: ' + event.target.error.code);
+      console.error('File could not be read: ' + event.target.error.code);
     };
 
     reader.readAsDataURL(image);
