@@ -73,7 +73,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     return this.options?.placeholder;
   }
 
-  protected constructor(private translateService: TranslateService) {
+  protected constructor(protected translateService: TranslateService) {
     super();
   }
 
