@@ -34,6 +34,9 @@
       margin-bottom: 0.75rem;
       display: block;
     }
+    &__content {
+      white-space: pre-line;
+    }
   }
 
   .mat-select-search-inside-mat-option .mat-select-search-clear {

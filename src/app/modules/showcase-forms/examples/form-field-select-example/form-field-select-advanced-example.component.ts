@@ -19,6 +19,11 @@ const tolkienBook: Book = {
   title: 'The letters of J.R.R. Tolkien',
 };
 
+const tolkienBook2: Book = {
+  key: '/works/OL27471W',
+  title: 'Narn i chîn Húrin',
+};
+
 const compare = (a: Book, b: Book): boolean =>
   a?.key && b?.key && a.key === b.key;
 
@@ -35,7 +40,7 @@ export class FormFieldSelectAdvancedExampleComponent {
       title: 'Song of Ice and Fire',
       key: '/works/OL21242192W',
     },
-    books3: [tolkienBook],
+    books3: [tolkienBook, tolkienBook2],
   };
   public formSchema: Lab900FormConfig = {
     fields: [
@@ -93,6 +98,11 @@ export class FormFieldSelectAdvancedExampleComponent {
               search: {
                 enabled: true,
               },
+              readonlyDisplay: (books: Book[]) =>
+                books
+                  .map((book) => book.title)
+                  .filter((x) => !!x)
+                  .join('<br>'),
             },
           },
         ],
