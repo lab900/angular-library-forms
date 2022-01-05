@@ -67,6 +67,13 @@ export class SelectFieldComponent<T>
 
   public defaultCompare = (o1: T, o2: T): boolean => o1 === o2;
 
+  public showClearButton = (): boolean => {
+    if (typeof this.options?.clearFieldButton?.enabled === 'function') {
+      return this.options.clearFieldButton.enabled(this.group.value);
+    }
+    return this.options?.clearFieldButton?.enabled;
+  };
+
   public ngOnInit(): void {
     if (this.options?.selectOptions) {
       const { selectOptions } = this.options;
@@ -238,6 +245,17 @@ export class SelectFieldComponent<T>
       }
     } else {
       return '-';
+    }
+  }
+
+  public handleClearFieldButtonClick($event: Event): void {
+    $event.stopPropagation();
+    if (this.options?.clearFieldButton?.click) {
+      this.options.clearFieldButton.click(this.fieldControl);
+    } else {
+      this.fieldControl.setValue(null);
+      this.fieldControl.markAsTouched();
+      this.fieldControl.markAsDirty();
     }
   }
 }

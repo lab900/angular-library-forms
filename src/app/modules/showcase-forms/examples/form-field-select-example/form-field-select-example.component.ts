@@ -59,8 +59,8 @@ export class FormFieldSelectExampleComponent {
             options: {
               selectOptions: [
                 {
-                  value: 'only',
-                  label: 'only',
+                  value: 'lonely',
+                  label: 'lonely item',
                 },
               ],
               autoselectOnlyOption: true,
@@ -84,6 +84,60 @@ export class FormFieldSelectExampleComponent {
                   label: 'checked yes',
                 },
               ],
+            },
+          },
+          {
+            attribute: 'forthPropName',
+            title: 'May the force be with you',
+            editType: EditType.Select,
+            options: {
+              selectOptions: [
+                {
+                  value: 'may',
+                  label: 'May',
+                },
+                {
+                  value: 'the',
+                  label: 'the',
+                },
+                {
+                  value: '4th',
+                  label: '4th',
+                },
+              ],
+              clearFieldButton: {
+                enabled: true,
+                click: (fieldControl) => {
+                  fieldControl.setValue('none');
+                  fieldControl.markAsTouched();
+                  fieldControl.markAsDirty();
+                },
+              },
+            },
+          },
+          {
+            attribute: 'forthMultiplePropName',
+            title: 'May the multiple forces be with you',
+            editType: EditType.Select,
+            options: {
+              multiple: true,
+              selectOptions: [
+                {
+                  value: 'may',
+                  label: 'May',
+                },
+                {
+                  value: 'the',
+                  label: 'the',
+                },
+                {
+                  value: '4th',
+                  label: '4th',
+                },
+              ],
+              clearFieldButton: {
+                enabled: true,
+              },
             },
           },
         ],

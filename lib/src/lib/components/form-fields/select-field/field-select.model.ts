@@ -5,6 +5,7 @@ import {
   ValueLabel,
 } from '../../../models/form-field-base';
 import { Observable } from 'rxjs';
+import { AbstractControl } from '@angular/forms';
 
 export interface FormFieldSelectOptionsFilter {
   page?: number;
@@ -60,6 +61,13 @@ export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
      * The threshold time before firing the infiniteScroll event
      */
     debounceTime?: number;
+  };
+  /**
+   * Shows a clear button on the right of the field
+   */
+  clearFieldButton?: {
+    enabled: boolean | ((data?: any) => boolean);
+    click?: (fieldControl: AbstractControl) => void;
   };
 }
 
