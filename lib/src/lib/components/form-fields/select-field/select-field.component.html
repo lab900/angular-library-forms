@@ -70,10 +70,7 @@
     mat-icon-button
     type="button"
     aria-label="Clear"
-    (click)="
-      $event.stopPropagation();
-      options?.clearFieldButton?.click(this.fieldControl)
-    "
+    (click)="handleClearFieldButtonClick($event)"
   >
     <mat-icon>close</mat-icon>
   </button>

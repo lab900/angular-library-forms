@@ -137,11 +137,6 @@ export class FormFieldSelectExampleComponent {
               ],
               clearFieldButton: {
                 enabled: true,
-                click: (fieldControl) => {
-                  fieldControl.setValue(['none']);
-                  fieldControl.markAsTouched();
-                  fieldControl.markAsDirty();
-                },
               },
             },
           },

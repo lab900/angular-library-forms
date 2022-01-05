@@ -67,7 +67,7 @@ export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
    */
   clearFieldButton?: {
     enabled: boolean | ((data?: any) => boolean);
-    click: (fieldControl: AbstractControl) => void;
+    click?: (fieldControl: AbstractControl) => void;
   };
 }
 

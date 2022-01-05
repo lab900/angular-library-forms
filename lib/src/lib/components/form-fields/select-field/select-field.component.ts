@@ -247,4 +247,15 @@ export class SelectFieldComponent<T>
       return '-';
     }
   }
+
+  public handleClearFieldButtonClick($event: Event): void {
+    $event.stopPropagation();
+    if (this.options?.clearFieldButton?.click) {
+      this.options.clearFieldButton.click(this.fieldControl);
+    } else {
+      this.fieldControl.setValue(null);
+      this.fieldControl.markAsTouched();
+      this.fieldControl.markAsDirty();
+    }
+  }
 }
