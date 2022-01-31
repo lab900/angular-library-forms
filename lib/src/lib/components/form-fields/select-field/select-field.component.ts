@@ -68,6 +68,10 @@ export class SelectFieldComponent<T>
   public defaultCompare = (o1: T, o2: T): boolean => o1 === o2;
 
   public showClearButton = (): boolean => {
+    if (!this.fieldControl.value) {
+      return false;
+    }
+
     if (typeof this.options?.clearFieldButton?.enabled === 'function') {
       return this.options.clearFieldButton.enabled(this.group.value);
     }
@@ -251,7 +255,7 @@ export class SelectFieldComponent<T>
   public handleClearFieldButtonClick($event: Event): void {
     $event.stopPropagation();
     if (this.options?.clearFieldButton?.click) {
-      this.options.clearFieldButton.click(this.fieldControl);
+      this.options.clearFieldButton.click(this.fieldControl, $event);
     } else {
       this.fieldControl.setValue(null);
       this.fieldControl.markAsTouched();
