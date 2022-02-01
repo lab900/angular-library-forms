@@ -68,6 +68,9 @@ export class FormFieldInputsExampleComponent {
         editType: EditType.Input,
         options: {
           type: 'password',
+          togglePasswordVisibility: {
+            enabled: true,
+          },
         },
       },
       {

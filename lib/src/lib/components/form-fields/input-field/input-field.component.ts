@@ -15,6 +15,7 @@ import { FormFieldInput } from './input-field.model';
 export class InputFieldComponent extends FormComponent<FormFieldInput> {
   @HostBinding('class')
   public classList = `lab900-form-field`;
+  public passwordVisible = false;
 
   public get showLengthIndicator(): boolean {
     return (
@@ -29,5 +30,9 @@ export class InputFieldComponent extends FormComponent<FormFieldInput> {
     translateService: TranslateService
   ) {
     super(translateService);
+  }
+
+  public togglePasswordVisibility(): void {
+    this.passwordVisible = !this.passwordVisible;
   }
 }

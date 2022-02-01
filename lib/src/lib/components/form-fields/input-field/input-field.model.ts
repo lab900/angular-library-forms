@@ -12,6 +12,11 @@ export interface FieldMask extends Partial<IConfig> {
 
 export interface FormFieldInputOptions extends FormFieldBaseOptions {
   type?: 'text' | 'number' | 'email' | 'password' | 'tel' | 'url' | 'time';
+  togglePasswordVisibility?: {
+    enabled: true;
+    passwordVisibleIcon?: Icon;
+    passwordHiddenIcon?: Icon;
+  };
   autofocus?: boolean;
   suffix?: string;
   prefix?: string;
