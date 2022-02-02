@@ -79,14 +79,15 @@ import {
   LAB900_FORM_FIELD_TYPES,
 } from './models/Lab900FormModuleSettings';
 import { Lab900FormBuilderService } from './services/form-builder.service';
-import { FormFieldMappingService } from './services/form-field-mapping.service';
-import { FormComponent } from './components/AbstractFormComponent';
+import { PasswordFieldComponent } from './components/form-fields/password-field/password-field.component';
 
 const customFields = [
   UnknownFieldComponent,
   InputFieldComponent,
+  PasswordFieldComponent,
   SelectFieldComponent,
   FileFieldComponent,
+  FilePreviewFieldComponent,
   DragNDropFileFieldComponent,
   CheckboxFieldComponent,
   DateFieldComponent,
@@ -117,7 +118,6 @@ const customFields = [
     MatRangeSliderFieldComponent,
     ...customFields,
     IconComponent,
-    FilePreviewFieldComponent,
     ImagePreviewModalComponent,
     AuthImageDirective,
     AutofocusDirective,
@@ -194,15 +194,35 @@ export class Lab900FormsModule {
           provide: LAB900_FORM_MODULE_SETTINGS,
           useValue: formSetting,
         },
-        FormFieldMappingService,
         {
           provide: LAB900_FORM_FIELD_TYPES,
-          useValue: customFields.reduce((obj, item: Type<FormComponent>) => {
-            return {
-              ...obj,
-              [item.name]: item,
-            };
-          }, {}),
+          useValue: {
+            UnknownFieldComponent,
+            InputFieldComponent,
+            PasswordFieldComponent,
+            SelectFieldComponent,
+            FileFieldComponent,
+            FilePreviewFieldComponent,
+            DragNDropFileFieldComponent,
+            CheckboxFieldComponent,
+            DateFieldComponent,
+            WysiwygFieldComponent,
+            TextareaFieldComponent,
+            RepeaterFieldComponent,
+            FormRowComponent,
+            RadioButtonsFieldComponent,
+            RangeSliderFieldComponent,
+            AutocompleteFieldComponent,
+            AutocompleteMultipleFieldComponent,
+            IconFieldComponent,
+            ButtonToggleFieldComponent,
+            ButtonFieldComponent,
+            SlideToggleFieldComponent,
+            ReadonlyFieldComponent,
+            DateRangeFieldComponent,
+            DateTimeFieldComponent,
+            MultiLangInputFieldComponent,
+          },
         },
       ],
     };

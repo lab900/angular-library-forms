@@ -8,13 +8,17 @@ import { AbstractControl } from '@angular/forms';
 import { EditType } from '../../../models/editType';
 
 export interface FormFieldAutocompleteOptions<T> extends FormFieldBaseOptions {
-  displayOptionFn: (option: T) => string;
-  displayInputFn?: (option: T) => string;
+  /**
+   *
+   * @deprecated Labels are set in the autocompleteOptions
+   */
+  displayOptionFn?: (option: ValueLabel<T>) => string;
+  displayInputFn: (option: T) => string;
   disabledOptionFn?: (option: T) => boolean;
   autocompleteOptions?: (
     searchTerm: string,
     currentControl: AbstractControl
-  ) => T[] | Observable<T[]>;
+  ) => ValueLabel<T>[] | Observable<ValueLabel<T>[]>;
   debounceTime?: number;
   requireMatch?: boolean;
 }

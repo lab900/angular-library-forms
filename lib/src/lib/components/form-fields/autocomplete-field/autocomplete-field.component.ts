@@ -26,7 +26,7 @@ export class AutocompleteFieldComponent<T>
   @ViewChild('input')
   public autoCompleteInput: ElementRef;
 
-  public filteredOptions: Observable<T[]>;
+  public filteredOptions: Observable<ValueLabel<T>[]>;
 
   public inputChange: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
@@ -48,7 +48,7 @@ export class AutocompleteFieldComponent<T>
       debounceTime(this.options.debounceTime ?? 300),
       switchMap((input: string) => {
         const res = this.options.autocompleteOptions(input, this.fieldControl);
-        return isObservable<T[]>(res) ? res : of(res);
+        return isObservable<ValueLabel<T>[]>(res) ? res : of(res);
       })
     );
   }

@@ -51,14 +51,30 @@
     </mat-option>
     <mat-option
       *ngFor="let item of selectOptions"
-      [value]="item"
-      [disabled]="
-        options?.disabledOptionFn ? options.disabledOptionFn(item) : false
-      "
+      [value]="item.value"
+      [disabled]="item.disabled"
     >
-      <div [innerHTML]="options?.displayOptionFn(item) | translate"></div>
+      <div
+        *ngIf="options?.displayOptionFn"
+        [innerHTML]="options.displayOptionFn(item) | translate"
+      ></div>
+      <div
+        *ngIf="!options?.displayOptionFn"
+        [innerHTML]="item.label | translate"
+      ></div>
     </mat-option>
   </mat-select>
+  <button
+    *ngIf="showClearButton()"
+    matSuffix
+    mat-icon-button
+    type="button"
+    aria-label="Clear"
+    (click)="handleClearFieldButtonClick($event)"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+
   <mat-hint
     *ngIf="hint && !(schema.options.hint.hideHintOnValidValue && select.value)"
     ><span [innerHTML]="hint | translate: hintValueTranslateData"></span
@@ -74,13 +90,10 @@
     class="lab900-readonly-field__label"
     >{{ options?.readonlyLabel || schema.title | translate }}</span
   >
-  <div *ngIf="!loading || !fieldControl.value">
-    {{
-      selectedOption
-        ? (options?.displayOptionFn(selectedOption) | translate)
-        : '-'
-    }}
-  </div>
+  <div
+    *ngIf="!loading || !fieldControl.value"
+    [innerHTML]="getReadOnlyDisplay()"
+  ></div>
   <div *ngIf="loading && fieldControl.value">
     {{ 'form.field.loading' | translate }}
   </div>

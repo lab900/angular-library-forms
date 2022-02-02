@@ -4,34 +4,36 @@ import { FormComponent } from '../components/AbstractFormComponent';
 import { EditType } from '../models/editType';
 import { LAB900_FORM_FIELD_TYPES } from '../models/Lab900FormModuleSettings';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class FormFieldMappingService {
-  public inputFieldComponent: Type<FormComponent>;
-  public checkboxFieldComponent: Type<FormComponent>;
-  public wysiwygFieldComponent: Type<FormComponent>;
-  public dateFieldComponent: Type<FormComponent>;
-  public fileFieldComponent: Type<FormComponent>;
-  public filePreviewFieldComponent: Type<FormComponent>;
-  public selectFieldComponent: Type<FormComponent>;
-  public textareaFieldComponent: Type<FormComponent>;
-  public repeaterFieldComponent: Type<FormComponent>;
-  public radioButtonsFieldComponent: Type<FormComponent>;
-  public formRowComponent: Type<FormComponent>;
-  public rangeSliderFieldComponent: Type<FormComponent>;
-  public autocompleteFieldComponent: Type<FormComponent>;
-  public autocompleteMultipleFieldComponent: Type<FormComponent>;
-  public iconFieldComponent: Type<FormComponent>;
-  public buttonToggleFieldComponent: Type<FormComponent>;
-  public buttonFieldComponent: Type<FormComponent>;
-  public slideToggleFieldComponent: Type<FormComponent>;
-  public dateRangeFieldComponent: Type<FormComponent>;
-  public dateTimeFieldComponent: Type<FormComponent>;
-  public multiLangInputFieldComponent: Type<FormComponent>;
-  public dragNDropFileFieldComponent: Type<FormComponent>;
-  public unknownFieldComponent: Type<FormComponent>;
+  private readonly inputFieldComponent: Type<FormComponent>;
+  private readonly passwordFieldComponent: Type<FormComponent>;
+  private readonly checkboxFieldComponent: Type<FormComponent>;
+  private readonly wysiwygFieldComponent: Type<FormComponent>;
+  private readonly dateFieldComponent: Type<FormComponent>;
+  private readonly fileFieldComponent: Type<FormComponent>;
+  private readonly filePreviewFieldComponent: Type<FormComponent>;
+  private readonly selectFieldComponent: Type<FormComponent>;
+  private readonly textareaFieldComponent: Type<FormComponent>;
+  private readonly repeaterFieldComponent: Type<FormComponent>;
+  private readonly radioButtonsFieldComponent: Type<FormComponent>;
+  private readonly formRowComponent: Type<FormComponent>;
+  private readonly rangeSliderFieldComponent: Type<FormComponent>;
+  private readonly autocompleteFieldComponent: Type<FormComponent>;
+  private readonly autocompleteMultipleFieldComponent: Type<FormComponent>;
+  private readonly iconFieldComponent: Type<FormComponent>;
+  private readonly buttonToggleFieldComponent: Type<FormComponent>;
+  private readonly buttonFieldComponent: Type<FormComponent>;
+  private readonly slideToggleFieldComponent: Type<FormComponent>;
+  private readonly dateRangeFieldComponent: Type<FormComponent>;
+  private readonly dateTimeFieldComponent: Type<FormComponent>;
+  private readonly multiLangInputFieldComponent: Type<FormComponent>;
+  private readonly dragNDropFileFieldComponent: Type<FormComponent>;
+  private readonly unknownFieldComponent: Type<FormComponent>;
 
   public constructor(@Inject(LAB900_FORM_FIELD_TYPES) lab900FormFieldTypes) {
     this.inputFieldComponent = lab900FormFieldTypes.InputFieldComponent;
+    this.passwordFieldComponent = lab900FormFieldTypes.PasswordFieldComponent;
     this.checkboxFieldComponent = lab900FormFieldTypes.CheckboxFieldComponent;
     this.wysiwygFieldComponent = lab900FormFieldTypes.WysiwygFieldComponent;
     this.dateFieldComponent = lab900FormFieldTypes.DateFieldComponent;
@@ -69,6 +71,8 @@ export class FormFieldMappingService {
     switch (field.editType) {
       case EditType.Input:
         return this.inputFieldComponent;
+      case EditType.Password:
+        return this.passwordFieldComponent;
       case EditType.Checkbox:
         return this.checkboxFieldComponent;
       case EditType.Wysiwyg:

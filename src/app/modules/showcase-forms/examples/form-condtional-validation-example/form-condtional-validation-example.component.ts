@@ -44,7 +44,6 @@ export class FormCondtionalValidationExampleComponent {
         editType: EditType.Select,
         title: 'Select Field?',
         options: {
-          displayOptionFn: (value: ValueLabel) => value.label,
           colspan: 6,
           selectOptions: [
             { value: 'a', label: 'Option a' },

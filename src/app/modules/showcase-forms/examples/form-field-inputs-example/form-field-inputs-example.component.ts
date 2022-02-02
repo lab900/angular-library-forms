@@ -65,9 +65,13 @@ export class FormFieldInputsExampleComponent {
       {
         attribute: 'passwordInput',
         title: 'Password Input',
-        editType: EditType.Input,
+        editType: EditType.Password,
         options: {
-          type: 'password',
+          togglePasswordVisibility: {
+            disabled: false,
+            passwordVisibleIcon: { name: 'visibility_off' },
+            passwordHiddenIcon: { name: 'visibility' },
+          },
         },
       },
       {
