@@ -9,7 +9,7 @@
   <input
     matInput
     #input
-    [type]="passwordVisible ? 'text' : options?.type || 'text'"
+    [type]="options?.type || 'text'"
     placeholder="{{ placeholder | translate }}"
     [formControlName]="fieldAttribute"
     [required]="fieldIsRequired"
@@ -55,21 +55,6 @@
   <lab900-icon
     [icon]="schema.icon"
     *ngIf="schema?.icon?.position === 'right'"
-    matSuffix
-  ></lab900-icon>
-  <lab900-icon
-    *ngIf="options?.togglePasswordVisibility?.enabled"
-    (click)="togglePasswordVisibility()"
-    class="clickable-icon"
-    [icon]="
-      passwordVisible
-        ? options.togglePasswordVisibility.passwordVisibleIcon || {
-            name: 'visibility_off'
-          }
-        : options.togglePasswordVisibility.passwordHiddenIcon || {
-            name: 'visibility'
-          }
-    "
     matSuffix
   ></lab900-icon>
   <span class="lab900-input-field--suffix" *ngIf="options?.suffix" matSuffix>{{

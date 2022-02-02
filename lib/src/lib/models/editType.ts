@@ -4,6 +4,7 @@ export enum EditType {
   Date = 'Date',
   Wysiwyg = 'Wysiwyg',
   Input = 'Input',
+  Password = 'Password',
   /**
    *
    * @deprecated Deprecated in favor of {@link FilePreview}

@@ -5,23 +5,17 @@ import {
   LAB900_FORM_MODULE_SETTINGS,
   Lab900FormModuleSettings,
 } from '../../../models/Lab900FormModuleSettings';
-import { FormFieldInput } from './input-field.model';
+import { FormFieldPassword } from './password-field.model';
 
 @Component({
-  selector: 'lab900-input-field',
-  templateUrl: './input-field.component.html',
-  styleUrls: ['./input-field.component.scss'],
+  selector: 'lab900-password-field',
+  templateUrl: './password-field.component.html',
+  styleUrls: ['./password-field.component.scss'],
 })
-export class InputFieldComponent extends FormComponent<FormFieldInput> {
+export class PasswordFieldComponent extends FormComponent<FormFieldPassword> {
   @HostBinding('class')
   public classList = `lab900-form-field`;
-
-  public get showLengthIndicator(): boolean {
-    return (
-      !!this.setting?.formField?.showLengthIndicator ||
-      !!this.options?.showLengthIndicator
-    );
-  }
+  public passwordVisible = false;
 
   public constructor(
     @Inject(LAB900_FORM_MODULE_SETTINGS)
@@ -29,5 +23,9 @@ export class InputFieldComponent extends FormComponent<FormFieldInput> {
     translateService: TranslateService
   ) {
     super(translateService);
+  }
+
+  public togglePasswordVisibility(): void {
+    this.passwordVisible = !this.passwordVisible;
   }
 }

@@ -7,6 +7,7 @@ import { LAB900_FORM_FIELD_TYPES } from '../models/Lab900FormModuleSettings';
 @Injectable({ providedIn: 'root' })
 export class FormFieldMappingService {
   private readonly inputFieldComponent: Type<FormComponent>;
+  private readonly passwordFieldComponent: Type<FormComponent>;
   private readonly checkboxFieldComponent: Type<FormComponent>;
   private readonly wysiwygFieldComponent: Type<FormComponent>;
   private readonly dateFieldComponent: Type<FormComponent>;
@@ -32,6 +33,7 @@ export class FormFieldMappingService {
 
   public constructor(@Inject(LAB900_FORM_FIELD_TYPES) lab900FormFieldTypes) {
     this.inputFieldComponent = lab900FormFieldTypes.InputFieldComponent;
+    this.passwordFieldComponent = lab900FormFieldTypes.PasswordFieldComponent;
     this.checkboxFieldComponent = lab900FormFieldTypes.CheckboxFieldComponent;
     this.wysiwygFieldComponent = lab900FormFieldTypes.WysiwygFieldComponent;
     this.dateFieldComponent = lab900FormFieldTypes.DateFieldComponent;
@@ -69,6 +71,8 @@ export class FormFieldMappingService {
     switch (field.editType) {
       case EditType.Input:
         return this.inputFieldComponent;
+      case EditType.Password:
+        return this.passwordFieldComponent;
       case EditType.Checkbox:
         return this.checkboxFieldComponent;
       case EditType.Wysiwyg:
