@@ -19,10 +19,12 @@ import { FormFieldSlideToggle } from '../components/form-fields/slide-toggle-fie
 import { FormFieldTextarea } from '../components/form-fields/textarea-field/textarea-field.model';
 import { WysiwgFieldModel } from '../components/form-fields/wysiwyg-field/wysiwg-field.model';
 import { FormRow } from '../components/form-row/form-row.model';
-import { FormFieldDragNDropFilePreview } from './../components/form-fields/drag-n-drop-file-field/drag-n-drop-file-field.model';
+import { FormFieldDragNDropFilePreview } from '../components/form-fields/drag-n-drop-file-field/drag-n-drop-file-field.model';
+import { FormFieldPassword } from '../components/form-fields/password-field/password-field.model';
 
 export type Lab900FormField<R = any, T extends string | number = string> =
   | FormFieldInput<T>
+  | FormFieldPassword<T>
   | FormFieldMultiLang<T>
   | WysiwgFieldModel<T>
   | FormFieldSelect<R, T>

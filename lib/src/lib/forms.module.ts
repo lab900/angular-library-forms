@@ -79,10 +79,12 @@ import {
   LAB900_FORM_FIELD_TYPES,
 } from './models/Lab900FormModuleSettings';
 import { Lab900FormBuilderService } from './services/form-builder.service';
+import { PasswordFieldComponent } from './components/form-fields/password-field/password-field.component';
 
 const customFields = [
   UnknownFieldComponent,
   InputFieldComponent,
+  PasswordFieldComponent,
   SelectFieldComponent,
   FileFieldComponent,
   FilePreviewFieldComponent,
@@ -197,6 +199,7 @@ export class Lab900FormsModule {
           useValue: {
             UnknownFieldComponent,
             InputFieldComponent,
+            PasswordFieldComponent,
             SelectFieldComponent,
             FileFieldComponent,
             FilePreviewFieldComponent,
