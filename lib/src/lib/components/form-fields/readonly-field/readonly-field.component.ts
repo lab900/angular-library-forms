@@ -30,4 +30,11 @@ export class ReadonlyFieldComponent extends FormComponent implements OnDestroy {
       ? this.options?.readonlyDisplay(this.group.value)
       : value;
   }
+
+  public getReadonlyContainerClass(): string {
+    if (typeof this.options?.readonlyContainerClass === 'function') {
+      return this.options.readonlyContainerClass(this.group.value);
+    }
+    return this.options?.readonlyContainerClass;
+  }
 }
