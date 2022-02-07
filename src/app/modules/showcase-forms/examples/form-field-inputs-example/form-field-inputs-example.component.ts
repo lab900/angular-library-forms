@@ -13,6 +13,21 @@ export class FormFieldInputsExampleComponent {
   public formSchema: Lab900FormConfig = {
     fields: [
       {
+        editType: EditType.Row,
+        nestedFields: [
+          {
+            attribute: 'containerCustomClass',
+            editType: EditType.Input,
+            options: {
+              readonly: true,
+              readonlyContainerClass: 'readonlyInputCustomContainerClass',
+              defaultValue: 'MANUAL',
+            },
+          },
+        ],
+      },
+
+      {
         attribute: 'uniqueNumber',
         title: 'Text Input Hidden',
         editType: EditType.Input,

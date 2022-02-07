@@ -123,3 +123,12 @@ pre[class*='language-'] {
     padding: 15px;
   }
 }
+
+.readonlyInputCustomContainerClass {
+  max-width: fit-content;
+  padding: 5px 15px;
+  color: #737d99;
+  background-color: rgba($color: #737d99, $alpha: 0.5);
+  font-size: 12px;
+  margin-bottom: 19px;
+}
