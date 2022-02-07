@@ -1,6 +1,6 @@
 <div
   class="lab900-readonly-field"
-  [class]="options.readonlyContainerClass"
+  [class]="getReadonlyContainerClass()"
   *ngIf="!fieldIsHidden"
 >
   <span

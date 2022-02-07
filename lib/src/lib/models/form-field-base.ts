@@ -44,7 +44,7 @@ export interface FormFieldBaseOptions {
   max?: number;
   defaultValue?: any;
   pattern?: RegExp;
-  readonlyContainerClass?: string;
+  readonlyContainerClass?: string | ((data?: any) => string);
   readonlyLabel?: string;
   readonlyDisplay?: (data?: any) => any;
   visibleFn?: (item: any) => boolean;
