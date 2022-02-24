@@ -15,7 +15,7 @@ export class ReadonlyFieldComponent extends FormComponent implements OnDestroy {
   public constructor(translateService: TranslateService) {
     super(translateService);
     setTimeout(() => {
-      if (this.group?.controls) {
+      if (this.group?.controls && this.fieldAttribute) {
         this.setValue(this.group.controls[this.fieldAttribute].value);
         this.addSubscription(
           this.group.controls[this.fieldAttribute].valueChanges,
