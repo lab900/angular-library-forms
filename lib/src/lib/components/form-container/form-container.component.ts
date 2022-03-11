@@ -66,12 +66,13 @@ export class Lab900Form<T> implements OnChanges {
   public patchValues(data: T, prevData?: T): void {
     Object.keys(data).forEach((key: string) => {
       const control = this.form.controls[key];
+
       if (control && !areValuesEqual(data[key], prevData?.[key])) {
         if (control instanceof FormArray) {
           const fieldSchema = this.schema.fields.find(
             (field: Lab900FormField) => field.attribute === key
           );
-          if (data[key] && fieldSchema?.editType === EditType.Repeater) {
+          if (fieldSchema?.editType === EditType.Repeater) {
             this.fb.createFormArray(data, fieldSchema, control);
           }
         } else {
@@ -89,7 +90,7 @@ export class Lab900Form<T> implements OnChanges {
           const fieldSchema = this.schema.fields.find(
             (field: Lab900FormField) => field.attribute === key
           );
-          if (data[key] && fieldSchema?.editType === EditType.Repeater) {
+          if (fieldSchema?.editType === EditType.Repeater) {
             this.fb.createFormArray(data, fieldSchema, control);
           }
         }

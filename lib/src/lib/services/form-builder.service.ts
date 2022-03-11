@@ -88,9 +88,9 @@ export class Lab900FormBuilderService {
     field: FormFieldRepeater,
     formArray: FormArray = this.fb.array([])
   ): FormArray {
+    formArray.clear();
     const data: any[] = this.getFieldValue(field.attribute, formData);
-    if (data?.length) {
-      formArray.clear();
+    if (Array.isArray(data) && data?.length) {
       data.forEach((nestedData) => {
         formArray.push(
           this.createFormGroup(field.nestedFields, undefined, nestedData)
