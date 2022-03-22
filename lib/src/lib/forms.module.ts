@@ -43,6 +43,7 @@ import { ButtonFieldComponent } from './components/form-fields/button-field/butt
 import { ButtonToggleFieldComponent } from './components/form-fields/button-toggle-field/button-toggle-field.component';
 import { CheckboxFieldComponent } from './components/form-fields/checkbox-field/checkbox-field.component';
 import { DateFieldComponent } from './components/form-fields/date-field/date-field.component';
+import { DateYearMonthFieldComponent } from './components/form-fields/date-year-month-field/date-year-month-field.component';
 import { DateRangeFieldComponent } from './components/form-fields/date-range-field/date-range-field.component';
 import { DateTimeFieldComponent } from './components/form-fields/date-time-field/date-time-field.component';
 import { DragNDropFileFieldComponent } from './components/form-fields/drag-n-drop-file-field/drag-n-drop-file-field.component';
@@ -91,6 +92,7 @@ const customFields = [
   DragNDropFileFieldComponent,
   CheckboxFieldComponent,
   DateFieldComponent,
+  DateYearMonthFieldComponent,
   WysiwygFieldComponent,
   TextareaFieldComponent,
   RepeaterFieldComponent,
@@ -206,6 +208,7 @@ export class Lab900FormsModule {
             DragNDropFileFieldComponent,
             CheckboxFieldComponent,
             DateFieldComponent,
+            DateYearMonthFieldComponent,
             WysiwygFieldComponent,
             TextareaFieldComponent,
             RepeaterFieldComponent,
