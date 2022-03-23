@@ -47,8 +47,6 @@ export class DateYearMonthFieldComponent extends FormComponent<FormFieldDateYear
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
-  public formControl: FormControl = new FormControl();
-
   public constructor(translateService: TranslateService) {
     super(translateService);
   }
@@ -70,6 +68,6 @@ export class DateYearMonthFieldComponent extends FormComponent<FormFieldDateYear
     picker: MatDatepicker<Moment>
   ): void {
     picker.close();
-    this.formControl.setValue(chosenMonthDate);
+    this.group.controls[this.fieldAttribute].setValue(chosenMonthDate);
   }
 }
