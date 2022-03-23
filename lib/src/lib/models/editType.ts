@@ -2,6 +2,7 @@ export enum EditType {
   Checkbox = 'Checkbox',
   TextArea = 'TextArea',
   Date = 'Date',
+  DateYearMonth = 'DateYearMonth',
   Wysiwyg = 'Wysiwyg',
   Input = 'Input',
   Password = 'Password',
