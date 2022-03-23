@@ -67,8 +67,7 @@ export class DateYearMonthFieldComponent extends FormComponent<FormFieldDateYear
     picker: MatDatepicker<Moment>
   ): void {
     picker.close();
-    this.group.controls[this.fieldAttribute].setValue(
-      chosenMonthDate.format('MM/YYYY')
-    );
+    this.group.controls[this.fieldAttribute].setValue(chosenMonthDate.format());
+    this.group.controls[this.fieldAttribute].markAsDirty();
   }
 }
