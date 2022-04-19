@@ -14,6 +14,7 @@ export interface FormFieldButtonToggleOptions extends FormFieldBaseOptions {
     buttonClass?: string;
   }[];
   color?: ThemePalette;
+  deselectOnClick?: boolean;
 }
 
 export interface FormFieldButtonToggle<T extends string | number = string>

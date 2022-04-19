@@ -18,6 +18,7 @@ export class FormFieldButtonToggleExampleComponent {
         editType: EditType.ButtonToggle,
         options: {
           required: true,
+          deselectOnClick: true,
           buttonOptions: [
             {
               value: Involvement.VICTIM,
