@@ -16,6 +16,7 @@
       *ngFor="let value of options?.buttonOptions"
       [value]="value.value"
       class="{{ value?.buttonClass }}"
+      (change)="onChange($event)"
     >
       <lab900-icon
         [icon]="value.icon"

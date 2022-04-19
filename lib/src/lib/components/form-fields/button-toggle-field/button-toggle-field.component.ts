@@ -2,6 +2,7 @@ import { Component, HostBinding } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldButtonToggle } from './button-toggle-field.model';
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
 
 @Component({
   selector: 'lab900-button-toggle-field',
@@ -37,5 +38,19 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
       (o) => o.value === this.value
     );
     return option?.label ?? `${this.value}`;
+  }
+
+  public onChange($event: MatButtonToggleChange): void {
+    if (this.options?.deselectOnClick && this.value === $event.value) {
+      setTimeout(() => {
+        this.group.controls[this.fieldAttribute].setValue(null);
+        this.group.controls[this.fieldAttribute].markAsDirty();
+        this.group.controls[this.fieldAttribute].markAsTouched();
+      });
+    } else {
+      setTimeout(() =>
+        this.group.controls[this.fieldAttribute].setValue($event.value)
+      );
+    }
   }
 }
