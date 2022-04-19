@@ -12,45 +12,42 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
-  public value: any;
+  // This stores the current value of the button toggle.
+  // It is used to calculate the readonly label and to check if the toggle needs to be deselected.
+  private currentValue: any;
 
   public constructor(translateService: TranslateService) {
     super(translateService);
     setTimeout(() => {
       if (this.group?.controls) {
-        this.setValue(this.group.controls[this.fieldAttribute].value);
+        this.currentValue = this.group.controls[this.fieldAttribute].value;
         this.addSubscription(
           this.group.controls[this.fieldAttribute].valueChanges,
-          (value: any) => setTimeout(() => this.setValue(value))
+          (value: any) => setTimeout(() => (this.currentValue = value))
         );
       }
     });
   }
 
-  private setValue(value: any): void {
-    this.value = this.options?.readonlyDisplay
-      ? this.options?.readonlyDisplay(this.group.value)
-      : value;
-  }
-
+  // This calculates the readonly label. If the readonlyDisplay() function is set, this is used.
+  // Otherwise the button label is displayed
   public get label(): string {
     const option = this.options.buttonOptions.find(
-      (o) => o.value === this.value
+      (o) => o.value === this.currentValue
     );
-    return option?.label ?? `${this.value}`;
+    return this.options?.readonlyDisplay
+      ? this.options?.readonlyDisplay(this.group.value)
+      : option?.label;
   }
 
+  // If the deselect option is set and the previous value of the toggle is the same as the current value the toggle will be deselected
   public onChange($event: MatButtonToggleChange): void {
-    if (this.options?.deselectOnClick && this.value === $event.value) {
+    if (this.options?.deselectOnClick && this.currentValue === $event.value) {
       setTimeout(() => {
         this.group.controls[this.fieldAttribute].setValue(null);
         this.group.controls[this.fieldAttribute].markAsDirty();
         this.group.controls[this.fieldAttribute].markAsTouched();
       });
-    } else {
-      setTimeout(() =>
-        this.group.controls[this.fieldAttribute].setValue($event.value)
-      );
     }
   }
 }
