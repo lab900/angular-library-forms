@@ -236,7 +236,9 @@ export class SelectFieldComponent<T>
   // does not work with multi select > use readonlyDisplay in that case
   public getReadOnlyDisplay(): string {
     if (this.options?.readonlyDisplay) {
-      return this.options.readonlyDisplay(this.fieldControl.value);
+      return this.translateService.instant(
+        this.options.readonlyDisplay(this.fieldControl.value)
+      );
     }
 
     if (this.selectedOption) {
