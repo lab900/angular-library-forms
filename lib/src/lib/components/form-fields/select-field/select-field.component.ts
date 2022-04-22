@@ -237,7 +237,7 @@ export class SelectFieldComponent<T>
   public getReadOnlyDisplay(): string {
     if (this.options?.readonlyDisplay) {
       return this.translateService.instant(
-        this.options.readonlyDisplay(this.fieldControl.value)
+        this.options.readonlyDisplay(this.fieldControl.value) || '-'
       );
     }
 
