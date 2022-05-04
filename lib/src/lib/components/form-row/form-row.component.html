@@ -27,6 +27,9 @@
           [schema]="field"
           [group]="fieldAttribute ? group.get(fieldAttribute) : group"
           [readonly]="rowIsReadonly(field)"
+          [language]="language"
+          [availableLanguages]="availableLanguages"
+          [externalForms]="externalForms"
         ></ng-container>
         <div class="form-col__info" *ngIf="field?.options?.infoTooltip as tip">
           <mat-icon [matTooltip]="tip?.text | translate">{{

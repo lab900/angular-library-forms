@@ -19,6 +19,10 @@
           lab900FormField
           [schema]="field"
           [group]="control"
+          [language]="language"
+          [availableLanguages]="availableLanguages"
+          [externalForms]="externalForms"
+          [readonly]="readonly"
         ></ng-container>
       </div>
       <div *ngIf="!fixedList && !fieldIsReadonly" class="repeater-row__actions">
