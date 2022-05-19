@@ -15,6 +15,7 @@ export * from './lib/components/form-fields/select-field/field-select.model';
 export * from './lib/components/form-fields/select-field/select-field.component';
 export * from './lib/components/form-fields/amount-field/amount-input.directive';
 export * from './lib/components/form-fields/amount-field/amount.helpers';
+export * from './lib/components/form-fields/amount-field/amount.pipe';
 
 export * from './lib/components/form-container/form-container.component';
 

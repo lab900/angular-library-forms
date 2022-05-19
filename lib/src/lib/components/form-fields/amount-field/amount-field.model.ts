@@ -5,14 +5,19 @@ import {
   Icon,
 } from '../../../models/form-field-base';
 
-export interface AmountFieldInputOptions extends FormFieldBaseOptions {
+export interface AmountOptions extends FormFieldBaseOptions {
+  maxDecimals?: number;
+  minDecimals?: number;
+}
+
+export interface AmountFieldInputOptions
+  extends AmountOptions,
+    FormFieldBaseOptions {
   autofocus?: boolean;
   suffix?: string | ((data?: any) => string);
   prefix?: string | ((data?: any) => string);
   align?: 'left' | 'right';
   style?: string;
-  maxDecimals?: number; // default is 2
-  minDecimals?: number; // default is 0
 }
 
 export interface FormFieldAmount<T extends string | number = string>

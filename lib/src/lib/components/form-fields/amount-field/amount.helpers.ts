@@ -1,4 +1,5 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AmountOptions } from './amount-field.model';
 
 export function getSeparatorCount(value: string, separator: string): number {
   return value?.match(new RegExp(separator, 'g'))?.length ?? 0;
@@ -42,4 +43,14 @@ export function validateNumberInput(): ValidatorFn {
     });
     return error;
   };
+}
+
+export function getAmountFormatter(
+  locale: string,
+  options?: AmountOptions
+): Intl.NumberFormat {
+  return new Intl.NumberFormat(locale, {
+    maximumFractionDigits: options?.maxDecimals,
+    minimumFractionDigits: options?.minDecimals,
+  });
 }

@@ -10,7 +10,11 @@ import {
   Self,
   SimpleChanges,
 } from '@angular/core';
-import { amountToNumber, validateNumberInput } from './amount.helpers';
+import {
+  amountToNumber,
+  getAmountFormatter,
+  validateNumberInput,
+} from './amount.helpers';
 import { Subscription } from 'rxjs';
 import { NgControl } from '@angular/forms';
 import { filter } from 'rxjs/operators';
@@ -39,7 +43,7 @@ export class AmountInputDirective
   private formatter: Intl.NumberFormat;
 
   public constructor(
-    @Inject(LOCALE_ID) public appLocale: string,
+    @Inject(LOCALE_ID) appLocale: string,
     @Inject(LAB900_FORM_MODULE_SETTINGS)
     public setting: Lab900FormModuleSettings,
     @Self() private ngControl: NgControl
@@ -97,11 +101,9 @@ export class AmountInputDirective
   }
 
   private getFormatter(): Intl.NumberFormat {
-    return new Intl.NumberFormat(this.locale, {
-      maximumFractionDigits:
-        this.maxDecimals ?? this.setting?.amountField?.maxDecimals,
-      minimumFractionDigits:
-        this.minDecimals ?? this.setting?.amountField?.minDecimals,
+    return getAmountFormatter(this.locale, {
+      maxDecimals: this.maxDecimals ?? this.setting?.amountField?.maxDecimals,
+      minDecimals: this.minDecimals ?? this.setting?.amountField?.minDecimals,
     });
   }
 }

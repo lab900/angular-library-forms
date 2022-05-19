@@ -83,6 +83,7 @@ import { Lab900FormBuilderService } from './services/form-builder.service';
 import { PasswordFieldComponent } from './components/form-fields/password-field/password-field.component';
 import { AmountFieldComponent } from './components/form-fields/amount-field/amount-field.component';
 import { AmountInputDirective } from './components/form-fields/amount-field/amount-input.directive';
+import { AmountPipe } from './components/form-fields/amount-field/amount.pipe';
 
 const customFields = [
   UnknownFieldComponent,
@@ -131,6 +132,7 @@ const customFields = [
     MultiLangFieldControlComponent,
     AmountFieldComponent,
     AmountInputDirective,
+    AmountPipe,
   ],
   imports: [
     CommonModule,
@@ -173,6 +175,7 @@ const customFields = [
     AutofocusDirective,
     SelectFieldComponent,
     AmountInputDirective,
+    AmountPipe,
   ],
 })
 export class Lab900FormsModule {
