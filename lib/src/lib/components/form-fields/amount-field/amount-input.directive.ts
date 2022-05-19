@@ -14,6 +14,8 @@ import {
   amountToNumber,
   formatAmountWithoutRounding,
   getAmountFormatter,
+  getDecimalSeparator,
+  getThousandSeparator,
   validateNumberInput,
 } from './amount.helpers';
 import { Subscription } from 'rxjs';
@@ -41,6 +43,9 @@ export class AmountInputDirective
   public minDecimals?: number;
 
   private readonly locale: string;
+  private readonly decimalSeparator: string;
+  private readonly thousandSeparator: string;
+
   private formatter: Intl.NumberFormat;
 
   public constructor(
@@ -50,7 +55,10 @@ export class AmountInputDirective
     @Self() private ngControl: NgControl
   ) {
     this.locale = setting?.amountField?.locale ?? appLocale;
+    this.decimalSeparator = getDecimalSeparator(this.locale);
+    this.thousandSeparator = getThousandSeparator(this.locale);
     this.formatter = this.getFormatter();
+    console.log(this);
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -102,7 +110,10 @@ export class AmountInputDirective
 
   private unFormatValue(): void {
     if (this.ngControl.value) {
-      const value = String(this.ngControl.value).replace(/\./g, '');
+      const value = String(this.ngControl.value).replace(
+        new RegExp('\\' + this.thousandSeparator, 'g'),
+        ''
+      );
       this.ngControl.control?.setValue(value ?? '', { emitEvent: false });
     }
   }

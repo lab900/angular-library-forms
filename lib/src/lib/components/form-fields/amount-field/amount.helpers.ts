@@ -63,3 +63,13 @@ export function formatAmountWithoutRounding(
   const re = new RegExp('^-?\\d+(?:.\\d{0,' + (max || -1) + '})?');
   return formatter.format(+value.toString().match(re)[0]);
 }
+
+export function getDecimalSeparator(locale: string): string {
+  const numberWithDecimalSeparator = 1.1;
+  return numberWithDecimalSeparator.toLocaleString(locale).substring(1, 2);
+}
+
+export function getThousandSeparator(locale: string): string {
+  const numberWithDecimalSeparator = 1000;
+  return numberWithDecimalSeparator.toLocaleString(locale).substring(1, 2);
+}
