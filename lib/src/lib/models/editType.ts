@@ -35,4 +35,5 @@ export enum EditType {
   DateRange = 'DateRange',
   DateTime = 'DateTime',
   MultiLangInput = 'MultiLangInput',
+  Amount = 'Amount',
 }

@@ -31,6 +31,7 @@ import { FormFieldSelectExampleComponent } from './examples/form-field-select-ex
 import { FormFieldSlideToggleExampleComponent } from './examples/form-field-slide-toggle-example/form-field-slide-toggle-example.component';
 import { FormFieldTextareaExampleComponent } from './examples/form-field-textarea-example/form-field-textarea-example.component';
 import { ShowcaseFormsRoutingModule } from './showcase-forms-routing.module';
+import { FormFieldAmountExampleComponent } from './examples/form-field-amount-example/form-field-amount-example.component';
 
 const examples = [
   FormFieldRepeaterExampleComponent,
@@ -62,6 +63,7 @@ const examples = [
   FormFieldSelectAdvancedExampleComponent,
   FormFieldNestedGroupsExampleComponent,
   FormFieldNestedGroupsByAttributeExampleComponent,
+  FormFieldAmountExampleComponent,
 ];
 
 @NgModule({

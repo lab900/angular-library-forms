@@ -12,9 +12,16 @@ export interface Lab900FormFieldOptions extends MatFormFieldDefaultOptions {
   showLengthIndicator?: boolean;
 }
 
+export interface Lab900AmountFieldOptions {
+  minDecimals?: number;
+  maxDecimals?: number;
+  locale?: string;
+}
+
 export interface Lab900FormModuleSettings {
   formField?: Lab900FormFieldOptions;
   fieldMask?: Partial<IConfig>;
+  amountField?: Lab900AmountFieldOptions;
 }
 
 export const defaultFormModuleSettings: Lab900FormModuleSettings = {
@@ -27,5 +34,9 @@ export const defaultFormModuleSettings: Lab900FormModuleSettings = {
   fieldMask: {
     thousandSeparator: '.',
     decimalMarker: ',',
+  },
+  amountField: {
+    minDecimals: 0,
+    maxDecimals: 2,
   },
 };

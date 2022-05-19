@@ -1,0 +1,54 @@
+<mat-form-field
+  *ngIf="!fieldIsHidden"
+  [formGroup]="group"
+  class="lab900-input-field {{ options?.align || 'left' }}"
+  [class.spanFix]="options?.suffix || options?.prefix"
+  id="lab900-input-field-{{ fieldAttribute }}"
+>
+  <mat-label *ngIf="schema.title">{{ schema.title | translate }}</mat-label>
+  <input
+    matInput
+    #input
+    type="text"
+    placeholder="{{ placeholder | translate }}"
+    [formControlName]="fieldAttribute"
+    [required]="fieldIsRequired"
+    [readonly]="fieldIsReadonly"
+    [ngClass]="{ readonly: fieldIsReadonly }"
+    lab900InputAutofocus
+    lab900AmountInput
+    [autofocus]="options?.autofocus"
+    [style]="options?.style || ''"
+    [maxDecimals]="options?.maxDecimals"
+    [minDecimals]="options?.minDecimals"
+  />
+  <lab900-icon
+    [icon]="schema.icon"
+    *ngIf="schema?.icon?.position === 'left'"
+    matPrefix
+    class="input-field__icon-left"
+  ></lab900-icon>
+  <lab900-icon
+    [icon]="schema.icon"
+    *ngIf="schema?.icon?.position === 'right'"
+    matSuffix
+  ></lab900-icon>
+  <span class="lab900-input-field--suffix" *ngIf="suffix" matSuffix>{{
+    suffix | translate
+  }}</span>
+  <span class="lab900-input-field--prefix" *ngIf="prefix" matPrefix>{{
+    prefix | translate
+  }}</span>
+  <mat-hint
+    *ngIf="
+      hint &&
+      !(schema.options.hint.hideHintOnValidValue && input.value) &&
+      !fieldIsReadonly
+    "
+  >
+    <span [innerHTML]="hint | translate: hintValueTranslateData"></span>
+  </mat-hint>
+  <mat-error *ngIf="!valid && !fieldIsReadonly"
+    ><span [innerHTML]="getErrorMessage() | async"></span
+  ></mat-error>
+</mat-form-field>

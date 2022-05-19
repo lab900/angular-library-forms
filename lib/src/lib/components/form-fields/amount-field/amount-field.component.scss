@@ -1,0 +1,11 @@
+.lab900-input-field {
+  &__icon {
+    &-left {
+      margin-right: 2px;
+    }
+  }
+
+  &.right input {
+    text-align: right;
+  }
+}

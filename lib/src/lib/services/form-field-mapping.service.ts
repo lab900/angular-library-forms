@@ -31,6 +31,7 @@ export class FormFieldMappingService {
   private readonly multiLangInputFieldComponent: Type<FormComponent>;
   private readonly dragNDropFileFieldComponent: Type<FormComponent>;
   private readonly unknownFieldComponent: Type<FormComponent>;
+  private readonly amountFieldComponent: Type<FormComponent>;
 
   public constructor(@Inject(LAB900_FORM_FIELD_TYPES) lab900FormFieldTypes) {
     this.inputFieldComponent = lab900FormFieldTypes.InputFieldComponent;
@@ -68,6 +69,7 @@ export class FormFieldMappingService {
     this.dragNDropFileFieldComponent =
       lab900FormFieldTypes.DragNDropFileFieldComponent;
     this.unknownFieldComponent = lab900FormFieldTypes.UnknownFieldComponent;
+    this.amountFieldComponent = lab900FormFieldTypes.AmountFieldComponent;
   }
 
   public mapToComponent = (field: Lab900FormField): Type<FormComponent> => {
@@ -120,6 +122,8 @@ export class FormFieldMappingService {
         return this.multiLangInputFieldComponent;
       case EditType.DragNDrop:
         return this.dragNDropFileFieldComponent;
+      case EditType.Amount:
+        return this.amountFieldComponent;
       default:
         return this.unknownFieldComponent;
     }
