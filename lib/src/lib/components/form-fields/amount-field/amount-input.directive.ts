@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import {
   amountToNumber,
+  formatAmountWithoutRounding,
   getAmountFormatter,
   validateNumberInput,
 } from './amount.helpers';
@@ -87,7 +88,13 @@ export class AmountInputDirective
     if (this.ngControl.value) {
       const v = amountToNumber(String(this.ngControl.value)) ?? null;
       this.ngControl.control?.setValue(
-        v != null ? this.formatter.format(v) : '',
+        v != null
+          ? formatAmountWithoutRounding(
+              v,
+              this.formatter,
+              this.getMaxDecimals()
+            )
+          : '',
         { emitEvent: false }
       );
     }
@@ -102,8 +109,16 @@ export class AmountInputDirective
 
   private getFormatter(): Intl.NumberFormat {
     return getAmountFormatter(this.locale, {
-      maxDecimals: this.maxDecimals ?? this.setting?.amountField?.maxDecimals,
-      minDecimals: this.minDecimals ?? this.setting?.amountField?.minDecimals,
+      maxDecimals: this.getMaxDecimals(),
+      minDecimals: this.getMinDecimals(),
     });
+  }
+
+  private getMaxDecimals(): number {
+    return this.maxDecimals ?? this.setting?.amountField?.maxDecimals;
+  }
+
+  private getMinDecimals(): number {
+    return this.minDecimals ?? this.setting?.amountField?.minDecimals;
   }
 }

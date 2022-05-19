@@ -4,7 +4,10 @@ import {
   LAB900_FORM_MODULE_SETTINGS,
   Lab900FormModuleSettings,
 } from '../../../models/Lab900FormModuleSettings';
-import { getAmountFormatter } from './amount.helpers';
+import {
+  formatAmountWithoutRounding,
+  getAmountFormatter,
+} from './amount.helpers';
 
 @Pipe({
   name: 'amount',
@@ -21,12 +24,13 @@ export class AmountPipe implements PipeTransform {
   }
 
   public transform(value: number, options?: AmountOptions): string {
+    const maxDecimals =
+      options?.maxDecimals ?? this.setting?.amountField?.maxDecimals;
     const formatter = getAmountFormatter(this.locale, {
-      maxDecimals:
-        options?.maxDecimals ?? this.setting?.amountField?.maxDecimals,
+      maxDecimals,
       minDecimals:
         options?.minDecimals ?? this.setting?.amountField?.minDecimals,
     });
-    return formatter.format(value);
+    return formatAmountWithoutRounding(value, formatter, maxDecimals);
   }
 }
