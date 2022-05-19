@@ -58,7 +58,6 @@ export class AmountInputDirective
     this.decimalSeparator = getDecimalSeparator(this.locale);
     this.thousandSeparator = getThousandSeparator(this.locale);
     this.formatter = this.getFormatter();
-    console.log(this);
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
