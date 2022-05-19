@@ -30,7 +30,7 @@ export class AmountInputDirective
   implements OnChanges, AfterViewInit, OnDestroy
 {
   private readonly validator = validateNumberInput();
-  private focusMode = false;
+  public focusMode = false;
   private changeSub?: Subscription;
 
   @Input()

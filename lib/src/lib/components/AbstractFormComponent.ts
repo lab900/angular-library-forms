@@ -169,6 +169,16 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
           'forms.error.requireMatch',
           interpolateParams
         );
+      case 'toManyDecimalSeparators':
+        return this.translateService.get(
+          'forms.error.toManyDecimalSeparators',
+          interpolateParams
+        );
+      case 'invalidNumber':
+        return this.translateService.get(
+          'forms.error.invalidNumber',
+          interpolateParams
+        );
       default:
         return this.translateService.get(
           'forms.error.generic',

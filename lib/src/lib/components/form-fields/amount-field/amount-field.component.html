@@ -48,7 +48,7 @@
   >
     <span [innerHTML]="hint | translate: hintValueTranslateData"></span>
   </mat-hint>
-  <mat-error *ngIf="!valid && !fieldIsReadonly"
-    ><span [innerHTML]="getErrorMessage() | async"></span
-  ></mat-error>
+  <mat-error *ngIf="!valid && !fieldIsReadonly">
+    <span [innerHTML]="getErrorMessage() | async"></span>
+  </mat-error>
 </mat-form-field>
