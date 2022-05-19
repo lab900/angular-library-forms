@@ -35,6 +35,9 @@ export function TranslationLoaderFactory(
       formField: {
         appearance: 'fill',
       },
+      amountField: {
+        locale: 'de-DE',
+      },
     }),
     TranslateModule.forRoot({
       loader: {

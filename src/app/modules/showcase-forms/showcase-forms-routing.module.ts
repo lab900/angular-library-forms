@@ -35,6 +35,7 @@ import { FormFieldSlideToggleExampleComponent } from './examples/form-field-slid
 import { FormFieldTextareaExampleComponent } from './examples/form-field-textarea-example/form-field-textarea-example.component';
 import { showcaseFormsConfig } from './showcase-forms.constants';
 import { showcaseFormsNavItems } from './showcase-forms.nav-items';
+import { FormFieldAmountExampleComponent } from './examples/form-field-amount-example/form-field-amount-example.component';
 
 const routes: Routes = [
   {
@@ -170,6 +171,12 @@ const routes: Routes = [
     new ShowcaseExample(
       FormFieldNestedGroupsByAttributeExampleComponent,
       'Nested groups by attributes'
+    ),
+  ]),
+  new ShowcaseRoute('form-field-amount', 'Form Fields: Amount', [
+    new ShowcaseExample(
+      FormFieldAmountExampleComponent,
+      'Formatted amount field'
     ),
   ]),
 ];

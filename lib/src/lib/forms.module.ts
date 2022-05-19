@@ -5,7 +5,7 @@ import {
 } from '@angular-material-components/datetime-picker';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ModuleWithProviders, NgModule, Type } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -81,6 +81,9 @@ import {
 } from './models/Lab900FormModuleSettings';
 import { Lab900FormBuilderService } from './services/form-builder.service';
 import { PasswordFieldComponent } from './components/form-fields/password-field/password-field.component';
+import { AmountFieldComponent } from './components/form-fields/amount-field/amount-field.component';
+import { AmountInputDirective } from './components/form-fields/amount-field/amount-input.directive';
+import { AmountPipe } from './components/form-fields/amount-field/amount.pipe';
 
 const customFields = [
   UnknownFieldComponent,
@@ -127,6 +130,9 @@ const customFields = [
     MultiLangInputFieldComponent,
     LanguagePickerComponent,
     MultiLangFieldControlComponent,
+    AmountFieldComponent,
+    AmountInputDirective,
+    AmountPipe,
   ],
   imports: [
     CommonModule,
@@ -168,6 +174,8 @@ const customFields = [
     AuthImageDirective,
     AutofocusDirective,
     SelectFieldComponent,
+    AmountInputDirective,
+    AmountPipe,
   ],
 })
 export class Lab900FormsModule {
@@ -182,6 +190,10 @@ export class Lab900FormsModule {
       fieldMask: {
         ...defaultFormModuleSettings.fieldMask,
         ...(settings?.fieldMask ?? {}),
+      },
+      amountField: {
+        ...defaultFormModuleSettings.amountField,
+        ...(settings?.amountField ?? {}),
       },
     };
     return {
@@ -225,6 +237,7 @@ export class Lab900FormsModule {
             DateRangeFieldComponent,
             DateTimeFieldComponent,
             MultiLangInputFieldComponent,
+            AmountFieldComponent,
           },
         },
       ],
