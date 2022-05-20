@@ -5,8 +5,13 @@ import { Lab900FormConfig, EditType } from '@lab900/forms';
   selector: 'lab900-form-field-amount-example',
   template: `<div>
     <h3>Form field:</h3>
-    <lab900-form [schema]="formSchema"></lab900-form>
-    <h3>Pipe:</h3>
+    <lab900-form
+      #f
+      [schema]="formSchema"
+      [data]="{ amount: 204500.456 }"
+    ></lab900-form>
+    <code>Form control value: {{ f?.form?.value?.amount }}</code>
+    <h3 style="margin-top: 2em">Pipe:</h3>
     <p>
       The same formatting is also available as a pipe:
       <code>{{ snippet }}</code>
@@ -23,7 +28,8 @@ export class FormFieldAmountExampleComponent {
         title: 'My amount',
         editType: EditType.Amount,
         options: {
-          minDecimals: 2,
+          minDecimals: 3,
+          maxDecimals: 3,
           suffix: 'EUR',
         },
       },
