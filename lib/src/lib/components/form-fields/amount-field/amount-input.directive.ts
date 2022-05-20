@@ -16,37 +16,23 @@ import {
   getDecimalSeparator,
   getThousandSeparator,
 } from './amount.helpers';
-import {
-  AbstractControl,
-  ControlValueAccessor,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR,
-  ValidationErrors,
-  Validator,
-} from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
   LAB900_FORM_MODULE_SETTINGS,
   Lab900FormModuleSettings,
 } from '../../../models/Lab900FormModuleSettings';
 
 @Directive({
-  selector: '[lab900AmountInput]',
+  selector: 'input[lab900AmountInput]',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => AmountInputDirective),
       multi: true,
     },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => AmountInputDirective),
-      multi: true,
-    },
   ],
 })
-export class AmountInputDirective
-  implements OnChanges, ControlValueAccessor, Validator
-{
+export class AmountInputDirective implements OnChanges, ControlValueAccessor {
   public focused = false;
 
   @Input()
@@ -60,7 +46,6 @@ export class AmountInputDirective
   private readonly thousandSeparator: string;
 
   private formatter: Intl.NumberFormat;
-  private numberValue?: number;
 
   public constructor(
     @Inject(LOCALE_ID) appLocale: string,
@@ -81,7 +66,6 @@ export class AmountInputDirective
   }
 
   public writeValue(value: number): void {
-    this.numberValue = value;
     if (value) {
       this.formatValue(value);
     }
@@ -90,7 +74,7 @@ export class AmountInputDirective
   public onChange = (_: number): void => {};
   public onTouched = (): void => {};
 
-  public registerOnChange(fn: (v: number) => void): void {
+  public registerOnChange(fn: (_: number) => void): void {
     this.onChange = fn;
   }
 
@@ -98,58 +82,51 @@ export class AmountInputDirective
     this.onTouched = fn;
   }
 
-  public registerOnValidatorChange(fn: () => void): void {
-    this.onChange = fn;
-  }
-
   public setDisabledState(isDisabled: boolean): void {
     this.elementRef.nativeElement.disabled = isDisabled;
   }
 
-  public validate(control: AbstractControl): ValidationErrors {
-    let value = control.value;
-    console.log('validating', value);
+  @HostListener('input', ['$event.target.valueAsNumber'])
+  public onInput(value: number): void {
+    this.onChange(isNaN(value) ? null : value);
+  }
 
-    if (!value?.length) {
-      return null;
+  @HostListener('paste', ['$event'])
+  public onPaste(event: ClipboardEvent): void {
+    event.preventDefault();
+    const pastedInput: string = event.clipboardData.getData('text/plain');
+    if (pastedInput?.length) {
+      const newValue = amountToNumber(
+        this.getUnformattedValue(pastedInput)
+      ) as any;
+      this.elementRef.nativeElement.value = newValue;
+      this.onChange(newValue);
+      this.onTouched();
     }
-    let error: ValidationErrors | null = null;
-    amountToNumber(value, (e) => {
-      error = { [e]: true };
-      return null;
-    });
-    return error;
   }
 
-  @HostListener('input')
-  public onInput(): void {
-    const valueOnBlur = isNaN(+this.elementRef.nativeElement.value)
-      ? amountToNumber(this.getUnformattedValue())
-      : +this.elementRef.nativeElement.value;
-
-    this.numberValue = valueOnBlur;
-    this.onTouched();
-    this.onChange(valueOnBlur);
-  }
-
-  @HostListener('focus')
-  public onFocus(): void {
+  @HostListener('focus', ['$event.target.value'])
+  public onFocus(value: string): void {
     if (!this.focused) {
       this.focused = true;
-      this.unFormatValue();
+      this.elementRef.nativeElement.type = 'number';
+      this.elementRef.nativeElement.value = amountToNumber(
+        this.getUnformattedValue(value)
+      ) as any;
     }
   }
 
-  @HostListener('blur')
-  public onBlur(): void {
+  @HostListener('blur', ['$event.target.valueAsNumber'])
+  public onBlur(value: number): void {
     if (this.focused) {
-      this.onTouched();
       this.focused = false;
-      this.formatValue(this.elementRef.nativeElement.value);
+      this.elementRef.nativeElement.type = 'string';
+      this.formatValue(value);
+      this.onTouched();
     }
   }
 
-  private formatValue(value: number | string): void {
+  private formatValue(value: number): void {
     const v = amountToNumber(String(value)) ?? null;
     this.elementRef.nativeElement.value =
       v != null
@@ -157,12 +134,7 @@ export class AmountInputDirective
         : '';
   }
 
-  private unFormatValue(): void {
-    this.elementRef.nativeElement.value = this.getUnformattedValue();
-  }
-
-  private getUnformattedValue(): string {
-    const value = this.elementRef.nativeElement.value;
+  private getUnformattedValue(value: string): string {
     if (value) {
       return (
         value.replace(new RegExp('\\' + this.thousandSeparator, 'g'), '') ?? ''
