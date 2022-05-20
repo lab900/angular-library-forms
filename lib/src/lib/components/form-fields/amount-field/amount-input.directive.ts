@@ -37,7 +37,11 @@ import {
       useExisting: forwardRef(() => AmountInputDirective),
       multi: true,
     },
-    { provide: NG_VALIDATORS, useExisting: AmountInputDirective, multi: true },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => AmountInputDirective),
+      multi: true,
+    },
   ],
 })
 export class AmountInputDirective
@@ -83,23 +87,29 @@ export class AmountInputDirective
     }
   }
 
-  public onChange(_newVal: number): void {}
-  public onTouched(_?: any): void {}
+  public onChange = (_: number): void => {};
+  public onTouched = (): void => {};
 
-  public registerOnChange(fn: any): void {
+  public registerOnChange(fn: (v: number) => void): void {
     this.onChange = fn;
   }
 
-  public registerOnTouched(fn: any): void {
+  public registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
+  }
+
+  public registerOnValidatorChange(fn: () => void): void {
+    this.onChange = fn;
   }
 
   public setDisabledState(isDisabled: boolean): void {
     this.elementRef.nativeElement.disabled = isDisabled;
   }
 
-  public validate(control: AbstractControl): ValidationErrors | null {
+  public validate(control: AbstractControl): ValidationErrors {
     let value = control.value;
+    console.log('validating', value);
+
     if (!value?.length) {
       return null;
     }
@@ -108,17 +118,18 @@ export class AmountInputDirective
       error = { [e]: true };
       return null;
     });
-    console.log(error);
     return error;
   }
 
   @HostListener('input')
   public onInput(): void {
-    const valueOnBlur = amountToNumber(this.getUnformattedValue());
-    if (this.numberValue != valueOnBlur) {
-      this.numberValue = valueOnBlur;
-      this.onChange(valueOnBlur);
-    }
+    const valueOnBlur = isNaN(+this.elementRef.nativeElement.value)
+      ? amountToNumber(this.getUnformattedValue())
+      : +this.elementRef.nativeElement.value;
+
+    this.numberValue = valueOnBlur;
+    this.onTouched();
+    this.onChange(valueOnBlur);
   }
 
   @HostListener('focus')
