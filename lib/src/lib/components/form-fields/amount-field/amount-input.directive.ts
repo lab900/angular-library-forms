@@ -86,15 +86,9 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
     this.elementRef.nativeElement.disabled = isDisabled;
   }
 
-  @HostListener('input', ['$event.target.value'])
-  public onInput(value: string): void {
-    // limit the decimal input
-    const v =
-      value.indexOf('.') >= 0
-        ? value.substr(0, value.indexOf('.')) +
-          value.substr(value.indexOf('.'), this.getMaxDecimals() + 1)
-        : value;
-    this.updateFormValue(+v);
+  @HostListener('input', ['$event.target.valueAsNumber'])
+  public onInput(value: number): void {
+    this.onChange(isNaN(value) ? null : value);
   }
 
   @HostListener('paste', ['$event'])
@@ -105,7 +99,8 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
       const newValue = amountToNumber(
         this.getUnformattedValue(pastedInput)
       ) as any;
-      this.updateFormValue(newValue);
+      this.elementRef.nativeElement.value = newValue;
+      this.onChange(newValue);
       this.onTouched();
     }
   }
@@ -162,10 +157,5 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
 
   private getMinDecimals(): number {
     return this.minDecimals ?? this.setting?.amountField?.minDecimals;
-  }
-
-  private updateFormValue(v: number): void {
-    this.elementRef.nativeElement.value = (isNaN(v) ? null : v) as any;
-    this.onChange(isNaN(v) ? null : v);
   }
 }
