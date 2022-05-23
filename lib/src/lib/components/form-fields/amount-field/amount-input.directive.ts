@@ -86,9 +86,19 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
     this.elementRef.nativeElement.disabled = isDisabled;
   }
 
-  @HostListener('input', ['$event.target.valueAsNumber'])
-  public onInput(value: number): void {
-    this.onChange(isNaN(value) ? null : value);
+  @HostListener('input', ['$event.target.value', '$event.target'])
+  public onInput(v: string, target: HTMLInputElement): void {
+    let validateValue = v;
+    if (validateValue?.length) {
+      const max = this.getMaxDecimals();
+      const sIndex = v.indexOf('.');
+      if (sIndex >= 0) {
+        validateValue =
+          v.substr(0, sIndex) + (max === 0 ? '' : v.substr(sIndex, max + 1));
+        target.value = validateValue;
+      }
+    }
+    this.onChange(isNaN(+validateValue) ? null : +validateValue);
   }
 
   @HostListener('paste', ['$event'])
