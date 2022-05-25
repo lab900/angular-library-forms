@@ -66,10 +66,10 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
   }
 
   public writeValue(value: number): void {
-    if (!isNaN(value)) {
+    if (!isNaN(value) && !this.focused) {
       this.formatValue(value);
     } else {
-      this.elementRef.nativeElement.value = null;
+      this.elementRef.nativeElement.value = value as any;
     }
   }
 
