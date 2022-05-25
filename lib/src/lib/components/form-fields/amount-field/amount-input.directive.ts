@@ -105,21 +105,23 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
 
   @HostListener('paste', ['$event'])
   public onPaste(event: ClipboardEvent): void {
-    event.preventDefault();
-    const pastedInput: string = event.clipboardData.getData('text/plain');
-    if (pastedInput?.length) {
-      const newValue = amountToNumber(
-        this.getUnformattedValue(pastedInput)
-      ) as any;
-      this.elementRef.nativeElement.value = newValue;
-      this.onChange(newValue);
-      this.onTouched();
+    if (this.canUpdate()) {
+      event.preventDefault();
+      const pastedInput: string = event.clipboardData.getData('text/plain');
+      if (pastedInput?.length) {
+        const newValue = amountToNumber(
+          this.getUnformattedValue(pastedInput)
+        ) as any;
+        this.elementRef.nativeElement.value = newValue;
+        this.onChange(newValue);
+        this.onTouched();
+      }
     }
   }
 
   @HostListener('focus', ['$event.target.value'])
   public onFocus(value: string): void {
-    if (!this.focused) {
+    if (!this.focused && this.canUpdate()) {
       this.focused = true;
       this.elementRef.nativeElement.type = 'number';
       this.elementRef.nativeElement.setAttribute('step', '0.01');
@@ -131,7 +133,7 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
 
   @HostListener('blur', ['$event.target.valueAsNumber'])
   public onBlur(value: number): void {
-    if (this.focused) {
+    if (this.focused && this.canUpdate()) {
       this.focused = false;
       this.elementRef.nativeElement.type = 'string';
       this.formatValue(value);
@@ -169,5 +171,12 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
 
   private getMinDecimals(): number {
     return this.minDecimals ?? this.setting?.amountField?.minDecimals;
+  }
+
+  private canUpdate(): boolean {
+    return (
+      !this.elementRef.nativeElement?.readOnly &&
+      !this.elementRef.nativeElement?.disabled
+    );
   }
 }
