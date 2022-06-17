@@ -70,6 +70,9 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   }
 
   public get placeholder(): string {
+    if (typeof this.options?.placeholder === 'function') {
+      return this.options.placeholder(this.group.value);
+    }
     return this.options?.placeholder;
   }
 

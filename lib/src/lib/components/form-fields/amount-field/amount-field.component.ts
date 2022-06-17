@@ -30,6 +30,20 @@ export class AmountFieldComponent extends FormComponent<FormFieldAmount> {
     return this.options?.prefix;
   }
 
+  public get maxDecimals(): number {
+    if (typeof this.options?.maxDecimals === 'function') {
+      return this.options.maxDecimals(this.group.value);
+    }
+    return this.options?.maxDecimals;
+  }
+
+  public get minDecimals(): number {
+    if (typeof this.options?.minDecimals === 'function') {
+      return this.options.minDecimals(this.group.value);
+    }
+    return this.options?.minDecimals;
+  }
+
   public constructor(
     @Inject(LAB900_FORM_MODULE_SETTINGS)
     public setting: Lab900FormModuleSettings,

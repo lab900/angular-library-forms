@@ -10,10 +10,10 @@ export interface AmountOptions extends FormFieldBaseOptions {
   minDecimals?: number;
 }
 
-export interface AmountFieldInputOptions
-  extends AmountOptions,
-    FormFieldBaseOptions {
+export interface AmountFieldInputOptions extends FormFieldBaseOptions {
   autofocus?: boolean;
+  maxDecimals?: AmountOptions['maxDecimals'] | ((data?: any) => number);
+  minDecimals?: AmountOptions['minDecimals'] | ((data?: any) => number);
   suffix?: string | ((data?: any) => string);
   prefix?: string | ((data?: any) => string);
   align?: 'left' | 'right';
