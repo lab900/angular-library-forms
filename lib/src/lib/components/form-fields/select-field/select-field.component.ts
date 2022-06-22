@@ -99,9 +99,9 @@ export class SelectFieldComponent<T>
 
     this.addSubscription(
       this.optionsFilter$.pipe(
-        debounceTime(this.options?.search?.debounceTime ?? 300),
         filter(() => !!this.optionsFn$.value),
         tap(() => (this.loading = true)),
+        debounceTime(this.options?.search?.debounceTime ?? 300),
         switchMap((optionsFilter) =>
           this.optionsFn$.pipe(
             take(1),
