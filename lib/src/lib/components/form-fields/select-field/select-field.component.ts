@@ -264,4 +264,11 @@ export class SelectFieldComponent<T>
       this.fieldControl.markAsDirty();
     }
   }
+
+  public onSearchEnter($event: Event): void {
+    if (this.loading) {
+      $event.preventDefault();
+      $event.stopPropagation();
+    }
+  }
 }

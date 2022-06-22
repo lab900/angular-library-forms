@@ -30,7 +30,10 @@
     <mat-select-trigger *ngIf="options?.customTriggerFn">
       <div [innerHTML]="options?.customTriggerFn(fieldControl.value)"></div>
     </mat-select-trigger>
-    <mat-option *ngIf="options?.search?.enabled">
+    <mat-option
+      *ngIf="options?.search?.enabled"
+      (keydown.enter)="onSearchEnter($event)"
+    >
       <ngx-mat-select-search
         [ngModel]="(optionsFilter$ | async)?.searchQuery || ''"
         [searching]="loading"
