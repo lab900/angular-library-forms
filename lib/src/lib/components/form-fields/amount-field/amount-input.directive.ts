@@ -100,7 +100,9 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
         target.value = validateValue;
       }
     }
-    this.onChange(isNaN(+validateValue) ? null : +validateValue);
+    this.onChange(
+      !validateValue?.length || isNaN(+validateValue) ? null : +validateValue
+    );
   }
 
   @HostListener('paste', ['$event'])
