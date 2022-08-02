@@ -47,11 +47,17 @@ export class FormFieldButtonToggleExampleComponent {
                   value: 'edit',
                   label: 'one',
                   icon: { name: 'delete', position: 'right' },
+                  tooltip: {
+                    text: 'Select first option',
+                  },
                 },
                 {
                   value: 'delete',
                   label: 'two',
                   icon: { name: 'delete', position: 'left' },
+                  tooltip: {
+                    text: 'Select second option',
+                  },
                 },
               ],
             },
