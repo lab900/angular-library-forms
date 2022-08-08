@@ -214,20 +214,21 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
       ) ?? false;
     if (this.fieldIsRequired != isRequired) {
       this.fieldIsRequired = isRequired;
-      setTimeout(() => {
-        this.group
-          ?.get(this.fieldAttribute)
-          ?.setValidators(
-            Lab900FormBuilderService.addValidators(
-              this.schema,
-              this.group.value
-            )
-          );
-      });
+      this.generateValidators();
     }
   }
 
-  private setFieldProperties(): void {
+  protected generateValidators(): void {
+    setTimeout(() => {
+      this.group
+        ?.get(this.fieldAttribute)
+        ?.setValidators(
+          Lab900FormBuilderService.addValidators(this.schema, this.group.value)
+        );
+    });
+  }
+
+  protected setFieldProperties(): void {
     this.hide();
     this.isReadonly();
     this.isRequired();
