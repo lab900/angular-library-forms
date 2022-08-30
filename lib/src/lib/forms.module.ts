@@ -170,13 +170,13 @@ const customFields = [
   ],
   exports: [
     Lab900Form,
-    InputFieldComponent,
     FormDialogDirective,
     AuthImageDirective,
     AutofocusDirective,
     SelectFieldComponent,
     AmountInputDirective,
     AmountPipe,
+    InputFieldComponent,
   ],
 })
 export class Lab900FormsModule {
