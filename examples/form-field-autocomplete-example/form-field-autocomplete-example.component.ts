@@ -21,7 +21,12 @@ export class FormFieldAutocompleteExampleComponent {
     { name: 'Mary' },
     { name: 'Shelley' },
     { name: 'Igor' },
-  ].map((value) => ({ value, label: value.name }));
+  ].map((value) => {
+    const image =
+      'https://firebasestorage.googleapis.com/v0/b/lab900-website-production.appspot.com/o/public%2Fproject-images%2Fyou%2Fyou-mockup.svg?alt=media';
+    const label = `<div class="user-option"><img width="20" height="20" src="${image}"> ${value.name}</div>`;
+    return { value, label };
+  });
 
   public formSchema: Lab900FormConfig = {
     fields: [
@@ -34,12 +39,6 @@ export class FormFieldAutocompleteExampleComponent {
           autocompleteOptions: (value: string) => of(this.filter(value)),
           debounceTime: 500,
           displayInputFn: (user: { name: string }) => user?.name ?? '',
-          displayOptionFn: (user: ValueLabel) => {
-            const userName = user?.label ?? '';
-            const image =
-              'https://firebasestorage.googleapis.com/v0/b/lab900-website-production.appspot.com/o/public%2Fproject-images%2Fyou%2Fyou-mockup.svg?alt=media';
-            return `<div class="user-option"><img width="20" height="20" src="${image}"> ${userName}</div>`;
-          },
         },
       },
       {
@@ -51,12 +50,6 @@ export class FormFieldAutocompleteExampleComponent {
           debounceTime: 500,
           requireMatch: true,
           displayInputFn: (user: { name: string }) => user?.name ?? '',
-          displayOptionFn: (user: ValueLabel) => {
-            const userName = user?.label ?? '';
-            const image =
-              'https://firebasestorage.googleapis.com/v0/b/lab900-website-production.appspot.com/o/public%2Fproject-images%2Fyou%2Fyou-mockup.svg?alt=media';
-            return `<div class="user-option"><img width="20" height="20" src="${image}"> ${userName}</div>`;
-          },
         },
       },
     ],

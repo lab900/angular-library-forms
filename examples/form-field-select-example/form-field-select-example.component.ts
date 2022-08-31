@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { EditType, Lab900FormConfig } from '@lab900/forms';
+import { EditType, Lab900FormConfig, ValueLabel } from '@lab900/forms';
 
 @Component({
   selector: 'lab900-form-field-select-example',
@@ -16,6 +16,7 @@ export class FormFieldSelectExampleComponent {
             attribute: 'somePropName',
             editType: EditType.Select,
             options: {
+              displayOptionFn: (value: ValueLabel) => value.label,
               placeholder: 'select yes or no',
               selectOptions: [
                 {
@@ -51,6 +52,20 @@ export class FormFieldSelectExampleComponent {
               colspan: 6,
             },
           },
+          {
+            attribute: 'thirdPropName',
+            title: 'Only item is auto-selected',
+            editType: EditType.Select,
+            options: {
+              selectOptions: [
+                {
+                  value: 'lonely',
+                  label: 'lonely item',
+                },
+              ],
+              autoselectOnlyOption: true,
+            },
+          },
         ],
       },
       {
@@ -69,6 +84,60 @@ export class FormFieldSelectExampleComponent {
                   label: 'checked yes',
                 },
               ],
+            },
+          },
+          {
+            attribute: 'forthPropName',
+            title: 'May the force be with you',
+            editType: EditType.Select,
+            options: {
+              selectOptions: [
+                {
+                  value: 'may',
+                  label: 'May',
+                },
+                {
+                  value: 'the',
+                  label: 'the',
+                },
+                {
+                  value: '4th',
+                  label: '4th',
+                },
+              ],
+              clearFieldButton: {
+                enabled: true,
+                click: (fieldControl) => {
+                  fieldControl.setValue('none');
+                  fieldControl.markAsTouched();
+                  fieldControl.markAsDirty();
+                },
+              },
+            },
+          },
+          {
+            attribute: 'forthMultiplePropName',
+            title: 'May the multiple forces be with you',
+            editType: EditType.Select,
+            options: {
+              multiple: true,
+              selectOptions: [
+                {
+                  value: 'may',
+                  label: 'May',
+                },
+                {
+                  value: 'the',
+                  label: 'the',
+                },
+                {
+                  value: '4th',
+                  label: '4th',
+                },
+              ],
+              clearFieldButton: {
+                enabled: true,
+              },
             },
           },
         ],

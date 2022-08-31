@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Lab900FormConfig, EditType, Lab900Form } from '@lab900/forms';
+import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 
 @Component({
   selector: 'lab900-form-field-inputs-example',
@@ -12,6 +12,21 @@ export class FormFieldInputsExampleComponent {
 
   public formSchema: Lab900FormConfig = {
     fields: [
+      {
+        editType: EditType.Row,
+        nestedFields: [
+          {
+            attribute: 'containerCustomClass',
+            editType: EditType.Input,
+            options: {
+              readonly: true,
+              readonlyContainerClass: 'readonlyInputCustomContainerClass',
+              defaultValue: 'MANUAL',
+            },
+          },
+        ],
+      },
+
       {
         attribute: 'uniqueNumber',
         title: 'Text Input Hidden',
@@ -65,9 +80,13 @@ export class FormFieldInputsExampleComponent {
       {
         attribute: 'passwordInput',
         title: 'Password Input',
-        editType: EditType.Input,
+        editType: EditType.Password,
         options: {
-          type: 'password',
+          togglePasswordVisibility: {
+            disabled: false,
+            passwordVisibleIcon: { name: 'visibility_off' },
+            passwordHiddenIcon: { name: 'visibility' },
+          },
         },
       },
       {

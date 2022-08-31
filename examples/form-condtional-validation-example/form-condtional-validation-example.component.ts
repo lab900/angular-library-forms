@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { EditType, Lab900FormConfig } from '@lab900/forms';
 import { Validators } from '@angular/forms';
+import { ValueLabel } from '@lab900/forms';
 
 @Component({
   selector: 'lab900-form-condtional-validation-example',

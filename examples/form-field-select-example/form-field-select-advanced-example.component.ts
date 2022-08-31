@@ -1,20 +1,30 @@
 import { Component } from '@angular/core';
 import {
   EditType,
-  Lab900FormConfig,
   FormFieldSelectOptionsFilter,
+  Lab900FormConfig,
   ValueLabel,
 } from '@lab900/forms';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-const tolkienBook: any = {
+interface Book {
+  key: string;
+  title: string;
+}
+
+const tolkienBook: Book = {
   key: '/works/OL27500W',
   title: 'The letters of J.R.R. Tolkien',
 };
 
-const compare = (a: any, b: any): boolean =>
+const tolkienBook2: Book = {
+  key: '/works/OL27471W',
+  title: 'Narn i chîn Húrin',
+};
+
+const compare = (a: Book, b: Book): boolean =>
   a?.key && b?.key && a.key === b.key;
 
 @Component({
@@ -22,7 +32,16 @@ const compare = (a: any, b: any): boolean =>
   template: '<lab900-form [schema]="formSchema" [data]="data"></lab900-form>',
 })
 export class FormFieldSelectAdvancedExampleComponent {
-  public data: any = { books2: tolkienBook };
+  public data: {
+    books2: Book;
+    books3: Book[];
+  } = {
+    books2: {
+      title: 'Song of Ice and Fire',
+      key: '/works/OL21242192W',
+    },
+    books3: [tolkienBook, tolkienBook2],
+  };
   public formSchema: Lab900FormConfig = {
     fields: [
       {
@@ -35,9 +54,9 @@ export class FormFieldSelectAdvancedExampleComponent {
             editType: EditType.Select,
             options: {
               compareWith: compare,
-              displayOptionFn: (o) => o?.value?.title,
               selectOptions: this.getSelectOptions.bind(this),
               colspan: 4,
+              displaySelectedOptionFn: (o: Book) => o?.title,
               infiniteScroll: {
                 enabled: true,
               },
@@ -49,9 +68,9 @@ export class FormFieldSelectAdvancedExampleComponent {
             editType: EditType.Select,
             options: {
               compareWith: compare,
-              displayOptionFn: (o) => o?.value?.title,
               selectOptions: this.getSelectOptions.bind(this),
               colspan: 4,
+              displaySelectedOptionFn: (o: Book) => o?.title,
               infiniteScroll: {
                 enabled: true,
               },
@@ -66,19 +85,24 @@ export class FormFieldSelectAdvancedExampleComponent {
             editType: EditType.Select,
             options: {
               compareWith: compare,
-              displayOptionFn: (o) => o?.value?.title,
-              customTriggerFn: (value: any[]) => {
+              customTriggerFn: (value: Book[]) => {
                 return value?.length + ' selected';
               },
               selectOptions: this.getSelectOptions.bind(this),
               colspan: 4,
               multiple: true,
+              displaySelectedOptionFn: (o: Book) => o?.title,
               infiniteScroll: {
                 enabled: true,
               },
               search: {
                 enabled: true,
               },
+              readonlyDisplay: (books: Book[]) =>
+                books
+                  .map((book) => book.title)
+                  .filter((x) => !!x)
+                  .join('<br>'),
             },
           },
         ],
@@ -89,7 +113,7 @@ export class FormFieldSelectAdvancedExampleComponent {
         nestedFields: [
           {
             attribute: 'author',
-            title: 'Select a author',
+            title: 'Select an author',
             editType: EditType.Select,
             options: {
               selectOptions: [
@@ -112,6 +136,7 @@ export class FormFieldSelectAdvancedExampleComponent {
               selectOptions: this.getSelectOptions.bind(this),
               compareWith: compare,
               colspan: 6,
+              displaySelectedOptionFn: (value: Book) => value.title,
               infiniteScroll: {
                 enabled: true,
               },
@@ -139,7 +164,7 @@ export class FormFieldSelectAdvancedExampleComponent {
   public getSelectOptions(
     filter?: FormFieldSelectOptionsFilter,
     author?: string
-  ): Observable<ValueLabel[]> {
+  ): Observable<ValueLabel<{ title: string; key: string }>[]> {
     return this.http
       .get<{ docs: any[] }>('https://openlibrary.org/search.json', {
         params: {
