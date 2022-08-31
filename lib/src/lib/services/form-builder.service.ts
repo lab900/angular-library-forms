@@ -88,9 +88,9 @@ export class Lab900FormBuilderService {
     field: FormFieldRepeater,
     formArray: FormArray = this.fb.array([])
   ): FormArray {
+    formArray.clear();
     const data: any[] = this.getFieldValue(field.attribute, formData);
-    if (data?.length) {
-      formArray.clear();
+    if (Array.isArray(data) && data?.length) {
       data.forEach((nestedData) => {
         formArray.push(
           this.createFormGroup(field.nestedFields, undefined, nestedData)
@@ -123,11 +123,13 @@ export class Lab900FormBuilderService {
       fieldGroup.addControl(attribute, repeaterArray);
     } else if (field.editType === EditType.DateRange) {
       const options = field?.options;
+      const startKey = options?.startKey ?? 'start';
+      const endKey = options?.endKey ?? 'end';
       fieldGroup.addControl(
         attribute,
         this.fb.group({
-          [options?.startKey || 'start']: '',
-          [options?.endKey || 'end']: '',
+          [startKey]: data?.[startKey],
+          [endKey]: data?.[endKey],
         })
       );
     } else {

@@ -70,6 +70,9 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   }
 
   public get placeholder(): string {
+    if (typeof this.options?.placeholder === 'function') {
+      return this.options.placeholder(this.group.value);
+    }
     return this.options?.placeholder;
   }
 
@@ -167,6 +170,16 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
       case 'requireMatch':
         return this.translateService.get(
           'forms.error.requireMatch',
+          interpolateParams
+        );
+      case 'toManyDecimalSeparators':
+        return this.translateService.get(
+          'forms.error.toManyDecimalSeparators',
+          interpolateParams
+        );
+      case 'invalidNumber':
+        return this.translateService.get(
+          'forms.error.invalidNumber',
           interpolateParams
         );
       default:

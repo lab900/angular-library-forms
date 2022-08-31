@@ -1,8 +1,8 @@
 {
   "name": "@lab900/forms",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "author": "Lab900 <info@lab900.com> (https://lab900.com)",
-  "licens": "MIT",
+  "license": "MIT",
   "peerDependencies": {
     "@angular/common": "~12.2.14",
     "@angular/core": "~12.2.14",

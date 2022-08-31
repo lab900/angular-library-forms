@@ -9,42 +9,18 @@
   <input
     matInput
     #input
-    [type]="options?.type || 'text'"
+    type="text"
     placeholder="{{ placeholder | translate }}"
     [formControlName]="fieldAttribute"
     [required]="fieldIsRequired"
     [readonly]="fieldIsReadonly"
     [ngClass]="{ readonly: fieldIsReadonly }"
-    [mask]="options?.fieldMask?.mask"
-    [prefix]="options?.fieldMask?.prefix || setting?.fieldMask?.prefix || ''"
-    [suffix]="options?.fieldMask?.suffix || setting?.fieldMask?.suffix || ''"
-    [placeHolderCharacter]="
-      options?.fieldMask?.placeHolderCharacter ||
-      setting?.fieldMask?.placeHolderCharacter ||
-      ''
-    "
-    [dropSpecialCharacters]="
-      options?.fieldMask?.dropSpecialCharacters ||
-      setting?.fieldMask?.dropSpecialCharacters ||
-      true
-    "
-    [allowNegativeNumbers]="
-      options?.fieldMask?.allowNegativeNumbers ||
-      setting?.fieldMask?.allowNegativeNumbers
-    "
-    [showMaskTyped]="
-      options?.fieldMask?.showMaskTyped || setting?.fieldMask?.showMaskTyped
-    "
-    [decimalMarker]="
-      options?.fieldMask?.decimalMarker || setting?.fieldMask?.decimalMarker
-    "
-    [thousandSeparator]="
-      options?.fieldMask?.thousandSeparator ||
-      setting?.fieldMask?.thousandSeparator
-    "
     lab900InputAutofocus
+    lab900AmountInput
     [autofocus]="options?.autofocus"
     [style]="options?.style || ''"
+    [maxDecimals]="maxDecimals"
+    [minDecimals]="minDecimals"
   />
   <lab900-icon
     [icon]="schema.icon"
@@ -72,12 +48,7 @@
   >
     <span [innerHTML]="hint | translate: hintValueTranslateData"></span>
   </mat-hint>
-  <mat-hint
-    align="end"
-    *ngIf="options?.maxLength && showLengthIndicator && !fieldIsReadonly"
-    >{{ input.value?.length || 0 }}/{{ options?.maxLength }}</mat-hint
-  >
-  <mat-error *ngIf="!valid && !fieldIsReadonly"
-    ><span [innerHTML]="getErrorMessage() | async"></span
-  ></mat-error>
+  <mat-error *ngIf="!valid && !fieldIsReadonly">
+    <span [innerHTML]="getErrorMessage() | async"></span>
+  </mat-error>
 </mat-form-field>

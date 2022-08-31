@@ -10,8 +10,10 @@ import { FormFieldAutocompleteExampleComponent } from './examples/form-field-aut
 import { FormFieldAutocompleteMultipleExampleComponent } from './examples/form-field-autocomplete-example/form-field-autocomplete-multiple-example.component';
 import { FormFieldButtonExampleComponent } from './examples/form-field-button-example/form-field-button-example.component';
 import { FormFieldButtonToggleExampleComponent } from './examples/form-field-button-toggle-example/form-field-button-toggle-example.component';
+import { FormFieldDatePickerExampleComponent } from './examples/form-field-date-picker-example/form-field-date-picker-example.component';
 import { FormFieldDateRangePickerExampleComponent } from './examples/form-field-date-range-picker-example/form-field-date-range-picker-example.component';
 import { FormFieldDateTimePickerExampleComponent } from './examples/form-field-date-time-picker-example/form-field-date-time-picker-example.component';
+import { FormFieldDateYearMonthPickerExampleComponent } from './examples/form-field-date-year-month-picker-example/form-field-date-year-month-picker-example.component';
 import { FormFieldDragNDropFileExampleFullWidthComponent } from './examples/form-field-drag-n-drop-file-example/form-field-drag-n-drop-file-example-full-width.component';
 import { FormFieldDragNDropFileExampleComponent } from './examples/form-field-drag-n-drop-file-example/form-field-drag-n-drop-file-example.component';
 import { FormFieldFileUploadExampleComponent } from './examples/form-field-file-upload-example/form-field-file-upload-example.component';
@@ -29,6 +31,7 @@ import { FormFieldSelectExampleComponent } from './examples/form-field-select-ex
 import { FormFieldSlideToggleExampleComponent } from './examples/form-field-slide-toggle-example/form-field-slide-toggle-example.component';
 import { FormFieldTextareaExampleComponent } from './examples/form-field-textarea-example/form-field-textarea-example.component';
 import { ShowcaseFormsRoutingModule } from './showcase-forms-routing.module';
+import { FormFieldAmountExampleComponent } from './examples/form-field-amount-example/form-field-amount-example.component';
 
 const examples = [
   FormFieldRepeaterExampleComponent,
@@ -47,6 +50,8 @@ const examples = [
   FormConditionalsExampleComponent,
   FormContainerReadonlyExampleComponent,
   FormFieldDateRangePickerExampleComponent,
+  FormFieldDateYearMonthPickerExampleComponent,
+  FormFieldDatePickerExampleComponent,
   FormFieldDateTimePickerExampleComponent,
   FormFieldSelectExampleComponent,
   FormFieldFileUploadExampleComponent,
@@ -58,6 +63,7 @@ const examples = [
   FormFieldSelectAdvancedExampleComponent,
   FormFieldNestedGroupsExampleComponent,
   FormFieldNestedGroupsByAttributeExampleComponent,
+  FormFieldAmountExampleComponent,
 ];
 
 @NgModule({

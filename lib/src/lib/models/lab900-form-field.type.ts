@@ -21,6 +21,8 @@ import { WysiwgFieldModel } from '../components/form-fields/wysiwyg-field/wysiwg
 import { FormRow } from '../components/form-row/form-row.model';
 import { FormFieldDragNDropFilePreview } from '../components/form-fields/drag-n-drop-file-field/drag-n-drop-file-field.model';
 import { FormFieldPassword } from '../components/form-fields/password-field/password-field.model';
+import { FormFieldDateYearMonthPicker } from '../components/form-fields/date-year-month-field/date-year-month-field.model';
+import { FormFieldAmount } from '../components/form-fields/amount-field/amount-field.model';
 
 export type Lab900FormField<R = any, T extends string | number = string> =
   | FormFieldInput<T>
@@ -40,9 +42,11 @@ export type Lab900FormField<R = any, T extends string | number = string> =
   | FormFieldSlideToggle<T>
   | FormFieldRangeSlider<T>
   | FormFieldDatePicker<T>
+  | FormFieldDateYearMonthPicker<T>
   | FormFieldDateTimePicker<T>
   | FormFieldDateRange<T>
   | FormFieldAutocomplete<R, T>
   | FormFieldAutocompleteMulti<R, T>
   | FormFieldRepeater<T>
-  | FormFieldTextarea<T>;
+  | FormFieldTextarea<T>
+  | FormFieldAmount<T>;

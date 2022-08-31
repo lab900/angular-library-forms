@@ -13,8 +13,10 @@ import { FormFieldAutocompleteExampleComponent } from './examples/form-field-aut
 import { FormFieldAutocompleteMultipleExampleComponent } from './examples/form-field-autocomplete-example/form-field-autocomplete-multiple-example.component';
 import { FormFieldButtonExampleComponent } from './examples/form-field-button-example/form-field-button-example.component';
 import { FormFieldButtonToggleExampleComponent } from './examples/form-field-button-toggle-example/form-field-button-toggle-example.component';
+import { FormFieldDatePickerExampleComponent } from './examples/form-field-date-picker-example/form-field-date-picker-example.component';
 import { FormFieldDateRangePickerExampleComponent } from './examples/form-field-date-range-picker-example/form-field-date-range-picker-example.component';
 import { FormFieldDateTimePickerExampleComponent } from './examples/form-field-date-time-picker-example/form-field-date-time-picker-example.component';
+import { FormFieldDateYearMonthPickerExampleComponent } from './examples/form-field-date-year-month-picker-example/form-field-date-year-month-picker-example.component';
 import { FormFieldDragNDropFileExampleFullWidthComponent } from './examples/form-field-drag-n-drop-file-example/form-field-drag-n-drop-file-example-full-width.component';
 import { FormFieldDragNDropFileExampleComponent } from './examples/form-field-drag-n-drop-file-example/form-field-drag-n-drop-file-example.component';
 import { FormFieldFileUploadExampleComponent } from './examples/form-field-file-upload-example/form-field-file-upload-example.component';
@@ -33,6 +35,7 @@ import { FormFieldSlideToggleExampleComponent } from './examples/form-field-slid
 import { FormFieldTextareaExampleComponent } from './examples/form-field-textarea-example/form-field-textarea-example.component';
 import { showcaseFormsConfig } from './showcase-forms.constants';
 import { showcaseFormsNavItems } from './showcase-forms.nav-items';
+import { FormFieldAmountExampleComponent } from './examples/form-field-amount-example/form-field-amount-example.component';
 
 const routes: Routes = [
   {
@@ -97,6 +100,11 @@ const routes: Routes = [
     ),
   ]),
   new ShowcaseRoute('form-field-datepicker', 'Form Fields: Datepicker', [
+    new ShowcaseExample(FormFieldDatePickerExampleComponent, 'Date picker'),
+    new ShowcaseExample(
+      FormFieldDateYearMonthPickerExampleComponent,
+      'Date Year Month picker'
+    ),
     new ShowcaseExample(
       FormFieldDateRangePickerExampleComponent,
       'Date range picker'
@@ -163,6 +171,12 @@ const routes: Routes = [
     new ShowcaseExample(
       FormFieldNestedGroupsByAttributeExampleComponent,
       'Nested groups by attributes'
+    ),
+  ]),
+  new ShowcaseRoute('form-field-amount', 'Form Fields: Amount', [
+    new ShowcaseExample(
+      FormFieldAmountExampleComponent,
+      'Formatted amount field'
     ),
   ]),
 ];

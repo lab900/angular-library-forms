@@ -33,7 +33,7 @@ export interface FormFieldBaseOptions {
     hideHintOnValidValue?: boolean;
     valueTranslateData?: object;
   };
-  placeholder?: string;
+  placeholder?: string | ((data?: any) => string);
   colspan?: number; // 12 column grid = value from 1 to 12.
   mobileCols?: boolean; // keep colspan on mobile (only for form rows)
   required?: boolean | ((data?: any) => boolean);
@@ -44,6 +44,7 @@ export interface FormFieldBaseOptions {
   max?: number;
   defaultValue?: any;
   pattern?: RegExp;
+  readonlyContainerClass?: string | ((data?: any) => string);
   readonlyLabel?: string;
   readonlyDisplay?: (data?: any) => any;
   visibleFn?: (item: any) => boolean;

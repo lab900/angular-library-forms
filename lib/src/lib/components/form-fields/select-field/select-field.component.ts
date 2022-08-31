@@ -99,9 +99,9 @@ export class SelectFieldComponent<T>
 
     this.addSubscription(
       this.optionsFilter$.pipe(
-        debounceTime(this.options?.search?.debounceTime ?? 300),
         filter(() => !!this.optionsFn$.value),
         tap(() => (this.loading = true)),
+        debounceTime(this.options?.search?.debounceTime ?? 300),
         switchMap((optionsFilter) =>
           this.optionsFn$.pipe(
             take(1),
@@ -236,7 +236,9 @@ export class SelectFieldComponent<T>
   // does not work with multi select > use readonlyDisplay in that case
   public getReadOnlyDisplay(): string {
     if (this.options?.readonlyDisplay) {
-      return this.options.readonlyDisplay(this.fieldControl.value);
+      return this.translateService.instant(
+        this.options.readonlyDisplay(this.fieldControl.value) || '-'
+      );
     }
 
     if (this.selectedOption) {
@@ -260,6 +262,13 @@ export class SelectFieldComponent<T>
       this.fieldControl.setValue(null);
       this.fieldControl.markAsTouched();
       this.fieldControl.markAsDirty();
+    }
+  }
+
+  public onSearchEnter($event: Event): void {
+    if (this.loading) {
+      $event.preventDefault();
+      $event.stopPropagation();
     }
   }
 }

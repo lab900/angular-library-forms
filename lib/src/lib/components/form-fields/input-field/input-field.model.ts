@@ -13,8 +13,8 @@ export interface FieldMask extends Partial<IConfig> {
 export interface FormFieldInputOptions extends FormFieldBaseOptions {
   type?: 'text' | 'number' | 'email' | 'tel' | 'url' | 'time';
   autofocus?: boolean;
-  suffix?: string;
-  prefix?: string;
+  suffix?: string | ((data?: any) => string);
+  prefix?: string | ((data?: any) => string);
   align?: 'left' | 'right';
   fieldMask?: FieldMask;
   showLengthIndicator?: boolean;

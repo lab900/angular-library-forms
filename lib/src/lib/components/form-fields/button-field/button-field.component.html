@@ -14,9 +14,7 @@
     (click)="handleClick($event)"
     [label]="options.label"
     [matTooltip]="options.tooltip?.text | translate"
-    [matTooltipPosition]="
-      options.tooltip?.position ? options.tooltip?.position : 'above'
-    "
+    [matTooltipPosition]="options.tooltip?.position || 'above'"
     [prefixIcon]="options.prefixIcon"
     [suffixIcon]="options.suffixIcon"
     [svgIcon]="options.svgIcon"

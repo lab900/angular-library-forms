@@ -15,7 +15,7 @@ export class ReadonlyFieldComponent extends FormComponent implements OnDestroy {
   public constructor(translateService: TranslateService) {
     super(translateService);
     setTimeout(() => {
-      if (this.group?.controls) {
+      if (this.group?.controls && this.fieldAttribute) {
         this.setValue(this.group.controls[this.fieldAttribute].value);
         this.addSubscription(
           this.group.controls[this.fieldAttribute].valueChanges,
@@ -29,5 +29,12 @@ export class ReadonlyFieldComponent extends FormComponent implements OnDestroy {
     this.value = this.options?.readonlyDisplay
       ? this.options?.readonlyDisplay(this.group.value)
       : value;
+  }
+
+  public getReadonlyContainerClass(): string {
+    if (typeof this.options?.readonlyContainerClass === 'function') {
+      return this.options.readonlyContainerClass(this.group.value);
+    }
+    return this.options?.readonlyContainerClass;
   }
 }

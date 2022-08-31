@@ -5,7 +5,7 @@ import {
 } from '@angular-material-components/datetime-picker';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ModuleWithProviders, NgModule, Type } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -43,6 +43,7 @@ import { ButtonFieldComponent } from './components/form-fields/button-field/butt
 import { ButtonToggleFieldComponent } from './components/form-fields/button-toggle-field/button-toggle-field.component';
 import { CheckboxFieldComponent } from './components/form-fields/checkbox-field/checkbox-field.component';
 import { DateFieldComponent } from './components/form-fields/date-field/date-field.component';
+import { DateYearMonthFieldComponent } from './components/form-fields/date-year-month-field/date-year-month-field.component';
 import { DateRangeFieldComponent } from './components/form-fields/date-range-field/date-range-field.component';
 import { DateTimeFieldComponent } from './components/form-fields/date-time-field/date-time-field.component';
 import { DragNDropFileFieldComponent } from './components/form-fields/drag-n-drop-file-field/drag-n-drop-file-field.component';
@@ -80,6 +81,9 @@ import {
 } from './models/Lab900FormModuleSettings';
 import { Lab900FormBuilderService } from './services/form-builder.service';
 import { PasswordFieldComponent } from './components/form-fields/password-field/password-field.component';
+import { AmountFieldComponent } from './components/form-fields/amount-field/amount-field.component';
+import { AmountInputDirective } from './components/form-fields/amount-field/amount-input.directive';
+import { AmountPipe } from './components/form-fields/amount-field/amount.pipe';
 
 const customFields = [
   UnknownFieldComponent,
@@ -91,6 +95,7 @@ const customFields = [
   DragNDropFileFieldComponent,
   CheckboxFieldComponent,
   DateFieldComponent,
+  DateYearMonthFieldComponent,
   WysiwygFieldComponent,
   TextareaFieldComponent,
   RepeaterFieldComponent,
@@ -125,6 +130,9 @@ const customFields = [
     MultiLangInputFieldComponent,
     LanguagePickerComponent,
     MultiLangFieldControlComponent,
+    AmountFieldComponent,
+    AmountInputDirective,
+    AmountPipe,
   ],
   imports: [
     CommonModule,
@@ -166,6 +174,9 @@ const customFields = [
     AuthImageDirective,
     AutofocusDirective,
     SelectFieldComponent,
+    AmountInputDirective,
+    AmountPipe,
+    InputFieldComponent,
   ],
 })
 export class Lab900FormsModule {
@@ -180,6 +191,10 @@ export class Lab900FormsModule {
       fieldMask: {
         ...defaultFormModuleSettings.fieldMask,
         ...(settings?.fieldMask ?? {}),
+      },
+      amountField: {
+        ...defaultFormModuleSettings.amountField,
+        ...(settings?.amountField ?? {}),
       },
     };
     return {
@@ -206,6 +221,7 @@ export class Lab900FormsModule {
             DragNDropFileFieldComponent,
             CheckboxFieldComponent,
             DateFieldComponent,
+            DateYearMonthFieldComponent,
             WysiwygFieldComponent,
             TextareaFieldComponent,
             RepeaterFieldComponent,
@@ -222,6 +238,7 @@ export class Lab900FormsModule {
             DateRangeFieldComponent,
             DateTimeFieldComponent,
             MultiLangInputFieldComponent,
+            AmountFieldComponent,
           },
         },
       ],
