@@ -1,5 +1,5 @@
 steps:
-- name: tarampampam/node:13-alpine
+- name: tarampampam/node:14.15-alpine
   entrypoint: sh
   dir: /workspace
   args:

@@ -1,13 +1,12 @@
 #!/bin/sh
 # Used in automatic deploy on main branch
 
-printf git
 #echo "$2" > git_ssh_key
 #chmod 400 git_ssh_key || exit
 #eval "$(ssh-agent)" || exit
 #ssh-add git_ssh_key || exit
 #mkdir ~/.ssh
-ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+#ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 #printf "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 #cat ~/.ssh/config
 #cat ~/.ssh/known_hosts
