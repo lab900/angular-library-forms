@@ -5,7 +5,6 @@ git config --global user.name "lab900-winand-vandenbergh"
 git config --global user.email "winand.vandenbergh@lab900.com"
 git config --global --list
 git config --local --list
-exit
 
 echo "$2" > git_ssh_key
 chmod 400 git_ssh_key || exit
