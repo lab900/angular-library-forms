@@ -1,6 +1,6 @@
 #!/bin/sh
 # Used in automatic deploy on main branch
-git init
+#git init
 git config --global user.name "lab900-winand-vandenbergh"
 git config --global user.email "winand.vandenbergh@lab900.com"
 git config --global --list
