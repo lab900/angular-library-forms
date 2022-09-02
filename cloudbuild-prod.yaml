@@ -1,5 +1,6 @@
 steps:
 - name: tarampampam/node:14.15-alpine
+  timeout: 1200s
   entrypoint: sh
   dir: /workspace
   args:
