@@ -1,6 +1,10 @@
 #!/bin/sh
 # Used in automatic deploy on main branch
 
+git config --global --list
+git config --local --list
+exit
+
 echo "$2" > git_ssh_key
 chmod 400 git_ssh_key || exit
 eval "$(ssh-agent)" || exit
