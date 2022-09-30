@@ -83,7 +83,7 @@ export class SelectFieldComponent<T>
       const { selectOptions } = this.options;
       this.updateOptionsFn(
         typeof selectOptions === 'function'
-          ? selectOptions
+          ? (f) => selectOptions(f, this.fieldControl)
           : () => selectOptions
       );
     }
