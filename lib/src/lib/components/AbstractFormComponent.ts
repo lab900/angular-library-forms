@@ -14,6 +14,7 @@ import { SubscriptionBasedDirective } from '../directives/subscription-based.dir
 import { Lab900FormField } from '../models/lab900-form-field.type';
 import { ValueLabel } from '../models/form-field-base';
 import { Lab900FormBuilderService } from '../services/form-builder.service';
+import memoize from 'lodash/memoize';
 
 @Directive()
 export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
@@ -76,6 +77,43 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     return this.options?.placeholder;
   }
 
+  public getErrorMessage = memoize(
+    (group: FormGroup = this.group): Observable<string> => {
+      const field = group.get(String(this.fieldAttribute));
+      let errors: ValidationErrors = field.errors;
+      let message = this.translateService.get('forms.error.generic');
+      if (field instanceof FormGroup && field.controls) {
+        errors = field.errors ?? {};
+        for (const controlsKey in field.controls) {
+          if (field.controls.hasOwnProperty(controlsKey)) {
+            errors = { ...errors, ...field.get(controlsKey).errors };
+          }
+        }
+      }
+
+      if (!errors) {
+        return;
+      }
+
+      Object.keys(errors).forEach((key: string) => {
+        if (field.hasError(key)) {
+          if (
+            this.schema.errorMessages &&
+            Object.keys(this.schema.errorMessages).includes(key)
+          ) {
+            message = this.translateService.get(
+              this.schema.errorMessages[key],
+              field.getError(key)
+            );
+          } else {
+            message = this.getDefaultErrorMessage(key, field.getError(key));
+          }
+        }
+      });
+      return message;
+    }
+  );
+
   protected constructor(protected translateService: TranslateService) {
     super();
   }
@@ -105,41 +143,6 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     value: any,
     firstRun?: boolean
   ): void {}
-
-  public getErrorMessage(group: FormGroup = this.group): Observable<string> {
-    const field = group.get(String(this.fieldAttribute));
-    let errors: ValidationErrors = field.errors;
-    let message = this.translateService.get('forms.error.generic');
-    if (field instanceof FormGroup && field.controls) {
-      errors = field.errors ?? {};
-      for (const controlsKey in field.controls) {
-        if (field.controls.hasOwnProperty(controlsKey)) {
-          errors = { ...errors, ...field.get(controlsKey).errors };
-        }
-      }
-    }
-
-    if (!errors) {
-      return;
-    }
-
-    Object.keys(errors).forEach((key: string) => {
-      if (field.hasError(key)) {
-        if (
-          this.schema.errorMessages &&
-          Object.keys(this.schema.errorMessages).includes(key)
-        ) {
-          message = this.translateService.get(
-            this.schema.errorMessages[key],
-            field.getError(key)
-          );
-        } else {
-          message = this.getDefaultErrorMessage(key, field.getError(key));
-        }
-      }
-    });
-    return message;
-  }
 
   private getDefaultErrorMessage(
     key: string,

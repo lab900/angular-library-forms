@@ -1,16 +1,16 @@
 <mat-form-field
   [formGroup]="group"
   *ngIf="!fieldIsReadonly && !fieldIsHidden"
-  [floatLabel]="loading || fieldControl.disabled ? 'never' : 'auto'"
+  [floatLabel]="loading$.value || fieldControl.disabled ? 'never' : 'auto'"
   class="lab900-select-field"
   [class.has-value]="fieldControl?.value?.length"
   id="lab900-select-field-{{ fieldAttribute }}"
 >
   <mat-label *ngIf="schema?.title">
-    <ng-container *ngIf="loading">{{
+    <ng-container *ngIf="loading$.value">{{
       'form.field.loading' | translate
     }}</ng-container>
-    <ng-container *ngIf="schema.title && !loading">{{
+    <ng-container *ngIf="schema.title && !loading$.value">{{
       schema.title | translate
     }}</ng-container>
   </mat-label>
@@ -33,10 +33,11 @@
     <mat-option
       *ngIf="options?.search?.enabled"
       (keydown.enter)="onSearchEnter($event)"
+      [disabled]="true"
     >
       <ngx-mat-select-search
         [ngModel]="(optionsFilter$ | async)?.searchQuery || ''"
-        [searching]="loading"
+        [searching]="loading$.value"
         (ngModelChange)="onSearch($event)"
         [ngModelOptions]="{ standalone: true }"
         [placeholderLabel]="
@@ -52,10 +53,30 @@
         [clearSearchInput]="options?.search?.clearOnClose || false"
       ></ngx-mat-select-search>
     </mat-option>
+    <div
+      *ngIf="options?.multiple && options?.selectAll?.enabled"
+      class="select-all"
+      style="margin: 5px 17px"
+    >
+      <mat-checkbox
+        [(ngModel)]="allSelected"
+        [ngModelOptions]="{ standalone: true }"
+        [disabled]="this.options.selectAll?.disabled"
+        (change)="handleToggleAllSelection()"
+      >
+        {{
+          options.selectAll?.label || 'forms.select-field.selectAllLabel'
+            | translate
+        }}
+      </mat-checkbox>
+    </div>
     <mat-option
       *ngFor="let item of selectOptions"
       [value]="item.value"
-      [disabled]="item.disabled || loading"
+      [disabled]="item.disabled || loading$.value"
+      (click)="
+        options?.multiple ? handleSelectAllEnabledOptionClick() : undefined
+      "
     >
       <div
         *ngIf="options?.displayOptionFn"
@@ -68,7 +89,7 @@
     </mat-option>
   </mat-select>
   <button
-    *ngIf="showClearButton()"
+    *ngIf="showClearButton(this.fieldControl.value)"
     matSuffix
     mat-icon-button
     type="button"
@@ -83,7 +104,7 @@
     ><span [innerHTML]="hint | translate: hintValueTranslateData"></span
   ></mat-hint>
   <mat-error *ngIf="!valid"
-    ><span [innerHTML]="getErrorMessage() | async"></span
+    ><span [innerHTML]="getErrorMessage(this.group) | async"></span
   ></mat-error>
 </mat-form-field>
 
@@ -94,10 +115,10 @@
     >{{ options?.readonlyLabel || schema.title | translate }}</span
   >
   <div
-    *ngIf="!loading || !fieldControl.value"
+    *ngIf="!loading$.value || !fieldControl.value"
     [innerHTML]="getReadOnlyDisplay()"
   ></div>
-  <div *ngIf="loading && fieldControl.value">
+  <div *ngIf="loading$.value && fieldControl.value">
     {{ 'form.field.loading' | translate }}
   </div>
 </div>

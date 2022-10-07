@@ -10,11 +10,13 @@ import { AbstractControl } from '@angular/forms';
 export interface FormFieldSelectOptionsFilter {
   page?: number;
   searchQuery?: string;
+  forSelectAll?: boolean;
 }
 
 export type FormFieldSelectOptionsFn<T> = (
   filter?: FormFieldSelectOptionsFilter,
-  fieldControl?: AbstractControl
+  fieldControl?: AbstractControl,
+  schema?: FormFieldSelect<T>
 ) => ValueLabel<T>[] | Observable<ValueLabel<T>[]>;
 
 export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
@@ -67,8 +69,13 @@ export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
    * Shows a clear button on the right of the field
    */
   clearFieldButton?: {
-    enabled: boolean | ((data?: any) => boolean);
+    enabled: boolean | ((data?: T) => boolean);
     click?: (fieldControl: AbstractControl, clickEvent: Event) => void;
+  };
+  selectAll?: {
+    enabled: boolean;
+    label?: string;
+    disabled?: boolean;
   };
 }
 
