@@ -121,6 +121,12 @@ export class SelectFieldComponent<T>
               return (isObservable(values) ? values : of(values)).pipe(
                 catchError(() => of([])),
                 tap((options: ValueLabel<T>[]) => {
+                  if (this.options.multiple && !optionsFilter.forSelectAll) {
+                    setTimeout(() => {
+                      this.isAllSelected();
+                    }, 0);
+                  }
+
                   if (
                     options.length === 1 &&
                     !this.fieldControl.value &&
@@ -284,15 +290,11 @@ export class SelectFieldComponent<T>
     }
   }
 
-  public handleSelectAllEnabledOptionClick(): void {
-    let allSelected = true;
-    for (let option of this.select.options) {
-      if (!option.selected) {
-        allSelected = false;
-        break;
-      }
-    }
-    this.allSelected = allSelected;
+  public isAllSelected(): void {
+    this.allSelected =
+      this.select.options.find(
+        (option) => !option.selected && !option.disabled
+      ) == null;
   }
 
   public handleToggleAllSelection(): void {

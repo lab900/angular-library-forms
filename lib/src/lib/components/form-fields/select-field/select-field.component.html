@@ -74,9 +74,7 @@
       *ngFor="let item of selectOptions"
       [value]="item.value"
       [disabled]="item.disabled || loading$.value"
-      (click)="
-        options?.multiple ? handleSelectAllEnabledOptionClick() : undefined
-      "
+      (click)="options?.multiple ? isAllSelected() : undefined"
     >
       <div
         *ngIf="options?.displayOptionFn"
