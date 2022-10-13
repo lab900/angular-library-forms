@@ -121,7 +121,7 @@ export class SelectFieldComponent<T>
               return (isObservable(values) ? values : of(values)).pipe(
                 catchError(() => of([])),
                 tap((options: ValueLabel<T>[]) => {
-                  if (this.options.multiple && !optionsFilter.forSelectAll) {
+                  if (this.options.multiple && !optionsFilter.getAll) {
                     setTimeout(() => {
                       this.isAllSelected();
                     }, 0);
@@ -233,7 +233,7 @@ export class SelectFieldComponent<T>
       const currentFilter = this.optionsFilter$.value;
       this.optionsFilter$.next({
         ...currentFilter,
-        forSelectAll: false,
+        getAll: false,
         page: currentFilter.page + 1,
       });
     }
@@ -301,7 +301,7 @@ export class SelectFieldComponent<T>
     if (this.schema.options.infiniteScroll?.enabled) {
       this.optionsFilter$.next({
         ...this.optionsFilter$.value,
-        forSelectAll: true,
+        getAll: true,
       });
       this.loading$
         .asObservable()

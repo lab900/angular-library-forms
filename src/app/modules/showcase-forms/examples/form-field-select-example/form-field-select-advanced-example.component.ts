@@ -204,13 +204,13 @@ export class FormFieldSelectAdvancedExampleComponent {
         params: {
           q: filter?.searchQuery,
           author: author ?? 'tolkien',
-          limit: filter.forSelectAll ? this.MAX_ITEMS_FOR_SELECT_ALL : '10',
-          offset: filter.forSelectAll ? 0 : String((filter?.page || 0) * 10),
+          limit: filter.getAll ? this.MAX_ITEMS_FOR_SELECT_ALL : '10',
+          offset: filter.getAll ? 0 : String((filter?.page || 0) * 10),
         },
       })
       .pipe(
         map((res) => {
-          if (filter.forSelectAll) {
+          if (filter.getAll) {
             schema.options.infiniteScroll = { enabled: false };
           }
           return res?.docs?.map((d) => ({

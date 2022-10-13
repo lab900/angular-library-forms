@@ -10,7 +10,7 @@ import { AbstractControl } from '@angular/forms';
 export interface FormFieldSelectOptionsFilter {
   page?: number;
   searchQuery?: string;
-  forSelectAll?: boolean;
+  getAll?: boolean;
 }
 
 export type FormFieldSelectOptionsFn<T> = (
