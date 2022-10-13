@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnInit } from '@angular/core';
+import { Component, HostBinding, OnInit, ViewChild } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, isObservable, of, Subject } from 'rxjs';
@@ -18,6 +18,9 @@ import {
 import { IFieldConditions } from '../../../models/IFieldConditions';
 import { coerceArray } from '@lab900/ui';
 import { ValueLabel } from '../../../models/form-field-base';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/core';
+import memoize from 'lodash/memoize';
 
 @Component({
   selector: 'lab900-select-field',
@@ -27,6 +30,11 @@ export class SelectFieldComponent<T>
   extends FormComponent<FormFieldSelect<T>>
   implements OnInit
 {
+  @ViewChild('select')
+  private select: MatSelect;
+
+  @HostBinding('class')
+  public classList = 'lab900-form-field';
   /*
    * When conditional options are used for this select, keep the previously selected item
    * and select it again when the new valuelist is loaded
@@ -43,12 +51,11 @@ export class SelectFieldComponent<T>
   public optionsFilter$ =
     new BehaviorSubject<FormFieldSelectOptionsFilter | null>(null);
 
-  @HostBinding('class')
-  public classList = 'lab900-form-field';
+  public allSelected = false;
 
   public selectOptions: ValueLabel<T>[];
 
-  public loading = true;
+  public loading$ = new BehaviorSubject<boolean>(true);
 
   public get selectedOption(): ValueLabel<T> {
     if (this.selectOptions && this.fieldControl.value) {
@@ -61,29 +68,26 @@ export class SelectFieldComponent<T>
     return null;
   }
 
+  public showClearButton = memoize((value: T): boolean => {
+    if (!value) return false;
+    if (typeof this.options?.clearFieldButton?.enabled === 'function') {
+      return this.options.clearFieldButton.enabled(this.group.value);
+    }
+    return this.options?.clearFieldButton?.enabled;
+  });
+
   public constructor(translateService: TranslateService) {
     super(translateService);
   }
 
   public defaultCompare = (o1: T, o2: T): boolean => o1 === o2;
 
-  public showClearButton = (): boolean => {
-    if (!this.fieldControl.value) {
-      return false;
-    }
-
-    if (typeof this.options?.clearFieldButton?.enabled === 'function') {
-      return this.options.clearFieldButton.enabled(this.group.value);
-    }
-    return this.options?.clearFieldButton?.enabled;
-  };
-
   public ngOnInit(): void {
     if (this.options?.selectOptions) {
       const { selectOptions } = this.options;
       this.updateOptionsFn(
         typeof selectOptions === 'function'
-          ? (f) => selectOptions(f, this.fieldControl)
+          ? (f) => selectOptions(f, this.fieldControl, this.schema)
           : () => selectOptions
       );
     }
@@ -92,7 +96,12 @@ export class SelectFieldComponent<T>
       this.conditionalOptionsChange,
       ({ condition, value }) => {
         this.updateOptionsFn((f) =>
-          condition?.conditionalOptions(value, this.fieldControl, f)
+          condition?.conditionalOptions(
+            value,
+            this.fieldControl,
+            f,
+            this.schema
+          )
         );
       }
     );
@@ -100,7 +109,9 @@ export class SelectFieldComponent<T>
     this.addSubscription(
       this.optionsFilter$.pipe(
         filter(() => !!this.optionsFn$.value),
-        tap(() => (this.loading = true)),
+        tap(() => {
+          this.loading$.next(true);
+        }),
         debounceTime(this.options?.search?.debounceTime ?? 300),
         switchMap((optionsFilter) =>
           this.optionsFn$.pipe(
@@ -110,6 +121,12 @@ export class SelectFieldComponent<T>
               return (isObservable(values) ? values : of(values)).pipe(
                 catchError(() => of([])),
                 tap((options: ValueLabel<T>[]) => {
+                  if (this.options.multiple && !optionsFilter.getAll) {
+                    setTimeout(() => {
+                      this.isAllSelected();
+                    }, 0);
+                  }
+
                   if (
                     options.length === 1 &&
                     !this.fieldControl.value &&
@@ -180,7 +197,7 @@ export class SelectFieldComponent<T>
           }
         }
 
-        this.loading = false;
+        this.loading$.next(false);
       }
     );
   }
@@ -212,10 +229,11 @@ export class SelectFieldComponent<T>
   }
 
   public onScroll(): void {
-    if (this.options?.infiniteScroll?.enabled && !this.loading) {
+    if (this.options?.infiniteScroll?.enabled && !this.loading$.value) {
       const currentFilter = this.optionsFilter$.value;
       this.optionsFilter$.next({
         ...currentFilter,
+        getAll: false,
         page: currentFilter.page + 1,
       });
     }
@@ -266,9 +284,50 @@ export class SelectFieldComponent<T>
   }
 
   public onSearchEnter($event: Event): void {
-    if (this.loading) {
+    if (this.loading$.value) {
       $event.preventDefault();
       $event.stopPropagation();
+    }
+  }
+
+  public isAllSelected(): void {
+    this.allSelected =
+      this.select.options.find(
+        (option) => !option.selected && !option.disabled
+      ) == null;
+  }
+
+  public handleToggleAllSelection(): void {
+    if (this.schema.options.infiniteScroll?.enabled) {
+      this.optionsFilter$.next({
+        ...this.optionsFilter$.value,
+        getAll: true,
+      });
+      this.loading$
+        .asObservable()
+        .pipe(
+          filter((loading) => !loading),
+          take(1)
+        )
+        .subscribe(() => {
+          setTimeout(() => {
+            this.toggleAllSelection();
+          }, 0);
+        });
+    } else {
+      this.toggleAllSelection();
+    }
+  }
+
+  private toggleAllSelection(): void {
+    if (this.allSelected) {
+      this.select.options.forEach((item: MatOption) => {
+        if (!item.disabled) item.select();
+      });
+    } else {
+      this.select.options.forEach((item: MatOption) => {
+        if (!item.disabled) item.deselect();
+      });
     }
   }
 }

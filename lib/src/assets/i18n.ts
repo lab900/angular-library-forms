@@ -15,6 +15,7 @@ export const formsTranslations = {
     'form.field.no_options_found': 'No options found',
     'form.button.upload': 'Upload',
     'forms.error.image.load': `Couldn't load image`,
+    'forms.select-field.selectAllLabel': `Select All`,
   },
   nl: {
     'forms.error.number-required': 'Een geldig getal is verplicht.',
@@ -32,5 +33,6 @@ export const formsTranslations = {
     'forms.error.image.load': 'Kon afbeelding niet laden',
     'form.field.search': 'Zoek...',
     'form.field.no_options_found': 'Geen opties gevonden',
+    'forms.select-field.selectAllLabel': `Selecteer alles`,
   },
 };

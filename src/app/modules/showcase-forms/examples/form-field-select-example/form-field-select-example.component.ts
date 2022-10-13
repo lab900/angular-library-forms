@@ -29,9 +29,7 @@ export class FormFieldSelectExampleComponent {
                 },
               ],
               colspan: 6,
-              required: (data) => {
-                return data?.secondPropName;
-              },
+              required: true,
             },
           },
           {
@@ -121,6 +119,7 @@ export class FormFieldSelectExampleComponent {
             editType: EditType.Select,
             options: {
               multiple: true,
+              selectAll: { enabled: true },
               selectOptions: [
                 {
                   value: 'may',

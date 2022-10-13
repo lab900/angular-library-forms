@@ -43,7 +43,10 @@
   "forms": {
     "title": "Form library",
     "description": "Create dynamic reactive forms",
-    "form-fields": "Form fields"
+    "form-fields": "Form fields",
+    "select-field": {
+      "selectAllLabel": "Select All"
+    }
   },
   "common": {
     "title": "Common Library",

@@ -9,6 +9,7 @@ import * as _ from 'lodash';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { FormComponent } from '../components/AbstractFormComponent';
 import { Lab900FormField } from './lab900-form-field.type';
+import { FormFieldSelect } from '../components/form-fields/select-field/field-select.model';
 
 export const areValuesEqual = (val1: any, val2: any): boolean => {
   if (typeof val1 === 'object' && typeof val2 === 'object') {
@@ -36,7 +37,8 @@ export interface IFieldConditions<T = any> {
   conditionalOptions?: (
     value: T,
     currentControl: AbstractControl,
-    options?: { page?: number; searchQuery?: string }
+    options?: { page?: number; searchQuery?: string },
+    schema?: FormFieldSelect<T>
   ) => any[] | Observable<any[]>;
   skipIfNotExists?: boolean;
   validators?: (value: T) => ValidatorFn[];
