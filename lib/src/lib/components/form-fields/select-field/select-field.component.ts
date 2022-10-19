@@ -31,7 +31,7 @@ export class SelectFieldComponent<T>
   implements OnInit
 {
   @ViewChild('select')
-  private select: MatSelect;
+  private select?: MatSelect;
 
   @HostBinding('class')
   public classList = 'lab900-form-field';
@@ -292,7 +292,7 @@ export class SelectFieldComponent<T>
 
   public isAllSelected(): void {
     this.allSelected =
-      this.select.options.find(
+      this.select?.options.find(
         (option) => !option.selected && !option.disabled
       ) == null;
   }
