@@ -123,7 +123,7 @@ export class SelectFieldComponent<T>
                 tap((options: ValueLabel<T>[]) => {
                   if (this.options.multiple && !optionsFilter.getAll) {
                     setTimeout(() => {
-                      this.isAllSelected();
+                      this.updateAllSelectedStatus();
                     }, 0);
                   }
 
@@ -290,7 +290,7 @@ export class SelectFieldComponent<T>
     }
   }
 
-  public isAllSelected(): void {
+  public updateAllSelectedStatus(): void {
     this.allSelected =
       this.select?.options.find(
         (option) => !option.selected && !option.disabled
