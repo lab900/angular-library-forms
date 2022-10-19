@@ -200,6 +200,12 @@ export class SelectFieldComponent<T>
         this.loading$.next(false);
       }
     );
+
+    this.addSubscription(this.group.valueChanges, (_value) => {
+      if (this.options.selectAll?.enabled && !this.loading$.value) {
+        this.updateAllSelectedStatus();
+      }
+    });
   }
 
   public onConditionalChange(
@@ -291,10 +297,12 @@ export class SelectFieldComponent<T>
   }
 
   public updateAllSelectedStatus(): void {
-    this.allSelected =
-      this.select?.options.find(
-        (option) => !option.selected && !option.disabled
-      ) == null;
+    if (this.select?.options) {
+      this.allSelected =
+        this.select.options.find(
+          (option) => !option.selected && !option.disabled
+        ) == null;
+    }
   }
 
   public handleToggleAllSelection(): void {

@@ -31,8 +31,8 @@ const compare = (a: Book, b: Book): boolean =>
 
 @Component({
   selector: 'lab900-form-field-select-advanced-example',
-  template: ` <lab900-form [schema]="formSchema" [data]="data"> </lab900-form
-    ><button (click)="logFormValue()">Log form data</button>`,
+  template: ` <lab900-form [schema]="formSchema" [data]="data"> </lab900-form>
+    <button (click)="logFormValue()">Log form data</button>`,
 })
 export class FormFieldSelectAdvancedExampleComponent {
   private readonly MAX_ITEMS_FOR_SELECT_ALL = 157;
