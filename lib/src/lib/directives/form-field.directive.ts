@@ -84,6 +84,7 @@ export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
         EditType.FilePreview,
         EditType.ButtonToggle,
         EditType.SlideToggle,
+        EditType.Button,
       ].includes(this.schema.editType)
         ? ReadonlyFieldComponent
         : this.formFieldMappingService.mapToComponent(this.schema);

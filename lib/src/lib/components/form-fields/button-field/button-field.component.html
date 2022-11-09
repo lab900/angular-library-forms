@@ -10,8 +10,8 @@
   <lab900-button
     [type]="options.type"
     [color]="options.color"
-    [disabled]="options.disabled"
-    (click)="handleClick($event)"
+    [disabled]="readonly || options.readonly || options.disabled"
+    (btnClick)="handleClick($event)"
     [label]="options.label"
     [matTooltip]="options.tooltip?.text | translate"
     [matTooltipPosition]="options.tooltip?.position || 'above'"
