@@ -1,11 +1,19 @@
 import { Component, HostBinding, OnInit, ViewChild } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, isObservable, of, Subject } from 'rxjs';
+import {
+  asyncScheduler,
+  BehaviorSubject,
+  concat,
+  isObservable,
+  of,
+  Subject,
+} from 'rxjs';
 import {
   catchError,
   debounceTime,
   filter,
+  publish,
   switchMap,
   take,
   tap,
@@ -112,7 +120,17 @@ export class SelectFieldComponent<T>
         tap(() => {
           this.loading$.next(true);
         }),
-        debounceTime(this.options?.search?.debounceTime ?? 300),
+        publish((value) =>
+          concat(
+            value.pipe(take(1)), // only debounce after the initial value
+            value.pipe(
+              debounceTime(
+                this.options?.search?.debounceTime ?? 300,
+                asyncScheduler
+              )
+            )
+          )
+        ),
         switchMap((optionsFilter) =>
           this.optionsFn$.pipe(
             take(1),
