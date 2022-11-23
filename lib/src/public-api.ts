@@ -23,6 +23,8 @@ export * from './lib/components/form-fields/input-field/input-field.model';
 
 export * from './lib/components/form-container/form-container.component';
 
+export * from './lib/components/AbstractFormComponent'
+
 export * from './lib/directives/form-dialog.directive';
 export * from './lib/directives/auth-image.directive';
 export * from './lib/directives/auto-focus.directive';
