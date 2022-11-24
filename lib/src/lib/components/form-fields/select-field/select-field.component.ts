@@ -115,22 +115,16 @@ export class SelectFieldComponent<T>
     );
 
     this.addSubscription(
-      this.optionsFilter$.pipe(
+      concat(
+        this.optionsFilter$.pipe(take(1)), // only debounce after the initial value
+        this.optionsFilter$.pipe(
+          debounceTime(this.options?.search?.debounceTime ?? 300)
+        )
+      ).pipe(
         filter(() => !!this.optionsFn$.value),
         tap(() => {
           this.loading$.next(true);
         }),
-        publish((value) =>
-          concat(
-            value.pipe(take(1)), // only debounce after the initial value
-            value.pipe(
-              debounceTime(
-                this.options?.search?.debounceTime ?? 300,
-                asyncScheduler
-              )
-            )
-          )
-        ),
         switchMap((optionsFilter) =>
           this.optionsFn$.pipe(
             take(1),
@@ -139,7 +133,7 @@ export class SelectFieldComponent<T>
               return (isObservable(values) ? values : of(values)).pipe(
                 catchError(() => of([])),
                 tap((options: ValueLabel<T>[]) => {
-                  if (this.options.multiple && !optionsFilter.getAll) {
+                  if (this.options.multiple && !optionsFilter?.getAll) {
                     setTimeout(() => {
                       this.updateAllSelectedStatus();
                     }, 0);
