@@ -13,6 +13,7 @@ export const formsTranslations = {
     'form.field.loading': 'Loading...',
     'form.field.search': 'Search...',
     'form.field.no_options_found': 'No options found',
+    'form.field.add_new': 'Add new',
     'form.button.upload': 'Upload',
     'forms.error.image.load': `Couldn't load image`,
     'forms.select-field.selectAllLabel': `Select All`,

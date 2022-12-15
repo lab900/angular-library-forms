@@ -6,6 +6,7 @@ import {
 } from '../../../models/form-field-base';
 import { Observable } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
+import { SelectFieldComponent } from './select-field.component';
 
 export interface FormFieldSelectOptionsFilter {
   page?: number;
@@ -42,6 +43,8 @@ export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
     enabled: boolean;
     placeholder?: string;
     notFoundLabel?: string;
+    addNewLabel?: string;
+    addNewFn?: (searchQuery: string, select: SelectFieldComponent<T>) => void;
     /**
      * Clear the search when the select closes
      * @default false

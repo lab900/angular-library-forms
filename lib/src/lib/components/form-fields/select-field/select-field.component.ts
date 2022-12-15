@@ -2,10 +2,10 @@ import { Component, HostBinding, OnInit, ViewChild } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  asyncScheduler,
   BehaviorSubject,
   concat,
   isObservable,
+  Observable,
   of,
   Subject,
 } from 'rxjs';
@@ -13,7 +13,8 @@ import {
   catchError,
   debounceTime,
   filter,
-  publish,
+  map,
+  shareReplay,
   switchMap,
   take,
   tap,
@@ -33,6 +34,18 @@ import memoize from 'lodash/memoize';
 @Component({
   selector: 'lab900-select-field',
   templateUrl: './select-field.component.html',
+  styles: [
+    `
+      .no-entries-found {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .no-entries-found button {
+        margin-left: 10px;
+      }
+    `,
+  ],
 })
 export class SelectFieldComponent<T>
   extends FormComponent<FormFieldSelect<T>>
@@ -56,8 +69,15 @@ export class SelectFieldComponent<T>
   private optionsFn$ = new BehaviorSubject<FormFieldSelectOptionsFn<T>>(
     () => []
   );
-  public optionsFilter$ =
+  public readonly optionsFilter$ =
     new BehaviorSubject<FormFieldSelectOptionsFilter | null>(null);
+
+  public readonly searchQuery$: Observable<string> = this.optionsFilter$
+    .asObservable()
+    .pipe(
+      map((filter) => filter?.searchQuery ?? ''),
+      shareReplay(1)
+    );
 
   public allSelected = false;
 
@@ -337,6 +357,10 @@ export class SelectFieldComponent<T>
     } else {
       this.toggleAllSelection();
     }
+  }
+
+  public handleAddNew(searchQuery: string): void {
+    this.options?.search?.addNewFn(searchQuery, this);
   }
 
   private toggleAllSelection(): void {

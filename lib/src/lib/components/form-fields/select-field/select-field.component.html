@@ -36,25 +36,46 @@
       [disabled]="true"
     >
       <ngx-mat-select-search
-        [ngModel]="(optionsFilter$ | async)?.searchQuery || ''"
+        [ngModel]="searchQuery$ | async"
         [searching]="loading$.value"
         (ngModelChange)="onSearch($event)"
         [ngModelOptions]="{ standalone: true }"
         [placeholderLabel]="
-          options?.search?.placeholder || 'form.field.search' | translate
-        "
-        [noEntriesFoundLabel]="
-          options?.search?.notFoundLabel || 'form.field.no_options_found'
-            | translate
+          options?.search?.placeholder ?? 'form.field.search' | translate
         "
         [disableScrollToActiveOnOptionsChanged]="
           options?.infiniteScroll?.enabled
         "
-        [clearSearchInput]="options?.search?.clearOnClose || false"
-      ></ngx-mat-select-search>
+        [clearSearchInput]="options?.search?.clearOnClose ?? false"
+      >
+        <div class="no-entries-found" ngxMatSelectNoEntriesFound>
+          <ng-container *ngIf="searchQuery$ | async as searchQuery">
+            <span>{{
+              options?.search?.notFoundLabel ?? 'form.field.no_options_found'
+                | translate: { searchQuery: searchQuery }
+            }}</span>
+            <button
+              mat-button
+              color="primary"
+              *ngIf="options?.search?.addNewFn"
+              (click)="handleAddNew(searchQuery)"
+            >
+              <mat-icon>add</mat-icon>
+              <span>{{
+                options?.search?.addNewLabel ?? 'form.field.add_new'
+                  | translate: { searchQuery: searchQuery }
+              }}</span>
+            </button>
+          </ng-container>
+        </div>
+      </ngx-mat-select-search>
     </mat-option>
     <div
-      *ngIf="options?.multiple && options?.selectAll?.enabled"
+      *ngIf="
+        options?.multiple &&
+        options?.selectAll?.enabled &&
+        selectOptions?.length
+      "
       class="select-all"
       style="margin: 5px 17px"
     >

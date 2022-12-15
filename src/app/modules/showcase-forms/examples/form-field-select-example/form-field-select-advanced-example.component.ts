@@ -41,13 +41,8 @@ export class FormFieldSelectAdvancedExampleComponent {
   public formContainer?: Lab900Form<Book>;
 
   public data: {
-    books2: Book;
     books3: Book[];
   } = {
-    books2: {
-      title: 'Song of Ice and Fire',
-      key: '/works/OL21242192W',
-    },
     books3: [tolkienBook, tolkienBook2],
   };
   public formSchema: Lab900FormConfig = {
@@ -94,6 +89,7 @@ export class FormFieldSelectAdvancedExampleComponent {
               },
               search: {
                 enabled: true,
+                addNewFn: (searchQuery) => alert(searchQuery),
               },
             },
           },
