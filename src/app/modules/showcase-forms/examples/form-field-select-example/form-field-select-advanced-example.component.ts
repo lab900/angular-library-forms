@@ -89,7 +89,17 @@ export class FormFieldSelectAdvancedExampleComponent {
               },
               search: {
                 enabled: true,
-                addNewFn: (searchQuery) => alert(searchQuery),
+                addNewFn: (searchQuery, select) => {
+                  const book: Book = {
+                    title: searchQuery,
+                    key: searchQuery,
+                  };
+                  select.selectOptions = [{ value: book, label: book.title }];
+                  select.fieldControl.setValue({
+                    title: searchQuery,
+                    key: searchQuery,
+                  });
+                },
               },
             },
           },

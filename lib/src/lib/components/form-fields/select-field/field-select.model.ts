@@ -44,6 +44,10 @@ export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
     placeholder?: string;
     notFoundLabel?: string;
     addNewLabel?: string;
+    /**
+     * Function to handle the new item creation, can be anything.
+     * Use the select argument to update the select after creation
+     */
     addNewFn?: (searchQuery: string, select: SelectFieldComponent<T>) => void;
     /**
      * Clear the search when the select closes
