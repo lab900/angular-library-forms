@@ -62,7 +62,10 @@ export class Lab900FormBuilderService {
     let formGroup = group ? group : this.fb.group({});
     fields.forEach((field) => {
       if (field.attribute) {
-        if (field.editType === EditType.Row) {
+        if (
+          field.editType === EditType.Row ||
+          field.editType === EditType.Column
+        ) {
           const nestedGroup = this.createFormGroup(
             field.nestedFields,
             null,
@@ -76,7 +79,10 @@ export class Lab900FormBuilderService {
           const fieldGroup = this.setFieldGroup(field.attribute, formGroup);
           this.createFormField(field, fieldGroup, data);
         }
-      } else if (field.editType === EditType.Row) {
+      } else if (
+        field.editType === EditType.Row ||
+        field.editType === EditType.Column
+      ) {
         formGroup = this.createFormGroup(field.nestedFields, formGroup, data);
       }
     });
