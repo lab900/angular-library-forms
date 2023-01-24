@@ -50,32 +50,38 @@ export const formFieldsExample: Lab900FormConfig = {
           },
         },
         {
-          title: 'Number',
-          attribute: 'number',
-          editType: EditType.Input,
+          editType: EditType.Column,
           options: {
             colspan: 6,
           },
+          nestedFields: [
+            {
+              title: 'Number',
+              attribute: 'number',
+              editType: EditType.Input,
+            },
+            {
+              attribute: 'buttonGroupAttribute',
+              title: 'Is this an appartment?',
+              editType: EditType.ButtonToggle,
+              options: {
+                required: true,
+                buttonOptions: [
+                  {
+                    value: true,
+                    label: 'yes',
+                  },
+                  {
+                    value: false,
+                    label: 'no',
+                  },
+                ],
+              },
+              conditions: [{ showIfEquals: (n) => !!n, dependOn: 'number' }],
+            },
+          ],
         },
       ],
-    },
-    {
-      attribute: 'buttonGroupAttribute',
-      title: 'Select yes or no',
-      editType: EditType.ButtonToggle,
-      options: {
-        required: true,
-        buttonOptions: [
-          {
-            value: true,
-            label: 'yes',
-          },
-          {
-            value: false,
-            label: 'no',
-          },
-        ],
-      },
     },
     {
       editType: EditType.Row,

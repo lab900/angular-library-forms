@@ -19,6 +19,7 @@ export class FormFieldMappingService {
   private readonly repeaterFieldComponent: Type<FormComponent>;
   private readonly radioButtonsFieldComponent: Type<FormComponent>;
   private readonly formRowComponent: Type<FormComponent>;
+  private readonly formColumnComponent: Type<FormComponent>;
   private readonly rangeSliderFieldComponent: Type<FormComponent>;
   private readonly autocompleteFieldComponent: Type<FormComponent>;
   private readonly autocompleteMultipleFieldComponent: Type<FormComponent>;
@@ -50,6 +51,7 @@ export class FormFieldMappingService {
     this.radioButtonsFieldComponent =
       lab900FormFieldTypes.RadioButtonsFieldComponent;
     this.formRowComponent = lab900FormFieldTypes.FormRowComponent;
+    this.formColumnComponent = lab900FormFieldTypes.FormColumnComponent;
     this.rangeSliderFieldComponent =
       lab900FormFieldTypes.RangeSliderFieldComponent;
     this.autocompleteFieldComponent =
@@ -100,6 +102,8 @@ export class FormFieldMappingService {
         return this.radioButtonsFieldComponent;
       case EditType.Row:
         return this.formRowComponent;
+      case EditType.Column:
+        return this.formColumnComponent;
       case EditType.RangeSlider:
         return this.rangeSliderFieldComponent;
       case EditType.Autocomplete:

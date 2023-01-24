@@ -84,6 +84,7 @@ import { PasswordFieldComponent } from './components/form-fields/password-field/
 import { AmountFieldComponent } from './components/form-fields/amount-field/amount-field.component';
 import { AmountInputDirective } from './components/form-fields/amount-field/amount-input.directive';
 import { AmountPipe } from './components/form-fields/amount-field/amount.pipe';
+import { FormColumnComponent } from './components/form-column/form-column.component';
 
 const customFields = [
   UnknownFieldComponent,
@@ -100,6 +101,7 @@ const customFields = [
   TextareaFieldComponent,
   RepeaterFieldComponent,
   FormRowComponent,
+  FormColumnComponent,
   RadioButtonsFieldComponent,
   RangeSliderFieldComponent,
   AutocompleteFieldComponent,
@@ -226,6 +228,7 @@ export class Lab900FormsModule {
             TextareaFieldComponent,
             RepeaterFieldComponent,
             FormRowComponent,
+            FormColumnComponent,
             RadioButtonsFieldComponent,
             RangeSliderFieldComponent,
             AutocompleteFieldComponent,

@@ -18,6 +18,7 @@ export enum EditType {
   RadioButtons = 'RadioButtons',
   RangeSlider = 'RangeSlider',
   Row = 'Row',
+  Column = 'Column',
   /**
    *
    * @deprecated Please use {@link Select} instead with search option

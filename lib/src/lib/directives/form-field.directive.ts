@@ -80,6 +80,7 @@ export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
       this.readonly &&
       ![
         EditType.Row,
+        EditType.Column,
         EditType.Select,
         EditType.FilePreview,
         EditType.ButtonToggle,
