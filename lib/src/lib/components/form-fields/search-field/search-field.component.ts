@@ -7,7 +7,6 @@ import { take } from 'rxjs/operators';
 @Component({
   selector: 'lab900-search-field',
   templateUrl: './search-field.component.html',
-  styleUrls: ['./search-field.component.scss'],
 })
 export class SearchFieldComponent<T> extends FormComponent<FormFieldSearch<T>> {
   @HostBinding('class')
