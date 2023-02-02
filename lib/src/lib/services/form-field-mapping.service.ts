@@ -33,6 +33,7 @@ export class FormFieldMappingService {
   private readonly dragNDropFileFieldComponent: Type<FormComponent>;
   private readonly unknownFieldComponent: Type<FormComponent>;
   private readonly amountFieldComponent: Type<FormComponent>;
+  private readonly searchFieldComponent: Type<FormComponent>;
 
   public constructor(@Inject(LAB900_FORM_FIELD_TYPES) lab900FormFieldTypes) {
     this.inputFieldComponent = lab900FormFieldTypes.InputFieldComponent;
@@ -72,6 +73,7 @@ export class FormFieldMappingService {
       lab900FormFieldTypes.DragNDropFileFieldComponent;
     this.unknownFieldComponent = lab900FormFieldTypes.UnknownFieldComponent;
     this.amountFieldComponent = lab900FormFieldTypes.AmountFieldComponent;
+    this.searchFieldComponent = lab900FormFieldTypes.SearchFieldComponent;
   }
 
   public mapToComponent = (field: Lab900FormField): Type<FormComponent> => {
@@ -128,6 +130,8 @@ export class FormFieldMappingService {
         return this.dragNDropFileFieldComponent;
       case EditType.Amount:
         return this.amountFieldComponent;
+      case EditType.Search:
+        return this.searchFieldComponent;
       default:
         return this.unknownFieldComponent;
     }

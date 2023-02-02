@@ -46,6 +46,9 @@
     "form-fields": "Form fields",
     "select-field": {
       "selectAllLabel": "Select All"
+    },
+    "search-field": {
+      "notFoundLabel": "No match found for \"{{value}}\""
     }
   },
   "common": {

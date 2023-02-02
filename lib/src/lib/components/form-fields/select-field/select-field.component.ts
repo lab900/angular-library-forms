@@ -52,7 +52,7 @@ export class SelectFieldComponent<T>
   implements OnInit
 {
   @ViewChild('select')
-  private select?: MatSelect;
+  public readonly select?: MatSelect;
 
   @HostBinding('class')
   public classList = 'lab900-form-field';
