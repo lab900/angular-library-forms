@@ -36,7 +36,7 @@ export class SearchInputDirective<T>
   public readonly searching$ = new BehaviorSubject<boolean>(false);
   public readonly noResult$ = new BehaviorSubject<boolean>(false);
 
-  public value?: T;
+  public value?: T | null;
 
   @Input()
   public options!: FormFieldSearchOptions<T>;

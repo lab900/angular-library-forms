@@ -13,7 +13,7 @@ export interface FormFieldSearchOptions<T> extends FormFieldBaseOptions {
   addNewLabel?: string;
   /**
    * Function to handle the new item creation, can be anything.
-   * Use the select argument to update the select after creation
+   * The field will be updated with the observable response
    */
   addNewFn?: (searchQuery: string) => Observable<T | null>;
   disableSearchOnInput?: boolean;
