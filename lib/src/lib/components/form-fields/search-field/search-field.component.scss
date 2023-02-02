@@ -1,0 +1,10 @@
+.search-field-no-results {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.75em;
+
+  button {
+    margin-left: 10px;
+  }
+}

@@ -185,6 +185,11 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
           'forms.error.invalidNumber',
           interpolateParams
         );
+      case 'noSearchMatches':
+        return this.translateService.get(
+          'forms.error.noSearchMatches',
+          interpolateParams
+        );
       default:
         return this.translateService.get(
           'forms.error.generic',

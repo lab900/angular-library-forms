@@ -13,6 +13,8 @@ export enum EditType {
   File = 'File',
   FilePreview = 'FilePreview',
   DragNDrop = 'DragNDrop',
+  Search = 'Search',
+
   Select = 'Select',
   Repeater = 'Repeater',
   RadioButtons = 'RadioButtons',

@@ -23,6 +23,7 @@ import { FormFieldDragNDropFilePreview } from '../components/form-fields/drag-n-
 import { FormFieldPassword } from '../components/form-fields/password-field/password-field.model';
 import { FormFieldDateYearMonthPicker } from '../components/form-fields/date-year-month-field/date-year-month-field.model';
 import { FormFieldAmount } from '../components/form-fields/amount-field/amount-field.model';
+import { FormFieldSearch } from '../components/form-fields/search-field/field-search.model';
 import { FormColumn } from '../components/form-column/form-column.model';
 
 export type Lab900FormField<R = any, T extends string | number = string> =
@@ -30,6 +31,7 @@ export type Lab900FormField<R = any, T extends string | number = string> =
   | FormFieldPassword<T>
   | FormFieldMultiLang<T>
   | WysiwgFieldModel<T>
+  | FormFieldSearch<R, T>
   | FormFieldSelect<R, T>
   | CheckboxFieldModel<T>
   | FormFieldRadioButtons<T>
