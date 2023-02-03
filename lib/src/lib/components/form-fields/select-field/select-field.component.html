@@ -56,7 +56,7 @@
             }}</span>
             <button
               mat-button
-              color="primary"
+              [color]="options?.search?.addNewBtnColor ?? 'primary'"
               *ngIf="options?.search?.addNewFn"
               (click)="handleAddNew(searchQuery)"
             >

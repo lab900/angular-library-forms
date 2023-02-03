@@ -7,6 +7,7 @@ import {
 import { Observable } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
 import { SelectFieldComponent } from './select-field.component';
+import { ThemePalette } from '@angular/material/core';
 
 export interface FormFieldSelectOptionsFilter {
   page?: number;
@@ -49,6 +50,7 @@ export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
      * Use the select argument to update the select after creation
      */
     addNewFn?: (searchQuery: string, select: SelectFieldComponent<T>) => void;
+    addNewBtnColor?: ThemePalette;
     /**
      * Clear the search when the select closes
      * @default false

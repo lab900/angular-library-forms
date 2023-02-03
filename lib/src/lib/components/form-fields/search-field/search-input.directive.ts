@@ -66,8 +66,8 @@ export class SearchInputDirective<T>
             this.updateValue(result);
             this.onChange(result);
           } else {
+            this.updateValue(null);
             this.onChange(null);
-            this.noResult$.next(true);
           }
           this.onTouched();
         });

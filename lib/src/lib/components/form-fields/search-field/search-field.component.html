@@ -23,7 +23,7 @@
   <button
     mat-icon-button
     matSuffix
-    color="primary"
+    [color]="options?.addNewBtnColor ?? 'primary'"
     *ngIf="
       options?.addNewFn &&
       !!inputRef.value &&

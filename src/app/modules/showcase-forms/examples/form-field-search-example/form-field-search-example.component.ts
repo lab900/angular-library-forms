@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { EditType, Lab900FormConfig } from '@lab900/forms';
 import { of } from 'rxjs';
 
@@ -10,7 +9,6 @@ import { of } from 'rxjs';
     {{ f.value | json }}`,
 })
 export class FormFieldSearchExampleComponent {
-  public readonly formGroup = new FormGroup({});
   public readonly formSchema: Lab900FormConfig = {
     fields: [
       {
@@ -18,7 +16,7 @@ export class FormFieldSearchExampleComponent {
         title: 'Search with a result',
         editType: EditType.Search,
         options: {
-          labelFormatter: (option) => option?.name + ' (from response)',
+          labelFormatter: (option) => option?.name,
           searchFn: (searchQuery: string) => of({ name: searchQuery, id: 1 }),
         },
       },
@@ -27,7 +25,7 @@ export class FormFieldSearchExampleComponent {
         editType: EditType.Search,
         title: 'Search without a result',
         options: {
-          labelFormatter: (option) => option?.name + ' (from response)',
+          labelFormatter: (option) => option?.name,
           searchFn: () => of(null),
           addNewFn: (searchQuery) =>
             of({
@@ -38,13 +36,4 @@ export class FormFieldSearchExampleComponent {
       },
     ],
   };
-
-  public constructor() {
-    const control = new FormControl();
-    this.formGroup.addControl('example-select', control);
-  }
-
-  public clearSelect(): void {
-    this.formGroup.get('example-select').setValue(null);
-  }
 }
