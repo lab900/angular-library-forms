@@ -41,8 +41,10 @@ export class FormFieldSelectAdvancedExampleComponent {
   public formContainer?: Lab900Form<Book>;
 
   public data: {
+    books2: Book;
     books3: Book[];
   } = {
+    books2: tolkienBook,
     books3: [tolkienBook, tolkienBook2],
   };
   public formSchema: Lab900FormConfig = {
