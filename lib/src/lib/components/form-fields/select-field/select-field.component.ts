@@ -7,11 +7,13 @@ import {
   isObservable,
   Observable,
   of,
+  ReplaySubject,
   Subject,
 } from 'rxjs';
 import {
   catchError,
   debounceTime,
+  distinctUntilChanged,
   filter,
   map,
   shareReplay,
@@ -66,9 +68,9 @@ export class SelectFieldComponent<T>
     condition: IFieldConditions;
     value: string;
   }>();
-  private optionsFn$ = new BehaviorSubject<FormFieldSelectOptionsFn<T>>(
-    () => []
-  );
+  private readonly optionsFn$ = new ReplaySubject<
+    FormFieldSelectOptionsFn<T>
+  >();
   public readonly optionsFilter$ =
     new BehaviorSubject<FormFieldSelectOptionsFilter | null>(null);
 
@@ -135,86 +137,26 @@ export class SelectFieldComponent<T>
     );
 
     this.addSubscription(
-      concat(
-        this.optionsFilter$.pipe(take(1)), // only debounce after the initial value
-        this.optionsFilter$.pipe(
-          debounceTime(this.options?.search?.debounceTime ?? 300)
-        )
-      ).pipe(
-        filter(() => !!this.optionsFn$.value),
-        tap(() => {
-          this.loading$.next(true);
-        }),
-        switchMap((optionsFilter) =>
-          this.optionsFn$.pipe(
-            take(1),
-            switchMap((getOptions) => {
-              const values = getOptions(optionsFilter);
-              return (isObservable(values) ? values : of(values)).pipe(
-                catchError(() => of([])),
-                tap((options: ValueLabel<T>[]) => {
-                  if (this.options.multiple && !optionsFilter?.getAll) {
-                    setTimeout(() => {
-                      this.updateAllSelectedStatus();
-                    }, 0);
-                  }
-
-                  if (
-                    options.length === 1 &&
-                    !this.fieldControl.value &&
-                    this.schema.options?.autoselectOnlyOption
-                  ) {
-                    this.fieldControl.setValue(options[0].value);
-                  }
-                })
-              );
-            })
+      this.optionsFn$.asObservable().pipe(
+        filter((optionsFn) => !!optionsFn),
+        switchMap((optionsFn) =>
+          concat(
+            this.optionsFilter$.pipe(take(1)), // only debounce after the initial value
+            this.optionsFilter$.pipe(
+              debounceTime(this.options?.search?.debounceTime ?? 300)
+            )
+          ).pipe(
+            distinctUntilChanged(),
+            tap(() => {
+              this.loading$.next(true);
+            }),
+            switchMap((optionsFilter) =>
+              this.handleGetOptions(optionsFn, optionsFilter)
+            )
           )
         )
       ),
-      (options: ValueLabel<T>[]) => {
-        const compare = this.options?.compareWith || this.defaultCompare;
-
-        if (this.optionsFilter$.value?.page > 0) {
-          /**
-           * concat options for infinite scroll
-           * duplicates are filtered out (can happen because of the option add)
-           */
-          this.selectOptions = this.selectOptions.concat(
-            options.filter((o) =>
-              this.selectOptions.some((so) => !compare(o.value, so.value))
-            )
-          );
-        } else {
-          this.selectOptions = options;
-        }
-
-        if (this.conditionalItemToSelectWhenExists) {
-          const value = coerceArray(this.conditionalItemToSelectWhenExists);
-          const compare = this.options?.compareWith || this.defaultCompare;
-          const inOptions = this.selectOptions.some((o) =>
-            value.some((v) => compare(o.value, v))
-          );
-          if (inOptions) {
-            this.fieldControl.setValue(this.conditionalItemToSelectWhenExists);
-          }
-        }
-
-        /**
-         * with infinite scroll & searching the form control value(s) might not always be present in the options
-         * this will cause the select to appear empty while it has values.
-         * to salve this we add the form values to the options
-         */
-        if (
-          this.fieldControl?.value &&
-          !this.valueInOptions() &&
-          !this.optionsFilter$.value?.searchQuery?.length
-        ) {
-          this.addValueToOptions();
-        }
-
-        this.loading$.next(false);
-      }
+      this.afterGetOptionsSuccess.bind(this)
     );
 
     this.addSubscription(this.group.valueChanges, (_value) => {
@@ -224,6 +166,9 @@ export class SelectFieldComponent<T>
     });
   }
 
+  /**
+   * Reset the search and make sure that the current value is in the select options when the select closes
+   */
   public onOpenedChange(open: boolean): void {
     if (
       !open &&
@@ -237,6 +182,9 @@ export class SelectFieldComponent<T>
     }
   }
 
+  /**
+   * Check if the existing form control value is in the available select options
+   */
   public valueInOptions(): boolean {
     const value = coerceArray(this.fieldControl.value);
     const compare = this.options?.compareWith || this.defaultCompare;
@@ -245,6 +193,9 @@ export class SelectFieldComponent<T>
     );
   }
 
+  /**
+   * Add the current form control value to the select options
+   */
   public addValueToOptions(): void {
     let label;
     // TODO: Validate options, this is a required field if search or infinite scroll is used
@@ -395,5 +346,86 @@ export class SelectFieldComponent<T>
         if (!item.disabled) item.deselect();
       });
     }
+  }
+
+  /**
+   * Wrapper method to get the select options
+   * @param optionsFn
+   * @param optionsFilter
+   * @private
+   */
+  private handleGetOptions(
+    optionsFn: FormFieldSelectOptionsFn<T>,
+    optionsFilter
+  ): Observable<ValueLabel<T>[]> {
+    const values = optionsFn(optionsFilter);
+    const values$ = isObservable(values) ? values : of(values);
+
+    return values$.pipe(
+      catchError(() => of([])),
+      tap((options: ValueLabel<T>[]) => {
+        if (this.options.multiple && !optionsFilter?.getAll) {
+          setTimeout(() => {
+            this.updateAllSelectedStatus();
+          }, 0);
+        }
+        if (
+          options.length === 1 &&
+          !this.fieldControl.value &&
+          this.schema.options?.autoselectOnlyOption
+        ) {
+          this.fieldControl.setValue(options[0].value);
+        }
+      })
+    );
+  }
+
+  /**
+   * After options are fetched logic
+   * @param options
+   * @private
+   */
+  private afterGetOptionsSuccess(options: ValueLabel<T>[]): void {
+    const compare = this.options?.compareWith || this.defaultCompare;
+
+    if (this.optionsFilter$.value?.page > 0) {
+      /**
+       * concat options for infinite scroll
+       * duplicates are filtered out (can happen because of the option add)
+       */
+      this.selectOptions = this.selectOptions.concat(
+        options.filter((o) =>
+          this.selectOptions.some((so) => !compare(o.value, so.value))
+        )
+      );
+    } else {
+      this.selectOptions = options;
+    }
+
+    if (this.conditionalItemToSelectWhenExists) {
+      const value = coerceArray(this.conditionalItemToSelectWhenExists);
+      const compare = this.options?.compareWith || this.defaultCompare;
+      const inOptions = this.selectOptions.some((o) =>
+        value.some((v) => compare(o.value, v))
+      );
+      if (inOptions) {
+        this.fieldControl.setValue(this.conditionalItemToSelectWhenExists);
+      }
+    }
+
+    /**
+     * with infinite scroll & searching the form control value(s) might not always be present in the options
+     * this will cause the select to appear empty while it has values.
+     * to salve this we add the form values to the options
+     */
+    if (
+      this.fieldControl?.value &&
+      !this.valueInOptions() &&
+      !this.optionsFilter$.value?.searchQuery?.length
+    ) {
+      this.addValueToOptions();
+    }
+
+    this.loading$.next(false);
   }
 }
