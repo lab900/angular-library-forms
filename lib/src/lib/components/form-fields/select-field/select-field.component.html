@@ -26,6 +26,7 @@
     [threshold]="options?.infiniteScroll?.threshold || '15%'"
     [debounceTime]="options?.infiniteScroll?.debounceTime || 150"
     (infiniteScroll)="onScroll()"
+    (openedChange)="onOpenedChange($event)"
   >
     <mat-select-trigger *ngIf="options?.customTriggerFn">
       <div [innerHTML]="options?.customTriggerFn(fieldControl.value)"></div>

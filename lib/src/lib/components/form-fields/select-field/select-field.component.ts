@@ -205,28 +205,12 @@ export class SelectFieldComponent<T>
          * this will cause the select to appear empty while it has values.
          * to salve this we add the form values to the options
          */
-        if (this.fieldControl?.value) {
-          const value = coerceArray(this.fieldControl.value);
-          const compare = this.options?.compareWith || this.defaultCompare;
-          const inOptions = this.selectOptions.some((o) =>
-            value.some((v) => compare(o.value, v))
-          );
-          if (!inOptions) {
-            let label;
-            // TODO: Validate options, this is a required field if search or infinite scroll is used
-            if (!this.options?.displaySelectedOptionFn) {
-              label = "ERROR: Can't display";
-              console.error(
-                `Please define a displaySelectedOptionFn to display your currently selected option for the field with attribute ${this.fieldAttribute} since it is not included in the current options`
-              );
-            }
-            this.selectOptions = value
-              .map((v: T) => ({
-                value: v,
-                label: label ?? this.options.displaySelectedOptionFn(v),
-              }))
-              .concat(this.selectOptions);
-          }
+        if (
+          this.fieldControl?.value &&
+          !this.valueInOptions() &&
+          !this.optionsFilter$.value?.searchQuery?.length
+        ) {
+          this.addValueToOptions();
         }
 
         this.loading$.next(false);
@@ -238,6 +222,44 @@ export class SelectFieldComponent<T>
         this.updateAllSelectedStatus();
       }
     });
+  }
+
+  public onOpenedChange(open: boolean): void {
+    if (
+      !open &&
+      this.fieldControl?.value &&
+      this.optionsFilter$.value?.searchQuery?.length
+    ) {
+      if (!this.valueInOptions()) {
+        this.addValueToOptions();
+      }
+      this.onSearch('');
+    }
+  }
+
+  public valueInOptions(): boolean {
+    const value = coerceArray(this.fieldControl.value);
+    const compare = this.options?.compareWith || this.defaultCompare;
+    return !!this.selectOptions?.some((o) =>
+      value.some((v) => compare(o.value, v))
+    );
+  }
+
+  public addValueToOptions(): void {
+    let label;
+    // TODO: Validate options, this is a required field if search or infinite scroll is used
+    if (!this.options?.displaySelectedOptionFn) {
+      label = "ERROR: Can't display";
+      console.error(
+        `Please define a displaySelectedOptionFn to display your currently selected option for the field with attribute ${this.fieldAttribute} since it is not included in the current options`
+      );
+    }
+    this.selectOptions = coerceArray(this.fieldControl.value)
+      .map((v: T) => ({
+        value: v,
+        label: label ?? this.options.displaySelectedOptionFn(v),
+      }))
+      .concat(this.selectOptions);
   }
 
   public onConditionalChange(
