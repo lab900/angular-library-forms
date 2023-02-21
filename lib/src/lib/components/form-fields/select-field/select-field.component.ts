@@ -32,6 +32,7 @@ import { ValueLabel } from '../../../models/form-field-base';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/core';
 import memoize from 'lodash/memoize';
+import { isDifferent } from '../../../utils/different.utils';
 
 @Component({
   selector: 'lab900-select-field',
@@ -141,14 +142,22 @@ export class SelectFieldComponent<T>
         filter((optionsFn) => !!optionsFn),
         switchMap((optionsFn) =>
           concat(
-            this.optionsFilter$.pipe(take(1)), // only debounce after the initial value
             this.optionsFilter$.pipe(
+              take(1),
+              tap(() => this.loading$.next(true))
+            ), // only debounce after the initial value
+            this.optionsFilter$.pipe(
+              tap(() => this.loading$.next(true)),
               debounceTime(this.options?.search?.debounceTime ?? 300)
             )
           ).pipe(
-            distinctUntilChanged(),
-            tap(() => {
-              this.loading$.next(true);
+            distinctUntilChanged((x: any, y: any) => {
+              if (isDifferent(x, y)) {
+                return false; // This means the values are different, so it will emit
+              } else {
+                this.loading$.next(false);
+                return true; // This means values are equal, it will not emit the current value
+              }
             }),
             switchMap((optionsFilter) =>
               this.handleGetOptions(optionsFn, optionsFilter)
