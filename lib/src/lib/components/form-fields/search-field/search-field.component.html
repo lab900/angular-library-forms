@@ -38,6 +38,16 @@
   >
     <mat-icon>add</mat-icon>
   </button>
+  <button
+    *ngIf="!options.hideClearButton && !!fieldControl.value"
+    matSuffix
+    mat-icon-button
+    type="button"
+    aria-label="Clear"
+    (click)="clear(inputRef)"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
   <mat-spinner
     *ngIf="(searchRef?.searching$ | async) === true"
     matSuffix

@@ -19,6 +19,7 @@ export interface FormFieldSearchOptions<T> extends FormFieldBaseOptions {
   addNewFn?: (searchQuery: string) => Observable<T | null>;
   disableSearchOnInput?: boolean;
   addNewBtnColor?: ThemePalette;
+  hideClearButton?: boolean;
 }
 
 export interface FormFieldSearch<T, R extends string | number = string>

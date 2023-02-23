@@ -194,12 +194,16 @@ export class SelectFieldComponent<T>
   /**
    * Check if the existing form control value is in the available select options
    */
-  public valueInOptions(): boolean {
+  public valueInOptions(options = this.selectOptions): boolean {
+    return !!this.getOptionsMatchingTheValue(options)?.length;
+  }
+
+  public getOptionsMatchingTheValue(
+    options = this.selectOptions
+  ): ValueLabel<T>[] {
     const value = coerceArray(this.fieldControl.value);
     const compare = this.options?.compareWith || this.defaultCompare;
-    return !!this.selectOptions?.some((o) =>
-      value.some((v) => compare(o.value, v))
-    );
+    return options?.filter((o) => value.some((v) => compare(o.value, v)));
   }
 
   /**
@@ -408,6 +412,16 @@ export class SelectFieldComponent<T>
         )
       );
     } else {
+      /**
+       * If the current (values) are in the old options but not in the new we should keep those options
+       */
+      if (
+        !this.optionsFilter$.value?.searchQuery?.length &&
+        this.valueInOptions() &&
+        !this.valueInOptions(options)
+      ) {
+        options = options.concat(this.getOptionsMatchingTheValue());
+      }
       this.selectOptions = options;
     }
 
@@ -426,6 +440,9 @@ export class SelectFieldComponent<T>
      * with infinite scroll & searching the form control value(s) might not always be present in the options
      * this will cause the select to appear empty while it has values.
      * to salve this we add the form values to the options
+     *
+     * This gives issues if the value is not an object
+     * Not to be mistaken with the first addValueToOptions in this method, this is still needed in some cases
      */
     if (
       this.fieldControl?.value &&

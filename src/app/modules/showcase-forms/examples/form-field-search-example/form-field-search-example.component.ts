@@ -32,6 +32,7 @@ export class FormFieldSearchExampleComponent {
               name: searchQuery,
               id: 2,
             }),
+          hideClearButton: true,
         },
       },
     ],

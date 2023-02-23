@@ -21,4 +21,9 @@ export class SearchFieldComponent<T> extends FormComponent<FormFieldSearch<T>> {
       .pipe(take(1))
       .subscribe((v) => this.fieldControl.setValue(v));
   }
+
+  public clear(inputRef: HTMLInputElement): void {
+    this.fieldControl.setValue(null);
+    inputRef.value = '';
+  }
 }
