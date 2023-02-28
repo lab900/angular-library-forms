@@ -27,6 +27,15 @@ $defaultMargin: (
       display: block;
       margin-bottom: map_get($margin, 'default');
       @include mat-typography-level-to-styles($configTypo, subheading-2);
+
+      &--with-info {
+        display: flex;
+        align-items: center;
+
+        .mat-icon {
+          margin-left: 0.25em;
+        }
+      }
     }
 
     .lab900-button-toggle-field {
