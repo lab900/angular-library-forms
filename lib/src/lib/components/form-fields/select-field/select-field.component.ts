@@ -453,5 +453,6 @@ export class SelectFieldComponent<T>
     }
 
     this.loading$.next(false);
+    setTimeout(() => this.select._keyManager.setFirstItemActive());
   }
 }
