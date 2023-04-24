@@ -60,7 +60,8 @@
     "nouislider": "^14.7.0",
     "rxjs": "~6.6.7",
     "tslib": "^2.3.1",
-    "zone.js": "~0.11.4"
+    "zone.js": "~0.11.4",
+    "memo-decorator": "^2.0.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~12.2.13",
