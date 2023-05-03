@@ -20,6 +20,7 @@ export interface FormFieldSearchOptions<T> extends FormFieldBaseOptions {
   disableSearchOnInput?: boolean;
   addNewBtnColor?: ThemePalette;
   hideClearButton?: boolean;
+  style?: string;
 }
 
 export interface FormFieldSearch<T, R extends string | number = string>
