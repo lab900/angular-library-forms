@@ -46,7 +46,8 @@ export const myFormSchema: Form = {
 | [`EditType.Repeater`](forms/form-field-repeater)                 | Repeatable fields (FormArrays)                         |
 | [`EditType.RadioButtons`](forms/form-field-radio-buttons)        | Radio buttons                                          |
 | [`EditType.RangeSlider`](forms/form-field-range-slider)          | Range slider                                           |
-| `EditType.Row`                                                   | For columns or nested FormGroups                       |
+| `EditType.Row`                                                   | For rows or nested FormGroups                          |
+| `EditType.Column`                                                | For columns or nested FormGroups                       |
 | [`EditType.Autocomplete`](forms/form-field-autocomplete)         | Input fields with autocomplete                         |
 | [`EditType.AutocompleteMultiple`](forms/form-field-autocomplete) | ?                                                      |
 | [`EditType.SlideToggle`](forms/form-field-button-toggle)         | Radio buttons that are styled as buttons,              |

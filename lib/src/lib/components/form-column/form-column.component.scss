@@ -1,0 +1,20 @@
+.form-column {
+  display: flex;
+  flex-direction: column;
+  flex-flow: column wrap;
+  align-items: flex-start;
+
+  & > div {
+    &.hidden {
+      display: none;
+    }
+
+    &__info {
+      padding: 1em 0 0 0.75em;
+
+      .mat-icon {
+        cursor: help;
+      }
+    }
+  }
+}

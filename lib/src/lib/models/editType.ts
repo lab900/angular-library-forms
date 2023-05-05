@@ -13,11 +13,13 @@ export enum EditType {
   File = 'File',
   FilePreview = 'FilePreview',
   DragNDrop = 'DragNDrop',
+  Search = 'Search',
   Select = 'Select',
   Repeater = 'Repeater',
   RadioButtons = 'RadioButtons',
   RangeSlider = 'RangeSlider',
   Row = 'Row',
+  Column = 'Column',
   /**
    *
    * @deprecated Please use {@link Select} instead with search option

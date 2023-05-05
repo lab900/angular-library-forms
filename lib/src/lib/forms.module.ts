@@ -17,8 +17,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import {
-  MatFormFieldModule,
   MAT_FORM_FIELD_DEFAULT_OPTIONS,
+  MatFormFieldModule,
 } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
@@ -75,15 +75,18 @@ import { FormDialogDirective } from './directives/form-dialog.directive';
 import { FormFieldDirective } from './directives/form-field.directive';
 import {
   defaultFormModuleSettings,
-  Lab900FormModuleSettings,
-  LAB900_FORM_MODULE_SETTINGS,
   LAB900_FORM_FIELD_TYPES,
+  LAB900_FORM_MODULE_SETTINGS,
+  Lab900FormModuleSettings,
 } from './models/Lab900FormModuleSettings';
 import { Lab900FormBuilderService } from './services/form-builder.service';
 import { PasswordFieldComponent } from './components/form-fields/password-field/password-field.component';
 import { AmountFieldComponent } from './components/form-fields/amount-field/amount-field.component';
 import { AmountInputDirective } from './components/form-fields/amount-field/amount-input.directive';
 import { AmountPipe } from './components/form-fields/amount-field/amount.pipe';
+import { FormColumnComponent } from './components/form-column/form-column.component';
+import { SearchFieldComponent } from './components/form-fields/search-field/search-field.component';
+import { SearchInputDirective } from './components/form-fields/search-field/search-input.directive';
 
 const customFields = [
   UnknownFieldComponent,
@@ -100,6 +103,7 @@ const customFields = [
   TextareaFieldComponent,
   RepeaterFieldComponent,
   FormRowComponent,
+  FormColumnComponent,
   RadioButtonsFieldComponent,
   RangeSliderFieldComponent,
   AutocompleteFieldComponent,
@@ -111,6 +115,9 @@ const customFields = [
   ReadonlyFieldComponent,
   DateRangeFieldComponent,
   DateTimeFieldComponent,
+  SearchFieldComponent,
+  AmountFieldComponent,
+  MultiLangInputFieldComponent,
 ];
 
 @NgModule({
@@ -121,18 +128,17 @@ const customFields = [
     FormDialogComponent,
     MatFileFieldComponent,
     MatRangeSliderFieldComponent,
-    ...customFields,
     IconComponent,
     ImagePreviewModalComponent,
     AuthImageDirective,
     AutofocusDirective,
     FileDropDirective,
-    MultiLangInputFieldComponent,
     LanguagePickerComponent,
     MultiLangFieldControlComponent,
-    AmountFieldComponent,
     AmountInputDirective,
     AmountPipe,
+    SearchInputDirective,
+    ...customFields,
   ],
   imports: [
     CommonModule,
@@ -226,6 +232,7 @@ export class Lab900FormsModule {
             TextareaFieldComponent,
             RepeaterFieldComponent,
             FormRowComponent,
+            FormColumnComponent,
             RadioButtonsFieldComponent,
             RangeSliderFieldComponent,
             AutocompleteFieldComponent,
@@ -239,6 +246,7 @@ export class Lab900FormsModule {
             DateTimeFieldComponent,
             MultiLangInputFieldComponent,
             AmountFieldComponent,
+            SearchFieldComponent,
           },
         },
       ],

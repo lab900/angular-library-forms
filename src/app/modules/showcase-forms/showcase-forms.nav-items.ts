@@ -54,6 +54,10 @@ export const showcaseFormsNavItems: NavItemGroup[] = [
             route: 'form-field-slide-toggle',
           },
           {
+            label: 'Search',
+            route: 'form-field-search',
+          },
+          {
             label: 'Select',
             route: 'form-field-select',
           },

@@ -1,0 +1,67 @@
+<mat-form-field
+  *ngIf="!fieldIsHidden"
+  [formGroup]="group"
+  class="lab900-input-field"
+  id="lab900-input-field-{{ fieldAttribute }}"
+>
+  <mat-label *ngIf="schema.title">{{ schema.title | translate }}</mat-label>
+  <input
+    matInput
+    type="text"
+    placeholder="{{ placeholder | translate }}"
+    [formControlName]="fieldAttribute"
+    [required]="fieldIsRequired"
+    [options]="options"
+    [readonly]="fieldIsReadonly"
+    [ngClass]="{ readonly: fieldIsReadonly }"
+    [style]="options?.style || ''"
+    lab900InputAutofocus
+    lab900SearchInput
+    #searchRef="lab900SearchInput"
+    #inputRef
+  />
+
+  <button
+    mat-icon-button
+    matSuffix
+    [color]="options?.addNewBtnColor ?? 'primary'"
+    *ngIf="
+      options?.addNewFn &&
+      !!inputRef.value &&
+      (searchRef?.noResult$ | async) === true
+    "
+    (click)="handleAddNew(inputRef.value)"
+    [matTooltip]="
+      options?.addNewLabel ?? 'form.field.add_new'
+        | translate: { searchQuery: inputRef.value }
+    "
+    style="align-items: flex-start"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+  <button
+    *ngIf="!options.hideClearButton && !!fieldControl.value"
+    matSuffix
+    mat-icon-button
+    type="button"
+    aria-label="Clear"
+    (click)="clear(inputRef)"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+  <mat-spinner
+    *ngIf="(searchRef?.searching$ | async) === true"
+    matSuffix
+    diameter="16"
+    style="display: inline-flex"
+  ></mat-spinner>
+  <mat-hint *ngIf="!!inputRef.value && (searchRef?.noResult$ | async) === true">
+    {{
+      options?.notFoundLabel ?? 'forms.search-field.notFoundLabel'
+        | translate: { value: inputRef.value }
+    }}
+  </mat-hint>
+  <mat-error *ngIf="!valid && !fieldIsReadonly">
+    <span [innerHTML]="getErrorMessage() | async"></span>
+  </mat-error>
+</mat-form-field>

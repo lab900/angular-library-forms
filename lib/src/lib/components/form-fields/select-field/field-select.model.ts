@@ -6,14 +6,19 @@ import {
 } from '../../../models/form-field-base';
 import { Observable } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
+import { SelectFieldComponent } from './select-field.component';
+import { ThemePalette } from '@angular/material/core';
 
 export interface FormFieldSelectOptionsFilter {
   page?: number;
   searchQuery?: string;
+  getAll?: boolean;
 }
 
 export type FormFieldSelectOptionsFn<T> = (
-  filter?: FormFieldSelectOptionsFilter
+  filter?: FormFieldSelectOptionsFilter,
+  fieldControl?: AbstractControl,
+  schema?: FormFieldSelect<T>
 ) => ValueLabel<T>[] | Observable<ValueLabel<T>[]>;
 
 export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
@@ -39,6 +44,13 @@ export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
     enabled: boolean;
     placeholder?: string;
     notFoundLabel?: string;
+    addNewLabel?: string;
+    /**
+     * Function to handle the new item creation, can be anything.
+     * Use the select argument to update the select after creation
+     */
+    addNewFn?: (searchQuery: string, select: SelectFieldComponent<T>) => void;
+    addNewBtnColor?: ThemePalette;
     /**
      * Clear the search when the select closes
      * @default false
@@ -66,8 +78,13 @@ export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
    * Shows a clear button on the right of the field
    */
   clearFieldButton?: {
-    enabled: boolean | ((data?: any) => boolean);
+    enabled: boolean | ((data?: T) => boolean);
     click?: (fieldControl: AbstractControl, clickEvent: Event) => void;
+  };
+  selectAll?: {
+    enabled: boolean;
+    label?: string;
+    disabled?: boolean;
   };
 }
 

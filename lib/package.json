@@ -1,6 +1,6 @@
 {
   "name": "@lab900/forms",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "author": "Lab900 <info@lab900.com> (https://lab900.com)",
   "license": "MIT",
   "peerDependencies": {
@@ -17,7 +17,7 @@
     "ngx-mask": "12.0.0",
     "@angular-material-components/datetime-picker": "^6.0.3",
     "ng-mat-select-infinite-scroll": "^3.0.0",
-    "ngx-mat-select-search": "^3.3.0"
+    "ngx-mat-select-search": "^5.0.0"
   },
   "repository": {
     "type": "git",

@@ -36,6 +36,7 @@ import { FormFieldTextareaExampleComponent } from './examples/form-field-textare
 import { showcaseFormsConfig } from './showcase-forms.constants';
 import { showcaseFormsNavItems } from './showcase-forms.nav-items';
 import { FormFieldAmountExampleComponent } from './examples/form-field-amount-example/form-field-amount-example.component';
+import { FormFieldSearchExampleComponent } from './examples/form-field-search-example/form-field-search-example.component';
 
 const routes: Routes = [
   {
@@ -178,6 +179,9 @@ const routes: Routes = [
       FormFieldAmountExampleComponent,
       'Formatted amount field'
     ),
+  ]),
+  new ShowcaseRoute('form-field-search', 'Form Fields: Search', [
+    new ShowcaseExample(FormFieldSearchExampleComponent, 'Search field'),
   ]),
 ];
 

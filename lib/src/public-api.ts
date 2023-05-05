@@ -11,6 +11,7 @@ export * from './lib/models/IFieldConditions';
 export * from './lib/models/Lab900File';
 export * from './lib/utils/form-field.utils';
 export * from './lib/components/form-row/form-row.model';
+export * from './lib/components/form-column/form-column.model';
 
 export * from './lib/components/form-fields/select-field/field-select.model';
 export * from './lib/components/form-fields/select-field/select-field.component';
@@ -23,11 +24,15 @@ export * from './lib/components/form-fields/input-field/input-field.model';
 
 export * from './lib/components/form-container/form-container.component';
 
+export * from './lib/components/AbstractFormComponent';
+
 export * from './lib/directives/form-dialog.directive';
 export * from './lib/directives/auth-image.directive';
 export * from './lib/directives/auto-focus.directive';
 
 export * from './lib/validators/multi-language.validator';
+
+export * from './lib/utils/different.utils';
 
 export * from './lib/forms.module';
 

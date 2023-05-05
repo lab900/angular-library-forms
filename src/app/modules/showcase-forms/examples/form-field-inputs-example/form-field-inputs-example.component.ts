@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
+import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'lab900-form-field-inputs-example',
@@ -82,11 +83,20 @@ export class FormFieldInputsExampleComponent {
         title: 'Password Input',
         editType: EditType.Password,
         options: {
+          required: true,
           togglePasswordVisibility: {
             disabled: false,
             passwordVisibleIcon: { name: 'visibility_off' },
             passwordHiddenIcon: { name: 'visibility' },
           },
+        },
+        validators: [
+          Validators.pattern(
+            /^(?=\D*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z]).{12,}$/
+          ),
+        ],
+        errorMessages: {
+          pattern: 'Does not match pattern',
         },
       },
       {
@@ -100,6 +110,21 @@ export class FormFieldInputsExampleComponent {
             thousandSeparator: '.',
           },
         },
+      },
+      {
+        attribute: 'maskAndPattern',
+        title: 'Mask and Pattern',
+        editType: EditType.Input,
+        options: {
+          placeholder: 'ABC(UJZ)-000000/0',
+          pattern: new RegExp('[a-zA-Z]{3}[ujzUJZ]{1}\\-[0-9]{6}\\/[0-9]{1}'),
+          fieldMask: {
+            mask: 'SSSS-000000/0',
+            dropSpecialCharacters: false,
+          },
+          style: 'text-transform: uppercase',
+        },
+        errorMessages: { pattern: 'Invalid ISO-6364 format' },
       },
       {
         attribute: 'readOnlyInput',
@@ -143,6 +168,6 @@ export class FormFieldInputsExampleComponent {
   };
 
   public validate(): void {
-    console.log(this.formContainer.valid);
+    console.log(this.formContainer.value?.maskAndPattern);
   }
 }

@@ -80,33 +80,9 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     super();
   }
 
-  public ngAfterContentInit(): void {
-    if (this.group) {
-      this.setFieldProperties();
-    }
-  }
-
-  public ngAfterViewInit(): void {
-    if (this.group) {
-      this.addSubscription(this.group.valueChanges, (value) => {
-        this.setFieldProperties();
-        if (this.schema?.options?.onChangeFn) {
-          this.schema?.options?.onChangeFn(value, this.fieldControl);
-        }
-      });
-      if (this.schema?.conditions?.length) {
-        this.createConditions();
-      }
-    }
-  }
-
-  public onConditionalChange(
-    dependOn: string,
-    value: any,
-    firstRun?: boolean
-  ): void {}
-
-  public getErrorMessage(group: FormGroup = this.group): Observable<string> {
+  public getErrorMessage = (
+    group: FormGroup = this.group
+  ): Observable<string> => {
     const field = group.get(String(this.fieldAttribute));
     let errors: ValidationErrors = field.errors;
     let message = this.translateService.get('forms.error.generic');
@@ -139,7 +115,33 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
       }
     });
     return message;
+  };
+
+  public ngAfterContentInit(): void {
+    if (this.group) {
+      this.setFieldProperties();
+    }
   }
+
+  public ngAfterViewInit(): void {
+    if (this.group) {
+      this.addSubscription(this.group.valueChanges, (value) => {
+        this.setFieldProperties();
+        if (this.schema?.options?.onChangeFn) {
+          this.schema?.options?.onChangeFn(value, this.fieldControl);
+        }
+      });
+      if (this.schema?.conditions?.length) {
+        this.createConditions();
+      }
+    }
+  }
+
+  public onConditionalChange(
+    dependOn: string,
+    value: any,
+    firstRun?: boolean
+  ): void {}
 
   private getDefaultErrorMessage(
     key: string,
@@ -180,6 +182,11 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
       case 'invalidNumber':
         return this.translateService.get(
           'forms.error.invalidNumber',
+          interpolateParams
+        );
+      case 'noSearchMatches':
+        return this.translateService.get(
+          'forms.error.noSearchMatches',
           interpolateParams
         );
       default:

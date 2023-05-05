@@ -19,6 +19,7 @@ export class FormFieldMappingService {
   private readonly repeaterFieldComponent: Type<FormComponent>;
   private readonly radioButtonsFieldComponent: Type<FormComponent>;
   private readonly formRowComponent: Type<FormComponent>;
+  private readonly formColumnComponent: Type<FormComponent>;
   private readonly rangeSliderFieldComponent: Type<FormComponent>;
   private readonly autocompleteFieldComponent: Type<FormComponent>;
   private readonly autocompleteMultipleFieldComponent: Type<FormComponent>;
@@ -32,6 +33,7 @@ export class FormFieldMappingService {
   private readonly dragNDropFileFieldComponent: Type<FormComponent>;
   private readonly unknownFieldComponent: Type<FormComponent>;
   private readonly amountFieldComponent: Type<FormComponent>;
+  private readonly searchFieldComponent: Type<FormComponent>;
 
   public constructor(@Inject(LAB900_FORM_FIELD_TYPES) lab900FormFieldTypes) {
     this.inputFieldComponent = lab900FormFieldTypes.InputFieldComponent;
@@ -50,6 +52,7 @@ export class FormFieldMappingService {
     this.radioButtonsFieldComponent =
       lab900FormFieldTypes.RadioButtonsFieldComponent;
     this.formRowComponent = lab900FormFieldTypes.FormRowComponent;
+    this.formColumnComponent = lab900FormFieldTypes.FormColumnComponent;
     this.rangeSliderFieldComponent =
       lab900FormFieldTypes.RangeSliderFieldComponent;
     this.autocompleteFieldComponent =
@@ -70,6 +73,7 @@ export class FormFieldMappingService {
       lab900FormFieldTypes.DragNDropFileFieldComponent;
     this.unknownFieldComponent = lab900FormFieldTypes.UnknownFieldComponent;
     this.amountFieldComponent = lab900FormFieldTypes.AmountFieldComponent;
+    this.searchFieldComponent = lab900FormFieldTypes.SearchFieldComponent;
   }
 
   public mapToComponent = (field: Lab900FormField): Type<FormComponent> => {
@@ -100,6 +104,8 @@ export class FormFieldMappingService {
         return this.radioButtonsFieldComponent;
       case EditType.Row:
         return this.formRowComponent;
+      case EditType.Column:
+        return this.formColumnComponent;
       case EditType.RangeSlider:
         return this.rangeSliderFieldComponent;
       case EditType.Autocomplete:
@@ -124,6 +130,8 @@ export class FormFieldMappingService {
         return this.dragNDropFileFieldComponent;
       case EditType.Amount:
         return this.amountFieldComponent;
+      case EditType.Search:
+        return this.searchFieldComponent;
       default:
         return this.unknownFieldComponent;
     }

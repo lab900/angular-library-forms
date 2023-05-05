@@ -6,7 +6,7 @@ import { MatInput } from '@angular/material/input';
 })
 export class AutofocusDirective implements OnChanges {
   @Input()
-  private autofocus = false;
+  public autofocus = false;
 
   public constructor(private matInput: MatInput) {}
 
