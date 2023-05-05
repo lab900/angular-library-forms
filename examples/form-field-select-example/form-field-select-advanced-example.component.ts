@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {
   EditType,
+  FormFieldSelect,
   FormFieldSelectOptionsFilter,
+  Lab900Form,
   Lab900FormConfig,
   ValueLabel,
 } from '@lab900/forms';
@@ -29,17 +31,20 @@ const compare = (a: Book, b: Book): boolean =>
 
 @Component({
   selector: 'lab900-form-field-select-advanced-example',
-  template: '<lab900-form [schema]="formSchema" [data]="data"></lab900-form>',
+  template: ` <lab900-form [schema]="formSchema" [data]="data"> </lab900-form>
+    <button (click)="logFormValue()">Log form data</button>`,
 })
 export class FormFieldSelectAdvancedExampleComponent {
+  private readonly MAX_ITEMS_FOR_SELECT_ALL = 157;
+
+  @ViewChild(Lab900Form)
+  public formContainer?: Lab900Form<Book>;
+
   public data: {
     books2: Book;
     books3: Book[];
   } = {
-    books2: {
-      title: 'Song of Ice and Fire',
-      key: '/works/OL21242192W',
-    },
+    books2: tolkienBook,
     books3: [tolkienBook, tolkienBook2],
   };
   public formSchema: Lab900FormConfig = {
@@ -54,7 +59,12 @@ export class FormFieldSelectAdvancedExampleComponent {
             editType: EditType.Select,
             options: {
               compareWith: compare,
-              selectOptions: this.getSelectOptions.bind(this),
+              selectOptions: (filter, fieldControl, schema) =>
+                this.getSelectOptions({
+                  filter,
+                  author: fieldControl.value,
+                  schema,
+                }),
               colspan: 4,
               displaySelectedOptionFn: (o: Book) => o?.title,
               infiniteScroll: {
@@ -68,7 +78,12 @@ export class FormFieldSelectAdvancedExampleComponent {
             editType: EditType.Select,
             options: {
               compareWith: compare,
-              selectOptions: this.getSelectOptions.bind(this),
+              selectOptions: (filter, fieldControl, schema) =>
+                this.getSelectOptions({
+                  filter,
+                  author: fieldControl.value,
+                  schema,
+                }),
               colspan: 4,
               displaySelectedOptionFn: (o: Book) => o?.title,
               infiniteScroll: {
@@ -76,6 +91,17 @@ export class FormFieldSelectAdvancedExampleComponent {
               },
               search: {
                 enabled: true,
+                addNewFn: (searchQuery, select) => {
+                  const book: Book = {
+                    title: searchQuery,
+                    key: searchQuery,
+                  };
+                  select.selectOptions = [{ value: book, label: book.title }];
+                  select.fieldControl.setValue({
+                    title: searchQuery,
+                    key: searchQuery,
+                  });
+                },
               },
             },
           },
@@ -88,7 +114,12 @@ export class FormFieldSelectAdvancedExampleComponent {
               customTriggerFn: (value: Book[]) => {
                 return value?.length + ' selected';
               },
-              selectOptions: this.getSelectOptions.bind(this),
+              selectOptions: (filter, fieldControl, schema) =>
+                this.getSelectOptions({
+                  filter,
+                  author: fieldControl.value,
+                  schema,
+                }),
               colspan: 4,
               multiple: true,
               displaySelectedOptionFn: (o: Book) => o?.title,
@@ -98,6 +129,7 @@ export class FormFieldSelectAdvancedExampleComponent {
               search: {
                 enabled: true,
               },
+              selectAll: { enabled: true },
               readonlyDisplay: (books: Book[]) =>
                 books
                   .map((book) => book.title)
@@ -133,7 +165,13 @@ export class FormFieldSelectAdvancedExampleComponent {
             title: 'Search a book',
             editType: EditType.Select,
             options: {
-              selectOptions: this.getSelectOptions.bind(this),
+              selectOptions: (filter, fieldControl, schema) => {
+                return this.getSelectOptions({
+                  filter,
+                  author: fieldControl.value,
+                  schema,
+                });
+              },
               compareWith: compare,
               colspan: 6,
               displaySelectedOptionFn: (value: Book) => value.title,
@@ -148,9 +186,8 @@ export class FormFieldSelectAdvancedExampleComponent {
               {
                 dependOn: 'author',
                 enableIfHasValue: true,
-                conditionalOptions: (value: string, control, filter) => {
-                  return this.getSelectOptions(filter, value);
-                },
+                conditionalOptions: (author: string, control, filter) =>
+                  this.getSelectOptions({ filter, author }),
               },
             ],
           },
@@ -161,26 +198,38 @@ export class FormFieldSelectAdvancedExampleComponent {
 
   public constructor(private http: HttpClient) {}
 
-  public getSelectOptions(
-    filter?: FormFieldSelectOptionsFilter,
-    author?: string
-  ): Observable<ValueLabel<{ title: string; key: string }>[]> {
+  public getSelectOptions({
+    filter,
+    author,
+    schema,
+  }: {
+    filter?: FormFieldSelectOptionsFilter;
+    author?: string;
+    schema?: FormFieldSelect<any>;
+  }): Observable<ValueLabel<{ title: string; key: string }>[]> {
     return this.http
       .get<{ docs: any[] }>('https://openlibrary.org/search.json', {
         params: {
           q: filter?.searchQuery,
           author: author ?? 'tolkien',
-          limit: '10',
-          offset: String((filter?.page || 0) * 10),
+          limit: filter.getAll ? this.MAX_ITEMS_FOR_SELECT_ALL : '10',
+          offset: filter.getAll ? 0 : String((filter?.page || 0) * 10),
         },
       })
       .pipe(
-        map((res) =>
-          res?.docs?.map((d) => ({
+        map((res) => {
+          if (filter.getAll) {
+            schema.options.infiniteScroll = { enabled: false };
+          }
+          return res?.docs?.map((d) => ({
             label: d.title,
             value: d,
-          }))
-        )
+          }));
+        })
       );
+  }
+
+  public logFormValue(): void {
+    console.log(this.formContainer.value);
   }
 }

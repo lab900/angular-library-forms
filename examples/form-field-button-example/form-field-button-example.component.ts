@@ -11,6 +11,7 @@ export class FormFieldButtonExampleComponent {
   public form: Lab900Form<any>;
 
   public formSchema: Lab900FormConfig = {
+    readonly: false,
     fields: [
       {
         editType: EditType.Row,
@@ -37,6 +38,7 @@ export class FormFieldButtonExampleComponent {
             attribute: 'button',
             editType: EditType.Button,
             options: {
+              readonly: true,
               colspan: 1,
               type: 'mini-fab',
               label: 'calculate',
