@@ -1,4 +1,9 @@
-<form *ngIf="schema?.fields" [formGroup]="form" class="lab900-form">
+<form
+  *ngIf="schema?.fields"
+  [formGroup]="form"
+  class="lab900-form"
+  [autocomplete]="setting?.disableBrowserAutocomplete ? 'off' : 'on'"
+>
   <div class="lab900-form__inner">
     <ng-container
       *ngFor="let field of schema.fields"

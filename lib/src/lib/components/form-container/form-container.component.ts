@@ -1,4 +1,10 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Inject,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
 import { Lab900FormConfig } from '../../models/Lab900FormConfig';
 import { Lab900FormBuilderService } from '../../services/form-builder.service';
@@ -6,6 +12,10 @@ import { areValuesEqual } from '../../models/IFieldConditions';
 import { ValueLabel } from '../../models/form-field-base';
 import { Lab900FormField } from '../../models/lab900-form-field.type';
 import { EditType } from '../../models/editType';
+import {
+  LAB900_FORM_MODULE_SETTINGS,
+  Lab900FormModuleSettings,
+} from '../../models/Lab900FormModuleSettings';
 
 @Component({
   selector: 'lab900-form[schema]',
@@ -46,7 +56,11 @@ export class Lab900Form<T> implements OnChanges {
     return this.schema?.readonly;
   }
 
-  public constructor(private fb: Lab900FormBuilderService) {}
+  public constructor(
+    private fb: Lab900FormBuilderService,
+    @Inject(LAB900_FORM_MODULE_SETTINGS)
+    public setting: Lab900FormModuleSettings
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.schema && this.schema?.fields) {
