@@ -202,6 +202,7 @@ export class Lab900FormsModule {
         ...defaultFormModuleSettings.amountField,
         ...(settings?.amountField ?? {}),
       },
+      disableBrowserAutocomplete: settings?.disableBrowserAutocomplete ?? false,
     };
     return {
       ngModule: Lab900FormsModule,
