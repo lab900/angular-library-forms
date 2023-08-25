@@ -20,6 +20,7 @@ export const areValuesEqual = (val1: any, val2: any): boolean => {
 
 export interface IFieldConditions<T = any> {
   dependOn: string | string[];
+  distinctUntilChangedCompareFn?: (a: T, b: T) => boolean;
   externalFormId?: string;
   hideIfHasValue?: boolean;
   showIfHasValue?: boolean;
@@ -49,6 +50,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
   private externalForms?: Record<string, FormGroup>;
 
   public dependOn: string | string[];
+  public distinctUntilChangedCompareFn?: (a: T, b: T) => boolean;
   public externalFormId?: string;
 
   public hideIfHasValue?: boolean;
@@ -140,7 +142,10 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
         if (control != null) {
           subs.push(
             control.valueChanges
-              .pipe(debounceTime(100), distinctUntilChanged())
+              .pipe(
+                debounceTime(100),
+                distinctUntilChanged(this.distinctUntilChangedCompareFn)
+              )
               .subscribe((v) =>
                 this.runAll(key, this.getDependControlValues(), false, callback)
               )
