@@ -384,7 +384,7 @@ export class SelectFieldComponent<T>
           }, 0);
         }
         if (
-          options.length === 1 &&
+          options?.length === 1 &&
           !this.fieldControl.value &&
           this.schema.options?.autoselectOnlyOption
         ) {

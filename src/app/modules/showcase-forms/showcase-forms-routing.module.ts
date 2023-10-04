@@ -62,25 +62,20 @@ const routes: Routes = [
     ],
     'guides/creating-forms.md'
   ),
-  new ShowcaseRoute(
-    'conditional-forms',
-    'Conditional forms',
-    [
-      new ShowcaseExample(
-        FormConditionalsExampleComponent,
-        'Conditional Form Container'
-      ),
-      new ShowcaseExample(
-        FormCondtionalValidationExampleComponent,
-        'Conditional validation'
-      ),
-      new ShowcaseExample(
-        FormCondtionalWithExternalFormExampleComponent,
-        'Conditionals across multiple forms'
-      ),
-    ],
-    'guides/TODO.md'
-  ),
+  new ShowcaseRoute('conditional-forms', 'Conditional forms', [
+    new ShowcaseExample(
+      FormConditionalsExampleComponent,
+      'Conditional Form Container'
+    ),
+    new ShowcaseExample(
+      FormCondtionalValidationExampleComponent,
+      'Conditional validation'
+    ),
+    new ShowcaseExample(
+      FormCondtionalWithExternalFormExampleComponent,
+      'Conditionals across multiple forms'
+    ),
+  ]),
   new ShowcaseRoute('form-field-autocomplete', 'Form Fields: Autocomplete', [
     new ShowcaseExample(FormFieldAutocompleteExampleComponent, 'Autocomplete'),
     new ShowcaseExample(
