@@ -31,7 +31,7 @@
     <mat-select-trigger *ngIf="options?.customTriggerFn">
       <div [innerHTML]="options?.customTriggerFn(fieldControl.value)"></div>
     </mat-select-trigger>
-    <mat-option *ngIf="options?.search?.enabled">
+    <mat-option *ngIf="options?.search?.enabled" style="background: #fff">
       <ngx-mat-select-search
         [ngModel]="searchQuery$ | async"
         [searching]="loading$.value"
@@ -79,7 +79,7 @@
       <mat-checkbox
         [(ngModel)]="allSelected"
         [ngModelOptions]="{ standalone: true }"
-        [disabled]="this.options.selectAll?.disabled"
+        [disabled]="this.options?.selectAll?.disabled"
         (change)="handleToggleAllSelection()"
       >
         {{

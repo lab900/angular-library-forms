@@ -12,10 +12,9 @@
     "@angular/forms": "~15.2.9",
     "@kolkov/angular-editor": "^2.1.0",
     "ng-mat-select-infinite-scroll": "^4.0.0",
-    "ngx-markdown": "^15.1.2",
     "ngx-mask": "15.2.1",
     "ngx-mat-select-search": "^7.0.4",
-    "nouislider": "^15.7.1"
+    "@lab900/ui": "^15.0.0"
   },
   "repository": {
     "type": "git",

@@ -170,7 +170,7 @@ export class SelectFieldComponent<T>
     );
 
     this.addSubscription(this.group.valueChanges, (_value) => {
-      if (this.options.selectAll?.enabled && !this.loading$.value) {
+      if (this.options?.selectAll?.enabled && !this.loading$.value) {
         this.updateAllSelectedStatus();
       }
     });
@@ -378,7 +378,7 @@ export class SelectFieldComponent<T>
     return values$.pipe(
       catchError(() => of([])),
       tap((options: ValueLabel<T>[]) => {
-        if (this.options.multiple && !optionsFilter?.getAll) {
+        if (this.options?.multiple && !optionsFilter?.getAll) {
           setTimeout(() => {
             this.updateAllSelectedStatus();
           }, 0);

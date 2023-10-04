@@ -1,7 +1,18 @@
 <div class="range-slider">
   <div>
     <div class="range-slider__slider">
-      <div><div class="noUiSlider"></div></div>
+      <mat-slider [min]="min" [max]="max" [step]="steps">
+        <input
+          [value]="value[0]"
+          (valueChange)="updateSliderInstanceValues(0, $event)"
+          matSliderStartThumb
+        />
+        <input
+          [value]="value[1]"
+          (valueChange)="updateSliderInstanceValues(1, $event)"
+          matSliderEndThumb
+        />
+      </mat-slider>
     </div>
     <div class="range-slider__input range-slider__input--from">
       <mat-form-field>
@@ -15,6 +26,7 @@
         />
       </mat-form-field>
     </div>
+
     <div class="range-slider__input range-slider__input--to">
       <mat-form-field>
         <mat-label translate>{{ toLabel }}</mat-label>

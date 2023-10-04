@@ -57,15 +57,10 @@
     }
 
     .spanFix {
-      .mat-mdc-form-field-prefix,
-      .mat-mdc-form-field-suffix {
+      .mat-mdc-form-field-icon-prefix,
+      .mat-mdc-form-field-icon-suffix {
         position: static !important;
       }
-    }
-
-    .mat-mdc-form-field-prefix .mat-icon,
-    .mat-mdc-form-field-suffix .mat-icon {
-      font-size: 1.5em;
     }
   }
 }

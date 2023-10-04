@@ -49,18 +49,18 @@
   <lab900-icon
     [icon]="schema.icon"
     *ngIf="schema?.icon?.position === 'left'"
-    matPrefix
+    matTextSuffix
     class="input-field__icon-left"
   ></lab900-icon>
   <lab900-icon
     [icon]="schema.icon"
     *ngIf="schema?.icon?.position === 'right'"
-    matSuffix
+    matTextSuffix
   ></lab900-icon>
-  <span class="lab900-input-field--suffix" *ngIf="suffix" matSuffix>{{
+  <span class="lab900-input-field--suffix" *ngIf="suffix" matTextSuffix>{{
     suffix | translate
   }}</span>
-  <span class="lab900-input-field--prefix" *ngIf="prefix" matPrefix>{{
+  <span class="lab900-input-field--prefix" *ngIf="prefix" matTextSuffix>{{
     prefix | translate
   }}</span>
   <mat-hint

@@ -85,6 +85,7 @@ import { AmountPipe } from './components/form-fields/amount-field/amount.pipe';
 import { FormColumnComponent } from './components/form-column/form-column.component';
 import { SearchFieldComponent } from './components/form-fields/search-field/search-field.component';
 import { SearchInputDirective } from './components/form-fields/search-field/search-input.directive';
+import { MatSliderModule } from '@angular/material/slider';
 
 const customFields = [
   UnknownFieldComponent,
@@ -170,6 +171,7 @@ const customFields = [
     Lab900ButtonModule,
     NgxMaskDirective,
     NgxMaskPipe,
+    MatSliderModule,
   ],
   exports: [
     Lab900Form,

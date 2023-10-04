@@ -1,9 +1,7 @@
-@use './scss/range-slider-theme' as range-slider;
 @use './scss/form-field-theme' as form-field;
 
 @mixin lab900-forms($config-or-theme) {
   @include form-field.lab900-form-field($config-or-theme);
-  @include range-slider.lab900-range-slider($config-or-theme);
 
   // ngx-mat-timepicker fixes
   .ngx-mat-timepicker {

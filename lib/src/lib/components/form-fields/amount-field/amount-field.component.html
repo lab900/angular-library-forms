@@ -33,10 +33,10 @@
     *ngIf="schema?.icon?.position === 'right'"
     matSuffix
   ></lab900-icon>
-  <span class="lab900-input-field--suffix" *ngIf="suffix" matSuffix>{{
+  <span class="lab900-input-field--suffix" *ngIf="suffix" matTextSuffix>{{
     suffix | translate
   }}</span>
-  <span class="lab900-input-field--prefix" *ngIf="prefix" matPrefix>{{
+  <span class="lab900-input-field--prefix" *ngIf="prefix" matTextPrefix>{{
     prefix | translate
   }}</span>
   <mat-hint

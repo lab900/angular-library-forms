@@ -5,10 +5,5 @@
     "entryFile": "src/public-api.ts"
   },
   "assets": ["./scss/*.scss", "./_theming.scss", "./assets/i18n.ts"],
-  "allowedNonPeerDependencies": [
-    "lab900",
-    "@types/nouislider",
-    "nouislider",
-    "@kolkov/angular-editor"
-  ]
+  "allowedNonPeerDependencies": ["lab900", "@kolkov/angular-editor"]
 }
