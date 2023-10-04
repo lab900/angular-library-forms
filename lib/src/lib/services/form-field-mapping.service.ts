@@ -90,8 +90,6 @@ export class FormFieldMappingService {
         return this.dateFieldComponent;
       case EditType.DateYearMonth:
         return this.dateYearMonthFieldComponent;
-      case EditType.File:
-        return this.fileFieldComponent;
       case EditType.FilePreview:
         return this.filePreviewFieldComponent;
       case EditType.Select:

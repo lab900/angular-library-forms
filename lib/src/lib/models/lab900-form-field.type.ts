@@ -6,7 +6,6 @@ import { CheckboxFieldModel } from '../components/form-fields/checkbox-field/che
 import { FormFieldDatePicker } from '../components/form-fields/date-field/date-field.model';
 import { FormFieldDateRange } from '../components/form-fields/date-range-field/date-range-field.model';
 import { FormFieldDateTimePicker } from '../components/form-fields/date-time-field/date-time-field.model';
-import { FormFieldFile } from '../components/form-fields/file-field/file-field.model';
 import { FormFieldFilePreview } from '../components/form-fields/file-preview-field/file-preview-field.model';
 import { FormFieldIcon } from '../components/form-fields/icon-field/icon-field.model';
 import { FormFieldInput } from '../components/form-fields/input-field/input-field.model';
@@ -36,7 +35,6 @@ export type Lab900FormField<R = any, T extends string | number = string> =
   | CheckboxFieldModel<T>
   | FormFieldRadioButtons<T>
   | FormFieldFilePreview<T>
-  | FormFieldFile<T>
   | FormFieldDragNDropFilePreview<T>
   | FormFieldIcon<T>
   | FormRow<T>

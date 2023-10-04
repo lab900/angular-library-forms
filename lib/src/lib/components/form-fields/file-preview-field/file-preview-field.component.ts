@@ -4,7 +4,7 @@ import { FormComponent } from '../../AbstractFormComponent';
 import { FormDialogDirective } from '../../../directives/form-dialog.directive';
 import { Lab900File } from '../../../models/Lab900File';
 import { FormDialogComponent } from '../../form-dialog/form-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ImagePreviewModalComponent } from '../../image-preview-modal/image-preview-modal.component';
 import { fetchImageBase64 } from '../../../utils/image.utils';
 import { FormFieldFilePreview } from './file-preview-field.model';

@@ -1,4 +1,4 @@
-import { MatFormFieldDefaultOptions } from '@angular/material/form-field';
+import { MatLegacyFormFieldDefaultOptions as MatFormFieldDefaultOptions } from '@angular/material/legacy-form-field';
 import { InjectionToken } from '@angular/core';
 import { IConfig } from 'ngx-mask';
 

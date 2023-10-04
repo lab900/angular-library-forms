@@ -3,7 +3,7 @@ import { FormComponent } from '../../AbstractFormComponent';
 import { UntypedFormArray } from '@angular/forms';
 import { Lab900FormBuilderService } from '../../../services/form-builder.service';
 import { TranslateService } from '@ngx-translate/core';
-import { matFormFieldAnimations } from '@angular/material/form-field';
+import { matLegacyFormFieldAnimations as matFormFieldAnimations } from '@angular/material/legacy-form-field';
 import { FormFieldRepeater } from './repeater-field.model';
 
 @Component({

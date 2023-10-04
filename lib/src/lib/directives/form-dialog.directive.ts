@@ -1,7 +1,10 @@
 import { Directive, HostListener, Input } from '@angular/core';
 import { FormDialogComponent } from '../components/form-dialog/form-dialog.component';
 import { Lab900FormConfig } from '../models/Lab900FormConfig';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import {
+  MatLegacyDialog as MatDialog,
+  MatLegacyDialogConfig as MatDialogConfig,
+} from '@angular/material/legacy-dialog';
 import { SubscriptionBasedDirective } from './subscription-based.directive';
 
 @Directive({

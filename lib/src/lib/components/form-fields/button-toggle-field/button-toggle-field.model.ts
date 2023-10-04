@@ -5,7 +5,7 @@ import {
 } from '../../../models/form-field-base';
 import { ThemePalette } from '@angular/material/core';
 import { EditType } from '../../../models/editType';
-import { TooltipPosition } from '@angular/material/tooltip';
+import { LegacyTooltipPosition as TooltipPosition } from '@angular/material/legacy-tooltip';
 
 export interface FormFieldButtonToggleOptions extends FormFieldBaseOptions {
   buttonOptions: {

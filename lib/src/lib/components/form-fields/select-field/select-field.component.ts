@@ -27,12 +27,12 @@ import {
   FormFieldSelectOptionsFn,
 } from './field-select.model';
 import { IFieldConditions } from '../../../models/IFieldConditions';
-import { coerceArray } from '@lab900/ui';
 import { ValueLabel } from '../../../models/form-field-base';
-import { MatSelect } from '@angular/material/select';
-import { MatOption } from '@angular/material/core';
+import { MatLegacySelect as MatSelect } from '@angular/material/legacy-select';
+import { MatLegacyOption as MatOption } from '@angular/material/legacy-core';
 import memoize from 'lodash/memoize';
 import { isDifferent } from '../../../utils/different.utils';
+import { coerceArray } from '@angular/cdk/coercion';
 
 @Component({
   selector: 'lab900-select-field',

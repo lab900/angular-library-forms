@@ -7,33 +7,33 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatCardModule } from '@angular/material/card';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatChipsModule } from '@angular/material/chips';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
+import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
+import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import {
-  MAT_FORM_FIELD_DEFAULT_OPTIONS,
-  MatFormFieldModule,
-} from '@angular/material/form-field';
+  MAT_LEGACY_FORM_FIELD_DEFAULT_OPTIONS as MAT_FORM_FIELD_DEFAULT_OPTIONS,
+  MatLegacyFormFieldModule as MatFormFieldModule,
+} from '@angular/material/legacy-form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
+import { MatLegacyRadioModule as MatRadioModule } from '@angular/material/legacy-radio';
+import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
+import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/material/legacy-slide-toggle';
+import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { Lab900ButtonModule } from '@lab900/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSelectInfiniteScrollModule } from 'ng-mat-select-infinite-scroll';
-import { NgxMaskModule } from 'ngx-mask';
+import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { Lab900Form } from './components/form-container/form-container.component';
 import { FormDialogComponent } from './components/form-dialog/form-dialog.component';
@@ -47,8 +47,6 @@ import { DateYearMonthFieldComponent } from './components/form-fields/date-year-
 import { DateRangeFieldComponent } from './components/form-fields/date-range-field/date-range-field.component';
 import { DateTimeFieldComponent } from './components/form-fields/date-time-field/date-time-field.component';
 import { DragNDropFileFieldComponent } from './components/form-fields/drag-n-drop-file-field/drag-n-drop-file-field.component';
-import { FileFieldComponent } from './components/form-fields/file-field/file-field.component';
-import { MatFileFieldComponent } from './components/form-fields/file-field/mat-file-field/mat-file-field.component';
 import { FilePreviewFieldComponent } from './components/form-fields/file-preview-field/file-preview-field.component';
 import { IconFieldComponent } from './components/form-fields/icon-field/icon-field.component';
 import { InputFieldComponent } from './components/form-fields/input-field/input-field.component';
@@ -93,7 +91,6 @@ const customFields = [
   InputFieldComponent,
   PasswordFieldComponent,
   SelectFieldComponent,
-  FileFieldComponent,
   FilePreviewFieldComponent,
   DragNDropFileFieldComponent,
   CheckboxFieldComponent,
@@ -126,7 +123,6 @@ const customFields = [
     FormDialogDirective,
     Lab900Form,
     FormDialogComponent,
-    MatFileFieldComponent,
     MatRangeSliderFieldComponent,
     IconComponent,
     ImagePreviewModalComponent,
@@ -162,7 +158,6 @@ const customFields = [
     TranslateModule,
     MatButtonToggleModule,
     MatChipsModule,
-    NgxMaskModule,
     NgxMatNativeDateModule,
     NgxMatDatetimePickerModule,
     NgxMatTimepickerModule,
@@ -173,6 +168,8 @@ const customFields = [
     MatSelectInfiniteScrollModule,
     NgxMatSelectSearchModule,
     Lab900ButtonModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
   ],
   exports: [
     Lab900Form,
@@ -223,7 +220,6 @@ export class Lab900FormsModule {
             InputFieldComponent,
             PasswordFieldComponent,
             SelectFieldComponent,
-            FileFieldComponent,
             FilePreviewFieldComponent,
             DragNDropFileFieldComponent,
             CheckboxFieldComponent,

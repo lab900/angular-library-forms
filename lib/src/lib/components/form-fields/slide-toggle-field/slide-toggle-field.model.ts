@@ -4,7 +4,7 @@ import {
 } from '../../../models/form-field-base';
 import { ThemePalette } from '@angular/material/core';
 import { EditType } from '../../../models/editType';
-import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { MatLegacySlideToggle as MatSlideToggle } from '@angular/material/legacy-slide-toggle';
 
 export interface FormFieldSlideToggleOptions extends FormFieldBaseOptions {
   label?: string;

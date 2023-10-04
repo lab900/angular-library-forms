@@ -28,7 +28,7 @@ export class MatRangeSliderFieldComponent
   extends BaseControlValueAccessorDirective<number[]>
   implements AfterViewInit, OnChanges
 {
-  private rangeSlider: noUiSlider.noUiSlider;
+  private rangeSlider: noUiSlider.API;
   private latestUnencodedValues: number[];
 
   @Input()
@@ -77,12 +77,15 @@ export class MatRangeSliderFieldComponent
   public ngOnChanges(changes: SimpleChanges): void {
     if (this.rangeSlider && (changes.min || changes.max)) {
       setTimeout(() => {
-        this.rangeSlider.updateOptions({
-          range: {
-            min: this.min,
-            max: this.max,
+        this.rangeSlider.updateOptions(
+          {
+            range: {
+              min: this.min,
+              max: this.max,
+            },
           },
-        });
+          false
+        );
       });
     }
   }
