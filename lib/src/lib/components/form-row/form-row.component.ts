@@ -1,7 +1,7 @@
 import { Component, HostBinding } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FormComponent } from '../AbstractFormComponent';
-import { matLegacyFormFieldAnimations as matFormFieldAnimations } from '@angular/material/legacy-form-field';
+import { matFormFieldAnimations } from '@angular/material/form-field';
 import { FormFieldUtils } from '../../utils/form-field.utils';
 import { FormRow } from './form-row.model';
 import { Lab900FormField } from '../../models/lab900-form-field.type';

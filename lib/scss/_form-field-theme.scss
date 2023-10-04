@@ -1,11 +1,8 @@
-@import '@angular/material/theming';
+@use 'sass:map';
+@use '@angular/material' as mat;
 
-$defaultMargin: (
-  default: 16px,
-);
-
-@mixin lab900-form-field($config-or-theme, $margin: $defaultMargin) {
-  $configTypo: mat-typography-config();
+@mixin lab900-form-field($config-or-theme, $margin: 16px) {
+  $configTypo: mat.get-typography-config($config-or-theme);
 
   .readonly {
     opacity: 0.6;
@@ -14,19 +11,19 @@ $defaultMargin: (
   .lab900-form-field {
     width: 100%;
 
-    .mat-error {
+    .mat-mdc-form-field-error {
       font-size: 11px;
       margin-top: 1px;
     }
 
-    .mat-form-field {
+    .mat-mdc-form-field {
       width: 100%;
     }
 
     .lab900-form-field-label {
       display: block;
-      margin-bottom: map_get($margin, 'default');
-      @include mat-typography-level-to-styles($configTypo, subheading-2);
+      margin-bottom: $margin;
+      // @include mat.typography-level($configTypo, 'body-1');
 
       &--with-info {
         display: flex;
@@ -40,7 +37,7 @@ $defaultMargin: (
 
     .lab900-button-toggle-field {
       &__label {
-        margin-bottom: map_get($margin, 'default');
+        margin-bottom: $margin;
       }
     }
 
@@ -51,23 +48,23 @@ $defaultMargin: (
         margin-top: 0.3em;
       }
       &__label {
-        margin-bottom: map_get($margin, 'default');
+        margin-bottom: $margin;
       }
     }
 
-    .mat-radio-button ~ .mat-radio-button {
-      margin-left: map_get($margin, 'default');
+    .mat-mdc-radio-button ~ .mat-radio-button {
+      margin-left: $margin;
     }
 
     .spanFix {
-      .mat-form-field-prefix,
-      .mat-form-field-suffix {
+      .mat-mdc-form-field-prefix,
+      .mat-mdc-form-field-suffix {
         position: static !important;
       }
     }
 
-    .mat-form-field-prefix .mat-icon,
-    .mat-form-field-suffix .mat-icon {
+    .mat-mdc-form-field-prefix .mat-icon,
+    .mat-mdc-form-field-suffix .mat-icon {
       font-size: 1.5em;
     }
   }

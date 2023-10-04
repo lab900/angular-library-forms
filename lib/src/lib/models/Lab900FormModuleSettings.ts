@@ -1,4 +1,4 @@
-import { MatLegacyFormFieldDefaultOptions as MatFormFieldDefaultOptions } from '@angular/material/legacy-form-field';
+import { MatFormFieldDefaultOptions } from '@angular/material/form-field';
 import { InjectionToken } from '@angular/core';
 import { IConfig } from 'ngx-mask';
 
@@ -27,7 +27,7 @@ export interface Lab900FormModuleSettings {
 
 export const defaultFormModuleSettings: Lab900FormModuleSettings = {
   formField: {
-    appearance: 'standard',
+    appearance: 'outline',
     floatLabel: 'auto',
     hideRequiredMarker: false,
     showLengthIndicator: true,

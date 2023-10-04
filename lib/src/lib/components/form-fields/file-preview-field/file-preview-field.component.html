@@ -17,7 +17,11 @@
   </button>
   <div class="images-wrapper" *ngIf="files?.length">
     <ng-container *ngFor="let file of files">
-      <mat-card class="image-wrapper" (click)="handleImageClick(file)">
+      <mat-card
+        appearance="outlined"
+        class="image-wrapper"
+        (click)="handleImageClick(file)"
+      >
         <mat-icon
           *ngIf="!fieldIsReadonly"
           (click)="$event.stopPropagation(); removeFile(file)"

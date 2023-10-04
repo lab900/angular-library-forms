@@ -72,21 +72,21 @@ p {
   color: $palette-lab900-text;
 }
 
-.mat-list-base .mat-list-item {
+.mat-mdc-list-base .mat-mdc-list-item {
   color: $palette-lab900-text;
 }
 
-.mat-card.lab900-card {
+.mat-mdc-card.lab900-card {
   display: flex;
   flex-direction: column;
   margin-bottom: 32px;
   padding: 0;
 
-  .mat-card-header {
+  .mat-mdc-card-header {
     padding: 8px;
     background: $palette-lab900green-100;
 
-    .mat-card-title {
+    .mat-mdc-card-title {
       margin: 0;
       padding: 0;
 

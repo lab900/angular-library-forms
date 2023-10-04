@@ -1,5 +1,5 @@
 import { Directive, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { MatLegacyInput as MatInput } from '@angular/material/legacy-input';
+import { MatInput } from '@angular/material/input';
 
 @Directive({
   selector: '[lab900InputAutofocus]',

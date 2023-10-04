@@ -1,7 +1,7 @@
 import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { TranslateService } from '@ngx-translate/core';
-import { matLegacyFormFieldAnimations as matFormFieldAnimations } from '@angular/material/legacy-form-field';
+import { matFormFieldAnimations } from '@angular/material/form-field';
 import { CheckboxFieldModel } from './checkbox-field.model';
 
 @Component({

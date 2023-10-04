@@ -9,9 +9,9 @@ import { FormComponent } from '../../AbstractFormComponent';
 import { BehaviorSubject, isObservable, Observable, of } from 'rxjs';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {
-  MatLegacyAutocomplete as MatAutocomplete,
-  MatLegacyAutocompleteSelectedEvent as MatAutocompleteSelectedEvent,
-} from '@angular/material/legacy-autocomplete';
+  MatAutocomplete,
+  MatAutocompleteSelectedEvent,
+} from '@angular/material/autocomplete';
 import { TranslateService } from '@ngx-translate/core';
 import { debounceTime, switchMap } from 'rxjs/operators';
 import { ValueLabel } from '../../../models/form-field-base';

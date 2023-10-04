@@ -54,7 +54,7 @@
     "ng-mat-select-infinite-scroll": "^4.0.0",
     "ngx-markdown": "^15.1.2",
     "ngx-mask": "15.2.1",
-    "ngx-mat-select-search": "^6.0.0",
+    "ngx-mat-select-search": "^7.0.4",
     "nouislider": "^15.7.1",
     "rxjs": "~7.8.1",
     "tslib": "^2.3.1",

@@ -1,16 +1,16 @@
-@import '@angular/material/theming';
+@use 'sass:map';
+@use '@angular/material' as mat;
 
 @mixin lab900-range-slider($config-or-theme) {
-  $config: mat-get-color-config($config-or-theme);
-  $primary: map-get($config, primary);
-  $accent: map-get($config, accent);
+  $config: mat.get-color-config($config-or-theme);
+  $primary: map.get($config, 'primary');
 
   .range-slider {
     .noUi-connect {
-      background-color: mat-color($primary);
+      background-color: mat.get-color-from-palette($primary);
     }
     .noUiSlider .noUi-handle {
-      @include mat-elevation(2);
+      @include mat.elevation(2);
     }
   }
 }

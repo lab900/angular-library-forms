@@ -28,8 +28,8 @@ import {
 } from './field-select.model';
 import { IFieldConditions } from '../../../models/IFieldConditions';
 import { ValueLabel } from '../../../models/form-field-base';
-import { MatLegacySelect as MatSelect } from '@angular/material/legacy-select';
-import { MatLegacyOption as MatOption } from '@angular/material/legacy-core';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/core';
 import memoize from 'lodash/memoize';
 import { isDifferent } from '../../../utils/different.utils';
 import { coerceArray } from '@angular/cdk/coercion';
@@ -44,6 +44,7 @@ import { coerceArray } from '@angular/cdk/coercion';
         align-items: center;
         justify-content: space-between;
       }
+
       .no-entries-found button {
         margin-left: 10px;
       }

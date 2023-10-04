@@ -7,7 +7,7 @@ import { EditType } from '../../../models/editType';
 import { Lab900FormField } from '../../../models/lab900-form-field.type';
 import { Lab900ButtonType } from '@lab900/ui';
 import { UntypedFormGroup } from '@angular/forms';
-import { LegacyTooltipPosition as TooltipPosition } from '@angular/material/legacy-tooltip';
+import { TooltipPosition } from '@angular/material/tooltip';
 
 export interface FormFieldButtonOptions extends FormFieldBaseOptions {
   type: Lab900ButtonType;

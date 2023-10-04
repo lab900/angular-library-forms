@@ -17,8 +17,8 @@
     ><span [innerHTML]="getErrorMessage() | async"></span
   ></mat-error>
   <mat-icon matSuffix *ngIf="!fieldIsReadonly">search</mat-icon>
-  <mat-chip-list #chipList [formControlName]="fieldAttribute">
-    <mat-chip
+  <mat-chip-grid #chipList [formControlName]="fieldAttribute">
+    <mat-chip-row
       *ngFor="let opt of selectedOptions; let i = index"
       [removable]="!fieldIsReadonly"
       selectable
@@ -26,7 +26,7 @@
     >
       <div [innerHTML]="options.displayInputFn(opt) | translate"></div>
       <mat-icon *ngIf="!fieldIsReadonly" matChipRemove>cancel</mat-icon>
-    </mat-chip>
+    </mat-chip-row>
     <input
       #input
       (input)="inputChanged($event)"
@@ -36,7 +36,7 @@
       [matChipInputFor]="chipList"
       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
     />
-  </mat-chip-list>
+  </mat-chip-grid>
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
     <mat-option
       *ngFor="let option of filteredOptions | async"
