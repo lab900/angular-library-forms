@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@import '@angular/material/theming';
 
 @mixin lab900-range-slider($config-or-theme) {
   $config: mat-get-color-config($config-or-theme);
