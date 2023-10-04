@@ -1,7 +1,7 @@
 import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { TranslateService } from '@ngx-translate/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { FormFieldDateRange } from './date-range-field.model';
 
 @Component({
@@ -16,8 +16,8 @@ export class DateRangeFieldComponent extends FormComponent<FormFieldDateRange> {
     super(translateService);
   }
 
-  public get dateFormGroup(): FormGroup {
-    return this.group.get(this.fieldAttribute) as FormGroup;
+  public get dateFormGroup(): UntypedFormGroup {
+    return this.group.get(this.fieldAttribute) as UntypedFormGroup;
   }
 
   public get maxDate(): Date | null {

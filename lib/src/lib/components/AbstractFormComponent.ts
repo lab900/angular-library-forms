@@ -1,4 +1,8 @@
-import { AbstractControl, FormGroup, ValidationErrors } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormGroup,
+  ValidationErrors,
+} from '@angular/forms';
 import {
   AfterContentInit,
   AfterViewInit,
@@ -24,7 +28,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   public fieldAttribute?: string;
 
   @Input()
-  public group: FormGroup;
+  public group: UntypedFormGroup;
 
   @Input()
   public schema: S;
@@ -33,7 +37,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   public language?: string;
 
   @Input()
-  public externalForms?: Record<string, FormGroup>;
+  public externalForms?: Record<string, UntypedFormGroup>;
 
   @Input()
   public availableLanguages?: ValueLabel[];
@@ -81,12 +85,12 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   }
 
   public getErrorMessage = (
-    group: FormGroup = this.group
+    group: UntypedFormGroup = this.group
   ): Observable<string> => {
     const field = group.get(String(this.fieldAttribute));
     let errors: ValidationErrors = field.errors;
     let message = this.translateService.get('forms.error.generic');
-    if (field instanceof FormGroup && field.controls) {
+    if (field instanceof UntypedFormGroup && field.controls) {
       errors = field.errors ?? {};
       for (const controlsKey in field.controls) {
         if (field.controls.hasOwnProperty(controlsKey)) {

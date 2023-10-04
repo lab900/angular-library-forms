@@ -6,7 +6,7 @@ import { ThemePalette } from '@angular/material/core';
 import { EditType } from '../../../models/editType';
 import { Lab900FormField } from '../../../models/lab900-form-field.type';
 import { Lab900ButtonType } from '@lab900/ui';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { TooltipPosition } from '@angular/material/tooltip';
 
 export interface FormFieldButtonOptions extends FormFieldBaseOptions {
@@ -14,7 +14,7 @@ export interface FormFieldButtonOptions extends FormFieldBaseOptions {
   color?: ThemePalette;
   disabled?: boolean;
   onClick?: (
-    formGroup: FormGroup,
+    formGroup: UntypedFormGroup,
     currentScheme: Lab900FormField,
     event: Event
   ) => any;

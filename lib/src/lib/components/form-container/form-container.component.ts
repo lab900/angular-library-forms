@@ -5,7 +5,7 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import { FormArray, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { Lab900FormConfig } from '../../models/Lab900FormConfig';
 import { Lab900FormBuilderService } from '../../services/form-builder.service';
 import { areValuesEqual } from '../../models/IFieldConditions';
@@ -31,7 +31,7 @@ export class Lab900Form<T> implements OnChanges {
    * You can add a object of other form groups which could be used in the conditional fields
    */
   @Input()
-  public externalForms?: Record<string, FormGroup>;
+  public externalForms?: Record<string, UntypedFormGroup>;
 
   @Input()
   public data?: T;
@@ -42,7 +42,7 @@ export class Lab900Form<T> implements OnChanges {
   @Input()
   public availableLanguages?: ValueLabel[];
 
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   public get valid(): boolean {
     return this.form.valid;
@@ -82,7 +82,7 @@ export class Lab900Form<T> implements OnChanges {
       const control = this.form.controls[key];
 
       if (control && !areValuesEqual(data[key], prevData?.[key])) {
-        if (control instanceof FormArray) {
+        if (control instanceof UntypedFormArray) {
           const fieldSchema = this.schema.fields.find(
             (field: Lab900FormField) => field.attribute === key
           );
@@ -100,7 +100,7 @@ export class Lab900Form<T> implements OnChanges {
     Object.keys(data).forEach((key: string) => {
       const control = this.form.controls[key];
       if (control) {
-        if (control instanceof FormArray) {
+        if (control instanceof UntypedFormArray) {
           const fieldSchema = this.schema.fields.find(
             (field: Lab900FormField) => field.attribute === key
           );

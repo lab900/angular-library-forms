@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { EditType, Lab900FormConfig, Lab900Form } from '@lab900/forms';
 
 @Component({
@@ -45,7 +45,7 @@ export class FormFieldButtonExampleComponent {
               tooltip: {
                 text: `Calculate MT based on m³ and density`,
               },
-              onClick: (formGroup: FormGroup) => {
+              onClick: (formGroup: UntypedFormGroup) => {
                 const { m3, density, mt } = formGroup.controls;
                 if (!m3.value || !density.value) {
                   return;

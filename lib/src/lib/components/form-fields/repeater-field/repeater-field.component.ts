@@ -1,6 +1,6 @@
 import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { FormArray } from '@angular/forms';
+import { UntypedFormArray } from '@angular/forms';
 import { Lab900FormBuilderService } from '../../../services/form-builder.service';
 import { TranslateService } from '@ngx-translate/core';
 import { matFormFieldAnimations } from '@angular/material/form-field';
@@ -32,8 +32,8 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
     return this.options?.fixedList;
   }
 
-  public get repeaterArray(): FormArray {
-    return this.group.get(this.fieldAttribute) as FormArray;
+  public get repeaterArray(): UntypedFormArray {
+    return this.group.get(this.fieldAttribute) as UntypedFormArray;
   }
 
   public constructor(
