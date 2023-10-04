@@ -1,20 +1,33 @@
 <ng-container *ngIf="visible && schema">
-  <div [hidden]="isHidden(schema)" class="lab900-form-column {{ options?.customClass }}">
-    <span *ngIf="(fieldIsReadonly && options?.readonlyLabel) || schema.title" class="lab900-form-field-label lab900-form-column-label {{
+  <div
+    [hidden]="isHidden(schema)"
+    class="lab900-form-column {{ options?.customClass }}"
+  >
+    <span
+      *ngIf="(fieldIsReadonly && options?.readonlyLabel) || schema.title"
+      class="lab900-form-field-label lab900-form-column-label {{
         options?.customTitleClass
-      }}">{{
-      (!fieldIsReadonly
-      ? schema.title
-      : options?.readonlyLabel || schema.title
-      ) | translate
-      }}</span>
+      }}"
+      >{{
+        (!fieldIsReadonly
+          ? schema.title
+          : options?.readonlyLabel || schema.title
+        ) | translate
+      }}</span
+    >
     <div class="form-column" [class.mobile-cols]="schema.options?.mobileCols">
-      <div *ngFor="let field of schema.nestedFields" [class.hidden]="isHidden(field)" lab900FormField [schema]="field"
-        [group]="fieldAttribute ? group.get(fieldAttribute) : group" [readonly]="columnIsReadonly(field)">
+      <div
+        *ngFor="let field of schema.nestedFields"
+        [class.hidden]="isHidden(field)"
+        lab900FormField
+        [schema]="field"
+        [group]="fieldAttribute ? group.get(fieldAttribute) : group"
+        [readonly]="columnIsReadonly(field)"
+      >
         <div class="form-col__info" *ngIf="field?.options?.infoTooltip as tip">
           <mat-icon [matTooltip]="tip?.text | translate">{{
             tip?.icon || 'info'
-            }}</mat-icon>
+          }}</mat-icon>
         </div>
       </div>
     </div>

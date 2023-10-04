@@ -11,8 +11,13 @@
     <ng-container *ngFor="let group of navItemGroups">
       <div *ngFor="let item of group.items" style="margin-bottom: 30px">
         <h2>{{ item.label | translate }}</h2>
-        <div fxLayout="row wrap" fxLayoutGap="10px">
-          <button *ngFor="let link of item.children" mat-raised-button [routerLink]="['/' + link.route]">
+        <div style="display: flex; flex-wrap: wrap">
+          <button
+            style="margin-right: 10px"
+            *ngFor="let link of item.children"
+            mat-raised-button
+            [routerLink]="['/' + link.route]"
+          >
             {{ link.label | translate }}
           </button>
         </div>
