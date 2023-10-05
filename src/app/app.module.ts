@@ -12,7 +12,7 @@ import { MarkdownModule } from 'ngx-markdown';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { MergingTranslateLoader } from './utils/merging-translate-loader';
 import { HttpClient } from '@angular/common/http';
-import { NgxMaskModule } from 'ngx-mask';
+import { provideEnvironmentNgxMask } from 'ngx-mask';
 
 export function TranslationLoaderFactory(
   http: HttpClient
@@ -30,7 +30,6 @@ export function TranslationLoaderFactory(
     AppRoutingModule,
     SharedModule,
     MarkdownModule.forRoot(),
-    NgxMaskModule.forRoot(),
     Lab900FormsModule.forRoot({
       formField: {
         appearance: 'fill',
@@ -48,6 +47,7 @@ export function TranslationLoaderFactory(
       defaultLanguage: 'en',
     }),
   ],
+  providers: [provideEnvironmentNgxMask()],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -1,27 +1,23 @@
-@import './scss/range-slider-theme';
-@import './scss/form-field-theme';
+@use './scss/form-field-theme' as form-field;
 
 @mixin lab900-forms($config-or-theme) {
-  @include lab900-form-field($config-or-theme);
-  @include lab900-range-slider($config-or-theme);
+  @include form-field.lab900-form-field($config-or-theme);
 
   // ngx-mat-timepicker fixes
   .ngx-mat-timepicker {
-    .mat-form-field {
+    .mat-mdc-form-field {
       max-width: 40px !important;
       width: 40px !important;
     }
-
-    .mat-form-field-infix {
+    .mat-mdc-form-field-infix {
       padding: 5px 0 10px !important;
     }
-
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
     .mat-form-field-appearance-outline .mat-form-field-wrapper {
       margin: 0 !important;
       padding: 0 !important;
     }
-
-    .mat-form-field-subscript-wrapper {
+    .mat-mdc-form-field-subscript-wrapper {
       display: none !important;
     }
   }

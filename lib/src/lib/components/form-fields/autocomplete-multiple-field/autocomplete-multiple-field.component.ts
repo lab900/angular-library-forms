@@ -60,7 +60,7 @@ export class AutocompleteMultipleFieldComponent<T>
       debounceTime(this.options.debounceTime ?? 300),
       switchMap((input: string) => {
         const res = this.options.autocompleteOptions(input, this.fieldControl);
-        return isObservable<ValueLabel<T>[]>(res) ? res : of(res);
+        return isObservable(res) ? res : of(res);
       })
     );
   }

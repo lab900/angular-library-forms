@@ -1,7 +1,11 @@
-import { FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import {
+  UntypedFormControl,
+  ValidationErrors,
+  ValidatorFn,
+} from '@angular/forms';
 
 export function multiLanguageValidator(): ValidatorFn {
-  return (control: FormControl): ValidationErrors => {
+  return (control: UntypedFormControl): ValidationErrors => {
     const values: string[] = Object.values(control?.value ?? {});
     if (
       !!values?.length &&

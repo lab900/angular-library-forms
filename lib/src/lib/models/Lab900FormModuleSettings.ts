@@ -27,7 +27,7 @@ export interface Lab900FormModuleSettings {
 
 export const defaultFormModuleSettings: Lab900FormModuleSettings = {
   formField: {
-    appearance: 'standard',
+    appearance: 'outline',
     floatLabel: 'auto',
     hideRequiredMarker: false,
     showLengthIndicator: true,

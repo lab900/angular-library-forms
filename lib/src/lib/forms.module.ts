@@ -33,7 +33,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 import { Lab900ButtonModule } from '@lab900/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSelectInfiniteScrollModule } from 'ng-mat-select-infinite-scroll';
-import { NgxMaskModule } from 'ngx-mask';
+import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { Lab900Form } from './components/form-container/form-container.component';
 import { FormDialogComponent } from './components/form-dialog/form-dialog.component';
@@ -47,8 +47,6 @@ import { DateYearMonthFieldComponent } from './components/form-fields/date-year-
 import { DateRangeFieldComponent } from './components/form-fields/date-range-field/date-range-field.component';
 import { DateTimeFieldComponent } from './components/form-fields/date-time-field/date-time-field.component';
 import { DragNDropFileFieldComponent } from './components/form-fields/drag-n-drop-file-field/drag-n-drop-file-field.component';
-import { FileFieldComponent } from './components/form-fields/file-field/file-field.component';
-import { MatFileFieldComponent } from './components/form-fields/file-field/mat-file-field/mat-file-field.component';
 import { FilePreviewFieldComponent } from './components/form-fields/file-preview-field/file-preview-field.component';
 import { IconFieldComponent } from './components/form-fields/icon-field/icon-field.component';
 import { InputFieldComponent } from './components/form-fields/input-field/input-field.component';
@@ -87,13 +85,13 @@ import { AmountPipe } from './components/form-fields/amount-field/amount.pipe';
 import { FormColumnComponent } from './components/form-column/form-column.component';
 import { SearchFieldComponent } from './components/form-fields/search-field/search-field.component';
 import { SearchInputDirective } from './components/form-fields/search-field/search-input.directive';
+import { MatSliderModule } from '@angular/material/slider';
 
 const customFields = [
   UnknownFieldComponent,
   InputFieldComponent,
   PasswordFieldComponent,
   SelectFieldComponent,
-  FileFieldComponent,
   FilePreviewFieldComponent,
   DragNDropFileFieldComponent,
   CheckboxFieldComponent,
@@ -126,7 +124,6 @@ const customFields = [
     FormDialogDirective,
     Lab900Form,
     FormDialogComponent,
-    MatFileFieldComponent,
     MatRangeSliderFieldComponent,
     IconComponent,
     ImagePreviewModalComponent,
@@ -162,7 +159,6 @@ const customFields = [
     TranslateModule,
     MatButtonToggleModule,
     MatChipsModule,
-    NgxMaskModule,
     NgxMatNativeDateModule,
     NgxMatDatetimePickerModule,
     NgxMatTimepickerModule,
@@ -173,6 +169,9 @@ const customFields = [
     MatSelectInfiniteScrollModule,
     NgxMatSelectSearchModule,
     Lab900ButtonModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
+    MatSliderModule,
   ],
   exports: [
     Lab900Form,
@@ -223,7 +222,6 @@ export class Lab900FormsModule {
             InputFieldComponent,
             PasswordFieldComponent,
             SelectFieldComponent,
-            FileFieldComponent,
             FilePreviewFieldComponent,
             DragNDropFileFieldComponent,
             CheckboxFieldComponent,

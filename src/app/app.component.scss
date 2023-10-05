@@ -1,4 +1,4 @@
-@import '../assets/styles/green.palette';
+@import 'src/assets/styles/green.palette';
 
 .lab900-showcase {
   &__header {
@@ -8,6 +8,16 @@
     z-index: 10;
     position: relative;
     padding-left: 0;
+
+    > div {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      > div:first-child {
+        display: flex;
+      }
+    }
 
     .menu-button {
       background: $palette-lab900green-50;
@@ -38,6 +48,10 @@
         height: 35px;
         margin-right: 15px;
         display: block;
+      }
+
+      h1 {
+        margin-bottom: 0;
       }
 
       @media screen and (max-width: 599px) {

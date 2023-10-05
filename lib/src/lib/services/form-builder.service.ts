@@ -1,8 +1,8 @@
 import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
@@ -16,7 +16,7 @@ import { FormFieldRepeater } from '../components/form-fields/repeater-field/repe
 
 @Injectable()
 export class Lab900FormBuilderService {
-  public constructor(private fb: FormBuilder) {}
+  public constructor(private fb: UntypedFormBuilder) {}
 
   public static addValidators(
     field: Lab900FormField,
@@ -56,9 +56,9 @@ export class Lab900FormBuilderService {
 
   public createFormGroup<T = any>(
     fields: Lab900FormField[],
-    group?: FormGroup,
+    group?: UntypedFormGroup,
     data?: T
-  ): FormGroup {
+  ): UntypedFormGroup {
     let formGroup = group ? group : this.fb.group({});
     fields.forEach((field) => {
       if (field.attribute) {
@@ -92,8 +92,8 @@ export class Lab900FormBuilderService {
   public createFormArray<T = any>(
     formData: T,
     field: FormFieldRepeater,
-    formArray: FormArray = this.fb.array([])
-  ): FormArray {
+    formArray: UntypedFormArray = this.fb.array([])
+  ): UntypedFormArray {
     formArray.clear();
     const data: any[] = this.getFieldValue(field.attribute, formData);
     if (Array.isArray(data) && data?.length) {
@@ -114,7 +114,7 @@ export class Lab900FormBuilderService {
 
   private createFormField(
     field: Lab900FormField,
-    fieldGroup: FormGroup,
+    fieldGroup: UntypedFormGroup,
     formData: any
   ): void {
     const attributeMap = field.attribute.split('.');
@@ -149,7 +149,7 @@ export class Lab900FormBuilderService {
             ? field.options.defaultValue(data)
             : field.options.defaultValue;
       }
-      const formControl = new FormControl(
+      const formControl = new UntypedFormControl(
         data,
         Lab900FormBuilderService.addValidators(field, data)
       );
@@ -157,14 +157,17 @@ export class Lab900FormBuilderService {
     }
   }
 
-  private setFieldGroup(attribute: string, parentGroup: FormGroup): FormGroup {
+  private setFieldGroup(
+    attribute: string,
+    parentGroup: UntypedFormGroup
+  ): UntypedFormGroup {
     let fieldGroup = parentGroup;
     if (attribute?.includes('.')) {
       const keys = attribute.split('.');
       keys.forEach((key, i) => {
         attribute = key;
         if (i < keys.length - 1) {
-          let newGroup = fieldGroup.get(key) as FormGroup;
+          let newGroup = fieldGroup.get(key) as UntypedFormGroup;
           if (!newGroup) {
             newGroup = this.fb.group({});
             fieldGroup.addControl(key, newGroup);

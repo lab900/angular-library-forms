@@ -1,4 +1,4 @@
-import { FormGroup, Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 import { FormFieldBaseOptions } from '../models/form-field-base';
 import { Lab900FormField } from '../models/lab900-form-field.type';
 
@@ -39,7 +39,7 @@ export class FormFieldUtils {
 
   public static isHidden(
     fieldOptions: FormFieldBaseOptions,
-    group: FormGroup
+    group: UntypedFormGroup
   ): boolean {
     if (typeof fieldOptions?.hide === 'function') {
       return fieldOptions?.hide(group.value);

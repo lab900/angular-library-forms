@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { EditType, Lab900FormConfig, ValueLabel } from '@lab900/forms';
 
 @Component({
@@ -13,7 +13,7 @@ import { EditType, Lab900FormConfig, ValueLabel } from '@lab900/forms';
     <button (click)="clearSelect()">clear All</button>`,
 })
 export class FormFieldSelectExampleComponent {
-  public readonly formGroup = new FormGroup({});
+  public readonly formGroup = new UntypedFormGroup({});
   public readonly formSchema: Lab900FormConfig = {
     fields: [
       {
@@ -179,7 +179,7 @@ export class FormFieldSelectExampleComponent {
   };
 
   public constructor() {
-    const control = new FormControl();
+    const control = new UntypedFormControl();
     this.formGroup.addControl('example-select', control);
   }
 

@@ -27,12 +27,12 @@ import {
   FormFieldSelectOptionsFn,
 } from './field-select.model';
 import { IFieldConditions } from '../../../models/IFieldConditions';
-import { coerceArray } from '@lab900/ui';
 import { ValueLabel } from '../../../models/form-field-base';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/core';
 import memoize from 'lodash/memoize';
 import { isDifferent } from '../../../utils/different.utils';
+import { coerceArray } from '@angular/cdk/coercion';
 
 @Component({
   selector: 'lab900-select-field',
@@ -44,6 +44,7 @@ import { isDifferent } from '../../../utils/different.utils';
         align-items: center;
         justify-content: space-between;
       }
+
       .no-entries-found button {
         margin-left: 10px;
       }
@@ -169,7 +170,7 @@ export class SelectFieldComponent<T>
     );
 
     this.addSubscription(this.group.valueChanges, (_value) => {
-      if (this.options.selectAll?.enabled && !this.loading$.value) {
+      if (this.options?.selectAll?.enabled && !this.loading$.value) {
         this.updateAllSelectedStatus();
       }
     });
@@ -377,13 +378,13 @@ export class SelectFieldComponent<T>
     return values$.pipe(
       catchError(() => of([])),
       tap((options: ValueLabel<T>[]) => {
-        if (this.options.multiple && !optionsFilter?.getAll) {
+        if (this.options?.multiple && !optionsFilter?.getAll) {
           setTimeout(() => {
             this.updateAllSelectedStatus();
           }, 0);
         }
         if (
-          options.length === 1 &&
+          options?.length === 1 &&
           !this.fieldControl.value &&
           this.schema.options?.autoselectOnlyOption
         ) {

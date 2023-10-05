@@ -1,6 +1,6 @@
 import {
   AbstractControl,
-  FormGroup,
+  UntypedFormGroup,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
@@ -47,7 +47,7 @@ export interface IFieldConditions<T = any> {
 
 export class FieldConditions<T = any> implements IFieldConditions<T> {
   private readonly fieldControl: AbstractControl;
-  private externalForms?: Record<string, FormGroup>;
+  private externalForms?: Record<string, UntypedFormGroup>;
 
   public dependOn: string | string[];
   public distinctUntilChangedCompareFn?: (a: T, b: T) => boolean;
@@ -73,7 +73,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
   public dependControls: Record<string, AbstractControl>;
   public prevValue: T;
 
-  private readonly group: FormGroup;
+  private readonly group: UntypedFormGroup;
   private readonly schema: Lab900FormField;
   public constructor(
     private readonly component: FormComponent<any>,
@@ -107,7 +107,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
     return value !== null && typeof value !== 'undefined';
   }
 
-  public getDependGroup(): FormGroup {
+  public getDependGroup(): UntypedFormGroup {
     if (this.externalFormId) {
       this.skipIfNotExists = true;
       if (this.externalForms?.[this.externalFormId]) {
@@ -121,12 +121,15 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
     return this.group;
   }
 
-  public getDependControl(dependOn: string, group: FormGroup): AbstractControl {
+  public getDependControl(
+    dependOn: string,
+    group: UntypedFormGroup
+  ): AbstractControl {
     let dependControl = group.get(dependOn);
     if (!dependControl && group.parent) {
       dependControl = this.getDependControl(
         dependOn,
-        group.parent as FormGroup
+        group.parent as UntypedFormGroup
       );
     }
     return dependControl;
