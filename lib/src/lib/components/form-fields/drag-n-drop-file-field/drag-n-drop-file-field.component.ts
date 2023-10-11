@@ -1,5 +1,4 @@
 import { Component, ElementRef, HostBinding, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { Lab900File } from '../../../models/Lab900File';
 import { formatBytes } from '../../../utils/image.utils';
@@ -11,19 +10,14 @@ import { FormFieldDragNDropFilePreview } from './drag-n-drop-file-field.model';
   templateUrl: './drag-n-drop-file-field.component.html',
   styleUrls: ['./drag-n-drop-file-field.component.scss'],
 })
-export class DragNDropFileFieldComponent<
-  T
-> extends FormComponent<FormFieldDragNDropFilePreview> {
+export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDropFilePreview> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
   @ViewChild('fileField')
   private fileFieldComponent: ElementRef;
 
-  public constructor(
-    translateService: TranslateService,
-    private dialog: MatDialog
-  ) {
+  public constructor(translateService: TranslateService) {
     super(translateService);
   }
 

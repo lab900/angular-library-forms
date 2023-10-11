@@ -80,7 +80,9 @@ export class SearchInputDirective<T>
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
   public onChange = (_: T | null): void => {};
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   public onTouched = (): void => {};
 
   public registerOnChange(fn: (_: T | null) => void): void {

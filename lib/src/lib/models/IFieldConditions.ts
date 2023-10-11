@@ -4,19 +4,12 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { Observable, of, Subscription } from 'rxjs';
-import * as _ from 'lodash';
+import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { FormComponent } from '../components/AbstractFormComponent';
 import { Lab900FormField } from './lab900-form-field.type';
 import { FormFieldSelect } from '../components/form-fields/select-field/field-select.model';
-
-export const areValuesEqual = (val1: any, val2: any): boolean => {
-  if (typeof val1 === 'object' && typeof val2 === 'object') {
-    return _.isEqual(val1, val2);
-  }
-  return val1 === val2;
-};
+import { isDifferent } from '@lab900/ui';
 
 export interface IFieldConditions<T = any> {
   dependOn: string | string[];
@@ -149,7 +142,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
                 debounceTime(100),
                 distinctUntilChanged(this.distinctUntilChangedCompareFn)
               )
-              .subscribe((v) =>
+              .subscribe(() =>
                 this.runAll(key, this.getDependControlValues(), false, callback)
               )
           );
@@ -165,7 +158,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
     firstRun: boolean,
     callback?: (dependOn: string, value: T, firstRun?: boolean) => void
   ): void {
-    if (firstRun || !areValuesEqual(this.prevValue, value)) {
+    if (firstRun || !isDifferent(this.prevValue, value)) {
       if (this.onChangeFn && typeof this.onChangeFn === 'function') {
         this.onChangeFn(value, this.fieldControl, this.schema);
       }
@@ -198,6 +191,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
     condition: boolean,
     callback: (isTrue: boolean) => void
   ): void {
+    // eslint-disable-next-line no-prototype-builtins
     if (this.hasOwnProperty(key)) {
       callback(condition);
     }
@@ -279,7 +273,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
   private getDependControlValues(): T {
     const entries = Object.entries(this.dependControls);
     if (entries?.length > 1) {
-      return entries.reduce((acc, [key, control], i) => {
+      return entries.reduce((acc, [key, control]) => {
         acc = { ...acc, [key]: control?.value };
         return acc;
       }, {} as T);

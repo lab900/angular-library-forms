@@ -37,7 +37,7 @@ export function getAmountFormatter(
 export function formatAmountWithoutRounding(
   value: number,
   formatter: Intl.NumberFormat,
-  max: number = 0
+  max = 0
 ): string {
   const re = new RegExp('^-?\\d+(?:.\\d{0,' + (max || -1) + '})?');
   return formatter.format(+value.toString().match(re)[0]);

@@ -93,7 +93,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     if (field instanceof UntypedFormGroup && field.controls) {
       errors = field.errors ?? {};
       for (const controlsKey in field.controls) {
-        if (field.controls.hasOwnProperty(controlsKey)) {
+        if ('controlsKey' in field.controls) {
           errors = { ...errors, ...field.get(controlsKey).errors };
         }
       }
@@ -142,10 +142,15 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   }
 
   public onConditionalChange(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     dependOn: string,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     value: any,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     firstRun?: boolean
-  ): void {}
+  ): void {
+    // Override in child component
+  }
 
   private getDefaultErrorMessage(
     key: string,

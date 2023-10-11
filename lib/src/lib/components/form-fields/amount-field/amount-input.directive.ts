@@ -73,7 +73,9 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
   public onChange = (_: number): void => {};
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   public onTouched = (): void => {};
 
   public registerOnChange(fn: (_: number) => void): void {

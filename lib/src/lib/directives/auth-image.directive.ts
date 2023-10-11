@@ -7,17 +7,14 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { Lab900File } from '../models/Lab900File';
-import { SubscriptionBasedDirective } from './subscription-based.directive';
 import { Observable } from 'rxjs';
 import { fetchImageBase64 } from '../utils/image.utils';
+import { take } from 'rxjs/operators';
 
 @Directive({
   selector: '[lab900AuthImage]',
 })
-export class AuthImageDirective
-  extends SubscriptionBasedDirective
-  implements OnChanges
-{
+export class AuthImageDirective implements OnChanges {
   @Input()
   private readonly image: Lab900File;
 
@@ -30,9 +27,7 @@ export class AuthImageDirective
   public constructor(
     private elementRef: ElementRef<HTMLElement>,
     private renderer: Renderer2
-  ) {
-    super();
-  }
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges): void {
     if ((changes.image || changes.httpCallback) && this.image?.imageSrc) {
@@ -40,24 +35,23 @@ export class AuthImageDirective
       if (this.httpCallback == null) {
         this.setSrc(this.image.imageSrc);
       } else {
-        this.addSubscription(
-          fetchImageBase64(
-            this.httpCallback,
-            this.image,
-            (result: string | ArrayBuffer | null) => {
-              const fileSrc = result as string;
-              this.setSrc(fileSrc);
-              const image: HTMLImageElement = document.createElement('img');
-              image.src = fileSrc;
-              image.onload = () => image.remove();
-              image.onerror = () => {
-                this.setPlaceholder();
-                image.remove();
-              };
-            }
-          ),
-          () => {}
-        );
+        fetchImageBase64(
+          this.httpCallback,
+          this.image,
+          (result: string | ArrayBuffer | null) => {
+            const fileSrc = result as string;
+            this.setSrc(fileSrc);
+            const image: HTMLImageElement = document.createElement('img');
+            image.src = fileSrc;
+            image.onload = () => image.remove();
+            image.onerror = () => {
+              this.setPlaceholder();
+              image.remove();
+            };
+          }
+        )
+          .pipe(take(1))
+          .subscribe();
       }
     } else {
       this.setPlaceholder();

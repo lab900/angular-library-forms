@@ -8,12 +8,15 @@
         "project": ["tsconfig.json", "e2e/tsconfig.json"]
       },
       "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
         "plugin:@angular-eslint/recommended",
         "plugin:@angular-eslint/template/process-inline-templates",
         "plugin:prettier/recommended"
       ],
       "rules": {
         "@typescript-eslint/explicit-member-accessibility": ["error"],
+        "@typescript-eslint/no-explicit-any": 0,
         "@typescript-eslint/explicit-function-return-type": [
           "error",
           {

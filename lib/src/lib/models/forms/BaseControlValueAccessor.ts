@@ -1,4 +1,4 @@
-import { Input, Directive } from '@angular/core';
+import { Directive, Input } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 
 @Directive()
@@ -11,8 +11,10 @@ export class BaseControlValueAccessorDirective<T>
   /**
    * Call when value has changed programmatically
    */
-  public onChange(newVal: T): void {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
+  public onChange(_: T): void {}
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
   public onTouched(_?: any): void {}
 
   /**

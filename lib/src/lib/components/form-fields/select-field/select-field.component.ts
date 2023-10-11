@@ -30,9 +30,8 @@ import { IFieldConditions } from '../../../models/IFieldConditions';
 import { ValueLabel } from '../../../models/form-field-base';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/core';
-import memoize from 'lodash/memoize';
-import { isDifferent } from '../../../utils/different.utils';
 import { coerceArray } from '@angular/cdk/coercion';
+import { isDifferent } from '@lab900/ui';
 
 @Component({
   selector: 'lab900-select-field',
@@ -100,17 +99,17 @@ export class SelectFieldComponent<T>
     return null;
   }
 
-  public showClearButton = memoize((value: T): boolean => {
+  public constructor(translateService: TranslateService) {
+    super(translateService);
+  }
+
+  public showClearButton = (value: T): boolean => {
     if (!value) return false;
     if (typeof this.options?.clearFieldButton?.enabled === 'function') {
       return this.options.clearFieldButton.enabled(this.group.value);
     }
     return this.options?.clearFieldButton?.enabled;
-  });
-
-  public constructor(translateService: TranslateService) {
-    super(translateService);
-  }
+  };
 
   public defaultCompare = (o1: T, o2: T): boolean => o1 === o2;
 
@@ -169,7 +168,7 @@ export class SelectFieldComponent<T>
       this.afterGetOptionsSuccess.bind(this)
     );
 
-    this.addSubscription(this.group.valueChanges, (_value) => {
+    this.addSubscription(this.group.valueChanges, () => {
       if (this.options?.selectAll?.enabled && !this.loading$.value) {
         this.updateAllSelectedStatus();
       }

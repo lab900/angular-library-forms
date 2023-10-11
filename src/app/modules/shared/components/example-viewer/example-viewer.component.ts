@@ -1,7 +1,6 @@
 import {
   AfterViewInit,
   Component,
-  ContentChild,
   ElementRef,
   Input,
   ViewChild,

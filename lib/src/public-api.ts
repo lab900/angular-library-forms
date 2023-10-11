@@ -34,8 +34,6 @@ export * from './lib/directives/auto-focus.directive';
 
 export * from './lib/validators/multi-language.validator';
 
-export * from './lib/utils/different.utils';
-
 export * from './lib/forms.module';
 
 export * from './assets/i18n';

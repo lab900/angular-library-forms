@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ImagePreviewModalComponent } from '../../image-preview-modal/image-preview-modal.component';
 import { fetchImageBase64 } from '../../../utils/image.utils';
 import { FormFieldFilePreview } from './file-preview-field.model';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'lab900-file-preview-field',
@@ -139,17 +140,16 @@ export class FilePreviewFieldComponent<
         },
       });
     } else if (this.options?.httpCallback) {
-      this.addSubscription(
-        fetchImageBase64(this.options.httpCallback, file, (result) => {
-          file.imageBase64 = result as string;
-          this.dialog.open(ImagePreviewModalComponent, {
-            data: {
-              image: file,
-            },
-          });
-        }),
-        () => {}
-      );
+      fetchImageBase64(this.options.httpCallback, file, (result) => {
+        file.imageBase64 = result as string;
+        this.dialog.open(ImagePreviewModalComponent, {
+          data: {
+            image: file,
+          },
+        });
+      })
+        .pipe(take(1))
+        .subscribe();
     }
   }
 

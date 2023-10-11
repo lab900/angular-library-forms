@@ -8,7 +8,6 @@ import {
 import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { Lab900FormConfig } from '../../models/Lab900FormConfig';
 import { Lab900FormBuilderService } from '../../services/form-builder.service';
-import { areValuesEqual } from '../../models/IFieldConditions';
 import { ValueLabel } from '../../models/form-field-base';
 import { Lab900FormField } from '../../models/lab900-form-field.type';
 import { EditType } from '../../models/editType';
@@ -16,6 +15,7 @@ import {
   LAB900_FORM_MODULE_SETTINGS,
   Lab900FormModuleSettings,
 } from '../../models/Lab900FormModuleSettings';
+import { isDifferent } from '@lab900/ui';
 
 @Component({
   selector: 'lab900-form[schema]',
@@ -81,7 +81,7 @@ export class Lab900Form<T> implements OnChanges {
     Object.keys(data).forEach((key: string) => {
       const control = this.form.controls[key];
 
-      if (control && !areValuesEqual(data[key], prevData?.[key])) {
+      if (control && !isDifferent(data[key], prevData?.[key])) {
         if (control instanceof UntypedFormArray) {
           const fieldSchema = this.schema.fields.find(
             (field: Lab900FormField) => field.attribute === key

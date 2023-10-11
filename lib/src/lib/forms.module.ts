@@ -30,7 +30,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AngularEditorModule } from '@kolkov/angular-editor';
-import { Lab900ButtonModule } from '@lab900/ui';
+import { Lab900ButtonModule, Lab900NavListModule } from '@lab900/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
@@ -62,7 +62,6 @@ import { TextareaFieldComponent } from './components/form-fields/textarea-field/
 import { UnknownFieldComponent } from './components/form-fields/unknown-field/unknown-field.component';
 import { WysiwygFieldComponent } from './components/form-fields/wysiwyg-field/wysiwyg-field.component';
 import { FormRowComponent } from './components/form-row/form-row.component';
-import { IconComponent } from './components/icon/icon.component';
 import { ImagePreviewModalComponent } from './components/image-preview-modal/image-preview-modal.component';
 import { LanguagePickerComponent } from './components/language-picker/language-picker.component';
 import { AuthImageDirective } from './directives/auth-image.directive';
@@ -125,7 +124,6 @@ const customFields = [
     Lab900Form,
     FormDialogComponent,
     MatRangeSliderFieldComponent,
-    IconComponent,
     ImagePreviewModalComponent,
     AuthImageDirective,
     AutofocusDirective,
@@ -172,6 +170,7 @@ const customFields = [
     NgxMaskDirective,
     NgxMaskPipe,
     MatSliderModule,
+    Lab900NavListModule,
   ],
   exports: [
     Lab900Form,
