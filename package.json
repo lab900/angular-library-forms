@@ -51,7 +51,6 @@
     "@ngx-translate/core": "^14.0.0",
     "lodash": "^4.17.20",
     "moment": "^2.29.0",
-    "ng-mat-select-infinite-scroll": "^4.0.0",
     "ngx-markdown": "^15.1.2",
     "ngx-mask": "15.2.1",
     "ngx-mat-select-search": "^7.0.4",

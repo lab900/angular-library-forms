@@ -32,7 +32,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { Lab900ButtonModule } from '@lab900/ui';
 import { TranslateModule } from '@ngx-translate/core';
-import { MatSelectInfiniteScrollModule } from 'ng-mat-select-infinite-scroll';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { Lab900Form } from './components/form-container/form-container.component';
@@ -86,6 +85,7 @@ import { FormColumnComponent } from './components/form-column/form-column.compon
 import { SearchFieldComponent } from './components/form-fields/search-field/search-field.component';
 import { SearchInputDirective } from './components/form-fields/search-field/search-input.directive';
 import { MatSliderModule } from '@angular/material/slider';
+import { SelectInfiniteScrollDirective } from './components/form-fields/select-field/select-field-infinite-scroll.directive';
 
 const customFields = [
   UnknownFieldComponent,
@@ -135,6 +135,7 @@ const customFields = [
     AmountInputDirective,
     AmountPipe,
     SearchInputDirective,
+    SelectInfiniteScrollDirective,
     ...customFields,
   ],
   imports: [
@@ -166,7 +167,6 @@ const customFields = [
     MatTooltipModule,
     MatSlideToggleModule,
     MatMenuModule,
-    MatSelectInfiniteScrollModule,
     NgxMatSelectSearchModule,
     Lab900ButtonModule,
     NgxMaskDirective,
@@ -182,6 +182,7 @@ const customFields = [
     AmountInputDirective,
     AmountPipe,
     InputFieldComponent,
+    SelectInfiniteScrollDirective,
   ],
 })
 export class Lab900FormsModule {
