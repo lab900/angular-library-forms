@@ -10,7 +10,7 @@ import { RouterModule } from '@angular/router';
 import { MarkdownModule } from 'ngx-markdown';
 
 import { Lab900FormsModule } from '@lab900/forms';
-import { Lab900NavListModule, Lab900PageHeaderModule } from '@lab900/ui';
+import { Lab900NavListComponent, Lab900PageHeaderComponent } from '@lab900/ui';
 
 import { ExampleViewerComponent } from './components/example-viewer/example-viewer.component';
 import { ShowcasePageComponent } from './components/showcase-page/showcase-page.component';
@@ -42,14 +42,14 @@ const material = [
     ShowcaseHomeComponent,
     MarkdownPageComponent,
     Lab900FormsModule,
-    Lab900NavListModule,
+    Lab900NavListComponent,
     ...material,
   ],
   imports: [
     CommonModule,
     Lab900FormsModule,
-    Lab900NavListModule,
-    Lab900PageHeaderModule,
+    Lab900NavListComponent,
+    Lab900PageHeaderComponent,
     MarkdownModule,
     RouterModule,
     ...material,

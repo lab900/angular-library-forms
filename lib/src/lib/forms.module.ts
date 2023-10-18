@@ -33,7 +33,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AngularEditorModule } from '@kolkov/angular-editor';
-import { Lab900ButtonModule, Lab900NavListModule } from '@lab900/ui';
+import { IconComponent, Lab900ButtonModule } from '@lab900/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
@@ -173,8 +173,8 @@ const customFields = [
     NgxMaskDirective,
     NgxMaskPipe,
     MatSliderModule,
-    Lab900NavListModule,
     MatPseudoCheckboxModule,
+    IconComponent,
   ],
   exports: [
     Lab900Form,
