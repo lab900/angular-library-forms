@@ -81,7 +81,7 @@ export class Lab900Form<T> implements OnChanges {
     Object.keys(data).forEach((key: string) => {
       const control = this.form.controls[key];
 
-      if (control && !isDifferent(data[key], prevData?.[key])) {
+      if (control && isDifferent(data[key], prevData?.[key])) {
         if (control instanceof UntypedFormArray) {
           const fieldSchema = this.schema.fields.find(
             (field: Lab900FormField) => field.attribute === key

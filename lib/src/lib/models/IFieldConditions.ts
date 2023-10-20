@@ -158,7 +158,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
     firstRun: boolean,
     callback?: (dependOn: string, value: T, firstRun?: boolean) => void
   ): void {
-    if (firstRun || !isDifferent(this.prevValue, value)) {
+    if (firstRun || isDifferent(this.prevValue, value)) {
       if (this.onChangeFn && typeof this.onChangeFn === 'function') {
         this.onChangeFn(value, this.fieldControl, this.schema);
       }
@@ -231,6 +231,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
   }
 
   public runDisableConditions(value: T): void {
+    console.log(value);
     const enable = (isTrue: boolean): any =>
       setTimeout(() =>
         isTrue ? this.fieldControl.enable() : this.fieldControl.disable()
