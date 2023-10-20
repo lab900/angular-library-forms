@@ -25,6 +25,8 @@
     [complete]="!options?.infiniteScroll?.enabled"
     [threshold]="options?.infiniteScroll?.threshold || '15%'"
     [debounceTime]="options?.infiniteScroll?.debounceTime || 150"
+    [panelWidth]="options?.panelWidth ?? 'auto'"
+    [panelClass]="options?.panelClass"
     (infiniteScroll)="onScroll()"
     (openedChange)="onOpenedChange($event)"
   >
@@ -73,26 +75,24 @@
         options?.selectAll?.enabled &&
         selectOptions?.length
       "
-      class="select-all"
-      style="margin: 5px 17px"
+      class="mat-mdc-option mdc-list-item mat-mdc-option-multiple select-all"
+      (click)="handleToggleAllSelection()"
     >
-      <mat-checkbox
-        [(ngModel)]="allSelected"
-        [ngModelOptions]="{ standalone: true }"
-        [disabled]="this.options?.selectAll?.disabled"
-        (change)="handleToggleAllSelection()"
-      >
+      <mat-pseudo-checkbox
+        [state]="selectAllState$ | async"
+        [disabled]="options?.selectAll?.disabled"
+      ></mat-pseudo-checkbox>
+      <span class="mdc-list-item__primary-text">
         {{
           options.selectAll?.label || 'forms.select-field.selectAllLabel'
             | translate
         }}
-      </mat-checkbox>
+      </span>
     </div>
     <mat-option
       *ngFor="let item of selectOptions"
       [value]="item.value"
       [disabled]="item.disabled || loading$.value"
-      (click)="options?.multiple ? updateAllSelectedStatus() : undefined"
     >
       <div
         *ngIf="options?.displayOptionFn"

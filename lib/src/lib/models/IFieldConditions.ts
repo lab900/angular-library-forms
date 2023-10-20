@@ -231,7 +231,6 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
   }
 
   public runDisableConditions(value: T): void {
-    console.log(value);
     const enable = (isTrue: boolean): any =>
       setTimeout(() =>
         isTrue ? this.fieldControl.enable() : this.fieldControl.disable()

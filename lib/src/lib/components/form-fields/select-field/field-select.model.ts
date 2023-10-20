@@ -86,6 +86,8 @@ export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
     label?: string;
     disabled?: boolean;
   };
+  panelWidth?: string | number | null;
+  panelClass?: string | string[];
 }
 
 export interface FormFieldSelect<T, R extends string | number = string>

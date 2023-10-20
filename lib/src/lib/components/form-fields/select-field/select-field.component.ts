@@ -1,4 +1,10 @@
-import { Component, HostBinding, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  HostBinding,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -9,6 +15,7 @@ import {
   of,
   ReplaySubject,
   Subject,
+  Subscription,
 } from 'rxjs';
 import {
   catchError,
@@ -29,7 +36,7 @@ import {
 import { IFieldConditions } from '../../../models/IFieldConditions';
 import { ValueLabel } from '../../../models/form-field-base';
 import { MatSelect } from '@angular/material/select';
-import { MatOption } from '@angular/material/core';
+import { MatOption, MatPseudoCheckboxState } from '@angular/material/core';
 import { coerceArray } from '@angular/cdk/coercion';
 import { isDifferent } from '@lab900/ui';
 
@@ -52,10 +59,34 @@ import { isDifferent } from '@lab900/ui';
 })
 export class SelectFieldComponent<T>
   extends FormComponent<FormFieldSelect<T>>
-  implements OnInit
+  implements OnInit, OnDestroy
 {
+  public selectOptions: ValueLabel<T>[];
+  private _select: MatSelect;
+
+  private selectAllSub?: Subscription;
+  public readonly selectAllState$ = new BehaviorSubject<MatPseudoCheckboxState>(
+    'unchecked'
+  );
+
   @ViewChild('select')
-  public readonly select?: MatSelect;
+  public set select(select: MatSelect) {
+    if (select) {
+      this._select = select;
+      this.selectAllSub?.unsubscribe();
+      if (select?.multiple) {
+        this.selectAllSub = select.selectionChange.subscribe((selection) => {
+          const allSelected =
+            this.selectOptions?.length === selection?.value?.length;
+          this.selectAllState$.next(allSelected ? 'checked' : 'unchecked');
+        });
+      }
+    }
+  }
+
+  public get select(): MatSelect {
+    return this._select;
+  }
 
   @HostBinding('class')
   public classList = 'lab900-form-field';
@@ -82,10 +113,6 @@ export class SelectFieldComponent<T>
       shareReplay(1)
     );
 
-  public allSelected = false;
-
-  public selectOptions: ValueLabel<T>[];
-
   public loading$ = new BehaviorSubject<boolean>(true);
 
   public get selectedOption(): ValueLabel<T> {
@@ -101,6 +128,11 @@ export class SelectFieldComponent<T>
 
   public constructor(translateService: TranslateService) {
     super(translateService);
+  }
+
+  public ngOnDestroy(): void {
+    super.ngOnDestroy();
+    this.selectAllSub?.unsubscribe();
   }
 
   public showClearButton = (value: T): boolean => {
@@ -167,12 +199,6 @@ export class SelectFieldComponent<T>
       ),
       this.afterGetOptionsSuccess.bind(this)
     );
-
-    this.addSubscription(this.group.valueChanges, () => {
-      if (this.options?.selectAll?.enabled && !this.loading$.value) {
-        this.updateAllSelectedStatus();
-      }
-    });
   }
 
   /**
@@ -314,15 +340,6 @@ export class SelectFieldComponent<T>
     }
   }
 
-  public updateAllSelectedStatus(): void {
-    if (this.select?.options) {
-      this.allSelected =
-        this.select.options.find(
-          (option) => !option.selected && !option.disabled
-        ) == null;
-    }
-  }
-
   public handleToggleAllSelection(): void {
     if (this.schema.options.infiniteScroll?.enabled) {
       this.optionsFilter$.next({
@@ -350,7 +367,7 @@ export class SelectFieldComponent<T>
   }
 
   private toggleAllSelection(): void {
-    if (this.allSelected) {
+    if (this.selectAllState$.value === 'unchecked') {
       this.select.options.forEach((item: MatOption) => {
         if (!item.disabled) item.select();
       });
@@ -377,11 +394,6 @@ export class SelectFieldComponent<T>
     return values$.pipe(
       catchError(() => of([])),
       tap((options: ValueLabel<T>[]) => {
-        if (this.options?.multiple && !optionsFilter?.getAll) {
-          setTimeout(() => {
-            this.updateAllSelectedStatus();
-          }, 0);
-        }
         if (
           options?.length === 1 &&
           !this.fieldControl.value &&
