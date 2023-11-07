@@ -10,7 +10,7 @@
     matInput
     #input
     type="text"
-    placeholder="{{ placeholder | translate }}"
+    placeholder="{{ (placeholder$ | async) ?? '' | translate }}"
     [formControlName]="fieldAttribute"
     [required]="fieldIsRequired"
     [readonly]="fieldIsReadonly"
@@ -49,6 +49,6 @@
     <span [innerHTML]="hint | translate: hintValueTranslateData"></span>
   </mat-hint>
   <mat-error *ngIf="!valid && !fieldIsReadonly">
-    <span [innerHTML]="getErrorMessage() | async"></span>
+    <span [innerHTML]="errorMessage$ | async"></span>
   </mat-error>
 </mat-form-field>

@@ -466,4 +466,6 @@ export class SelectFieldComponent<T>
 
     this.loading$.next(false);
   }
+
+  protected readonly escape = escape;
 }

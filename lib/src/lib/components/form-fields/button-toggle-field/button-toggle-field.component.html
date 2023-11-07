@@ -36,7 +36,7 @@
   <mat-error
     class="mat-form-field-subscript-wrapper"
     *ngIf="touched && !valid && !fieldIsReadonly"
-    >{{ getErrorMessage() | async }}</mat-error
+    >{{ errorMessage$ | async }}</mat-error
   >
 </div>
 

@@ -24,6 +24,6 @@
     class="radio-buttons-field__error"
     *ngIf="group.controls[fieldAttribute].touched && !valid && !fieldIsReadonly"
   >
-    <mat-error>{{ getErrorMessage() | async }}</mat-error>
+    <mat-error>{{ errorMessage$ | async }}</mat-error>
   </div>
 </div>

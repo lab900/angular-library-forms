@@ -1,5 +1,6 @@
 import {
   AbstractControl,
+  FormControlStatus,
   UntypedFormGroup,
   ValidationErrors,
 } from '@angular/forms';
@@ -11,27 +12,92 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  EMPTY,
+  Observable,
+  startWith,
+  switchMap,
+} from 'rxjs';
 import { FieldConditions } from '../models/IFieldConditions';
 import { FormFieldUtils } from '../utils/form-field.utils';
 import { SubscriptionBasedDirective } from '../directives/subscription-based.directive';
 import { Lab900FormField } from '../models/lab900-form-field.type';
 import { ValueLabel } from '../models/form-field-base';
 import { Lab900FormBuilderService } from '../services/form-builder.service';
+import { filter, map, shareReplay, withLatestFrom } from 'rxjs/operators';
 
 @Directive()
 export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   extends SubscriptionBasedDirective
   implements AfterViewInit, OnDestroy, AfterContentInit
 {
-  @Input()
-  public fieldAttribute?: string;
+  private readonly _fieldAttribute$ = new BehaviorSubject<string | undefined>(
+    undefined
+  );
+
+  private readonly fieldAttribute$: Observable<string> = this._fieldAttribute$
+    .asObservable()
+    .pipe(
+      filter((g) => !!g),
+      shareReplay({ bufferSize: 1, refCount: true })
+    );
+
+  public get fieldAttribute(): string {
+    return this._fieldAttribute$.value;
+  }
 
   @Input()
-  public group: UntypedFormGroup;
+  public set fieldAttribute(attr: string) {
+    this._fieldAttribute$.next(attr);
+  }
 
-  @Input()
-  public schema: S;
+  private readonly _group$ = new BehaviorSubject<UntypedFormGroup | undefined>(
+    undefined
+  );
+
+  public readonly group$: Observable<UntypedFormGroup> = this._group$
+    .asObservable()
+    .pipe(
+      filter((g) => !!g),
+      shareReplay({ bufferSize: 1, refCount: true })
+    );
+
+  public get group(): UntypedFormGroup {
+    return this._group$.value;
+  }
+
+  @Input({ required: true })
+  public set group(group: UntypedFormGroup) {
+    this._group$.next(group);
+  }
+
+  private readonly _schema$ = new BehaviorSubject<S | undefined>(undefined);
+
+  public readonly schema$: Observable<S> = this._schema$.asObservable().pipe(
+    filter((s) => !!s),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  public readonly options$: Observable<S['options']> = this.schema$.pipe(
+    map((schema) => schema.options),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  public get schema(): S {
+    return this._schema$.value;
+  }
+
+  @Input({ required: true })
+  public set schema(schema: S) {
+    this._schema$.next(schema);
+  }
+
+  public readonly groupValue$: Observable<any> = this.group$.pipe(
+    switchMap((group) => group.valueChanges.pipe(startWith(group.value))),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
 
   @Input()
   public language?: string;
@@ -53,6 +119,28 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     return this.group.get(this.fieldAttribute);
   }
 
+  public readonly fieldControl$: Observable<AbstractControl> = combineLatest([
+    this.group$,
+    this.fieldAttribute$,
+  ]).pipe(map(([group, fieldAttribute]) => group.get(fieldAttribute)));
+
+  public readonly controlValue$: Observable<any> = this.fieldControl$.pipe(
+    switchMap((control) => control.valueChanges.pipe(startWith(control.value))),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  public readonly controlStatus$: Observable<FormControlStatus> =
+    this.fieldControl$.pipe(
+      switchMap((control) =>
+        control.statusChanges.pipe(startWith(control.status))
+      ),
+      shareReplay({ bufferSize: 1, refCount: true })
+    );
+
+  public readonly valid$: Observable<boolean> = this.controlStatus$.pipe(
+    map((status) => status === 'VALID')
+  );
+
   public get valid(): boolean {
     return this.fieldControl?.valid;
   }
@@ -73,19 +161,42 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     return this.options?.hint?.valueTranslateData;
   }
 
-  public get placeholder(): string {
-    if (typeof this.options?.placeholder === 'function') {
-      return this.options.placeholder(this.group.value);
-    }
-    return this.options?.placeholder;
-  }
+  public readonly placeholder$: Observable<string> =
+    this.getOption$('placeholder');
+
+  public readonly errorMessage$: Observable<string | undefined>;
 
   protected constructor(protected translateService: TranslateService) {
     super();
+
+    this.controlStatus$.subscribe(console.log);
+
+    this.addSubscription(
+      this.fieldControl$.pipe(
+        switchMap((control) =>
+          control.valueChanges.pipe(withLatestFrom(this.schema$))
+        )
+      ),
+      ([value, schema]) => {
+        //this.setFieldProperties();
+        if (schema?.options?.onChangeFn) {
+          schema?.options?.onChangeFn(value, this.fieldControl);
+        }
+      }
+    );
+
+    this.errorMessage$ = combineLatest([this.group$, this.schema$]).pipe(
+      switchMap(([group, schema]) => this.getErrorMessage(group, schema))
+    );
+
+    /*this.groupValue$
+      .pipe(withLatestFrom(this.schema$))
+      .subscribe(([value, schema]) => console.log(schema.attribute, value));*/
   }
 
-  public getErrorMessage = (
-    group: UntypedFormGroup = this.group
+  private getErrorMessage = (
+    group: UntypedFormGroup,
+    schema: S
   ): Observable<string> => {
     const field = group.get(String(this.fieldAttribute));
     let errors: ValidationErrors = field.errors;
@@ -100,7 +211,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     }
 
     if (!errors) {
-      return;
+      return EMPTY;
     }
 
     Object.keys(errors).forEach((key: string) => {
@@ -129,12 +240,6 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
 
   public ngAfterViewInit(): void {
     if (this.group) {
-      this.addSubscription(this.group.valueChanges, (value) => {
-        this.setFieldProperties();
-        if (this.schema?.options?.onChangeFn) {
-          this.schema?.options?.onChangeFn(value, this.fieldControl);
-        }
-      });
       if (this.schema?.conditions?.length) {
         this.createConditions();
       }
@@ -154,7 +259,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
 
   private getDefaultErrorMessage(
     key: string,
-    interpolateParams: object = this.schema.options
+    interpolateParams: object
   ): Observable<string> {
     switch (key) {
       case 'required':
@@ -265,5 +370,17 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
           this.subscriptions.concat(subs);
         }
       });
+  }
+
+  private getOption$<T>(optionProp: keyof S['options']): Observable<T> {
+    return combineLatest([this.controlValue$, this.options$]).pipe(
+      map(([value, options]) => {
+        const opt = options?.[optionProp];
+        if (opt) {
+          return typeof opt === 'function' ? opt(value) : opt;
+        }
+        return undefined;
+      })
+    );
   }
 }

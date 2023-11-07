@@ -19,6 +19,6 @@
   <mat-error
     class="lab900-slide-toggle-field__error"
     *ngIf="touched && !valid && !fieldIsReadonly"
-    >{{ getErrorMessage() | async }}</mat-error
+    >{{ errorMessage$ | async }}</mat-error
   >
 </div>

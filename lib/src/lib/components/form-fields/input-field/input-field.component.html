@@ -10,7 +10,7 @@
     matInput
     #input
     [type]="options?.type || 'text'"
-    placeholder="{{ placeholder | translate }}"
+    placeholder="{{ (placeholder$ | async) ?? '' | translate }}"
     [formControlName]="fieldAttribute"
     [required]="fieldIsRequired"
     [readonly]="fieldIsReadonly"
@@ -78,6 +78,6 @@
     >{{ input.value?.length || 0 }}/{{ options?.maxLength }}</mat-hint
   >
   <mat-error *ngIf="!valid && !fieldIsReadonly"
-    ><span [innerHTML]="getErrorMessage() | async"></span
+    ><span [innerHTML]="errorMessage$ | async"></span
   ></mat-error>
 </mat-form-field>

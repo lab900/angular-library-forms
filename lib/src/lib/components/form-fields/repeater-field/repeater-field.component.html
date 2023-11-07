@@ -49,7 +49,7 @@
       class="subscript-wrapper"
       *ngIf="touched && !valid && !fieldIsReadonly"
       [@transitionMessages]="valid ? 'void' : 'enter'"
-      >{{ getErrorMessage() | async }}</mat-error
+      >{{ errorMessage$ | async }}</mat-error
     >
     <div *ngIf="!fixedList && !fieldIsReadonly" class="repeater-field__actions">
       <button

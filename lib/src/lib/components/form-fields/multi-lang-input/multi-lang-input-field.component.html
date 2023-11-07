@@ -20,6 +20,6 @@
     [useTextAreaField]="options?.useTextAreaField"
   ></lab900-multi-lang-field-control>
   <div *ngIf="!valid && fieldControl.touched && !fieldIsReadonly">
-    <mat-error>{{ getErrorMessage() | async }}</mat-error>
+    <mat-error>{{ errorMessage$ | async }}</mat-error>
   </div>
 </div>
