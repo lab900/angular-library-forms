@@ -21,6 +21,7 @@ import { FormFieldSearchOptions } from './field-search.model';
 @Directive({
   selector: 'input[lab900SearchInput][options]',
   exportAs: 'lab900SearchInput',
+  standalone: true,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

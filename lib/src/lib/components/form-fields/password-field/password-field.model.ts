@@ -2,7 +2,7 @@ import { EditType } from '../../../models/editType';
 import {
   FormFieldBase,
   FormFieldBaseOptions,
-  Icon,
+  FormIcon,
 } from '../../../models/form-field-base';
 
 export interface FormFieldPasswordOptions extends FormFieldBaseOptions {
@@ -11,13 +11,13 @@ export interface FormFieldPasswordOptions extends FormFieldBaseOptions {
   style?: string;
   togglePasswordVisibility?: {
     disabled: boolean;
-    passwordVisibleIcon?: Icon;
-    passwordHiddenIcon?: Icon;
+    passwordVisibleIcon?: FormIcon;
+    passwordHiddenIcon?: FormIcon;
   };
 }
 
 export interface FormFieldPassword<T extends string | number = string>
   extends FormFieldBase<T, FormFieldPasswordOptions> {
   editType: EditType.Password;
-  icon?: Icon & { position?: 'left' | 'right' };
+  icon?: FormIcon;
 }

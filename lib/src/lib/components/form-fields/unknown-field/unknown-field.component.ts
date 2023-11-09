@@ -1,18 +1,17 @@
-import { Component, HostBinding } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { TranslateService } from '@ngx-translate/core';
+import { FormFieldService } from '../../../services/form-field.service';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'lab900-unknown-field',
+  providers: [FormFieldService],
   template: ` <div>
     <p>Unknown schema:</p>
     <pre>{{ schema | json }}</pre>
   </div>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [JsonPipe],
 })
-export class UnknownFieldComponent extends FormComponent {
-  @HostBinding('class')
-  public classList = 'lab900-form-field';
-  public constructor(translateService: TranslateService) {
-    super(translateService);
-  }
-}
+export class UnknownFieldComponent extends FormComponent {}

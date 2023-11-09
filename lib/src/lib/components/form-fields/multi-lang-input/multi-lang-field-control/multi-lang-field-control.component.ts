@@ -5,7 +5,7 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BaseControlValueAccessorDirective } from '../../../../models/forms/BaseControlValueAccessor';
 import { ThemePalette } from '@angular/material/core';
 import {
@@ -13,6 +13,10 @@ import {
   Lab900FormModuleSettings,
 } from '../../../../models/Lab900FormModuleSettings';
 import { ValueLabel } from '../../../../models/form-field-base';
+import { TranslateModule } from '@ngx-translate/core';
+import { LanguagePickerComponent } from '../../../language-picker/language-picker.component';
+import { MatInputModule } from '@angular/material/input';
+import { NgForOf, NgIf } from '@angular/common';
 
 @Component({
   selector: 'lab900-multi-lang-field-control',
@@ -24,6 +28,15 @@ import { ValueLabel } from '../../../../models/form-field-base';
       useExisting: MultiLangFieldControlComponent,
       multi: true,
     },
+  ],
+  standalone: true,
+  imports: [
+    TranslateModule,
+    LanguagePickerComponent,
+    MatInputModule,
+    NgIf,
+    FormsModule,
+    NgForOf,
   ],
 })
 export class MultiLangFieldControlComponent

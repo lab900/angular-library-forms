@@ -1,0 +1,34 @@
+<mat-option *ngIf="search?.enabled" style="background: #fff">
+  <ngx-mat-select-search
+    [ngModel]="searchQuery"
+    (ngModelChange)="searchQueryChange.emit($event)"
+    [searching]="searching"
+    [ngModelOptions]="{ standalone: true }"
+    [placeholderLabel]="search?.placeholder ?? 'form.field.search' | translate"
+    [disableScrollToActiveOnOptionsChanged]="
+      disableScrollToActiveOnOptionsChanged
+    "
+    [clearSearchInput]="search?.clearOnClose ?? false"
+  >
+    <div class="no-entries-found" ngxMatSelectNoEntriesFound>
+      <ng-container *ngIf="searchQuery?.length">
+        <span>{{
+          search?.notFoundLabel ?? 'form.field.no_options_found'
+            | translate: { searchQuery: searchQuery }
+        }}</span>
+        <button
+          *ngIf="search?.addNewFn"
+          mat-button
+          [color]="search?.addNewBtnColor ?? 'primary'"
+          (click)="handleAddNew()"
+        >
+          <mat-icon>add</mat-icon>
+          <span>{{
+            search?.addNewLabel ?? 'form.field.add_new'
+              | translate: { searchQuery: searchQuery }
+          }}</span>
+        </button>
+      </ng-container>
+    </div>
+  </ngx-mat-select-search>
+</mat-option>

@@ -13,6 +13,7 @@ import { take } from 'rxjs/operators';
 
 @Directive({
   selector: '[lab900AuthImage]',
+  standalone: true,
 })
 export class AuthImageDirective implements OnChanges {
   @Input()

@@ -1,46 +1,41 @@
-<mat-form-field
-  *ngIf="!fieldIsHidden"
-  [formGroup]="group"
-  class="lab900-input-field"
-  id="lab900-input-field-{{ fieldAttribute }}"
+<lab900-form-field
+  *ngIf="(hideField$ | async) === false"
+  [formGroup]="group$ | async"
 >
-  <mat-label *ngIf="schema.title">{{ schema.title | translate }}</mat-label>
   <input
     matInput
     type="text"
     placeholder="{{ (placeholder$ | async) ?? '' | translate }}"
-    [formControlName]="fieldAttribute"
+    [formControlName]="fieldAttribute$ | async"
     [required]="fieldIsRequired"
     [options]="options"
-    [readonly]="fieldIsReadonly"
-    [ngClass]="{ readonly: fieldIsReadonly }"
+    [readonly]="readonlyField$ | async"
+    [class.readonly]="readonlyField$ | async"
     [style]="options?.style || ''"
     lab900InputAutofocus
     lab900SearchInput
     #searchRef="lab900SearchInput"
     #inputRef
+    class="
+      mat-mdc-input-element mat-mdc-form-field-input-control
+      mdc-text-field__input
+    "
   />
-
   <button
     mat-icon-button
     matSuffix
-    [color]="options?.addNewBtnColor ?? 'primary'"
-    *ngIf="
-      options?.addNewFn &&
-      !!inputRef.value &&
-      (searchRef?.noResult$ | async) === true
-    "
+    [color]="addNewBtnColor$ | async"
+    *ngIf="!!inputRef.value && (searchRef?.noResult$ | async) === true"
     (click)="handleAddNew(inputRef.value)"
     [matTooltip]="
-      options?.addNewLabel ?? 'form.field.add_new'
-        | translate: { searchQuery: inputRef.value }
+      addNewLabel$ | async | translate: { searchQuery: inputRef.value }
     "
     style="align-items: flex-start"
   >
     <mat-icon>add</mat-icon>
   </button>
   <button
-    *ngIf="!options.hideClearButton && !!fieldControl.value"
+    *ngIf="showClearButton$ | async"
     matSuffix
     mat-icon-button
     type="button"
@@ -56,12 +51,6 @@
     style="display: inline-flex"
   ></mat-spinner>
   <mat-hint *ngIf="!!inputRef.value && (searchRef?.noResult$ | async) === true">
-    {{
-      options?.notFoundLabel ?? 'forms.search-field.notFoundLabel'
-        | translate: { value: inputRef.value }
-    }}
+    {{ notFoundLabel$ | async | translate: { value: inputRef.value } }}
   </mat-hint>
-  <mat-error *ngIf="!valid && !fieldIsReadonly">
-    <span [innerHTML]="errorMessage$ | async"></span>
-  </mat-error>
-</mat-form-field>
+</lab900-form-field>

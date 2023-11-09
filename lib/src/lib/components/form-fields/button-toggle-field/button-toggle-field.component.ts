@@ -1,53 +1,83 @@
-import { Component, HostBinding } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { FormFieldButtonToggle } from './button-toggle-field.model';
-import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import {
+  FormFieldButtonOption,
+  FormFieldButtonToggle,
+} from './button-toggle-field.model';
+import {
+  MatButtonToggleChange,
+  MatButtonToggleModule,
+} from '@angular/material/button-toggle';
+import { FormFieldService } from '../../../services/form-field.service';
+import { TranslateModule } from '@ngx-translate/core';
+import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { IconComponent } from '@lab900/ui';
+import { FormFieldErrorComponent } from '../../form-field-error/form-field-error.component';
+import { combineLatest } from 'rxjs';
+import { map, take } from 'rxjs/operators';
 
 @Component({
   selector: 'lab900-button-toggle-field',
   templateUrl: './button-toggle-field.component.html',
+  providers: [FormFieldService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    TranslateModule,
+    NgIf,
+    ReactiveFormsModule,
+    AsyncPipe,
+    MatInputModule,
+    MatButtonToggleModule,
+    NgForOf,
+    MatTooltipModule,
+    IconComponent,
+    FormFieldErrorComponent,
+  ],
 })
 export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonToggle> {
-  @HostBinding('class')
-  public classList = 'lab900-form-field';
+  public readonly buttonOptions$ =
+    this.getOption$<FormFieldButtonOption[]>('buttonOptions');
 
-  // This stores the current value of the button toggle.
-  // It is used to calculate the readonly label and to check if the toggle needs to be deselected.
-  private currentValue: any;
-
-  public constructor(translateService: TranslateService) {
-    super(translateService);
-    setTimeout(() => {
-      if (this.group?.controls) {
-        this.currentValue = this.group.controls[this.fieldAttribute].value;
-        this.addSubscription(
-          this.group.controls[this.fieldAttribute].valueChanges,
-          (value: any) => setTimeout(() => (this.currentValue = value))
-        );
+  public readonly readonlyTitle$ = this.formFieldService.schema$.pipe(
+    map((schema) => schema?.options?.readonlyLabel ?? schema?.title)
+  );
+  /**
+   * This calculates the readonly label. If the readonlyDisplay() function is set, this is used.
+   * Otherwise, the button label is displayed
+   */
+  public readonly readonlyLabel$ = combineLatest([
+    this.buttonOptions$,
+    this.controlValue$,
+    this.formFieldService.groupValue$,
+    this.formFieldService.options$,
+  ]).pipe(
+    map(([buttonOptions, value, groupValue, schemaOptions]) => {
+      if (schemaOptions?.readonlyDisplay) {
+        return schemaOptions.readonlyDisplay(groupValue) ?? '-';
       }
-    });
-  }
-
-  // This calculates the readonly label. If the readonlyDisplay() function is set, this is used.
-  // Otherwise the button label is displayed
-  public get label(): string {
-    const option = this.options.buttonOptions.find(
-      (o) => o.value === this.currentValue
-    );
-    return this.options?.readonlyDisplay
-      ? this.options?.readonlyDisplay(this.group.value)
-      : option?.label;
-  }
+      return buttonOptions.find((o) => o.value === value)?.label ?? '-';
+    })
+  );
 
   // If the deselect option is set and the previous value of the toggle is the same as the current value the toggle will be deselected
   public onChange($event: MatButtonToggleChange): void {
-    if (this.options?.deselectOnClick && this.currentValue === $event.value) {
-      setTimeout(() => {
-        this.group.controls[this.fieldAttribute].setValue(null);
-        this.group.controls[this.fieldAttribute].markAsDirty();
-        this.group.controls[this.fieldAttribute].markAsTouched();
+    combineLatest([
+      this.formFieldService.fieldControl$,
+      this.formFieldService.options$,
+    ])
+      .pipe(take(1))
+      .subscribe(([control, options]) => {
+        if (options?.deselectOnClick && control.value === $event.value) {
+          setTimeout(() => {
+            control.setValue(null);
+            control.markAsDirty();
+            control.markAsTouched();
+          });
+        }
       });
-    }
   }
 }

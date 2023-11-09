@@ -1,32 +1,23 @@
-<div
-  [formGroup]="group"
-  *ngIf="!fieldIsHidden"
-  class="lab900-checkbox-field"
-  id="lab900-checkbox-field-{{ fieldAttribute }}"
->
+<div [formGroup]="group$ | async" *ngIf="(hideField$ | async) === false">
   <mat-checkbox
-    #checkbox
-    [color]="options?.color || 'primary'"
-    [formControlName]="fieldAttribute"
-    [indeterminate]="indeterminate"
-    [required]="fieldIsRequired"
-    [disabled]="fieldIsReadonly"
+    [color]="color$ | async"
+    [formControlName]="fieldAttribute$ | async"
+    [indeterminate]="disabledIndeterminate$ | async"
   >
-    {{ schema.title | translate }}
+    {{ label$ | async | translate }}
   </mat-checkbox>
   <div
-    *ngIf="!fieldIsReadonly"
+    *ngIf="(readonlyField$ | async) === false"
     class="subscript-wrapper"
     [@transitionMessages]="valid ? 'void' : 'enter'"
   >
-    <mat-hint
-      *ngIf="
-        hint && !(schema.options.hint.hideHintOnValidValue && checkbox.value)
-      "
-      ><span [innerHTML]="hint | translate: hintValueTranslateData"></span
-    ></mat-hint>
-    <mat-error *ngIf="!valid"
-      ><span [innerHTML]="errorMessage$ | async"></span
-    ></mat-error>
+    <mat-hint *ngIf="hint$ | async as hint">
+      <span
+        [innerHTML]="hint.value | translate: hint.valueTranslateData"
+      ></span>
+    </mat-hint>
+    <mat-error>
+      <lab900-form-field-error/>
+    </mat-error>
   </div>
 </div>

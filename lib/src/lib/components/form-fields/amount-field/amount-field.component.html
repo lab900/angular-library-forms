@@ -1,54 +1,27 @@
-<mat-form-field
-  *ngIf="!fieldIsHidden"
-  [formGroup]="group"
-  class="lab900-input-field {{ options?.align || 'left' }}"
-  [class.spanFix]="options?.suffix || options?.prefix"
-  id="lab900-input-field-{{ fieldAttribute }}"
+<lab900-form-field
+  *ngIf="(hideField$ | async) === false"
+  [formGroup]="group$ | async"
+  [icon]="icon$ | async"
+  [suffix]="suffix$ | async"
+  [prefix]="prefix$ | async"
 >
-  <mat-label *ngIf="schema.title">{{ schema.title | translate }}</mat-label>
   <input
     matInput
-    #input
+    class="
+      mat-mdc-input-element mat-mdc-form-field-input-control
+      mdc-text-field__input
+    "
+    [style.text-align]="align$ | async"
     type="text"
     placeholder="{{ (placeholder$ | async) ?? '' | translate }}"
-    [formControlName]="fieldAttribute"
-    [required]="fieldIsRequired"
-    [readonly]="fieldIsReadonly"
-    [ngClass]="{ readonly: fieldIsReadonly }"
-    lab900InputAutofocus
+    [lab900InputAutofocus]="autofocus$ | async"
     lab900AmountInput
-    [autofocus]="options?.autofocus"
-    [style]="options?.style || ''"
-    [maxDecimals]="maxDecimals"
-    [minDecimals]="minDecimals"
+    [formControlName]="fieldAttribute$ | async"
+    [required]="fieldIsRequired"
+    [readonly]="readonlyField$ | async"
+    [class.readonly]="readonlyField$ | async"
+    [style]="style$ | async"
+    [maxDecimals]="maxDecimals$ | async"
+    [minDecimals]="minDecimals$ | async"
   />
-  <lab900-icon
-    [icon]="schema.icon"
-    *ngIf="schema?.icon?.position === 'left'"
-    matPrefix
-    class="input-field__icon-left"
-  ></lab900-icon>
-  <lab900-icon
-    [icon]="schema.icon"
-    *ngIf="schema?.icon?.position === 'right'"
-    matSuffix
-  ></lab900-icon>
-  <span class="lab900-input-field--suffix" *ngIf="suffix" matTextSuffix>{{
-    suffix | translate
-  }}</span>
-  <span class="lab900-input-field--prefix" *ngIf="prefix" matTextPrefix>{{
-    prefix | translate
-  }}</span>
-  <mat-hint
-    *ngIf="
-      hint &&
-      !(schema.options.hint.hideHintOnValidValue && input.value) &&
-      !fieldIsReadonly
-    "
-  >
-    <span [innerHTML]="hint | translate: hintValueTranslateData"></span>
-  </mat-hint>
-  <mat-error *ngIf="!valid && !fieldIsReadonly">
-    <span [innerHTML]="errorMessage$ | async"></span>
-  </mat-error>
-</mat-form-field>
+</lab900-form-field>

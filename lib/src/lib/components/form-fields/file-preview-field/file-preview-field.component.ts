@@ -1,37 +1,65 @@
-import { Component, ElementRef, HostBinding, ViewChild } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { FormDialogDirective } from '../../../directives/form-dialog.directive';
 import { Lab900File } from '../../../models/Lab900File';
-import { FormDialogComponent } from '../../form-dialog/form-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ImagePreviewModalComponent } from '../../image-preview-modal/image-preview-modal.component';
 import { fetchImageBase64 } from '../../../utils/image.utils';
 import { FormFieldFilePreview } from './file-preview-field.model';
 import { take } from 'rxjs/operators';
+import { FormFieldService } from '../../../services/form-field.service';
+import { AsyncPipe, NgIf } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
+import { Lab900ButtonModule } from '@lab900/ui';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { AuthImageDirective } from '../../../directives/auth-image.directive';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'lab900-file-preview-field',
   templateUrl: './file-preview-field.component.html',
   styleUrls: ['./file-preview-field.component.scss'],
+  providers: [FormFieldService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    NgIf,
+    AsyncPipe,
+    TranslateModule,
+    Lab900ButtonModule,
+    MatCardModule,
+    MatIconModule,
+    AuthImageDirective,
+    MatTooltipModule,
+  ],
 })
 export class FilePreviewFieldComponent<
   T
 > extends FormComponent<FormFieldFilePreview> {
-  @HostBinding('class')
-  public classList = 'lab900-form-field';
+  public readonly accept$ = this.getOption$<string>('accept');
+  public readonly multiple$ = this.getOption$<boolean>('multiple', false);
+  public readonly fileUploadButtonText$ = this.getOption$<string>(
+    'fileUploadButtonText',
+    'form.button.upload'
+  );
+
+  public readonly overlay$ = this.getOption$<{
+    backgroundColor: string;
+    textColor: string;
+    text: string;
+  }>('overlay');
+  public readonly showOverlay$ = this.getOption$<boolean>('showOverlay', false);
 
   @ViewChild('fileField')
   private fileFieldComponent: ElementRef;
 
-  @ViewChild('FormDialogDirective')
-  private lab900FormDialog: FormDialogDirective<T>;
-
-  public constructor(
-    translateService: TranslateService,
-    private dialog: MatDialog
-  ) {
-    super(translateService);
+  public constructor(private dialog: MatDialog) {
+    super();
   }
 
   public get files(): Lab900File[] {
@@ -123,13 +151,13 @@ export class FilePreviewFieldComponent<
   }
 
   private openMetaDataDialog(file: Lab900File): void {
-    this.dialog.open(FormDialogComponent, {
+    /*this.dialog.open(FormDialogComponent, {
       data: {
         schema: this.options?.fileMetaDataConfig,
         data: file,
         submit: this.onMetaDataChanged.bind(this),
       },
-    });
+    });*/
   }
 
   public openPreviewDialog(file: Lab900File): void {
@@ -150,14 +178,6 @@ export class FilePreviewFieldComponent<
       })
         .pipe(take(1))
         .subscribe();
-    }
-  }
-
-  public showOverlay(file: Lab900File): boolean {
-    if (typeof this.options?.showOverlay === 'function') {
-      return this.options?.showOverlay(file);
-    } else {
-      return this.options?.showOverlay ?? false;
     }
   }
 

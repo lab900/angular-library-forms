@@ -1,48 +1,34 @@
-import {
-  Component,
-  HostBinding,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { TranslateService } from '@ngx-translate/core';
-import {
-  BehaviorSubject,
-  concat,
-  isObservable,
-  Observable,
-  of,
-  ReplaySubject,
-  Subject,
-  Subscription,
-} from 'rxjs';
-import {
-  catchError,
-  debounceTime,
-  distinctUntilChanged,
-  filter,
-  map,
-  shareReplay,
-  switchMap,
-  take,
-  tap,
-} from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
+import { filter, map, shareReplay, take } from 'rxjs/operators';
 import {
   FormFieldSelect,
-  FormFieldSelectOptionsFilter,
-  FormFieldSelectOptionsFn,
+  FormFieldSelectAll,
+  FormFieldSelectInfiniteScroll,
+  FormFieldSelectSearch,
 } from './field-select.model';
-import { IFieldConditions } from '../../../models/IFieldConditions';
 import { ValueLabel } from '../../../models/form-field-base';
-import { MatSelect } from '@angular/material/select';
+import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { MatOption, MatPseudoCheckboxState } from '@angular/material/core';
-import { coerceArray } from '@angular/cdk/coercion';
-import { isDifferent } from '@lab900/ui';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { FormFieldService } from '../../../services/form-field.service';
+import { FormFieldComponent } from '../../form-field/form-field.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
+import { SelectInfiniteScrollDirective } from './select-field-infinite-scroll.directive';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { SelectFieldService } from './select-field.service';
+import { SelectFieldSearchComponent } from './select-field-search/select-field-search.component';
+import { SelectFieldSelectAllComponent } from './select-field-select-all/select-field-select-all.component';
 
 @Component({
   selector: 'lab900-select-field',
   templateUrl: './select-field.component.html',
+  providers: [FormFieldService, SelectFieldService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   styles: [
     `
       .no-entries-found {
@@ -56,200 +42,86 @@ import { isDifferent } from '@lab900/ui';
       }
     `,
   ],
+  imports: [
+    FormFieldComponent,
+    ReactiveFormsModule,
+    NgIf,
+    MatSelectModule,
+    AsyncPipe,
+    TranslateModule,
+    SelectInfiniteScrollDirective,
+    MatButtonModule,
+    NgForOf,
+    MatIconModule,
+    SelectFieldSearchComponent,
+    SelectFieldSelectAllComponent,
+  ],
 })
-export class SelectFieldComponent<T>
-  extends FormComponent<FormFieldSelect<T>>
-  implements OnInit, OnDestroy
-{
-  public selectOptions: ValueLabel<T>[];
-  private _select: MatSelect;
-
-  private selectAllSub?: Subscription;
-  public readonly selectAllState$ = new BehaviorSubject<MatPseudoCheckboxState>(
-    'unchecked'
+export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> {
+  public readonly multiple$ = this.getOption$('multiple', false);
+  public readonly compareWith$ = this.getOption$<(o1: T, o2: T) => boolean>(
+    'compareWith',
+    (o1: T, o2: T): boolean => o1 === o2
   );
 
+  public readonly panelWidth$ = this.getOption$('panelWidth', 'auto');
+  public readonly panelClass$ = this.getOption$('panelClass');
+  public readonly infiniteScroll$ =
+    this.getOption$<FormFieldSelectInfiniteScroll>('infiniteScroll');
+
+  public readonly search$ = this.getOption$<FormFieldSelectSearch<T>>('search');
+  public readonly selectAll$ = this.getOption$<FormFieldSelectAll>('selectAll');
+
   @ViewChild('select')
-  public set select(select: MatSelect) {
-    if (select) {
-      this._select = select;
-      this.selectAllSub?.unsubscribe();
-      if (select?.multiple) {
-        this.selectAllSub = select.selectionChange.subscribe((selection) => {
-          const allSelected =
-            this.selectOptions?.length === selection?.value?.length;
-          this.selectAllState$.next(allSelected ? 'checked' : 'unchecked');
-        });
-      }
-    }
-  }
+  public readonly select?: MatSelect;
 
-  public get select(): MatSelect {
-    return this._select;
-  }
-
-  @HostBinding('class')
-  public classList = 'lab900-form-field';
-  /*
-   * When conditional options are used for this select, keep the previously selected item
-   * and select it again when the new valuelist is loaded
-   */
-  private conditionalItemToSelectWhenExists: T;
-
-  private conditionalOptionsChange = new Subject<{
-    condition: IFieldConditions;
-    value: string;
-  }>();
-  private readonly optionsFn$ = new ReplaySubject<
-    FormFieldSelectOptionsFn<T>
-  >();
-  public readonly optionsFilter$ =
-    new BehaviorSubject<FormFieldSelectOptionsFilter | null>(null);
-
-  public readonly searchQuery$: Observable<string> = this.optionsFilter$
-    .asObservable()
-    .pipe(
+  public readonly searchQuery$: Observable<string> =
+    this.selectFieldService.optionsFilter$.asObservable().pipe(
       map((filter) => filter?.searchQuery ?? ''),
       shareReplay(1)
     );
 
-  public loading$ = new BehaviorSubject<boolean>(true);
+  public readonly loading$: Observable<boolean>;
 
+  public readonly showClearButton$ = combineLatest([
+    this.controlValue$,
+    this.formFieldService.options$,
+    this.formFieldService.groupValue$,
+  ]).pipe(
+    map(([value, options, groupValue]) => {
+      if (!value) return false;
+      if (typeof options?.clearFieldButton?.enabled === 'function') {
+        return options.clearFieldButton.enabled(groupValue);
+      }
+      return options?.clearFieldButton?.enabled;
+    })
+  );
   public get selectedOption(): ValueLabel<T> {
-    if (this.selectOptions && this.fieldControl.value) {
+    /*if (this.selectOptions && this.fieldControl.value) {
       return this.selectOptions.find((opt) =>
         this.options?.compareWith
           ? this.options?.compareWith(opt.value, this.fieldControl.value)
           : this.defaultCompare(opt.value, this.fieldControl.value)
       );
-    }
+    }*/
     return null;
   }
 
-  public constructor(translateService: TranslateService) {
-    super(translateService);
+  public readonly selectOptions$: Observable<ValueLabel<T>[]>;
+
+  public constructor(
+    private readonly translateService: TranslateService,
+    private readonly selectFieldService: SelectFieldService<any>
+  ) {
+    super();
+    this.loading$ = this.selectFieldService.selectOptionsLoading$;
+    this.selectOptions$ = this.selectFieldService.selectOptions$;
   }
 
-  public ngOnDestroy(): void {
-    super.ngOnDestroy();
-    this.selectAllSub?.unsubscribe();
-  }
-
-  public showClearButton = (value: T): boolean => {
-    if (!value) return false;
-    if (typeof this.options?.clearFieldButton?.enabled === 'function') {
-      return this.options.clearFieldButton.enabled(this.group.value);
-    }
-    return this.options?.clearFieldButton?.enabled;
-  };
-
-  public defaultCompare = (o1: T, o2: T): boolean => o1 === o2;
-
-  public ngOnInit(): void {
-    if (this.options?.selectOptions) {
-      const { selectOptions } = this.options;
-      this.updateOptionsFn(
-        typeof selectOptions === 'function'
-          ? (f) => selectOptions(f, this.fieldControl, this.schema)
-          : () => selectOptions
-      );
-    }
-
-    this.addSubscription(
-      this.conditionalOptionsChange,
-      ({ condition, value }) => {
-        this.updateOptionsFn((f) =>
-          condition?.conditionalOptions(
-            value,
-            this.fieldControl,
-            f,
-            this.schema
-          )
-        );
-      }
-    );
-
-    this.addSubscription(
-      this.optionsFn$.asObservable().pipe(
-        filter((optionsFn) => !!optionsFn),
-        switchMap((optionsFn) =>
-          concat(
-            this.optionsFilter$.pipe(
-              take(1),
-              tap(() => this.loading$.next(true))
-            ), // only debounce after the initial value
-            this.optionsFilter$.pipe(
-              tap(() => this.loading$.next(true)),
-              debounceTime(this.options?.search?.debounceTime ?? 300)
-            )
-          ).pipe(
-            distinctUntilChanged((x: any, y: any) => {
-              if (isDifferent(x, y)) {
-                return false; // This means the values are different, so it will emit
-              } else {
-                this.loading$.next(false);
-                return true; // This means values are equal, it will not emit the current value
-              }
-            }),
-            switchMap((optionsFilter) =>
-              this.handleGetOptions(optionsFn, optionsFilter)
-            )
-          )
-        )
-      ),
-      this.afterGetOptionsSuccess.bind(this)
-    );
-  }
-
-  /**
-   * Reset the search and make sure that the current value is in the select options when the select closes
-   */
   public onOpenedChange(open: boolean): void {
-    if (
-      !open &&
-      this.fieldControl?.value &&
-      this.optionsFilter$.value?.searchQuery?.length
-    ) {
-      if (!this.valueInOptions()) {
-        this.addValueToOptions();
-      }
-      this.onSearch('');
+    if (!open) {
+      this.selectFieldService.afterSelectClose();
     }
-  }
-
-  /**
-   * Check if the existing form control value is in the available select options
-   */
-  public valueInOptions(options = this.selectOptions): boolean {
-    return !!this.getOptionsMatchingTheValue(options)?.length;
-  }
-
-  public getOptionsMatchingTheValue(
-    options = this.selectOptions
-  ): ValueLabel<T>[] {
-    const value = coerceArray(this.fieldControl.value);
-    const compare = this.options?.compareWith || this.defaultCompare;
-    return options?.filter((o) => value.some((v) => compare(o.value, v)));
-  }
-
-  /**
-   * Add the current form control value to the select options
-   */
-  public addValueToOptions(): void {
-    let label;
-    // TODO: Validate options, this is a required field if search or infinite scroll is used
-    if (!this.options?.displaySelectedOptionFn) {
-      label = "ERROR: Can't display";
-      console.error(
-        `Please define a displaySelectedOptionFn to display your currently selected option for the field with attribute ${this.fieldAttribute} since it is not included in the current options`
-      );
-    }
-    this.selectOptions = coerceArray(this.fieldControl.value)
-      .map((v: T) => ({
-        value: v,
-        label: label ?? this.options.displaySelectedOptionFn(v),
-      }))
-      .concat(this.selectOptions);
   }
 
   public onConditionalChange(
@@ -265,39 +137,28 @@ export class SelectFieldComponent<T>
       );
       if (condition?.conditionalOptions) {
         if (!firstRun || !value) {
-          if (this.fieldControl?.value) {
+          /*if (this.fieldControl?.value) {
             this.conditionalItemToSelectWhenExists = this.fieldControl?.value;
           }
-          this.fieldControl.reset();
+          this.fieldControl.reset();*/
         }
         // When conditional has no value, this field is disabled. No need to fetch the options yet.
         if (!condition.enableIfHasValue || this.fieldControl?.enabled) {
-          this.conditionalOptionsChange.next({ condition, value });
+          this.selectFieldService.conditionalOptionsChange$.next({
+            condition,
+            value,
+          });
         }
       }
     });
   }
 
   public onScroll(): void {
-    if (this.options?.infiniteScroll?.enabled && !this.loading$.value) {
-      const currentFilter = this.optionsFilter$.value;
-      this.optionsFilter$.next({
-        ...currentFilter,
-        getAll: false,
-        page: currentFilter.page + 1,
-      });
-    }
+    this.selectFieldService.handleScroll();
   }
 
   public onSearch(searchQuery: string): void {
-    if (this.options?.search?.enabled) {
-      this.optionsFilter$.next({ searchQuery, page: 0 });
-    }
-  }
-
-  private updateOptionsFn(optionsFn: FormFieldSelectOptionsFn<T>): void {
-    this.optionsFn$.next(optionsFn);
-    this.optionsFilter$.next({ page: 0, searchQuery: '' });
+    this.selectFieldService.handleSearch(searchQuery);
   }
 
   // if no readonlyDisplay is defined, show the single selected value
@@ -305,7 +166,7 @@ export class SelectFieldComponent<T>
   public getReadOnlyDisplay(): string {
     if (this.options?.readonlyDisplay) {
       return this.translateService.instant(
-        this.options.readonlyDisplay(this.fieldControl.value) || '-'
+        this.options.readonlyDisplay() || '-'
       );
     }
 
@@ -322,150 +183,45 @@ export class SelectFieldComponent<T>
     }
   }
 
-  public handleClearFieldButtonClick($event: Event): void {
+  public handleClear($event: Event): void {
     $event.stopPropagation();
-    if (this.options?.clearFieldButton?.click) {
-      this.options.clearFieldButton.click(this.fieldControl, $event);
-    } else {
-      this.fieldControl.setValue(null);
-      this.fieldControl.markAsTouched();
-      this.fieldControl.markAsDirty();
-    }
+    this.selectFieldService.clearSelect($event);
   }
 
-  public onSearchEnter($event: Event): void {
-    if (this.loading$.value) {
-      $event.preventDefault();
-      $event.stopPropagation();
-    }
-  }
-
-  public handleToggleAllSelection(): void {
+  public handleToggleAllSelection(state: MatPseudoCheckboxState): void {
     if (this.schema.options.infiniteScroll?.enabled) {
-      this.optionsFilter$.next({
-        ...this.optionsFilter$.value,
+      this.selectFieldService.optionsFilter$.next({
+        ...this.selectFieldService.optionsFilter$.value,
         getAll: true,
       });
       this.loading$
-        .asObservable()
         .pipe(
           filter((loading) => !loading),
           take(1)
         )
         .subscribe(() => {
           setTimeout(() => {
-            this.toggleAllSelection();
+            this.toggleAllSelection(state);
           }, 0);
         });
     } else {
-      this.toggleAllSelection();
+      this.toggleAllSelection(state);
     }
   }
 
-  public handleAddNew(searchQuery: string): void {
-    this.options?.search?.addNewFn(searchQuery, this);
-  }
-
-  private toggleAllSelection(): void {
-    if (this.selectAllState$.value === 'unchecked') {
+  private toggleAllSelection(state: MatPseudoCheckboxState): void {
+    if (state === 'unchecked') {
       this.select.options.forEach((item: MatOption) => {
-        if (!item.disabled) item.select();
+        if (!item.disabled) item.select(false);
       });
     } else {
       this.select.options.forEach((item: MatOption) => {
-        if (!item.disabled) item.deselect();
+        if (!item.disabled) item.deselect(false);
       });
     }
+    this.select.selectionChange.emit({
+      value: this.select.selected,
+      source: this.select,
+    });
   }
-
-  /**
-   * Wrapper method to get the select options
-   * @param optionsFn
-   * @param optionsFilter
-   * @private
-   */
-  private handleGetOptions(
-    optionsFn: FormFieldSelectOptionsFn<T>,
-    optionsFilter
-  ): Observable<ValueLabel<T>[]> {
-    const values = optionsFn(optionsFilter);
-    const values$ = isObservable(values) ? values : of(values);
-
-    return values$.pipe(
-      catchError(() => of([])),
-      tap((options: ValueLabel<T>[]) => {
-        if (
-          options?.length === 1 &&
-          !this.fieldControl.value &&
-          this.schema.options?.autoselectOnlyOption
-        ) {
-          this.fieldControl.setValue(options[0].value);
-        }
-      })
-    );
-  }
-
-  /**
-   * After options are fetched logic
-   * @param options
-   * @private
-   */
-  private afterGetOptionsSuccess(options: ValueLabel<T>[]): void {
-    const compare = this.options?.compareWith || this.defaultCompare;
-
-    if (this.optionsFilter$.value?.page > 0) {
-      /**
-       * concat options for infinite scroll
-       * duplicates are filtered out (can happen because of the option add)
-       */
-      this.selectOptions = this.selectOptions.concat(
-        options.filter((o) =>
-          this.selectOptions.some((so) => !compare(o.value, so.value))
-        )
-      );
-    } else {
-      /**
-       * If the current (values) are in the old options but not in the new we should keep those options
-       */
-      if (
-        !this.optionsFilter$.value?.searchQuery?.length &&
-        this.valueInOptions() &&
-        !this.valueInOptions(options)
-      ) {
-        options = options.concat(this.getOptionsMatchingTheValue());
-      }
-      this.selectOptions = options;
-    }
-
-    if (this.conditionalItemToSelectWhenExists) {
-      const value = coerceArray(this.conditionalItemToSelectWhenExists);
-      const compare = this.options?.compareWith || this.defaultCompare;
-      const inOptions = this.selectOptions.some((o) =>
-        value.some((v) => compare(o.value, v))
-      );
-      if (inOptions) {
-        this.fieldControl.setValue(this.conditionalItemToSelectWhenExists);
-      }
-    }
-
-    /**
-     * with infinite scroll & searching the form control value(s) might not always be present in the options
-     * this will cause the select to appear empty while it has values.
-     * to salve this we add the form values to the options
-     *
-     * This gives issues if the value is not an object
-     * Not to be mistaken with the first addValueToOptions in this method, this is still needed in some cases
-     */
-    if (
-      this.fieldControl?.value &&
-      !this.valueInOptions() &&
-      !this.optionsFilter$.value?.searchQuery?.length
-    ) {
-      this.addValueToOptions();
-    }
-
-    this.loading$.next(false);
-  }
-
-  protected readonly escape = escape;
 }

@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { Lab900FormsModule } from '@lab900/forms';
+import { provideEnvironmentLab900Forms } from '@lab900/forms';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -11,7 +9,7 @@ import { SharedModule } from './modules/shared/shared.module';
 import { MarkdownModule } from 'ngx-markdown';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { MergingTranslateLoader } from './utils/merging-translate-loader';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { provideEnvironmentNgxMask } from 'ngx-mask';
 
 export function TranslationLoaderFactory(
@@ -25,19 +23,9 @@ export function TranslationLoaderFactory(
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    MatFormFieldModule,
-    MatSelectModule,
     AppRoutingModule,
     SharedModule,
     MarkdownModule.forRoot(),
-    Lab900FormsModule.forRoot({
-      formField: {
-        appearance: 'fill',
-      },
-      amountField: {
-        locale: 'de-DE',
-      },
-    }),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -47,7 +35,18 @@ export function TranslationLoaderFactory(
       defaultLanguage: 'en',
     }),
   ],
-  providers: [provideEnvironmentNgxMask()],
+  providers: [
+    provideHttpClient(),
+    provideEnvironmentNgxMask(),
+    provideEnvironmentLab900Forms({
+      formField: {
+        appearance: 'fill',
+      },
+      amountField: {
+        locale: 'de-DE',
+      },
+    }),
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

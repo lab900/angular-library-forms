@@ -21,6 +21,48 @@ export type FormFieldSelectOptionsFn<T> = (
   schema?: FormFieldSelect<T>
 ) => ValueLabel<T>[] | Observable<ValueLabel<T>[]>;
 
+export interface FormFieldSelectInfiniteScroll {
+  enabled: boolean;
+  /**
+   * The threshold distance from the bottom of the options list to call the infiniteScroll output event when scrolled.
+   * The threshold value can be either in percent, or in pixels.
+   * For example, use the value of 10% for the infiniteScroll output event to get called when the user has needs 10% to reach the bottom.
+   */
+  threshold?: string;
+  /**
+   * The threshold time before firing the infiniteScroll event
+   */
+  debounceTime?: number;
+}
+
+export interface FormFieldSelectSearch<T> {
+  enabled: boolean;
+  placeholder?: string;
+  notFoundLabel?: string;
+  addNewLabel?: string;
+  /**
+   * Function to handle the new item creation, can be anything.
+   * Use the select argument to update the select after creation
+   */
+  addNewFn?: (searchQuery: string, select: SelectFieldComponent<T>) => void;
+  addNewBtnColor?: ThemePalette;
+  /**
+   * Clear the search when the select closes
+   * @default false
+   */
+  clearOnClose?: boolean;
+  /**
+   * The threshold time before firing the search event
+   */
+  debounceTime?: number;
+}
+
+export interface FormFieldSelectAll {
+  enabled: boolean;
+  label?: string;
+  disabled?: boolean;
+}
+
 export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
   multiple?: boolean;
   selectOptions?:
@@ -40,40 +82,8 @@ export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
    * @param option Expects the current value of the field, not a ValueLabel!
    */
   displaySelectedOptionFn?: (option: T) => string;
-  search?: {
-    enabled: boolean;
-    placeholder?: string;
-    notFoundLabel?: string;
-    addNewLabel?: string;
-    /**
-     * Function to handle the new item creation, can be anything.
-     * Use the select argument to update the select after creation
-     */
-    addNewFn?: (searchQuery: string, select: SelectFieldComponent<T>) => void;
-    addNewBtnColor?: ThemePalette;
-    /**
-     * Clear the search when the select closes
-     * @default false
-     */
-    clearOnClose?: boolean;
-    /**
-     * The threshold time before firing the search event
-     */
-    debounceTime?: number;
-  };
-  infiniteScroll?: {
-    enabled: boolean;
-    /**
-     * The threshold distance from the bottom of the options list to call the infiniteScroll output event when scrolled.
-     * The threshold value can be either in percent, or in pixels.
-     * For example, use the value of 10% for the infiniteScroll output event to get called when the user has needs 10% to reach the bottom.
-     */
-    threshold?: string;
-    /**
-     * The threshold time before firing the infiniteScroll event
-     */
-    debounceTime?: number;
-  };
+  search?: FormFieldSelectSearch<T>;
+  infiniteScroll?: FormFieldSelectInfiniteScroll;
   /**
    * Shows a clear button on the right of the field
    */
@@ -81,11 +91,7 @@ export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
     enabled: boolean | ((data?: T) => boolean);
     click?: (fieldControl: AbstractControl, clickEvent: Event) => void;
   };
-  selectAll?: {
-    enabled: boolean;
-    label?: string;
-    disabled?: boolean;
-  };
+  selectAll?: FormFieldSelectAll;
   panelWidth?: string | number | null;
   panelClass?: string | string[];
 }

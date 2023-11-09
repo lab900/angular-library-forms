@@ -1,12 +1,6 @@
-<div
-  class="lab900-readonly-field"
-  [class]="getReadonlyContainerClass()"
-  *ngIf="!fieldIsHidden"
->
-  <span
-    *ngIf="options?.readonlyLabel || schema.title"
-    class="lab900-readonly-field__label"
-    >{{ options?.readonlyLabel || schema.title | translate }}</span
-  >
-  <div [innerHTML]="value || '-' | translate"></div>
+<div [class]="containerClass$ | async" *ngIf="(hideField$ | async) === false">
+  <span *ngIf="label$ | async as label" class="lab900-readonly-field__label">
+    {{ label | translate }}
+  </span>
+  <div [innerHTML]="(value$ | async) ?? '-' | translate"></div>
 </div>

@@ -226,7 +226,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
         (isTrue: boolean) => hide(!isTrue)
       );
       // Refresh hide settings
-      this.component.hide();
+      // this.component.hide();
     });
   }
 

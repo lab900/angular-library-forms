@@ -1,33 +1,24 @@
-<mat-form-field
-  [formGroup]="group"
-  *ngIf="!fieldIsHidden"
-  class="lab900-autocomplete-field"
-  id="lab900-autocomplete-field-{{ fieldAttribute }}"
+<lab900-form-field
+  [formGroup]="group$ | async"
+  *ngIf="(hideField$ | async) === false"
+  [icon]="{ name: 'search', position: 'right' }"
 >
-  <mat-label *ngIf="schema.title" translate>{{ schema.title }}</mat-label>
   <input
     #input
     (input)="inputChanged($event)"
-    [formControlName]="fieldAttribute"
+    [formControlName]="fieldAttribute$ | async"
     [matAutocomplete]="auto"
-    [readonly]="fieldIsReadonly"
+    [readonly]="readonlyField$ | async"
     [required]="fieldIsRequired"
     matInput
     placeholder="{{ (placeholder$ | async) ?? '' | translate }}"
     type="text"
-  />
-  <mat-hint
-    *ngIf="
-      hint &&
-      !fieldIsReadonly &&
-      !(schema.options.hint.hideHintOnValidValue && input.value)
+    class="
+      mat-mdc-input-element mat-mdc-form-field-input-control
+      mdc-text-field__input
     "
-    ><span [innerHTML]="hint | translate: hintValueTranslateData"></span
-  ></mat-hint>
-  <mat-error *ngIf="!valid && !fieldIsReadonly"
-    ><span [innerHTML]="errorMessage$ | async"></span
-  ></mat-error>
-  <mat-icon matSuffix *ngIf="!fieldIsReadonly">search</mat-icon>
+  />
+
   <mat-autocomplete
     #auto="matAutocomplete"
     [displayWith]="options.displayInputFn"
@@ -47,4 +38,4 @@
       ></div>
     </mat-option>
   </mat-autocomplete>
-</mat-form-field>
+</lab900-form-field>

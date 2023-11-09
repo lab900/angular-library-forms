@@ -2,7 +2,7 @@ import { EditType } from '../../../models/editType';
 import {
   FormFieldBase,
   FormFieldBaseOptions,
-  Icon,
+  FormIcon,
 } from '../../../models/form-field-base';
 import { IConfig } from 'ngx-mask';
 
@@ -11,7 +11,7 @@ export interface FieldMask extends Partial<IConfig> {
 }
 
 export interface FormFieldInputOptions extends FormFieldBaseOptions {
-  type?: 'text' | 'number' | 'email' | 'tel' | 'url' | 'time';
+  type?: 'text' | 'number' | 'email' | 'tel' | 'url' | 'time' | 'password';
   autofocus?: boolean;
   suffix?: string | ((data?: any) => string);
   prefix?: string | ((data?: any) => string);
@@ -24,5 +24,5 @@ export interface FormFieldInputOptions extends FormFieldBaseOptions {
 export interface FormFieldInput<T extends string | number = string>
   extends FormFieldBase<T, FormFieldInputOptions> {
   editType: EditType.Input;
-  icon?: Icon & { position?: 'left' | 'right' };
+  icon?: FormIcon;
 }

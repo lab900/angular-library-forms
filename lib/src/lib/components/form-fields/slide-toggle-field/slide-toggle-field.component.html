@@ -1,24 +1,24 @@
 <div
-  [formGroup]="group"
-  *ngIf="!fieldIsHidden"
-  class="lab900-slide-toggle-field mat-form-field-wrapper"
-  id="lab900-slide-toggle-field-{{ fieldAttribute }}"
+  [formGroup]="group$ | async"
+  *ngIf="(hideField$ | async) === false"
 >
-  <div *ngIf="schema.title" class="lab900-slide-toggle-field__title">
+  <div *ngIf="label$ | async as label" class="lab900-slide-toggle-field__title">
     <mat-label>{{ schema.title | translate }}</mat-label>
   </div>
   <mat-slide-toggle
-    [disabled]="fieldIsReadonly"
-    [formControlName]="fieldAttribute"
+    [disabled]="disabled$ | async"
+    [formControlName]="fieldAttribute$ | async"
     [required]="fieldIsRequired"
-    [color]="options?.color || 'primary'"
-    [labelPosition]="options?.labelPosition"
+    [color]="color$ | async"
+    [labelPosition]="labelPosition$ | async"
   >
-    {{ options?.label | translate }}
+    {{ label$ | async | translate }}
   </mat-slide-toggle>
   <mat-error
     class="lab900-slide-toggle-field__error"
-    *ngIf="touched && !valid && !fieldIsReadonly"
-    >{{ errorMessage$ | async }}</mat-error
+    *ngIf="touched && !valid && !readonlyField$ | async"
+    >
+    <lab900-form-field-error/>
+  </mat-error
   >
 </div>

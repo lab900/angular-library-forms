@@ -1,8 +1,8 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
-  HostBinding,
   ViewChild,
 } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
@@ -10,24 +10,44 @@ import { BehaviorSubject, isObservable, Observable, of } from 'rxjs';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {
   MatAutocomplete,
+  MatAutocompleteModule,
   MatAutocompleteSelectedEvent,
 } from '@angular/material/autocomplete';
-import { TranslateService } from '@ngx-translate/core';
 import { debounceTime, switchMap } from 'rxjs/operators';
 import { ValueLabel } from '../../../models/form-field-base';
 import { FormFieldAutocompleteMulti } from './autocomplete-multiple-field.model';
+import { FormFieldService } from '../../../services/form-field.service';
+import { MatInputModule } from '@angular/material/input';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FormFieldComponent } from '../../form-field/form-field.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'lab900-autocomplete-multiple-field',
   templateUrl: './autocomplete-multiple-field.component.html',
+  providers: [FormFieldService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatAutocompleteModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    FormFieldComponent,
+    TranslateModule,
+    NgForOf,
+    NgIf,
+    AsyncPipe,
+    MatChipsModule,
+    MatIconModule,
+  ],
 })
 export class AutocompleteMultipleFieldComponent<T>
   extends FormComponent<FormFieldAutocompleteMulti<T, string>>
   implements AfterViewInit
 {
-  @HostBinding('class')
-  public classList = 'lab900-form-field';
-
   @ViewChild('input')
   private input: ElementRef<HTMLInputElement>;
   @ViewChild('auto')
@@ -40,10 +60,6 @@ export class AutocompleteMultipleFieldComponent<T>
 
   public get selectedOptions(): T[] {
     return this.group.controls[this.fieldAttribute]?.value ?? [];
-  }
-
-  public constructor(translateService: TranslateService) {
-    super(translateService);
   }
 
   public ngAfterViewInit(): void {

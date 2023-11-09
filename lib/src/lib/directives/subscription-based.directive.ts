@@ -1,6 +1,10 @@
 import { Directive, OnDestroy } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 
+/**
+ * @deprecated use the new rxjs operator takeUntilDestroyed() instead
+ * @see https://angular.io/api/core/rxjs-interop/takeUntilDestroyed
+ */
 @Directive()
 export abstract class SubscriptionBasedDirective implements OnDestroy {
   protected subscriptions: Subscription[] = [];

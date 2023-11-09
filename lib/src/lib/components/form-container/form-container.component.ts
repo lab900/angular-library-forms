@@ -5,7 +5,11 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  UntypedFormArray,
+  UntypedFormGroup,
+} from '@angular/forms';
 import { Lab900FormConfig } from '../../models/Lab900FormConfig';
 import { Lab900FormBuilderService } from '../../services/form-builder.service';
 import { ValueLabel } from '../../models/form-field-base';
@@ -16,15 +20,19 @@ import {
   Lab900FormModuleSettings,
 } from '../../models/Lab900FormModuleSettings';
 import { isDifferent } from '@lab900/ui';
+import { NgForOf, NgIf } from '@angular/common';
+import { FormFieldDirective } from '../../directives/form-field.directive';
 
 @Component({
   selector: 'lab900-form[schema]',
   templateUrl: './form-container.component.html',
   styleUrls: ['./form-container.component.scss'],
+  standalone: true,
+  imports: [ReactiveFormsModule, NgIf, FormFieldDirective, NgForOf],
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 export class Lab900Form<T> implements OnChanges {
-  @Input()
+  @Input({ required: true })
   public schema!: Lab900FormConfig;
 
   /**
@@ -42,7 +50,7 @@ export class Lab900Form<T> implements OnChanges {
   @Input()
   public availableLanguages?: ValueLabel[];
 
-  public form: UntypedFormGroup;
+  public form?: UntypedFormGroup;
 
   public get valid(): boolean {
     return this.form.valid;

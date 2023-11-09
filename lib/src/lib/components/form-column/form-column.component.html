@@ -1,28 +1,22 @@
-<ng-container *ngIf="visible && schema">
+<ng-container *ngIf="showRow$ | async">
   <div
     [hidden]="isHidden(schema)"
-    class="lab900-form-column {{ options?.customClass }}"
+    class="lab900-form-column {{ rowClass$ | async }}"
   >
     <span
-      *ngIf="(fieldIsReadonly && options?.readonlyLabel) || schema.title"
+      *ngIf="rowTitle$ | async as title"
       class="lab900-form-field-label lab900-form-column-label {{
-        options?.customTitleClass
+        rowTitleClass$ | async
       }}"
-      >{{
-        (!fieldIsReadonly
-          ? schema.title
-          : options?.readonlyLabel || schema.title
-        ) | translate
-      }}</span
+      >{{ title | translate }}</span
     >
-    <div class="form-column" [class.mobile-cols]="schema.options?.mobileCols">
+    <div class="form-column" [class.mobile-cols]="mobileCols$ | async">
       <div
-        *ngFor="let field of schema.nestedFields"
+        *ngFor="let field of nestedFields$ | async"
         [class.hidden]="isHidden(field)"
         lab900FormField
         [schema]="field"
         [group]="fieldAttribute ? group.get(fieldAttribute) : group"
-        [readonly]="columnIsReadonly(field)"
       >
         <div class="form-col__info" *ngIf="field?.options?.infoTooltip as tip">
           <mat-icon [matTooltip]="tip?.text | translate">{{
@@ -30,6 +24,7 @@
           }}</mat-icon>
         </div>
       </div>
+      -
     </div>
   </div>
 </ng-container>

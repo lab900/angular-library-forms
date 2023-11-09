@@ -8,6 +8,7 @@ import {
 
 @Directive({
   selector: '[lab900DropFile]',
+  standalone: true,
 })
 export class FileDropDirective {
   private static SHADOW_ON = 'rgba(0, 0, 0, 0.10) 0px 2px 4px 0px inset';

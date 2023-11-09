@@ -1,60 +1,110 @@
-import { Component, HostBinding } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { UntypedFormArray } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormArray } from '@angular/forms';
 import { Lab900FormBuilderService } from '../../../services/form-builder.service';
-import { TranslateService } from '@ngx-translate/core';
 import { matFormFieldAnimations } from '@angular/material/form-field';
 import { FormFieldRepeater } from './repeater-field.model';
+import { FormFieldService } from '../../../services/form-field.service';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatButtonModule } from '@angular/material/button';
+import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
+import { FormFieldDirective } from '../../../directives/form-field.directive';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { combineLatest, Observable } from 'rxjs';
+import { filter, map, take, withLatestFrom } from 'rxjs/operators';
+import { ThemePalette } from '@angular/material/core';
 
 @Component({
   selector: 'lab900-repeater-field',
   templateUrl: './repeater-field.component.html',
   styleUrls: ['./repeater-field.component.scss'],
   animations: [matFormFieldAnimations.transitionMessages],
+  providers: [FormFieldService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatInputModule,
+    MatIconModule,
+    TranslateModule,
+    MatButtonModule,
+    NgIf,
+    AsyncPipe,
+    FormFieldDirective,
+    NgForOf,
+    MatTooltipModule,
+    ReactiveFormsModule,
+  ],
 })
 export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
-  @HostBinding('class')
-  public classList = 'lab900-form-field';
+  public readonly addLabel$ = this.getOption$<string>('addLabel', 'Add new');
+  public readonly fixedList$ = this.getOption$<boolean>('fixedList');
+  public readonly minRows$ = this.getOption$<number>('minRows', 1);
+  public readonly maxRows$ = this.getOption$<number>('maxRows');
+  public readonly buttonColor$ = this.getOption$<ThemePalette>(
+    'buttonColor',
+    'accent'
+  );
 
-  public get addLabel(): string {
-    return this.options?.addLabel ?? 'Add new';
-  }
+  public readonly tooltip$ =
+    this.getOption$<{ text: string; icon?: string }>('infoTooltip');
 
-  public get minRows(): number {
-    return this.options?.minRows ?? 1;
-  }
+  public readonly nestedFields$ = this.formFieldService.schema$.pipe(
+    map((schema) => schema?.nestedFields ?? [])
+  );
 
-  public get maxRows(): number {
-    return this.options?.maxRows;
-  }
+  public readonly showErrors$ = combineLatest([
+    this.formFieldService.fieldControl$,
+    this.readonlyField$,
+  ]).pipe(
+    map(
+      ([control, readonlyField]) =>
+        !readonlyField && control?.invalid && control?.touched
+    )
+  );
 
-  public get fixedList(): boolean {
-    return this.options?.fixedList;
-  }
+  public readonly showActions$ = combineLatest([
+    this.formFieldService.options$,
+    this.readonlyField$,
+  ]).pipe(
+    map(([options, readonlyField]) => !readonlyField && !options?.fixedList)
+  );
 
-  public get repeaterArray(): UntypedFormArray {
-    return this.group.get(this.fieldAttribute) as UntypedFormArray;
-  }
+  public readonly repeaterArray$ = this.formFieldService
+    .fieldControl$ as Observable<UntypedFormArray>;
 
-  public constructor(
-    private fb: Lab900FormBuilderService,
-    translateService: TranslateService
-  ) {
-    super(translateService);
+  public readonly disableAdd$ = combineLatest([
+    this.maxRows$,
+    this.repeaterArray$,
+  ]).pipe(map(([maxRows, arr]) => !maxRows && arr.length >= maxRows));
+
+  public constructor(private fb: Lab900FormBuilderService) {
+    super();
   }
 
   public addToArray(): void {
-    const formGroup = this.fb.createFormGroup(this.schema.nestedFields);
-    this.repeaterArray.push(formGroup);
-    this.repeaterArray.markAsDirty();
-    this.repeaterArray.markAsTouched();
+    this.repeaterArray$
+      .pipe(take(1), withLatestFrom(this.formFieldService.schema$))
+      .subscribe(([arr, schema]) => {
+        const formGroup = this.fb.createFormGroup(schema.nestedFields);
+        arr.push(formGroup);
+        arr.markAsDirty();
+        arr.markAsTouched();
+      });
   }
 
   public removeFromArray(index: number): void {
-    if (this.repeaterArray.length > this.minRows) {
-      this.repeaterArray.removeAt(index);
-      this.repeaterArray.markAsDirty();
-      this.repeaterArray.markAsTouched();
-    }
+    this.repeaterArray$
+      .pipe(
+        take(1),
+        withLatestFrom(this.minRows$),
+        filter(([arr, minRows]) => arr?.length > minRows)
+      )
+      .subscribe(([arr]) => {
+        arr.removeAt(index);
+        arr.markAsDirty();
+        arr.markAsTouched();
+      });
   }
 }

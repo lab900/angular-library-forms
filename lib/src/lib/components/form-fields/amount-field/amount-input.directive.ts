@@ -24,6 +24,7 @@ import {
 
 @Directive({
   selector: 'input[lab900AmountInput]',
+  standalone: true,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

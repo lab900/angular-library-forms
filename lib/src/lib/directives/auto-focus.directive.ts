@@ -3,9 +3,10 @@ import { MatInput } from '@angular/material/input';
 
 @Directive({
   selector: '[lab900InputAutofocus]',
+  standalone: true,
 })
 export class AutofocusDirective implements OnChanges {
-  @Input()
+  @Input('lab900InputAutofocus')
   public autofocus = false;
 
   public constructor(private matInput: MatInput) {}

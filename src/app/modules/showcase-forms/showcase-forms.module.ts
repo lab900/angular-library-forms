@@ -33,6 +33,7 @@ import { FormFieldTextareaExampleComponent } from './examples/form-field-textare
 import { ShowcaseFormsRoutingModule } from './showcase-forms-routing.module';
 import { FormFieldAmountExampleComponent } from './examples/form-field-amount-example/form-field-amount-example.component';
 import { FormFieldSearchExampleComponent } from './examples/form-field-search-example/form-field-search-example.component';
+import { AmountPipe, SelectFieldComponent } from '@lab900/forms';
 
 const examples = [
   FormFieldRepeaterExampleComponent,
@@ -70,6 +71,12 @@ const examples = [
 
 @NgModule({
   declarations: examples,
-  imports: [CommonModule, SharedModule, ShowcaseFormsRoutingModule],
+  imports: [
+    CommonModule,
+    SharedModule,
+    ShowcaseFormsRoutingModule,
+    SelectFieldComponent,
+    AmountPipe,
+  ],
 })
 export class ShowcaseFormsModule {}

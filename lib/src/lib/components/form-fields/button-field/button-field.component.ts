@@ -1,29 +1,56 @@
-import { Component, ElementRef, HostBinding, ViewChild } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldButton } from './button-field.model';
-import { Lab900ButtonComponent } from '@lab900/ui';
+import { FormFieldService } from '../../../services/form-field.service';
+import { ThemePalette } from '@angular/material/core';
+import { Lab900ButtonModule, Lab900ButtonType } from '@lab900/ui';
+import { MatTooltipModule, TooltipPosition } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
+import { AsyncPipe, NgIf } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { take, withLatestFrom } from 'rxjs/operators';
 
 @Component({
   selector: 'lab900-button-field',
   templateUrl: './button-field.component.html',
+  providers: [FormFieldService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    TranslateModule,
+    NgIf,
+    AsyncPipe,
+    Lab900ButtonModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatTooltipModule,
+  ],
 })
 export class ButtonFieldComponent extends FormComponent<FormFieldButton> {
-  @HostBinding('class')
-  public classList = 'lab900-form-field';
+  public readonly type$ = this.getOption$<Lab900ButtonType>('type');
+  public readonly color$ = this.getOption$<ThemePalette>('color', 'primary');
+  public readonly label$ = this.getOption$<string>(
+    'label',
+    'No label provided'
+  );
 
-  @ViewChild(Lab900ButtonComponent, { read: ElementRef })
-  public set buttonComp(buttonComp: ElementRef) {
-    // fix for trigger action on enter
-    buttonComp?.nativeElement?.children?.[0]?.setAttribute('type', 'button');
-  }
+  public readonly tooltip$ = this.getOption$<{
+    text: string;
+    position?: TooltipPosition;
+  }>('tooltip');
 
-  public constructor(translateService: TranslateService) {
-    super(translateService);
-  }
+  public readonly prefixIcon$ = this.getOption$<string>('prefixIcon');
+  public readonly suffixIcon$ = this.getOption$<string>('suffixIcon');
+  public readonly svgIcon$ = this.getOption$<boolean>('svgIcon', false);
+  public readonly containerClass$ = this.getOption$<string>('containerClass');
 
   public handleClick(event: Event): void {
     event.stopPropagation();
-    this.options?.onClick(this.group, this.schema, event);
+    this.formFieldService.schema$
+      .pipe(take(1), withLatestFrom(this.formFieldService.group$))
+      .subscribe(([schema, group]) => {
+        schema?.options?.onClick(group, schema, event);
+      });
   }
 }

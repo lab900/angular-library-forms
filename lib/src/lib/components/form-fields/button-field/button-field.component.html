@@ -1,23 +1,19 @@
-<div
-  [formGroup]="group"
-  *ngIf="!fieldIsHidden"
-  class="lab900-button-field button-field mat-form-field-wrapper"
-  id="lab900-button-field-{{ fieldAttribute }}"
->
-  <div *ngIf="schema.title" class="lab900-button-field__label">
-    <mat-label>{{ schema.title | translate }}</mat-label>
+<div [formGroup]="group$ | async" *ngIf="(hideField$ | async) === false">
+  <div *ngIf="label$ | async as label" class="lab900-button-field__label">
+    <mat-label>{{ label | translate }}</mat-label>
   </div>
   <lab900-button
-    [type]="options.type"
-    [color]="options.color"
-    [disabled]="options.disabled ?? options.readonly ?? readonly"
+    [type]="type$ | async"
+    [color]="color$ | async"
+    [disabled]="disabled$ | async"
     (btnClick)="handleClick($event)"
-    [label]="options.label"
-    [matTooltip]="options.tooltip?.text | translate"
-    [matTooltipPosition]="options.tooltip?.position || 'above'"
-    [prefixIcon]="options.prefixIcon"
-    [suffixIcon]="options.suffixIcon"
-    [svgIcon]="options.svgIcon"
-    [containerClass]="options.containerClass"
+    [label]="label$ | async"
+    [matTooltip]="(tooltip$ | async)?.text | translate"
+    [matTooltipPosition]="(tooltip$ | async)?.position || 'above'"
+    [prefixIcon]="prefixIcon$ | async"
+    [suffixIcon]="suffixIcon$ | async"
+    [svgIcon]="svgIcon$ | async"
+    [containerClass]="containerClass$ | async"
+    [buttonType]="'button'"
   ></lab900-button>
 </div>

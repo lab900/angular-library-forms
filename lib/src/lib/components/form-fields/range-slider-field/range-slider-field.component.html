@@ -1,26 +1,26 @@
-<div
-  [formGroup]="group"
-  *ngIf="!fieldIsHidden"
-  class="lab900-range-slider-field"
-  id="lab900-range-slider-field-{{ fieldAttribute }}"
->
-  <span *ngIf="schema.title" class="lab900-form-field-label" translate>{{
-    schema.title
-  }}</span>
+<div [formGroup]="group$ | async" *ngIf="(hideField$ | async) === false">
+  <span
+    *ngIf="label$ | async as label"
+    class="lab900-form-field-label"
+    translate
+    >{{ label }}</span
+  >
   <lab900-mat-range-slider-field
-    [formControlName]="fieldAttribute"
-    [fromLabel]="options?.fromLabel || 'From'"
-    [toLabel]="options?.toLabel || 'To'"
-    [min]="options?.min"
-    [max]="options?.max"
-    [steps]="options?.steps"
-    [format]="options?.format"
+    [formControlName]="fieldAttribute$ | async"
+    [fromLabel]="fromLabel$ | async"
+    [toLabel]="toLabel$ | async"
+    [min]="min$ | async"
+    [max]="max$ | async"
+    [steps]="steps$ | async"
+    [format]="format$ | async"
     [required]="fieldIsRequired"
   ></lab900-mat-range-slider-field>
   <div
     class="radio-buttons-field__error"
-    *ngIf="group.controls[fieldAttribute].touched && !valid && !fieldIsReadonly"
+    *ngIf="showErrors$ | async"
   >
-    <mat-error>{{ errorMessage$ | async }}</mat-error>
+    <mat-error>
+      <lab900-form-field-error />
+    </mat-error>
   </div>
 </div>

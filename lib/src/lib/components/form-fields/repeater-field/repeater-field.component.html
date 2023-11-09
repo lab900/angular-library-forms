@@ -1,66 +1,66 @@
 <div
-  [formGroup]="group"
-  *ngIf="!fieldIsHidden"
-  class="lab900-repeater-field repeater-field"
-  id="lab900-repeater-field-{{ fieldAttribute }}"
-  [class.fixed-list]="fixedList"
+  [formGroup]="group$ | async"
+  *ngIf="(hideField$ | async) === false"
+  [class.fixed-list]="fixedList$ | async"
 >
-  <div [formArrayName]="fieldAttribute">
+  <div [formArrayName]="fieldAttribute$ | async">
     <span
-      *ngIf="schema.title"
+      *ngIf="label$ | async as label"
       class="lab900-form-field-label lab900-form-field-label--with-info"
     >
-      {{ schema.title | translate }}
+      {{ label | translate }}
       <mat-icon
-        *ngIf="options?.infoTooltip as tip"
+        *ngIf="tooltip$ | async as tip"
         [matTooltip]="tip?.text | translate"
       >
         {{ tip?.icon || 'info' }}
       </mat-icon>
     </span>
 
-    <div
-      *ngFor="let control of repeaterArray.controls; let i = index"
-      class="repeater-row"
-    >
-      <div class="repeater-row__fields">
-        <ng-container
-          *ngFor="let field of schema.nestedFields"
-          lab900FormField
-          [schema]="field"
-          [group]="control"
-        ></ng-container>
+    <ng-container *ngIf="repeaterArray$ | async as repeaterArray">
+      <div
+        *ngFor="let control of repeaterArray.controls; let i = index"
+        class="repeater-row"
+      >
+        <div class="repeater-row__fields">
+          <ng-container
+            *ngFor="let field of nestedFields$ | async"
+            lab900FormField
+            [schema]="field"
+            [group]="$any(control)"
+          ></ng-container>
+        </div>
+        <div *ngIf="showActions$ | async" class="repeater-row__actions">
+          <button
+            type="button"
+            *ngIf="i + 1 > (minRows$ | async) || options?.removeAll"
+            (click)="removeFromArray(i)"
+            mat-mini-fab
+            class="mat-elevation-z0"
+            [color]="buttonColor$ | async"
+            aria-label="Delete"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
       </div>
-      <div *ngIf="!fixedList && !fieldIsReadonly" class="repeater-row__actions">
+      <mat-error
+        class="subscript-wrapper"
+        *ngIf="showErrors$ | async"
+        [@transitionMessages]="valid ? 'void' : 'enter'"
+        >{{ controlError$ | async }}</mat-error
+      >
+      <div *ngIf="showActions$ | async" class="repeater-field__actions">
         <button
-          type="button"
-          *ngIf="i + 1 > minRows || options?.removeAll"
-          (click)="removeFromArray(i)"
-          mat-mini-fab
-          class="mat-elevation-z0"
-          [color]="options?.buttonColor || 'accent'"
-          aria-label="Delete"
+          mat-button
+          color="primary"
+          [disabled]="disableAdd$ | async"
+          (click)="addToArray()"
+          class="repeater-add"
         >
-          <mat-icon>delete</mat-icon>
+          {{ addLabel$ | async | translate }}
         </button>
       </div>
-    </div>
-    <mat-error
-      class="subscript-wrapper"
-      *ngIf="touched && !valid && !fieldIsReadonly"
-      [@transitionMessages]="valid ? 'void' : 'enter'"
-      >{{ errorMessage$ | async }}</mat-error
-    >
-    <div *ngIf="!fixedList && !fieldIsReadonly" class="repeater-field__actions">
-      <button
-        mat-button
-        color="primary"
-        [disabled]="!!maxRows && repeaterArray.length >= maxRows"
-        (click)="addToArray()"
-        class="repeater-add"
-      >
-        {{ addLabel | translate }}
-      </button>
-    </div>
+    </ng-container>
   </div>
 </div>

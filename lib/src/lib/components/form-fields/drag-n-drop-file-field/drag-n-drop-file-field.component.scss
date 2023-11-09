@@ -41,20 +41,17 @@
 }
 
 .file-list {
-  &--full {
-    margin: 5px -5px 0px;
-  }
-
-  &--compact {
-    margin: 0px 0px;
-  }
-
+  margin: 5px -5px 0px;
   max-height: 200px;
   overflow: auto;
   display: flex;
   align-content: flex-start;
   flex-wrap: wrap;
   flex: 1 1 auto;
+
+  &--compact {
+    margin: 0px 0px;
+  }
 }
 
 .file {

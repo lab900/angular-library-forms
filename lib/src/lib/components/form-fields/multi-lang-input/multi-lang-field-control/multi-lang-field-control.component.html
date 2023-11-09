@@ -34,7 +34,11 @@
           (ngModelChange)="updateGlobalTranslation($event)"
           [required]="required"
           [readonly]="readonly"
-          [ngClass]="{ readonly: readonly }"
+          [class.readonly]="readonly"
+          class="
+            mat-mdc-input-element mat-mdc-form-field-input-control
+            mdc-text-field__input
+          "
         />
         <textarea
           *ngIf="useTextAreaField"
@@ -44,7 +48,11 @@
           (ngModelChange)="updateGlobalTranslation($event)"
           [required]="required"
           [readonly]="readonly"
-          [ngClass]="{ readonly: readonly }"
+          [class.readonly]="readonly"
+          class="
+            mat-mdc-input-element mat-mdc-form-field-input-control
+            mdc-text-field__input
+          "
         ></textarea>
       </mat-form-field>
     </div>
@@ -53,7 +61,7 @@
         <mat-form-field
           *ngIf="lang.value === activeLanguage.value"
           class="lab900-input-field"
-          id="lab900-input-field-{{ this.formControlName }}-{{ lang.value }}"
+          id="lab900-input-field-{{ formControlName }}-{{ lang.value }}"
         >
           <mat-label *ngIf="label">{{ label | translate }}</mat-label>
           <input
@@ -65,8 +73,12 @@
             (ngModelChange)="updateSingleLanguage($event, lang.value)"
             [required]="required"
             [readonly]="readonly"
-            [ngClass]="{ readonly: readonly }"
+            [class.readonly]="{  readonly }"
             [disabled]="activeLanguage.disabled"
+            class="
+              mat-mdc-input-element mat-mdc-form-field-input-control
+              mdc-text-field__input
+            "
           />
           <textarea
             *ngIf="useTextAreaField"
@@ -76,8 +88,12 @@
             (ngModelChange)="updateSingleLanguage($event, lang.value)"
             [required]="required"
             [readonly]="readonly"
-            [ngClass]="{ readonly: readonly }"
+            [class.readonly]="{  readonly }"
             [disabled]="activeLanguage.disabled"
+            class="
+              mat-mdc-input-element mat-mdc-form-field-input-control
+              mdc-text-field__input
+            "
           ></textarea>
         </mat-form-field>
       </ng-container>

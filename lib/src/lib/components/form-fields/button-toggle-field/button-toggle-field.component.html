@@ -1,50 +1,49 @@
-<div
-  [formGroup]="group"
-  *ngIf="!fieldIsHidden && !fieldIsReadonly"
-  class="lab900-button-toggle-field button-toggle-field mat-form-field-wrapper"
-  id="lab900-button-toggle-field-{{ fieldAttribute }}"
->
-  <div *ngIf="schema.title" class="lab900-button-toggle-field__label">
-    <mat-label>{{ schema.title | translate }}</mat-label>
-  </div>
-  <mat-button-toggle-group
-    [formControlName]="fieldAttribute"
-    [required]="fieldIsRequired"
+<ng-container *ngIf="(hideField$ | async) === false">
+  <div
+    [formGroup]="group$ | async"
+    *ngIf="(readonlyField$ | async) === false; else readonlyFieldTemplate"
   >
-    <mat-button-toggle
-      [disabled]="fieldIsReadonly"
-      *ngFor="let value of options?.buttonOptions"
-      [value]="value.value"
-      class="{{ value?.buttonClass }}"
-      (change)="onChange($event)"
-      [matTooltip]="value?.tooltip?.text | translate"
-      [matTooltipPosition]="value?.tooltip?.position || 'above'"
+    <div
+      *ngIf="label$ | async as label"
+      class="lab900-button-toggle-field__label"
     >
-      <lab900-icon
-        [icon]="value.icon"
-        *ngIf="value?.icon?.position === 'left'"
-      ></lab900-icon>
-      <ng-container *ngIf="value.label">
-        {{ value.label | translate }}
-      </ng-container>
-      <lab900-icon
-        [icon]="value.icon"
-        *ngIf="!value?.icon?.position || value.icon.position === 'right'"
-      ></lab900-icon>
-    </mat-button-toggle>
-  </mat-button-toggle-group>
-  <mat-error
-    class="mat-form-field-subscript-wrapper"
-    *ngIf="touched && !valid && !fieldIsReadonly"
-    >{{ errorMessage$ | async }}</mat-error
-  >
-</div>
-
-<div class="lab900-readonly-field" *ngIf="fieldIsReadonly && !fieldIsHidden">
-  <span
-    *ngIf="options?.readonlyLabel || schema.title"
-    class="lab900-readonly-field__label"
-    >{{ options?.readonlyLabel || schema.title | translate }}</span
-  >
-  <div [innerHTML]="label || '-' | translate"></div>
-</div>
+      <mat-label>{{ label | translate }}</mat-label>
+    </div>
+    <mat-button-toggle-group [formControlName]="fieldAttribute$ | async" [required]="">
+      <mat-button-toggle
+        [disabled]="disabled$ | async"
+        *ngFor="let value of buttonOptions$ | async"
+        [value]="value.value"
+        class="{{ value?.buttonClass }}"
+        (change)="onChange($event)"
+        [matTooltip]="value?.tooltip?.text | translate"
+        [matTooltipPosition]="value?.tooltip?.position || 'above'"
+      >
+        <lab900-icon
+          [icon]="value.icon"
+          *ngIf="value?.icon?.position === 'left'"
+        ></lab900-icon>
+        <ng-container *ngIf="value.label">
+          {{ value.label | translate }}
+        </ng-container>
+        <lab900-icon
+          [icon]="value.icon"
+          *ngIf="!value?.icon?.position || value.icon.position === 'right'"
+        ></lab900-icon>
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+    <mat-error>
+      <lab900-form-field-error/>
+    </mat-error>
+  </div>
+  <ng-template #readonlyFieldTemplate>
+    <div class="lab900-readonly-field">
+      <span
+        *ngIf="readonlyTitle$ | async as readonlyTitle"
+        class="lab900-readonly-field__label"
+        >{{ readonlyTitle | translate }}</span
+      >
+      <div [innerHTML]="readonlyLabel$ | async | translate"></div>
+    </div>
+  </ng-template>
+</ng-container>

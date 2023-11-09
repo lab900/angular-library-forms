@@ -9,7 +9,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { RouterModule } from '@angular/router';
 import { MarkdownModule } from 'ngx-markdown';
 
-import { Lab900FormsModule } from '@lab900/forms';
+import { Lab900Form } from '@lab900/forms';
 import { Lab900NavListComponent, Lab900PageHeaderComponent } from '@lab900/ui';
 
 import { ExampleViewerComponent } from './components/example-viewer/example-viewer.component';
@@ -18,6 +18,7 @@ import { ComponentLoaderDirective } from './directives/component-loader.directiv
 import { ShowcaseHomeComponent } from './components/showcase-home/showcase-home.component';
 import { MarkdownPageComponent } from './components/markdown-page/markdown-page.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 const material = [
   MatCardModule,
@@ -41,19 +42,20 @@ const material = [
     ShowcasePageComponent,
     ShowcaseHomeComponent,
     MarkdownPageComponent,
-    Lab900FormsModule,
+    Lab900Form,
     Lab900NavListComponent,
     ...material,
   ],
   imports: [
     CommonModule,
-    Lab900FormsModule,
+    Lab900Form,
     Lab900NavListComponent,
     Lab900PageHeaderComponent,
     MarkdownModule,
     RouterModule,
     ...material,
     TranslateModule,
+    MatTooltipModule,
   ],
 })
 export class SharedModule {}

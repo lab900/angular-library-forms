@@ -1,37 +1,23 @@
-<mat-form-field
-  [formGroup]="group"
-  *ngIf="!fieldIsHidden"
-  class="lab900-autocomplete-multi-field"
-  id="lab900-autocomplete-multi-field-{{ fieldAttribute }}"
+<lab900-form-field
+  [formGroup]="group$ | async"
+  *ngIf="(hideField$ | async) === false"
+  [icon]="{ name: 'search', position: 'right' }"
 >
-  <mat-label *ngIf="schema.title" translate>{{ schema.title }}</mat-label>
-  <mat-hint
-    *ngIf="
-      hint &&
-      !fieldIsReadonly &&
-      !(schema.options.hint.hideHintOnValidValue && input.value)
-    "
-    ><span [innerHTML]="hint | translate: hintValueTranslateData"></span
-  ></mat-hint>
-  <mat-error *ngIf="!valid && !fieldIsReadonly"
-    ><span [innerHTML]="errorMessage$ | async"></span
-  ></mat-error>
-  <mat-icon matSuffix *ngIf="!fieldIsReadonly">search</mat-icon>
-  <mat-chip-grid #chipList [formControlName]="fieldAttribute">
+  <mat-chip-grid #chipList [formControlName]="fieldAttribute$ | async">
     <mat-chip-row
       *ngFor="let opt of selectedOptions; let i = index"
-      [removable]="!fieldIsReadonly"
+      [removable]="!readonlyField$ | async"
       selectable
       (removed)="remove(i)"
     >
       <div [innerHTML]="options.displayInputFn(opt) | translate"></div>
-      <mat-icon *ngIf="!fieldIsReadonly" matChipRemove>cancel</mat-icon>
+      <mat-icon *ngIf="!readonlyField$ | async" matChipRemove>cancel</mat-icon>
     </mat-chip-row>
     <input
       #input
       (input)="inputChanged($event)"
       placeholder="{{ (placeholder$ | async) ?? '' | translate }}"
-      [readOnly]="fieldIsReadonly"
+      [readOnly]="readonlyField$ | async"
       [matAutocomplete]="auto"
       [matChipInputFor]="chipList"
       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
@@ -52,4 +38,4 @@
       }}</ng-container>
     </mat-option>
   </mat-autocomplete>
-</mat-form-field>
+</lab900-form-field>

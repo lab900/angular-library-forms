@@ -1,25 +1,21 @@
 <div
-  [formGroup]="group"
-  *ngIf="!fieldIsHidden"
-  class="lab900-multi-lang-field lab900-multi-lang-field--{{
-    setting?.formField?.appearance || 'standard'
-  }}"
-  id="lab900-multi-lang-field-{{ fieldAttribute }}"
+  [formGroup]="group$ | async"
+  *ngIf="(hideField$ | async) === false"
   style="padding-bottom: 1.34375em"
 >
   <lab900-multi-lang-field-control
-    [formControlName]="fieldAttribute"
-    [defaultLanguage]="language"
-    [availableLanguages]="availableLanguages"
+    [formControlName]="fieldAttribute$ | async"
+    [defaultLanguage]="form?.language"
+    [availableLanguages]="form?.availableLanguages"
     [required]="fieldIsRequired"
-    [readonly]="fieldIsReadonly"
-    [label]="schema.title"
-    [buttonColor]="options?.buttonColor"
-    [translateLabel]="options?.translateLabel"
-    [stopTranslateLabel]="options?.stopTranslateLabel"
-    [useTextAreaField]="options?.useTextAreaField"
+    [readonly]="readonlyField$ | async"
+    [label]="title$ | async"
+    [buttonColor]="buttonColor$ | async"
+    [translateLabel]="translateLabel$ | async"
+    [stopTranslateLabel]="stopTranslateLabel$ | async"
+    [useTextAreaField]="useTextAreaField$ | async"
   ></lab900-multi-lang-field-control>
-  <div *ngIf="!valid && fieldControl.touched && !fieldIsReadonly">
-    <mat-error>{{ errorMessage$ | async }}</mat-error>
-  </div>
+  <mat-error *ngIf="showErrors$ | async">
+    <lab900-form-field-error/>
+  </mat-error>
 </div>

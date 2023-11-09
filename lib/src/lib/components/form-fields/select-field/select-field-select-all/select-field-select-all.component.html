@@ -1,0 +1,9 @@
+<div
+    class="mat-mdc-option mdc-list-item mat-mdc-option-multiple select-all"
+    (click)="toggle()"
+>
+    <mat-pseudo-checkbox [state]="selectAllState$ | async" [disabled]="selectAll?.disabled"/>
+    <span class="mdc-list-item__primary-text">
+        {{selectAll?.label || 'forms.select-field.selectAllLabel'| translate}}
+    </span>
+</div>

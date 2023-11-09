@@ -1,83 +1,33 @@
-<mat-form-field
-  *ngIf="!fieldIsHidden"
-  [formGroup]="group"
-  class="lab900-input-field {{ options?.align || 'left' }}"
-  [class.spanFix]="options?.suffix || options?.prefix"
-  id="lab900-input-field-{{ fieldAttribute }}"
+<lab900-form-field
+  *ngIf="(hideField$ | async) === false"
+  [formGroup]="group$ | async"
+  [icon]="icon$ | async"
+  [suffix]="suffix$ | async"
+  [prefix]="prefix$ | async"
 >
-  <mat-label *ngIf="schema.title">{{ schema.title | translate }}</mat-label>
   <input
     matInput
-    #input
-    [type]="options?.type || 'text'"
-    placeholder="{{ (placeholder$ | async) ?? '' | translate }}"
-    [formControlName]="fieldAttribute"
+    class="
+      mat-mdc-input-element mat-mdc-form-field-input-control
+      mdc-text-field__input
+    "
+    [style.text-align]="align$ | async"
+    [type]="type$ | async"
+    [placeholder]="(placeholder$ | async) ?? '' | translate"
+    [formControlName]="fieldAttribute$ | async"
     [required]="fieldIsRequired"
-    [readonly]="fieldIsReadonly"
-    [ngClass]="{ readonly: fieldIsReadonly }"
-    [mask]="options?.fieldMask?.mask"
-    [prefix]="(options?.fieldMask?.prefix ?? setting?.fieldMask?.prefix) || ''"
-    [suffix]="(options?.fieldMask?.suffix ?? setting?.fieldMask?.suffix) || ''"
-    [placeHolderCharacter]="
-      options?.fieldMask?.placeHolderCharacter ??
-      setting?.fieldMask?.placeHolderCharacter ??
-      ''
-    "
-    [dropSpecialCharacters]="
-      options?.fieldMask?.dropSpecialCharacters ??
-      setting?.fieldMask?.dropSpecialCharacters ??
-      true
-    "
-    [allowNegativeNumbers]="
-      options?.fieldMask?.allowNegativeNumbers ??
-      setting?.fieldMask?.allowNegativeNumbers
-    "
-    [showMaskTyped]="
-      options?.fieldMask?.showMaskTyped ?? setting?.fieldMask?.showMaskTyped
-    "
-    [decimalMarker]="
-      options?.fieldMask?.decimalMarker ?? setting?.fieldMask?.decimalMarker
-    "
-    [thousandSeparator]="
-      options?.fieldMask?.thousandSeparator ??
-      setting?.fieldMask?.thousandSeparator
-    "
-    lab900InputAutofocus
-    [autofocus]="options?.autofocus"
-    [style]="options?.style || ''"
+    [readonly]="readonlyField$ | async"
+    [class.readonly]="readonlyField$ | async"
+    [mask]="(fieldMask$ | async)?.mask"
+    [prefix]="maskPrefix$ | async"
+    [suffix]="maskSuffix$ | async"
+    [placeHolderCharacter]="placeHolderCharacter$ | async"
+    [dropSpecialCharacters]="dropSpecialCharacters$ | async"
+    [allowNegativeNumbers]="allowNegativeNumbers$ | async"
+    [showMaskTyped]="showMaskTyped$ | async"
+    [decimalMarker]="decimalMarker$ | async"
+    [thousandSeparator]="thousandSeparator$ | async"
+    [lab900InputAutofocus]="autofocus$ | async"
+    [style]="style$ | async"
   />
-  <lab900-icon
-    [icon]="schema.icon"
-    *ngIf="schema?.icon?.position === 'left'"
-    matTextSuffix
-    class="input-field__icon-left"
-  ></lab900-icon>
-  <lab900-icon
-    [icon]="schema.icon"
-    *ngIf="schema?.icon?.position === 'right'"
-    matTextSuffix
-  ></lab900-icon>
-  <span class="lab900-input-field--suffix" *ngIf="suffix" matTextSuffix>{{
-    suffix | translate
-  }}</span>
-  <span class="lab900-input-field--prefix" *ngIf="prefix" matTextSuffix>{{
-    prefix | translate
-  }}</span>
-  <mat-hint
-    *ngIf="
-      hint &&
-      !(schema.options.hint.hideHintOnValidValue && input.value) &&
-      !fieldIsReadonly
-    "
-  >
-    <span [innerHTML]="hint | translate: hintValueTranslateData"></span>
-  </mat-hint>
-  <mat-hint
-    align="end"
-    *ngIf="options?.maxLength && showLengthIndicator && !fieldIsReadonly"
-    >{{ input.value?.length || 0 }}/{{ options?.maxLength }}</mat-hint
-  >
-  <mat-error *ngIf="!valid && !fieldIsReadonly"
-    ><span [innerHTML]="errorMessage$ | async"></span
-  ></mat-error>
-</mat-form-field>
+</lab900-form-field>

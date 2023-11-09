@@ -1,11 +1,13 @@
-import { Component, HostBinding } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { TranslateService } from '@ngx-translate/core';
 import {
   FormFieldDateYearMonthPicker,
   FormFieldDateYearMonthPickerOptions,
 } from './date-year-month-field.model';
-import { MatDatepicker } from '@angular/material/datepicker';
+import {
+  MatDatepicker,
+  MatDatepickerModule,
+} from '@angular/material/datepicker';
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
@@ -16,11 +18,29 @@ import {
   MomentDateAdapter,
 } from '@angular/material-moment-adapter';
 import { Moment } from 'moment';
+import { FormFieldService } from '../../../services/form-field.service';
+import { AsyncPipe, NgIf } from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FormFieldComponent } from '../../form-field/form-field.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'lab900-date-year-month-field',
   templateUrl: './date-year-month-field.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    AsyncPipe,
+    NgIf,
+    MatDatepickerModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    FormFieldComponent,
+    TranslateModule,
+  ],
   providers: [
+    FormFieldService,
     {
       provide: DateAdapter,
       useClass: MomentDateAdapter,
@@ -43,24 +63,11 @@ import { Moment } from 'moment';
   ],
 })
 export class DateYearMonthFieldComponent extends FormComponent<FormFieldDateYearMonthPicker> {
-  @HostBinding('class')
-  public classList = 'lab900-form-field';
-
-  public constructor(translateService: TranslateService) {
-    super(translateService);
-  }
-
-  public get startView(): FormFieldDateYearMonthPickerOptions['startView'] {
-    return this.schema?.options?.startView ?? 'multi-year';
-  }
-
-  public get maxDate(): FormFieldDateYearMonthPickerOptions['maxDate'] {
-    return this.schema?.options?.maxDate;
-  }
-
-  public get minDate(): FormFieldDateYearMonthPickerOptions['minDate'] {
-    return this.schema?.options?.minDate;
-  }
+  public readonly maxDate$ = this.getOption$<Date | null>('maxDate');
+  public readonly minDate$ = this.getOption$<Date | null>('minDate');
+  public readonly startView$ = this.getOption$<
+    FormFieldDateYearMonthPickerOptions['startView']
+  >('startView', 'multi-year');
 
   public monthSelectedHandler(
     chosenMonthDate: Moment,

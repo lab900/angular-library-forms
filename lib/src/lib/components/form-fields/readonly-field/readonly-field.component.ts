@@ -1,40 +1,36 @@
-import { Component, HostBinding, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { TranslateService } from '@ngx-translate/core';
+import { FormFieldService } from '../../../services/form-field.service';
+import { combineLatest, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { AsyncPipe, NgIf } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'lab900-readonly',
   templateUrl: './readonly-field.component.html',
+  providers: [FormFieldService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [AsyncPipe, TranslateModule, NgIf],
 })
 export class ReadonlyFieldComponent extends FormComponent implements OnDestroy {
-  @HostBinding('class')
-  public classList = 'lab900-form-field';
+  public readonly value$: Observable<string | undefined> = combineLatest([
+    this.formFieldService.groupValue$,
+    this.formFieldService.controlValue$,
+    this.formFieldService.options$,
+  ]).pipe(
+    map(([groupValue, value, options]) =>
+      options?.readonlyDisplay ? options.readonlyDisplay(groupValue) : value
+    )
+  );
 
-  public value: any;
+  public readonly containerClass$ = this.getOption$<string>(
+    'readonlyContainerClass'
+  );
 
-  public constructor(translateService: TranslateService) {
-    super(translateService);
-    setTimeout(() => {
-      if (this.group?.controls && this.fieldAttribute) {
-        this.setValue(this.group.controls[this.fieldAttribute].value);
-        this.addSubscription(
-          this.group.controls[this.fieldAttribute].valueChanges,
-          (value: any) => setTimeout(() => this.setValue(value))
-        );
-      }
-    });
-  }
-
-  private setValue(value: any): void {
-    this.value = this.options?.readonlyDisplay
-      ? this.options?.readonlyDisplay(this.group.value)
-      : value;
-  }
-
-  public getReadonlyContainerClass(): string {
-    if (typeof this.options?.readonlyContainerClass === 'function') {
-      return this.options.readonlyContainerClass(this.group.value);
-    }
-    return this.options?.readonlyContainerClass;
-  }
+  public readonly label$: Observable<string | undefined> =
+    this.formFieldService.schema$.pipe(
+      map((schema) => schema.options?.readonlyLabel ?? schema.title)
+    );
 }

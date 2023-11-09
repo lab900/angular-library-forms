@@ -11,6 +11,7 @@ import {
 import { MatSelect } from '@angular/material/select';
 import { debounceTime, takeUntil, tap } from 'rxjs/operators';
 import { fromEvent, Subject } from 'rxjs';
+import { FormFieldSelectInfiniteScroll } from './field-select.model';
 
 /** The height of the select items in `em` units. */
 const SELECT_ITEM_HEIGHT_EM = 3;
@@ -20,14 +21,16 @@ const SELECT_ITEM_HEIGHT_EM = 3;
  */
 @Directive({
   selector: 'mat-select[lab900InfiniteScroll]',
+  standalone: true,
 })
 export class SelectInfiniteScrollDirective
   implements OnInit, OnDestroy, AfterViewInit
 {
-  @Input() public threshold = '15%';
-  @Input() public debounceTime = 150;
-  @Input() public complete!: boolean;
-  @Output() public infiniteScroll = new EventEmitter<void>();
+  @Input({ required: true })
+  public lab900InfiniteScroll: FormFieldSelectInfiniteScroll;
+
+  @Output()
+  public readonly infiniteScroll = new EventEmitter<void>();
 
   private panel!: Element;
   private thrPx = 0;
@@ -39,10 +42,16 @@ export class SelectInfiniteScrollDirective
   public constructor(private matSelect: MatSelect, private ngZone: NgZone) {}
 
   public ngOnInit(): void {
+    if (!this.lab900InfiniteScroll?.enabled) {
+      return;
+    }
     this.evaluateThreshold();
   }
 
   public ngAfterViewInit(): void {
+    if (!this.lab900InfiniteScroll?.enabled) {
+      return;
+    }
     this.matSelect.openedChange
       .pipe(takeUntil(this.destroyed$))
       .subscribe((opened) => {
@@ -60,20 +69,23 @@ export class SelectInfiniteScrollDirective
   }
 
   private evaluateThreshold(): void {
-    if (this.threshold.lastIndexOf('%') > -1) {
+    const threshold = this.lab900InfiniteScroll?.threshold ?? '15%';
+    if (threshold.lastIndexOf('%') > -1) {
       this.thrPx = 0;
-      this.thrPc = parseFloat(this.threshold) / 100;
+      this.thrPc = parseFloat(threshold) / 100;
     } else {
-      this.thrPx = parseFloat(this.threshold);
+      this.thrPx = parseFloat(threshold);
       this.thrPc = 0;
     }
   }
 
   private registerScrollListener(): void {
+    const timing = this.lab900InfiniteScroll?.debounceTime ?? 150;
+
     fromEvent(this.panel, 'scroll')
       .pipe(
         takeUntil(this.destroyed$),
-        debounceTime(this.debounceTime),
+        debounceTime(timing),
         tap((event) => {
           this.handleScrollEvent(event);
         })
@@ -83,9 +95,6 @@ export class SelectInfiniteScrollDirective
 
   private handleScrollEvent(event: any): void {
     this.ngZone.runOutsideAngular(() => {
-      if (this.complete) {
-        return;
-      }
       const countOfRenderedOptions = this.matSelect.options.length;
       const infiniteScrollDistance =
         this.singleOptionHeight * countOfRenderedOptions;

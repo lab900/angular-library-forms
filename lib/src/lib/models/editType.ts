@@ -6,11 +6,6 @@ export enum EditType {
   Wysiwyg = 'Wysiwyg',
   Input = 'Input',
   Password = 'Password',
-  /**
-   *
-   * @deprecated Deprecated in favor of {@link FilePreview}
-   */
-  File = 'File',
   FilePreview = 'FilePreview',
   DragNDrop = 'DragNDrop',
   Search = 'Search',

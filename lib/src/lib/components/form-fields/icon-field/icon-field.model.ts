@@ -2,11 +2,11 @@ import { EditType } from '../../../models/editType';
 import {
   FormFieldBase,
   FormFieldBaseOptions,
-  Icon,
+  FormIcon,
 } from '../../../models/form-field-base';
 
 export interface FormFieldIconOptions extends FormFieldBaseOptions {
-  icon?: Icon;
+  icon?: FormIcon;
 }
 
 export interface FormFieldIcon<T extends string | number = string>

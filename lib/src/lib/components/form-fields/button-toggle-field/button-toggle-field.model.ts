@@ -1,23 +1,25 @@
 import {
   FormFieldBase,
   FormFieldBaseOptions,
-  Icon,
+  FormIcon,
 } from '../../../models/form-field-base';
 import { ThemePalette } from '@angular/material/core';
 import { EditType } from '../../../models/editType';
 import { TooltipPosition } from '@angular/material/tooltip';
 
+export interface FormFieldButtonOption {
+  value: any;
+  label?: string;
+  icon?: FormIcon;
+  buttonClass?: string;
+  tooltip?: {
+    text: string;
+    position?: TooltipPosition;
+  };
+}
+
 export interface FormFieldButtonToggleOptions extends FormFieldBaseOptions {
-  buttonOptions: {
-    value: any;
-    label?: string;
-    icon?: Icon & { position?: 'left' | 'right' };
-    buttonClass?: string;
-    tooltip?: {
-      text: string;
-      position?: TooltipPosition;
-    };
-  }[];
+  buttonOptions: FormFieldButtonOption[];
   color?: ThemePalette;
   deselectOnClick?: boolean;
 }

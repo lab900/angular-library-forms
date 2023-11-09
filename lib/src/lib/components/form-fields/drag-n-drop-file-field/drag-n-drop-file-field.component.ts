@@ -1,29 +1,56 @@
-import { Component, ElementRef, HostBinding, ViewChild } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
 import { Lab900File } from '../../../models/Lab900File';
 import { formatBytes } from '../../../utils/image.utils';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldDragNDropFilePreview } from './drag-n-drop-file-field.model';
+import { FormFieldService } from '../../../services/form-field.service';
+import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
+import { FileDropDirective } from '../../../directives/file-drop.directive';
+import { combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'lab900-drag-n-drop-file-field',
   templateUrl: './drag-n-drop-file-field.component.html',
   styleUrls: ['./drag-n-drop-file-field.component.scss'],
+  providers: [FormFieldService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    NgIf,
+    AsyncPipe,
+    FileDropDirective,
+    MatIconModule,
+    TranslateModule,
+    MatButtonModule,
+    NgForOf,
+  ],
 })
 export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDropFilePreview> {
-  @HostBinding('class')
-  public classList = 'lab900-form-field';
+  public readonly compact$ = this.getOption$<boolean>('compact', false);
+  public readonly isCompact$ = combineLatest([
+    this.compact$,
+    this.controlValue$,
+  ]).pipe(map(([compact, value]) => compact && value?.length > 0));
+  public readonly dropFilesText$ = this.getOption$<string>(
+    'dropFilesText',
+    'Drop Files'
+  );
+  public readonly dropFilesBtn$ = this.getOption$<string>(
+    'dropFilesButton',
+    'Upload Files'
+  );
 
   @ViewChild('fileField')
   private fileFieldComponent: ElementRef;
-
-  public constructor(translateService: TranslateService) {
-    super(translateService);
-  }
-
-  public get files(): Lab900File[] {
-    return (this.fieldControl?.value as Lab900File[]) ?? [];
-  }
 
   public handleInput(target: EventTarget): void {
     this.handleFileList((target as HTMLInputElement)?.files);
@@ -63,9 +90,9 @@ export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDro
     return formatBytes(size);
   }
 
-  public deleteFile(file: Lab900File): void {
-    const files = new Set(this.files);
-    files.delete(file);
-    this.setFieldControlValue(Array.from(files));
+  public deleteFile(file: Lab900File, files: Lab900File[]): void {
+    const currentFiles = new Set(files);
+    currentFiles.delete(file);
+    this.setFieldControlValue(Array.from(currentFiles));
   }
 }

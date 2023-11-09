@@ -62,7 +62,7 @@ export class FormFieldSelectAdvancedExampleComponent {
               selectOptions: (filter, fieldControl, schema) =>
                 this.getSelectOptions({
                   filter,
-                  author: fieldControl.value,
+                  author: fieldControl?.value,
                   schema,
                 }),
               colspan: 4,
@@ -81,7 +81,7 @@ export class FormFieldSelectAdvancedExampleComponent {
               selectOptions: (filter, fieldControl, schema) =>
                 this.getSelectOptions({
                   filter,
-                  author: fieldControl.value,
+                  author: fieldControl?.value,
                   schema,
                 }),
               colspan: 4,
@@ -96,7 +96,8 @@ export class FormFieldSelectAdvancedExampleComponent {
                     title: searchQuery,
                     key: searchQuery,
                   };
-                  select.selectOptions = [{ value: book, label: book.title }];
+
+                  // select.selectOptions = [{ value: book, label: book.title }];
                   select.fieldControl.setValue({
                     title: searchQuery,
                     key: searchQuery,
@@ -117,7 +118,7 @@ export class FormFieldSelectAdvancedExampleComponent {
               selectOptions: (filter, fieldControl, schema) =>
                 this.getSelectOptions({
                   filter,
-                  author: fieldControl.value,
+                  author: fieldControl?.value,
                   schema,
                 }),
               colspan: 4,
@@ -168,7 +169,7 @@ export class FormFieldSelectAdvancedExampleComponent {
               selectOptions: (filter, fieldControl, schema) => {
                 return this.getSelectOptions({
                   filter,
-                  author: fieldControl.value,
+                  author: fieldControl?.value,
                   schema,
                 });
               },

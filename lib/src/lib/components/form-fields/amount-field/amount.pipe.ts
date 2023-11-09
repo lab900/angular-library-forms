@@ -11,6 +11,7 @@ import {
 
 @Pipe({
   name: 'amount',
+  standalone: true,
 })
 export class AmountPipe implements PipeTransform {
   private readonly locale: string;
