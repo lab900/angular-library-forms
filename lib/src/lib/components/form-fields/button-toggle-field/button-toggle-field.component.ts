@@ -72,11 +72,7 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
       .pipe(take(1))
       .subscribe(([control, options]) => {
         if (options?.deselectOnClick && control.value === $event.value) {
-          setTimeout(() => {
-            control.setValue(null);
-            control.markAsDirty();
-            control.markAsTouched();
-          });
+          this.updateControlValue(null);
         }
       });
   }

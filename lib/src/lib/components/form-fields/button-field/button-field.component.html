@@ -1,4 +1,4 @@
-<div [formGroup]="group$ | async" *ngIf="(hideField$ | async) === false">
+<div *ngIf="(hideField$ | async) === false">
   <div *ngIf="label$ | async as label" class="lab900-button-field__label">
     <mat-label>{{ label | translate }}</mat-label>
   </div>

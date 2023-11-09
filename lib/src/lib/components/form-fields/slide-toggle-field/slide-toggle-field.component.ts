@@ -12,6 +12,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormFieldErrorComponent } from '../../form-field-error/form-field-error.component';
+import { combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'lab900-slide-toggle-field',
@@ -35,4 +37,13 @@ export class SlideToggleFieldComponent extends FormComponent<FormFieldSlideToggl
     MatSlideToggle['labelPosition']
   >('labelPosition', 'after');
   public readonly label$ = this.getOption$<string>('label');
+  public readonly showErrors$ = combineLatest([
+    this.formFieldService.fieldControl$,
+    this.readonlyField$,
+  ]).pipe(
+    map(
+      ([control, readonlyField]) =>
+        !readonlyField && control?.invalid && control?.touched
+    )
+  );
 }

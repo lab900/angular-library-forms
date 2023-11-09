@@ -1,9 +1,4 @@
-import {
-  AbstractControl,
-  UntypedFormGroup,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, ValidatorFn } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { FormComponent } from '../components/AbstractFormComponent';
@@ -167,9 +162,6 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
         this.fieldControl.setValidators(newValidators);
         this.fieldControl.updateValueAndValidity();
         this.component.schema.validators = newValidators;
-        this.component.fieldIsRequired = newValidators.includes(
-          Validators.required
-        );
       }
       if (!this.schema.options?.visibleFn) {
         this.runVisibilityConditions(value);

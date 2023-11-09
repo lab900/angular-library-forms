@@ -17,7 +17,7 @@
     [lab900InputAutofocus]="autofocus$ | async"
     lab900AmountInput
     [formControlName]="fieldAttribute$ | async"
-    [required]="fieldIsRequired"
+    [required]="requiredField$ | async"
     [readonly]="readonlyField$ | async"
     [class.readonly]="readonlyField$ | async"
     [style]="style$ | async"

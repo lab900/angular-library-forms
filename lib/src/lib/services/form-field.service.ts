@@ -6,7 +6,7 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { filter, map, shareReplay } from 'rxjs/operators';
+import { filter, map, shareReplay, take } from 'rxjs/operators';
 import {
   AbstractControl,
   FormControlStatus,
@@ -86,12 +86,14 @@ export class FormFieldService<S extends Lab900FormField = Lab900FormField> {
   ]).pipe(map(([group, fieldAttribute]) => group.get(fieldAttribute)));
 
   public readonly controlValue$: Observable<any> = this.fieldControl$.pipe(
+    filter((control) => !!control),
     switchMap((control) => control.valueChanges.pipe(startWith(control.value))),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
   public readonly controlStatus$: Observable<FormControlStatus> =
     this.fieldControl$.pipe(
+      filter((control) => !!control),
       switchMap((control) =>
         control.statusChanges.pipe(startWith(control.status))
       ),
@@ -123,5 +125,15 @@ export class FormFieldService<S extends Lab900FormField = Lab900FormField> {
         return fallback;
       })
     );
+  }
+
+  public updateControlValue(value: any, markAsDirty = true): void {
+    this.fieldControl$.pipe(take(1)).subscribe((control) => {
+      control.setValue(value);
+      if (markAsDirty) {
+        control.markAsDirty();
+        control.markAsTouched();
+      }
+    });
   }
 }

@@ -9,7 +9,7 @@
     [formControlName]="fieldAttribute$ | async"
     [matAutocomplete]="auto"
     [readonly]="readonlyField$ | async"
-    [required]="fieldIsRequired"
+    [required]="requiredField$ | async"
     matInput
     placeholder="{{ (placeholder$ | async) ?? '' | translate }}"
     type="text"

@@ -15,7 +15,7 @@
     [type]="type$ | async"
     [placeholder]="(placeholder$ | async) ?? '' | translate"
     [formControlName]="fieldAttribute$ | async"
-    [required]="fieldIsRequired"
+    [required]="requiredField$ | async"
     [readonly]="readonlyField$ | async"
     [class.readonly]="readonlyField$ | async"
     [mask]="(fieldMask$ | async)?.mask"

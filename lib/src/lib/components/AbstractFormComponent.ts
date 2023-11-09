@@ -1,19 +1,11 @@
 import { AbstractControl, UntypedFormGroup } from '@angular/forms';
-import {
-  AfterContentInit,
-  AfterViewInit,
-  Directive,
-  inject,
-  Input,
-  OnDestroy,
-} from '@angular/core';
+import { AfterViewInit, Directive, inject, Input } from '@angular/core';
 import { combineLatest, Observable, switchMap } from 'rxjs';
 import { FieldConditions } from '../models/IFieldConditions';
 import { FormFieldUtils } from '../utils/form-field.utils';
 import { SubscriptionBasedDirective } from '../directives/subscription-based.directive';
 import { Lab900FormField } from '../models/lab900-form-field.type';
 import { FormFieldHint, ValueLabel } from '../models/form-field-base';
-import { Lab900FormBuilderService } from '../services/form-builder.service';
 import { filter, map, withLatestFrom } from 'rxjs/operators';
 import { FormFieldService } from '../services/form-field.service';
 
@@ -22,7 +14,7 @@ type controlError = { error: string; errorParams?: Record<string, string> };
 @Directive()
 export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   extends SubscriptionBasedDirective
-  implements AfterViewInit, OnDestroy, AfterContentInit
+  implements AfterViewInit
 {
   protected readonly formFieldService: FormFieldService<S> =
     inject(FormFieldService);
@@ -65,9 +57,6 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
 
   @Input()
   public readonly = false; // Global form readonly flag
-
-  public fieldIsReadonly!: boolean;
-  public fieldIsRequired!: boolean;
 
   public get fieldControl(): AbstractControl {
     return this.group.get(this.fieldAttribute);
@@ -120,6 +109,16 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     })
   );
 
+  public readonly requiredField$: Observable<boolean> = combineLatest([
+    this.formFieldService.groupValue$,
+    this.formFieldService.groupValue$,
+    this.readonlyField$,
+  ]).pipe(
+    map(([groupValue, schema, readonly]) =>
+      FormFieldUtils.isRequired(readonly, schema, groupValue)
+    )
+  );
+
   public controlValue$ = this.formFieldService.controlValue$;
 
   public disabled$ = combineLatest([
@@ -148,18 +147,16 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     );
   }
 
-  public ngAfterContentInit(): void {
-    if (this.group) {
-      this.setFieldProperties();
-    }
-  }
-
   public ngAfterViewInit(): void {
     if (this.group) {
       if (this.schema?.conditions?.length) {
         this.createConditions();
       }
     }
+  }
+
+  public updateControlValue(value: any, markAsDirty = true): void {
+    this.formFieldService.updateControlValue(value, markAsDirty);
   }
 
   public onConditionalChange(
@@ -178,32 +175,6 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     fallback?: T
   ): Observable<T> {
     return this.formFieldService.getOption$<T>(optionProp, fallback);
-  }
-
-  private isRequired(): void {
-    const isRequired =
-      FormFieldUtils.isRequired(
-        this.fieldIsReadonly,
-        this.schema,
-        this.group.value
-      ) ?? false;
-    if (this.fieldIsRequired != isRequired) {
-      this.fieldIsRequired = isRequired;
-      setTimeout(() => {
-        this.group
-          ?.get(this.fieldAttribute)
-          ?.setValidators(
-            Lab900FormBuilderService.addValidators(
-              this.schema,
-              this.group.value
-            )
-          );
-      });
-    }
-  }
-
-  private setFieldProperties(): void {
-    this.isRequired();
   }
 
   private createConditions(): void {

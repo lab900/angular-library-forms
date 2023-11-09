@@ -8,14 +8,14 @@
     (change)="fileChange($event)"
   />
   <button
-    *ngIf="!readonlyField$ | async"
+    *ngIf="(readonlyField$ | async) === false"
     mat-raised-button
     color="primary"
     (click)="fileField.click()"
   >
     {{ fileUploadButtonText$ | async | translate }}
   </button>
-  <div class="images-wrapper" *ngIf="files?.length">
+  <div class="images-wrapper" *ngIf="controlValue$ | async as files">
     <ng-container *ngFor="let file of files">
       <mat-card
         appearance="outlined"
@@ -23,7 +23,7 @@
         (click)="handleImageClick(file)"
       >
         <mat-icon
-          *ngIf="!readonlyField$ | async"
+          *ngIf="(readonlyField$ | async) === false"
           (click)="$event.stopPropagation(); removeFile(file)"
           class="delete-image"
           >close</mat-icon
@@ -57,7 +57,7 @@
             {{ file.fileName }}
           </p>
           <mat-icon
-            *ngIf="options?.canEditFileMetaData && !readonlyField$ | async"
+            *ngIf="canEditFileMetaData$ | async"
             (click)="$event.stopPropagation(); openPreviewDialog(file)"
             >visibility</mat-icon
           >

@@ -70,7 +70,7 @@ export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDro
         );
         return;
       }
-      this.setFieldControlValue(files);
+      this.updateControlValue(files);
     }
   }
 
@@ -80,12 +80,6 @@ export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDro
     return lab900File;
   }
 
-  private setFieldControlValue(files: Lab900File[]): void {
-    this.fieldControl.setValue(files);
-    this.fieldControl.markAsDirty();
-    this.fieldControl.markAsTouched();
-  }
-
   public formatBytes(size: number): string {
     return formatBytes(size);
   }
@@ -93,6 +87,6 @@ export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDro
   public deleteFile(file: Lab900File, files: Lab900File[]): void {
     const currentFiles = new Set(files);
     currentFiles.delete(file);
-    this.setFieldControlValue(Array.from(currentFiles));
+    this.updateControlValue(Array.from(currentFiles));
   }
 }

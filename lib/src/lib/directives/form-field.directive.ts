@@ -91,15 +91,17 @@ export class FormFieldDirective<S extends Lab900FormField = Lab900FormField> {
 
   private setComponentProps(schema: S, group: UntypedFormGroup): void {
     this.component.instance.schema = schema;
-    if (schema?.attribute?.includes('.')) {
-      const attributeMap = schema?.attribute.split('.');
-      this.component.instance.fieldAttribute = attributeMap.pop();
-      this.component.instance.group = group.get(
-        attributeMap.join('.')
-      ) as UntypedFormGroup;
-    } else {
-      this.component.instance.fieldAttribute = schema.attribute;
-      this.component.instance.group = group;
+    if (schema?.attribute) {
+      if (schema?.attribute?.includes('.')) {
+        const attributeMap = schema?.attribute.split('.');
+        this.component.instance.fieldAttribute = attributeMap.pop();
+        this.component.instance.group = group.get(
+          attributeMap.join('.')
+        ) as UntypedFormGroup;
+      } else {
+        this.component.instance.fieldAttribute = schema.attribute;
+        this.component.instance.group = group;
+      }
     }
   }
 }

@@ -63,11 +63,11 @@ export class SearchFieldComponent<T> extends FormComponent<FormFieldSearch<T>> {
     this.options
       ?.addNewFn(searchQuery)
       .pipe(take(1))
-      .subscribe((v) => this.fieldControl.setValue(v));
+      .subscribe((v) => this.updateControlValue(v));
   }
 
   public clear(inputRef: HTMLInputElement): void {
-    this.fieldControl.setValue(null);
+    this.updateControlValue(null);
     inputRef.value = '';
   }
 }

@@ -6,13 +6,13 @@ import {
 } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { Lab900File } from '../../../models/Lab900File';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ImagePreviewModalComponent } from '../../image-preview-modal/image-preview-modal.component';
 import { fetchImageBase64 } from '../../../utils/image.utils';
 import { FormFieldFilePreview } from './file-preview-field.model';
-import { take } from 'rxjs/operators';
+import { filter, switchMap, take } from 'rxjs/operators';
 import { FormFieldService } from '../../../services/form-field.service';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { Lab900ButtonModule } from '@lab900/ui';
 import { MatCardModule } from '@angular/material/card';
@@ -36,6 +36,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatIconModule,
     AuthImageDirective,
     MatTooltipModule,
+    MatDialogModule,
+    NgForOf,
   ],
 })
 export class FilePreviewFieldComponent<
@@ -54,16 +56,16 @@ export class FilePreviewFieldComponent<
     text: string;
   }>('overlay');
   public readonly showOverlay$ = this.getOption$<boolean>('showOverlay', false);
+  public readonly canEditFileMetaData$ = this.readonlyField$.pipe(
+    filter((readonly) => !readonly),
+    switchMap(() => this.getOption$<boolean>('canEditFileMetaData', false))
+  );
 
   @ViewChild('fileField')
   private fileFieldComponent: ElementRef;
 
   public constructor(private dialog: MatDialog) {
     super();
-  }
-
-  public get files(): Lab900File[] {
-    return (this.fieldControl?.value as Lab900File[]) ?? [];
   }
 
   public fileChange(event: Event): void {
@@ -104,16 +106,19 @@ export class FilePreviewFieldComponent<
   }
 
   private addFileToFieldControl(file: File): void {
-    const lab900File = file as Lab900File;
-    lab900File.fileName = file.name;
-    this.setFieldControlValue([...this.files, lab900File]);
+    this.controlValue$.pipe(take(1)).subscribe((files: Lab900File[]) => {
+      const lab900File = file as Lab900File;
+      lab900File.fileName = file.name;
+      this.updateControlValue([...files, lab900File]);
+    });
   }
 
   public removeFile(file: Lab900File): void {
-    const files: Lab900File[] = this.files;
-    files.splice(this.getFileIndex(file), 1);
-    this.setFieldControlValue(files);
-    this.fileFieldComponent.nativeElement.value = null;
+    this.controlValue$.pipe(take(1)).subscribe((files: Lab900File[]) => {
+      files.splice(this.getFileIndex(file, files), 1);
+      this.updateControlValue(files);
+      this.fileFieldComponent.nativeElement.value = null;
+    });
   }
 
   public onMetaDataChanged(
@@ -121,20 +126,20 @@ export class FilePreviewFieldComponent<
     originalData?: Lab900File
   ): Promise<boolean> {
     return new Promise<boolean>((resolve) => {
-      const files = this.files;
-      const index = this.getFileIndex(originalData);
+      const files = [];
+      const index = this.getFileIndex(originalData, files);
       if (index === -1) {
         console.error(`Couldn't find file in list`);
       }
       Object.assign(originalData, data);
       files[index] = originalData;
-      this.setFieldControlValue(files);
+      this.updateControlValue(files);
       resolve(true);
     });
   }
 
-  private getFileIndex(file: Lab900File): number {
-    return this.files.findIndex(
+  private getFileIndex(file: Lab900File, files: Lab900File[]): number {
+    return files.findIndex(
       (listFile: Lab900File) =>
         listFile.fileName === file.fileName &&
         listFile.type === file.type &&
@@ -143,11 +148,13 @@ export class FilePreviewFieldComponent<
   }
 
   public handleImageClick(file: Lab900File): void {
-    if (this.options?.canEditFileMetaData && !this.fieldIsReadonly) {
-      this.openMetaDataDialog(file);
-    } else if (file.imageSrc != null) {
-      this.openPreviewDialog(file);
-    }
+    this.canEditFileMetaData$.pipe(take(1)).subscribe((canEdit) => {
+      if (canEdit) {
+        this.openMetaDataDialog(file);
+      } else if (file.imageSrc != null) {
+        this.openPreviewDialog(file);
+      }
+    });
   }
 
   private openMetaDataDialog(file: Lab900File): void {
@@ -179,11 +186,5 @@ export class FilePreviewFieldComponent<
         .pipe(take(1))
         .subscribe();
     }
-  }
-
-  private setFieldControlValue(files: Lab900File[]): void {
-    this.fieldControl.setValue(files);
-    this.fieldControl.markAsDirty();
-    this.fieldControl.markAsTouched();
   }
 }

@@ -7,7 +7,7 @@
     type="text"
     placeholder="{{ (placeholder$ | async) ?? '' | translate }}"
     [formControlName]="fieldAttribute$ | async"
-    [required]="fieldIsRequired"
+    [required]="requiredField$ | async"
     [options]="options"
     [readonly]="readonlyField$ | async"
     [class.readonly]="readonlyField$ | async"

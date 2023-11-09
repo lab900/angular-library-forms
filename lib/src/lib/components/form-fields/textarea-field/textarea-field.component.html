@@ -8,7 +8,7 @@
     #input
     [readonly]="readonlyField$ | async"
     [formControlName]="fieldAttribute$ | async"
-    [required]="fieldIsRequired"
+    [required]="requiredField$ | async"
     matInput
     placeholder="{{ (placeholder$ | async) ?? '' | translate }}"
     class="

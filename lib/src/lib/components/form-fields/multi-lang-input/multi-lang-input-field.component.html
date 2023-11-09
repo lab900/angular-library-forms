@@ -7,7 +7,7 @@
     [formControlName]="fieldAttribute$ | async"
     [defaultLanguage]="form?.language"
     [availableLanguages]="form?.availableLanguages"
-    [required]="fieldIsRequired"
+    [required]="requiredField$ | async"
     [readonly]="readonlyField$ | async"
     [label]="title$ | async"
     [buttonColor]="buttonColor$ | async"

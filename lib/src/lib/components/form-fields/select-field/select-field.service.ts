@@ -111,9 +111,7 @@ export class SelectFieldService<T> {
         if (options?.clearFieldButton?.click) {
           options.clearFieldButton.click(control, $event);
         } else {
-          control.setValue(null);
-          control.markAsTouched();
-          control.markAsDirty();
+          this.formFieldService.updateControlValue(null);
         }
       });
   }

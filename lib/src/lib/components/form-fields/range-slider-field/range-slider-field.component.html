@@ -13,7 +13,7 @@
     [max]="max$ | async"
     [steps]="steps$ | async"
     [format]="format$ | async"
-    [required]="fieldIsRequired"
+    [required]="requiredField$ | async"
   ></lab900-mat-range-slider-field>
   <div
     class="radio-buttons-field__error"

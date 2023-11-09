@@ -97,11 +97,4 @@ export class AutocompleteMultipleFieldComponent<T>
     this.input.nativeElement.value = '';
     this.group.markAsDirty();
   }
-
-  private updateControlValue(val: T[]): void {
-    this.group.controls[this.fieldAttribute].setValue(val);
-    this.group.controls[this.fieldAttribute].updateValueAndValidity();
-    this.group.controls[this.fieldAttribute].markAsDirty();
-    this.group.controls[this.fieldAttribute].markAsTouched();
-  }
 }

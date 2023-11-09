@@ -6,12 +6,14 @@
   <mat-chip-grid #chipList [formControlName]="fieldAttribute$ | async">
     <mat-chip-row
       *ngFor="let opt of selectedOptions; let i = index"
-      [removable]="!readonlyField$ | async"
+      [removable]="(readonlyField$ | async) === false"
       selectable
       (removed)="remove(i)"
     >
       <div [innerHTML]="options.displayInputFn(opt) | translate"></div>
-      <mat-icon *ngIf="!readonlyField$ | async" matChipRemove>cancel</mat-icon>
+      <mat-icon *ngIf="(readonlyField$ | async) === false" matChipRemove
+        >cancel</mat-icon
+      >
     </mat-chip-row>
     <input
       #input

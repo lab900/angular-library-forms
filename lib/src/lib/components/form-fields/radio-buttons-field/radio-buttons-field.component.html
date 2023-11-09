@@ -8,7 +8,7 @@
   <mat-radio-group
     [formControlName]="fieldAttribute$ | async"
     [color]="color$ | async"
-    [required]="fieldIsRequired"
+    [required]="requiredField$ | async"
   >
     <mat-radio-button
       *ngFor="let value of radioOptions$ | async"

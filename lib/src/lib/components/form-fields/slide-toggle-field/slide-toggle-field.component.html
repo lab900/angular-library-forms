@@ -8,7 +8,7 @@
   <mat-slide-toggle
     [disabled]="disabled$ | async"
     [formControlName]="fieldAttribute$ | async"
-    [required]="fieldIsRequired"
+    [required]="requiredField$ | async"
     [color]="color$ | async"
     [labelPosition]="labelPosition$ | async"
   >
@@ -16,7 +16,7 @@
   </mat-slide-toggle>
   <mat-error
     class="lab900-slide-toggle-field__error"
-    *ngIf="touched && !valid && !readonlyField$ | async"
+    *ngIf="showErrors$ | async"
     >
     <lab900-form-field-error/>
   </mat-error
