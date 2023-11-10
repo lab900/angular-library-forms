@@ -19,6 +19,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthImageDirective } from '../../../directives/auth-image.directive';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'lab900-file-preview-field',
@@ -43,6 +44,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 export class FilePreviewFieldComponent<
   T
 > extends FormComponent<FormFieldFilePreview> {
+  public readonly httpCallback$ =
+    this.getOption$<(image: Lab900File) => Observable<Blob>>('httpCallback');
   public readonly accept$ = this.getOption$<string>('accept');
   public readonly multiple$ = this.getOption$<boolean>('multiple', false);
   public readonly fileUploadButtonText$ = this.getOption$<string>(
@@ -167,23 +170,30 @@ export class FilePreviewFieldComponent<
     });*/
   }
 
-  public openPreviewDialog(file: Lab900File): void {
+  public openPreviewDialog(file: Lab900File, event?: PointerEvent): void {
+    event?.stopPropagation();
     if (file.imageBase64 != null) {
       this.dialog.open(ImagePreviewModalComponent, {
         data: {
           image: file,
         },
       });
-    } else if (this.options?.httpCallback) {
-      fetchImageBase64(this.options.httpCallback, file, (result) => {
-        file.imageBase64 = result as string;
-        this.dialog.open(ImagePreviewModalComponent, {
-          data: {
-            image: file,
-          },
-        });
-      })
-        .pipe(take(1))
+    } else {
+      this.httpCallback$
+        .pipe(
+          take(1),
+          filter((httpCallback) => !!httpCallback),
+          switchMap((httpCallback) =>
+            fetchImageBase64(httpCallback, file, (result) => {
+              file.imageBase64 = result as string;
+              this.dialog.open(ImagePreviewModalComponent, {
+                data: {
+                  image: file,
+                },
+              });
+            })
+          )
+        )
         .subscribe();
     }
   }

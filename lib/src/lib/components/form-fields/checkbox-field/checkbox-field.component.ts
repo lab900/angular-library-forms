@@ -10,6 +10,8 @@ import { FormFieldErrorComponent } from '../../form-field-error/form-field-error
 import { TranslateModule } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
+import { combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'lab900-checkbox-field',
@@ -33,6 +35,14 @@ export class CheckboxFieldComponent extends FormComponent<CheckboxFieldModel> {
   public readonly disabledIndeterminate$ = this.getOption$<boolean>(
     'disabledIndeterminate'
   );
-
   public readonly color$ = this.getOption$<ThemePalette>('color', 'primary');
+  public readonly showErrors$ = combineLatest([
+    this.formFieldService.fieldControl$,
+    this.readonlyField$,
+  ]).pipe(
+    map(
+      ([control, readonlyField]) =>
+        !readonlyField && control?.invalid && control?.touched
+    )
+  );
 }

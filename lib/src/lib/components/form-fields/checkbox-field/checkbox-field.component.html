@@ -16,7 +16,7 @@
         [innerHTML]="hint.value | translate : hint.valueTranslateData"
       ></span>
     </mat-hint>
-    <mat-error>
+    <mat-error *ngIf="showErrors$ | async">
       <lab900-form-field-error />
     </mat-error>
   </div>

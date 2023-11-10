@@ -15,16 +15,6 @@ export enum EditType {
   RangeSlider = 'RangeSlider',
   Row = 'Row',
   Column = 'Column',
-  /**
-   *
-   * @deprecated Please use {@link Select} instead with search option
-   */
-  Autocomplete = 'Autocomplete',
-  /**
-   *
-   * @deprecated Please use {@link Select} instead with search option
-   */
-  AutocompleteMultiple = 'AutocompleteMultiple',
   Icon = 'Icon',
   ButtonToggle = 'ButtonToggle',
   Button = 'Button',

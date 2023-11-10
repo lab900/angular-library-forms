@@ -15,8 +15,6 @@ import { RadioButtonsFieldComponent } from '../components/form-fields/radio-butt
 import { FormRowComponent } from '../components/form-row/form-row.component';
 import { FormColumnComponent } from '../components/form-column/form-column.component';
 import { RangeSliderFieldComponent } from '../components/form-fields/range-slider-field/range-slider-field.component';
-import { AutocompleteFieldComponent } from '../components/form-fields/autocomplete-field/autocomplete-field.component';
-import { AutocompleteMultipleFieldComponent } from '../components/form-fields/autocomplete-multiple-field/autocomplete-multiple-field.component';
 import { IconFieldComponent } from '../components/form-fields/icon-field/icon-field.component';
 import { ButtonToggleFieldComponent } from '../components/form-fields/button-toggle-field/button-toggle-field.component';
 import { ButtonFieldComponent } from '../components/form-fields/button-field/button-field.component';
@@ -77,10 +75,6 @@ export const mapToComponent = (
       return FormColumnComponent;
     case EditType.RangeSlider:
       return RangeSliderFieldComponent;
-    case EditType.Autocomplete:
-      return AutocompleteFieldComponent;
-    case EditType.AutocompleteMultiple:
-      return AutocompleteMultipleFieldComponent;
     case EditType.Icon:
       return IconFieldComponent;
     case EditType.ButtonToggle:

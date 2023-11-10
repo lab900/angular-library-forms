@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { EditType, Lab900FormConfig, Lab900Form } from '@lab900/forms';
+import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 
 @Component({
   selector: 'lab900-form-field-button-toggle-example',
@@ -18,7 +18,6 @@ export class FormFieldButtonToggleExampleComponent {
         editType: EditType.ButtonToggle,
         options: {
           required: true,
-          deselectOnClick: true,
           buttonOptions: [
             {
               value: Involvement.VICTIM,

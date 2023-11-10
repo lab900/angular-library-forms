@@ -10,8 +10,6 @@ import { EditType } from '../models/editType';
 import { Injectable } from '@angular/core';
 import { FormFieldUtils } from '../utils/form-field.utils';
 import { Lab900FormField } from '../models/lab900-form-field.type';
-import { FormFieldAutocomplete } from '../components/form-fields/autocomplete-field/autocomplete-field.model';
-import { requireMatchValidator } from '../validators/require-match.validator';
 import { FormFieldRepeater } from '../components/form-fields/repeater-field/repeater-field.model';
 
 @Injectable()
@@ -48,16 +46,14 @@ export class Lab900FormBuilderService {
     if (field.options?.pattern) {
       validators.push(Validators.pattern(field.options.pattern));
     }
-    if ((field as FormFieldAutocomplete<any>).options?.requireMatch) {
-      validators.push(requireMatchValidator());
-    }
     return validators;
   }
 
   public createFormGroup<T = any>(
     fields: Lab900FormField[],
     group?: UntypedFormGroup,
-    data?: T
+    data?: T,
+    readonly?: boolean
   ): UntypedFormGroup {
     let formGroup = group ? group : this.fb.group({});
     fields.forEach((field) => {
@@ -77,13 +73,18 @@ export class Lab900FormBuilderService {
           formGroup.addControl(field.attribute, nestedGroup);
         } else {
           const fieldGroup = this.setFieldGroup(field.attribute, formGroup);
-          this.createFormField(field, fieldGroup, data);
+          this.createFormField(field, fieldGroup, data, readonly);
         }
       } else if (
         field.editType === EditType.Row ||
         field.editType === EditType.Column
       ) {
-        formGroup = this.createFormGroup(field.nestedFields, formGroup, data);
+        formGroup = this.createFormGroup(
+          field.nestedFields,
+          formGroup,
+          data,
+          readonly
+        );
       }
     });
     return formGroup;
@@ -115,7 +116,8 @@ export class Lab900FormBuilderService {
   private createFormField(
     field: Lab900FormField,
     fieldGroup: UntypedFormGroup,
-    formData: any
+    formData: any,
+    readonly: boolean
   ): void {
     const attributeMap = field.attribute.split('.');
     const attribute = attributeMap[attributeMap.length - 1];
@@ -150,7 +152,7 @@ export class Lab900FormBuilderService {
             : field.options.defaultValue;
       }
       const formControl = new UntypedFormControl(
-        data,
+        { value: data, disabled: readonly },
         Lab900FormBuilderService.addValidators(field, data)
       );
       fieldGroup.addControl(attribute, formControl);

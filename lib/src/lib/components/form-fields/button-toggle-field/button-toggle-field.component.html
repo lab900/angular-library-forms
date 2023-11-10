@@ -11,16 +11,14 @@
     </div>
     <mat-button-toggle-group
       [formControlName]="fieldAttribute$ | async"
-      [required]=""
+      [required]="requiredField$ | async"
     >
       <mat-button-toggle
-        [disabled]="disabled$ | async"
         *ngFor="let value of buttonOptions$ | async"
         [value]="value.value"
-        class="{{ value?.buttonClass }}"
-        (change)="onChange($event)"
         [matTooltip]="value?.tooltip?.text | translate"
         [matTooltipPosition]="value?.tooltip?.position || 'above'"
+        class="{{ value?.buttonClass }}"
       >
         <lab900-icon
           [icon]="value.icon"
@@ -35,7 +33,7 @@
         ></lab900-icon>
       </mat-button-toggle>
     </mat-button-toggle-group>
-    <mat-error>
+    <mat-error *ngIf="showErrors$ | async">
       <lab900-form-field-error />
     </mat-error>
   </div>

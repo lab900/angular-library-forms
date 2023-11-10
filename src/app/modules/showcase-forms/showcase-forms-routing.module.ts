@@ -9,8 +9,6 @@ import { FormCondtionalValidationExampleComponent } from './examples/form-condti
 import { FormCondtionalWithExternalFormExampleComponent } from './examples/form-condtional-with-external-form-example/form-condtional-with-external-form-example.component';
 import { FormContainerExampleComponent } from './examples/form-container-example/form-container-example.component';
 import { FormContainerReadonlyExampleComponent } from './examples/form-container-example/form-container-readonly-example.component';
-import { FormFieldAutocompleteExampleComponent } from './examples/form-field-autocomplete-example/form-field-autocomplete-example.component';
-import { FormFieldAutocompleteMultipleExampleComponent } from './examples/form-field-autocomplete-example/form-field-autocomplete-multiple-example.component';
 import { FormFieldButtonExampleComponent } from './examples/form-field-button-example/form-field-button-example.component';
 import { FormFieldButtonToggleExampleComponent } from './examples/form-field-button-toggle-example/form-field-button-toggle-example.component';
 import { FormFieldDatePickerExampleComponent } from './examples/form-field-date-picker-example/form-field-date-picker-example.component';
@@ -73,14 +71,6 @@ const routes: Routes = [
     new ShowcaseExample(
       FormCondtionalWithExternalFormExampleComponent,
       'Conditionals across multiple forms'
-    ),
-  ]),
-  new ShowcaseRoute('form-field-autocomplete', 'Form Fields: Autocomplete', [
-    new ShowcaseExample(FormFieldAutocompleteExampleComponent, 'Autocomplete'),
-    new ShowcaseExample(
-      FormFieldAutocompleteMultipleExampleComponent,
-      'Autocomplete Multiple',
-      'form-field-autocomplete-example'
     ),
   ]),
   new ShowcaseRoute('form-field-repeater', 'Form Fields: Repeater', [

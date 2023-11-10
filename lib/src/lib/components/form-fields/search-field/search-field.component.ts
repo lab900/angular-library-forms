@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldSearch } from './field-search.model';
-import { map, take } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
 import { FormFieldService } from '../../../services/form-field.service';
 import { ThemePalette } from '@angular/material/core';
 import { combineLatest } from 'rxjs';
@@ -39,6 +39,8 @@ import { SearchInputDirective } from './search-input.directive';
   ],
 })
 export class SearchFieldComponent<T> extends FormComponent<FormFieldSearch<T>> {
+  public readonly style$ = this.getOption$<string>('style');
+
   public readonly notFoundLabel$ = this.getOption$<string>(
     'notFoundLabel',
     'forms.search-field.notFoundLabel'
@@ -60,9 +62,11 @@ export class SearchFieldComponent<T> extends FormComponent<FormFieldSearch<T>> {
   ]).pipe(map(([hideClearButton, value]) => !hideClearButton && !!value));
 
   public handleAddNew(searchQuery: string): void {
-    this.options
-      ?.addNewFn(searchQuery)
-      .pipe(take(1))
+    this.options$
+      .pipe(
+        take(1),
+        switchMap((options) => options.addNewFn(searchQuery))
+      )
       .subscribe((v) => this.updateControlValue(v));
   }
 

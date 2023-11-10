@@ -33,7 +33,7 @@
         <div *ngIf="showActions$ | async" class="repeater-row__actions">
           <button
             type="button"
-            *ngIf="i + 1 > (minRows$ | async) || options?.removeAll"
+            *ngIf="canRemoveRow(i + 1) | async"
             (click)="removeFromArray(i)"
             mat-mini-fab
             class="mat-elevation-z0"

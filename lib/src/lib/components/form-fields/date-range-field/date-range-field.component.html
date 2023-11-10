@@ -14,13 +14,6 @@
       [placeholder]="endLabel$ | async | translate"
     />
   </mat-date-range-input>
-  <mat-datepicker-toggle
-    [disabled]="disabled$ | async"
-    matSuffix
-    [for]="picker"
-  ></mat-datepicker-toggle>
-  <mat-date-range-picker
-    [disabled]="disabled$ | async"
-    #picker
-  ></mat-date-range-picker>
+  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-date-range-picker #picker></mat-date-range-picker>
 </lab900-form-field>

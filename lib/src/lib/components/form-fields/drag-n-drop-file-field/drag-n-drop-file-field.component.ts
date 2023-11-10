@@ -12,7 +12,7 @@ import { FormFieldService } from '../../../services/form-field.service';
 import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
 import { FileDropDirective } from '../../../directives/file-drop.directive';
 import { combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -35,6 +35,8 @@ import { MatButtonModule } from '@angular/material/button';
   ],
 })
 export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDropFilePreview> {
+  public readonly maxFiles$ = this.getOption$<number>('maxFiles', 1);
+  public readonly multiple$ = this.maxFiles$.pipe(map((max) => max > 1));
   public readonly compact$ = this.getOption$<boolean>('compact', false);
   public readonly isCompact$ = combineLatest([
     this.compact$,
@@ -63,14 +65,16 @@ export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDro
 
   private ingestFiles(files: Lab900File[]): void {
     if (files) {
-      if (files.length > this.options.maxFiles) {
-        console.error(
-          `Too many files loaded ${files.length}, max is ${this.options.maxFiles}.
+      this.maxFiles$.pipe(take(1)).subscribe((maxFiles) => {
+        if (files.length > maxFiles) {
+          console.error(
+            `Too many files loaded ${files.length}, max is ${maxFiles}.
             Change property maxFiles to fix this.`
-        );
-        return;
-      }
-      this.updateControlValue(files);
+          );
+          return;
+        }
+        this.updateControlValue(files);
+      });
     }
   }
 

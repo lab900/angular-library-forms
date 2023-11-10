@@ -45,7 +45,7 @@
             lab900AuthImage
             class="image"
             [image]="file"
-            [httpCallback]="options?.httpCallback"
+            [httpCallback]="httpCallback$ | async"
           ></div>
         </ng-template>
         <div class="file-name">
@@ -58,7 +58,7 @@
           </p>
           <mat-icon
             *ngIf="canEditFileMetaData$ | async"
-            (click)="$event.stopPropagation(); openPreviewDialog(file)"
+            (click)="openPreviewDialog(file, $event)"
             >visibility</mat-icon
           >
         </div>

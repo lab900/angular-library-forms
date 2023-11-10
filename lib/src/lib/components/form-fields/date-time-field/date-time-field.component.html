@@ -8,20 +8,17 @@
     [ngxMatDatetimePicker]="picker"
     [formControlName]="fieldAttribute$ | async"
     [required]="requiredField$ | async"
-    [readonly]="readonlyField$ | async"
     [max]="maxDate$ | async"
     [min]="minDate$ | async"
     class="mat-mdc-input-element mat-mdc-form-field-input-control mdc-text-field__input"
   />
 
   <ngx-mat-datepicker-toggle
-    [disabled]="disabled$ | async"
     matSuffix
     [for]="picker"
   ></ngx-mat-datepicker-toggle>
   <ngx-mat-datetime-picker
     #picker
-    [disabled]="disabled$ | async"
     [showSpinners]="true"
     [showSeconds]="showSeconds$ | async"
     [startView]="startView$ | async"

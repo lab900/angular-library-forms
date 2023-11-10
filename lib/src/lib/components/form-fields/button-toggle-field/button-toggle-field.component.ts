@@ -4,10 +4,7 @@ import {
   FormFieldButtonOption,
   FormFieldButtonToggle,
 } from './button-toggle-field.model';
-import {
-  MatButtonToggleChange,
-  MatButtonToggleModule,
-} from '@angular/material/button-toggle';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormFieldService } from '../../../services/form-field.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
@@ -17,7 +14,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { IconComponent } from '@lab900/ui';
 import { FormFieldErrorComponent } from '../../form-field-error/form-field-error.component';
 import { combineLatest } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'lab900-button-toggle-field',
@@ -53,7 +50,7 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
     this.buttonOptions$,
     this.controlValue$,
     this.formFieldService.groupValue$,
-    this.formFieldService.options$,
+    this.options$,
   ]).pipe(
     map(([buttonOptions, value, groupValue, schemaOptions]) => {
       if (schemaOptions?.readonlyDisplay) {
@@ -63,17 +60,13 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
     })
   );
 
-  // If the deselect option is set and the previous value of the toggle is the same as the current value the toggle will be deselected
-  public onChange($event: MatButtonToggleChange): void {
-    combineLatest([
-      this.formFieldService.fieldControl$,
-      this.formFieldService.options$,
-    ])
-      .pipe(take(1))
-      .subscribe(([control, options]) => {
-        if (options?.deselectOnClick && control.value === $event.value) {
-          this.updateControlValue(null);
-        }
-      });
-  }
+  public readonly showErrors$ = combineLatest([
+    this.formFieldService.fieldControl$,
+    this.readonlyField$,
+  ]).pipe(
+    map(
+      ([control, readonlyField]) =>
+        !readonlyField && control?.invalid && control?.touched
+    )
+  );
 }

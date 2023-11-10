@@ -30,7 +30,7 @@
       (change)="handleInput($event.target)"
       hidden
       type="file"
-      [multiple]="options.maxFiles > 1"
+      [multiple]="multiple$ | async"
     />
   </div>
   <ng-container *ngIf="controlValue$ | async as files">

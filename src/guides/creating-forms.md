@@ -31,29 +31,27 @@ export const myFormSchema: Form = {
 
 ### Different field types
 
-| EditType                                                         | Description                                            |
-| ---------------------------------------------------------------- | ------------------------------------------------------ |
-| `EditType.Checkbox`                                              | Checkbox field                                         |
-| [`EditType.TextArea`](forms/form-field-input)                    | Texarea field                                          |
-| [`EditType.Date`](forms/form-field-datepicker)                   | Date picker                                            |
-| [`EditType.DateRange`](forms/form-field-datepicker)              | Date range picker                                      |
-| [`EditType.DateTime`](forms/form-field-datepicker)               | Date time range picker                                 |
-| `EditType.Wysiwyg`                                               | Wysiwyg editor                                         |
-| `EditType.Image`                                                 | Image uploader                                         |
-| `EditType.Input`                                                 | Input fielder (text, number, email, phone or password) |
-| `EditType.File`                                                  | File uploader                                          |
-| `EditType.Select`                                                | Selection field                                        |
-| [`EditType.Repeater`](forms/form-field-repeater)                 | Repeatable fields (FormArrays)                         |
-| [`EditType.RadioButtons`](forms/form-field-radio-buttons)        | Radio buttons                                          |
-| [`EditType.RangeSlider`](forms/form-field-range-slider)          | Range slider                                           |
-| `EditType.Row`                                                   | For rows or nested FormGroups                          |
-| `EditType.Column`                                                | For columns or nested FormGroups                       |
-| [`EditType.Autocomplete`](forms/form-field-autocomplete)         | Input fields with autocomplete                         |
-| [`EditType.AutocompleteMultiple`](forms/form-field-autocomplete) | ?                                                      |
-| [`EditType.SlideToggle`](forms/form-field-button-toggle)         | Radio buttons that are styled as buttons,              |
-| [`EditType.ButtonToggle`](forms/form-field-slide-toggle)         | Slide Toggle,                                          |
-| [`EditType.Button`](forms/form-field-button)                     | Button,                                                |
-| `EditType.Icon`                                                  | ?                                                      |
+| EditType                                                  | Description                                            |
+| --------------------------------------------------------- | ------------------------------------------------------ |
+| `EditType.Checkbox`                                       | Checkbox field                                         |
+| [`EditType.TextArea`](forms/form-field-input)             | Texarea field                                          |
+| [`EditType.Date`](forms/form-field-datepicker)            | Date picker                                            |
+| [`EditType.DateRange`](forms/form-field-datepicker)       | Date range picker                                      |
+| [`EditType.DateTime`](forms/form-field-datepicker)        | Date time range picker                                 |
+| `EditType.Wysiwyg`                                        | Wysiwyg editor                                         |
+| `EditType.Image`                                          | Image uploader                                         |
+| `EditType.Input`                                          | Input fielder (text, number, email, phone or password) |
+| `EditType.File`                                           | File uploader                                          |
+| `EditType.Select`                                         | Selection field                                        |
+| [`EditType.Repeater`](forms/form-field-repeater)          | Repeatable fields (FormArrays)                         |
+| [`EditType.RadioButtons`](forms/form-field-radio-buttons) | Radio buttons                                          |
+| [`EditType.RangeSlider`](forms/form-field-range-slider)   | Range slider                                           |
+| `EditType.Row`                                            | For rows or nested FormGroups                          |
+| `EditType.Column`                                         | For columns or nested FormGroups                       |
+| [`EditType.SlideToggle`](forms/form-field-button-toggle)  | Radio buttons that are styled as buttons,              |
+| [`EditType.ButtonToggle`](forms/form-field-slide-toggle)  | Slide Toggle,                                          |
+| [`EditType.Button`](forms/form-field-button)              | Button,                                                |
+| `EditType.Icon`                                           | ?                                                      |
 
 ### Readonly mode
 

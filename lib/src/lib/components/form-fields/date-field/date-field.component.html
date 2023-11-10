@@ -8,19 +8,10 @@
     [matDatepicker]="picker"
     [formControlName]="fieldAttribute$ | async"
     [required]="requiredField$ | async"
-    [readonly]="readonlyField$ | async"
     [max]="maxDate$ | async"
     [min]="minDate$ | async"
     class="mat-mdc-input-element mat-mdc-form-field-input-control mdc-text-field__input"
   />
-  <mat-datepicker-toggle
-    [disabled]="disabled$ | async"
-    matSuffix
-    [for]="picker"
-  ></mat-datepicker-toggle>
-  <mat-datepicker
-    [disabled]="disabled$ | async"
-    #picker
-    [startView]="startView$ | async"
-  ></mat-datepicker>
+  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker [startView]="startView$ | async"></mat-datepicker>
 </lab900-form-field>

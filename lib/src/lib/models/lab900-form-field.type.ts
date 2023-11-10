@@ -1,5 +1,3 @@
-import { FormFieldAutocomplete } from '../components/form-fields/autocomplete-field/autocomplete-field.model';
-import { FormFieldAutocompleteMulti } from '../components/form-fields/autocomplete-multiple-field/autocomplete-multiple-field.model';
 import { FormFieldButton } from '../components/form-fields/button-field/button-field.model';
 import { FormFieldButtonToggle } from '../components/form-fields/button-toggle-field/button-toggle-field.model';
 import { CheckboxFieldModel } from '../components/form-fields/checkbox-field/checkbox-field.model';
@@ -47,8 +45,6 @@ export type Lab900FormField<R = any, T extends string | number = string> =
   | FormFieldDateYearMonthPicker<T>
   | FormFieldDateTimePicker<T>
   | FormFieldDateRange<T>
-  | FormFieldAutocomplete<R, T>
-  | FormFieldAutocompleteMulti<R, T>
   | FormFieldRepeater<T>
   | FormFieldTextarea<T>
   | FormFieldAmount<T>;

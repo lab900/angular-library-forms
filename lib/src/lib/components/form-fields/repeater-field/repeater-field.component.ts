@@ -65,7 +65,7 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
   );
 
   public readonly showActions$ = combineLatest([
-    this.formFieldService.options$,
+    this.options$,
     this.readonlyField$,
   ]).pipe(
     map(([options, readonlyField]) => !readonlyField && !options?.fixedList)
@@ -106,5 +106,11 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
         arr.markAsDirty();
         arr.markAsTouched();
       });
+  }
+
+  public canRemoveRow(index: number): Observable<boolean> {
+    return this.options$.pipe(
+      map((options) => !!options?.removeAll || index > (options?.minRows ?? 1))
+    );
   }
 }

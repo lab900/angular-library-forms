@@ -17,8 +17,8 @@ import { TranslateModule } from '@ngx-translate/core';
 export class ReadonlyFieldComponent extends FormComponent {
   public readonly value$: Observable<string | undefined> = combineLatest([
     this.formFieldService.groupValue$,
-    this.formFieldService.controlValue$,
-    this.formFieldService.options$,
+    this.controlValue$,
+    this.options$,
   ]).pipe(
     map(([groupValue, value, options]) =>
       options?.readonlyDisplay ? options.readonlyDisplay(groupValue) : value

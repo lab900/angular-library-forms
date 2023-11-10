@@ -3,7 +3,6 @@
     <mat-label>{{ schema.title | translate }}</mat-label>
   </div>
   <mat-slide-toggle
-    [disabled]="disabled$ | async"
     [formControlName]="fieldAttribute$ | async"
     [required]="requiredField$ | async"
     [color]="color$ | async"

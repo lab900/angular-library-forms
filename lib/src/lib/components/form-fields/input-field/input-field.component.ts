@@ -64,7 +64,7 @@ export class InputFieldComponent extends FormComponent<FormFieldInput> {
   );
   public readonly maskPrefix$ = this.getFieldMaskProp('prefix');
   public readonly maskSuffix$ = this.getFieldMaskProp('suffix');
-  public readonly maxLength$ = this.formFieldService.options$.pipe(
+  public readonly maxLength$ = this.options$.pipe(
     filter(
       (options) =>
         !!(

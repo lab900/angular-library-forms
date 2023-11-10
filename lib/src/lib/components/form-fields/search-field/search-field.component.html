@@ -8,10 +8,10 @@
     placeholder="{{ (placeholder$ | async) ?? '' | translate }}"
     [formControlName]="fieldAttribute$ | async"
     [required]="requiredField$ | async"
-    [options]="options"
+    [options]="options$ | async"
     [readonly]="readonlyField$ | async"
     [class.readonly]="readonlyField$ | async"
-    [style]="options?.style || ''"
+    [style]="style$ | async"
     lab900InputAutofocus
     lab900SearchInput
     #searchRef="lab900SearchInput"

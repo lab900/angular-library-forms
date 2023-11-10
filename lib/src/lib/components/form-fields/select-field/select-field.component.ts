@@ -85,7 +85,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> {
 
   public readonly showClearButton$ = combineLatest([
     this.controlValue$,
-    this.formFieldService.options$,
+    this.options$,
     this.formFieldService.groupValue$,
   ]).pipe(
     map(([value, options, groupValue]) => {

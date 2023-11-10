@@ -30,7 +30,7 @@ import { filter, map } from 'rxjs/operators';
   ],
 })
 export class TextareaFieldComponent extends FormComponent<FormFieldTextarea> {
-  public readonly maxLength$ = this.formFieldService.options$.pipe(
+  public readonly maxLength$ = this.options$.pipe(
     filter(
       (options) =>
         !!(

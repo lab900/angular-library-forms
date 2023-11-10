@@ -29,10 +29,7 @@ export const showcaseFormsNavItems: NavItemGroup[] = [
             label: 'Amount',
             route: 'form-field-amount',
           },
-          {
-            label: 'Autocomplete',
-            route: 'form-field-autocomplete',
-          },
+
           {
             label: 'Input & Textarea',
             route: 'form-field-input',

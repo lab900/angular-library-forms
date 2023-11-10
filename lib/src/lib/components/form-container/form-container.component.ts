@@ -1,10 +1,4 @@
-import {
-  Component,
-  Inject,
-  Input,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
 import {
   ReactiveFormsModule,
   UntypedFormArray,
@@ -20,20 +14,38 @@ import {
   Lab900FormModuleSettings,
 } from '../../models/Lab900FormModuleSettings';
 import { isDifferent } from '@lab900/ui';
-import { NgForOf, NgIf } from '@angular/common';
+import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
 import { FormFieldDirective } from '../../directives/form-field.directive';
+import { BehaviorSubject, combineLatest } from 'rxjs';
+import { filter, map, shareReplay } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'lab900-form[schema]',
   templateUrl: './form-container.component.html',
   styleUrls: ['./form-container.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf, FormFieldDirective, NgForOf],
+  imports: [ReactiveFormsModule, NgIf, FormFieldDirective, NgForOf, AsyncPipe],
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
-export class Lab900Form<T> implements OnChanges {
+export class Lab900Form<T> {
+  private readonly _schema$ = new BehaviorSubject<Lab900FormConfig | undefined>(
+    undefined
+  );
+
+  public readonly schema$ = this._schema$.asObservable().pipe(
+    filter((schema) => !!schema),
+    shareReplay({ refCount: true, bufferSize: 1 })
+  );
+
+  public readonly formFields$ = this.schema$.pipe(
+    map((schema) => schema?.fields ?? [])
+  );
+
   @Input({ required: true })
-  public schema!: Lab900FormConfig;
+  public set schema(schema: Lab900FormConfig) {
+    this._schema$.next(schema);
+  }
 
   /**
    * You can add a object of other form groups which could be used in the conditional fields
@@ -41,8 +53,12 @@ export class Lab900Form<T> implements OnChanges {
   @Input()
   public externalForms?: Record<string, UntypedFormGroup>;
 
+  private readonly _data$ = new BehaviorSubject<T | undefined>(undefined);
+
   @Input()
-  public data?: T;
+  public set data(data: T | undefined) {
+    this._data$.next(data);
+  }
 
   @Input()
   public language?: string;
@@ -61,28 +77,19 @@ export class Lab900Form<T> implements OnChanges {
   }
 
   public get readonly(): boolean {
-    return this.schema?.readonly;
+    return this._schema$.value?.readonly;
   }
 
   public constructor(
     private fb: Lab900FormBuilderService,
     @Inject(LAB900_FORM_MODULE_SETTINGS)
     public setting: Lab900FormModuleSettings
-  ) {}
-
-  public ngOnChanges(changes: SimpleChanges): void {
-    if (changes.schema && this.schema?.fields) {
-      this.form = this.fb.createFormGroup<T>(
-        this.schema.fields,
-        null,
-        this.data
-      );
-    }
-    if (!changes?.data?.isFirstChange() && this.data) {
-      setTimeout(() =>
-        this.patchValues(this.data, changes?.data?.previousValue)
-      );
-    }
+  ) {
+    combineLatest([this.schema$, this._data$])
+      .pipe(takeUntilDestroyed())
+      .subscribe(([{ fields, readonly }, data]) => {
+        this.form = this.fb.createFormGroup<T>(fields, null, data, readonly);
+      });
   }
 
   public patchValues(data: T, prevData?: T): void {

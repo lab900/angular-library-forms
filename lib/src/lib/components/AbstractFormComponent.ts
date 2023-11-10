@@ -125,9 +125,10 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     )
   );
 
-  public controlValue$ = this.formFieldService.controlValue$;
+  public readonly controlValue$ = this.formFieldService.controlValue$;
+  public readonly options$ = this.formFieldService.options$;
 
-  public disabled$ = combineLatest([
+  public readonly disabled$ = combineLatest([
     this.formFieldService.fieldControl$,
     this.readonlyField$,
   ]).pipe(map(([control, readonly]) => readonly || control?.disabled));
