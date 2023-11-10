@@ -1,7 +1,4 @@
-<div
-  [formGroup]="group$ | async"
-  *ngIf="(hideField$ | async) === false"
->
+<div [formGroup]="group$ | async" *ngIf="(hideField$ | async) === false">
   <div *ngIf="label$ | async as label" class="lab900-slide-toggle-field__title">
     <mat-label>{{ schema.title | translate }}</mat-label>
   </div>
@@ -17,8 +14,7 @@
   <mat-error
     class="lab900-slide-toggle-field__error"
     *ngIf="showErrors$ | async"
-    >
-    <lab900-form-field-error/>
-  </mat-error
   >
+    <lab900-form-field-error />
+  </mat-error>
 </div>

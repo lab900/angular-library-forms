@@ -11,6 +11,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { FormFieldComponent } from '../../form-field/form-field.component';
 import { AsyncPipe, NgIf } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'lab900-textarea-field',
@@ -29,12 +30,16 @@ import { ReactiveFormsModule } from '@angular/forms';
   ],
 })
 export class TextareaFieldComponent extends FormComponent<FormFieldTextarea> {
-  public readonly showLengthIndicator$ = this.getOption$<boolean>(
-    'showLengthIndicator',
-    this.setting?.formField?.showLengthIndicator
+  public readonly maxLength$ = this.formFieldService.options$.pipe(
+    filter(
+      (options) =>
+        !!(
+          options?.showLengthIndicator ||
+          this.setting?.formField?.showLengthIndicator
+        ) && typeof options?.maxLength === 'number'
+    ),
+    map((o) => o.maxLength)
   );
-
-  public readonly maxLength$ = this.getOption$<number>('maxLength');
 
   public constructor(
     @Inject(LAB900_FORM_MODULE_SETTINGS)

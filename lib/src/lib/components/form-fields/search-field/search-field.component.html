@@ -16,10 +16,7 @@
     lab900SearchInput
     #searchRef="lab900SearchInput"
     #inputRef
-    class="
-      mat-mdc-input-element mat-mdc-form-field-input-control
-      mdc-text-field__input
-    "
+    class="mat-mdc-input-element mat-mdc-form-field-input-control mdc-text-field__input"
   />
   <button
     mat-icon-button
@@ -28,7 +25,7 @@
     *ngIf="!!inputRef.value && (searchRef?.noResult$ | async) === true"
     (click)="handleAddNew(inputRef.value)"
     [matTooltip]="
-      addNewLabel$ | async | translate: { searchQuery: inputRef.value }
+      addNewLabel$ | async | translate : { searchQuery: inputRef.value }
     "
     style="align-items: flex-start"
   >
@@ -51,6 +48,6 @@
     style="display: inline-flex"
   ></mat-spinner>
   <mat-hint *ngIf="!!inputRef.value && (searchRef?.noResult$ | async) === true">
-    {{ notFoundLabel$ | async | translate: { value: inputRef.value } }}
+    {{ notFoundLabel$ | async | translate : { value: inputRef.value } }}
   </mat-hint>
 </lab900-form-field>

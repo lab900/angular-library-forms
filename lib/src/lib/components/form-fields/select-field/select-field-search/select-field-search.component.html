@@ -14,7 +14,7 @@
       <ng-container *ngIf="searchQuery?.length">
         <span>{{
           search?.notFoundLabel ?? 'form.field.no_options_found'
-            | translate: { searchQuery: searchQuery }
+            | translate : { searchQuery: searchQuery }
         }}</span>
         <button
           *ngIf="search?.addNewFn"
@@ -25,7 +25,7 @@
           <mat-icon>add</mat-icon>
           <span>{{
             search?.addNewLabel ?? 'form.field.add_new'
-              | translate: { searchQuery: searchQuery }
+              | translate : { searchQuery: searchQuery }
           }}</span>
         </button>
       </ng-container>

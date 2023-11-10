@@ -15,10 +15,7 @@
     [format]="format$ | async"
     [required]="requiredField$ | async"
   ></lab900-mat-range-slider-field>
-  <div
-    class="radio-buttons-field__error"
-    *ngIf="showErrors$ | async"
-  >
+  <div class="radio-buttons-field__error" *ngIf="showErrors$ | async">
     <mat-error>
       <lab900-form-field-error />
     </mat-error>

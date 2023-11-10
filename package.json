@@ -16,8 +16,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "pretty:check": "prettier -c \"{src,lib}/**/**.{ts,js}\"",
-    "pretty:fix": "prettier  --write \"{src,lib}/**/**.{ts,js}\"",
+    "pretty:check": "prettier -c \"{src,lib}/**/**.{ts,js,html,scss}\"",
+    "pretty:fix": "prettier  --write \"{src,lib}/**/**.{ts,js,html,scss}\"",
     "pretty:html:fix": "prettier --no-config --print-width=140 --write \"{src,lib}/**/**.html\"",
     "clean": "rm -rf node_modules/ && npm install"
   },
@@ -87,7 +87,7 @@
     "karma-jasmine-html-reporter": "^1.7.0",
     "lint-staged": "^10.5.4",
     "ng-packagr": "^16.2.3",
-    "prettier": "2.3.1",
+    "prettier": "2.8.8",
     "protractor": "~7.0.0",
     "ts-node": "~8.3.0",
     "typescript": "~4.9.5"

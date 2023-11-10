@@ -72,6 +72,9 @@ export class FormFieldComponent<S extends Lab900FormField = Lab900FormField>
   @Input()
   public prefix?: string;
 
+  @Input()
+  public maxLength?: number;
+
   public ngOnInit(): void {
     this.matFormField._control = this.formFieldControl;
   }

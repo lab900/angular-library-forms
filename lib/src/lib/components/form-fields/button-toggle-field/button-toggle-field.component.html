@@ -9,7 +9,10 @@
     >
       <mat-label>{{ label | translate }}</mat-label>
     </div>
-    <mat-button-toggle-group [formControlName]="fieldAttribute$ | async" [required]="">
+    <mat-button-toggle-group
+      [formControlName]="fieldAttribute$ | async"
+      [required]=""
+    >
       <mat-button-toggle
         [disabled]="disabled$ | async"
         *ngFor="let value of buttonOptions$ | async"
@@ -33,7 +36,7 @@
       </mat-button-toggle>
     </mat-button-toggle-group>
     <mat-error>
-      <lab900-form-field-error/>
+      <lab900-form-field-error />
     </mat-error>
   </div>
   <ng-template #readonlyFieldTemplate>

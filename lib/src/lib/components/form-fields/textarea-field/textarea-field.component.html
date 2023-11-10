@@ -1,23 +1,14 @@
 <lab900-form-field
   *ngIf="(hideField$ | async) === false"
   [formGroup]="group$ | async"
-  class="lab900-textarea-field"
-  id="lab900-textarea-field-{{ fieldAttribute }}"
+  [maxLength]="maxLength$ | async"
 >
   <textarea
-    #input
     [readonly]="readonlyField$ | async"
     [formControlName]="fieldAttribute$ | async"
     [required]="requiredField$ | async"
     matInput
     placeholder="{{ (placeholder$ | async) ?? '' | translate }}"
-    class="
-      mat-mdc-input-element mat-mdc-form-field-input-control
-      mdc-text-field__input
-    "
+    class="mat-mdc-input-element mat-mdc-form-field-input-control mdc-text-field__input"
   ></textarea>
-  to check hint
-  <mat-hint *ngIf="showLengthIndicator$ | async" align="end">
-    {{ input.value?.length || 0 }}/{{ maxLength$ | async }}
-  </mat-hint>
 </lab900-form-field>

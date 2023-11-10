@@ -3,18 +3,31 @@
     {{ label | translate }}
   </mat-label>
   <ng-content></ng-content>
-  <div matPrefix *ngIf="icon?.position === 'left'" class="lab900-field-icon lab900-field-icon--prefix" [class.clickable]="icon?.onClick">
-    <lab900-icon  [icon]="icon" (click)="icon?.onClick?.($event)" />
+  <div
+    matPrefix
+    *ngIf="icon?.position === 'left'"
+    class="lab900-field-icon lab900-field-icon--prefix"
+    [class.clickable]="icon?.onClick"
+  >
+    <lab900-icon [icon]="icon" (click)="icon?.onClick?.($event)" />
   </div>
-  <div matSuffix *ngIf="icon?.position === 'right'" class="lab900-field-icon lab900-field-icon--suffix" [class.clickable]="icon?.onClick">
-    <lab900-icon  [icon]="icon" (click)="icon?.onClick?.($event)" />
+  <div
+    matSuffix
+    *ngIf="icon?.position === 'right'"
+    class="lab900-field-icon lab900-field-icon--suffix"
+    [class.clickable]="icon?.onClick"
+  >
+    <lab900-icon [icon]="icon" (click)="icon?.onClick?.($event)" />
   </div>
   <span *ngIf="suffix" matTextSuffix>{{ suffix | translate }}</span>
   <span *ngIf="prefix" matTextSuffix>{{ prefix | translate }}</span>
   <mat-hint *ngIf="hint$ | async as hint">
-    <span [innerHTML]="hint.value | translate: hint.valueTranslateData"></span>
+    <span [innerHTML]="hint.value | translate : hint.valueTranslateData"></span>
+  </mat-hint>
+  <mat-hint *ngIf="maxLength" align="end">
+    {{ formFieldControl.value?.length || 0 }}/{{ maxLength }}
   </mat-hint>
   <mat-error>
-    <lab900-form-field-error/>
+    <lab900-form-field-error />
   </mat-error>
 </mat-form-field>

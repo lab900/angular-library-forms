@@ -6,7 +6,7 @@ import {
 } from '../../../models/Lab900FormModuleSettings';
 import { FieldMask, FormFieldInput } from './input-field.model';
 import { FormFieldService } from '../../../services/form-field.service';
-import { map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { FormFieldComponent } from '../../form-field/form-field.component';
 import { AsyncPipe, NgIf } from '@angular/common';
@@ -41,17 +41,14 @@ export class InputFieldComponent extends FormComponent<FormFieldInput> {
   public readonly icon$ = this.formFieldService.schema$.pipe(
     map((schema) => schema?.icon)
   );
-  public readonly showLengthIndicator$ = this.getOption$<boolean>(
-    'showLengthIndicator',
-    this.setting?.formField?.showLengthIndicator
-  );
   public readonly type$ = this.getOption$<string>('type');
   public readonly align$ = this.getOption$<'left' | 'right'>('align', 'left');
 
   /**
    * All properties related to field masks
    */
-  public readonly fieldMask$ = this.getOption$<FieldMask>('fieldMask');
+
+  public readonly fieldMask$ = this.getFieldMaskProp('mask');
   public readonly allowNegativeNumbers$ = this.getFieldMaskProp(
     'allowNegativeNumbers'
   );
@@ -67,6 +64,16 @@ export class InputFieldComponent extends FormComponent<FormFieldInput> {
   );
   public readonly maskPrefix$ = this.getFieldMaskProp('prefix');
   public readonly maskSuffix$ = this.getFieldMaskProp('suffix');
+  public readonly maxLength$ = this.formFieldService.options$.pipe(
+    filter(
+      (options) =>
+        !!(
+          options?.showLengthIndicator ||
+          this.setting?.formField?.showLengthIndicator
+        ) && typeof options?.maxLength === 'number'
+    ),
+    map((o) => o.maxLength)
+  );
 
   public constructor(
     @Inject(LAB900_FORM_MODULE_SETTINGS)
@@ -76,7 +83,7 @@ export class InputFieldComponent extends FormComponent<FormFieldInput> {
   }
 
   private getFieldMaskProp(key: keyof FieldMask): Observable<any> {
-    return this.fieldMask$.pipe(
+    return this.getOption$('fieldMask').pipe(
       map((fieldMask) => fieldMask?.[key] ?? this.setting?.fieldMask?.[key])
     );
   }

@@ -47,8 +47,9 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
     'accent'
   );
 
-  public readonly tooltip$ =
-    this.getOption$<{ text: string; icon?: string }>('infoTooltip');
+  public readonly tooltip$ = this.getOption$<{ text: string; icon?: string }>(
+    'infoTooltip'
+  );
 
   public readonly nestedFields$ = this.formFieldService.schema$.pipe(
     map((schema) => schema?.nestedFields ?? [])

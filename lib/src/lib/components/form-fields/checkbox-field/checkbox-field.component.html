@@ -13,11 +13,11 @@
   >
     <mat-hint *ngIf="hint$ | async as hint">
       <span
-        [innerHTML]="hint.value | translate: hint.valueTranslateData"
+        [innerHTML]="hint.value | translate : hint.valueTranslateData"
       ></span>
     </mat-hint>
     <mat-error>
-      <lab900-form-field-error/>
+      <lab900-form-field-error />
     </mat-error>
   </div>
 </div>

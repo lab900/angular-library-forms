@@ -4,13 +4,12 @@
   [icon]="icon$ | async"
   [suffix]="suffix$ | async"
   [prefix]="prefix$ | async"
+  [maxLength]="maxLength$ | async"
 >
   <input
+    #input
     matInput
-    class="
-      mat-mdc-input-element mat-mdc-form-field-input-control
-      mdc-text-field__input
-    "
+    class="mat-mdc-input-element mat-mdc-form-field-input-control mdc-text-field__input"
     [style.text-align]="align$ | async"
     [type]="type$ | async"
     [placeholder]="(placeholder$ | async) ?? '' | translate"
@@ -18,7 +17,7 @@
     [required]="requiredField$ | async"
     [readonly]="readonlyField$ | async"
     [class.readonly]="readonlyField$ | async"
-    [mask]="(fieldMask$ | async)?.mask"
+    [mask]="fieldMask$ | async"
     [prefix]="maskPrefix$ | async"
     [suffix]="maskSuffix$ | async"
     [placeHolderCharacter]="placeHolderCharacter$ | async"
