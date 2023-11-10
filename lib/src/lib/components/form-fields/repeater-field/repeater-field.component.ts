@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, forwardRef } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { ReactiveFormsModule, UntypedFormArray } from '@angular/forms';
 import { Lab900FormBuilderService } from '../../../services/form-builder.service';
@@ -31,10 +31,10 @@ import { ThemePalette } from '@angular/material/core';
     MatButtonModule,
     NgIf,
     AsyncPipe,
-    FormFieldDirective,
     NgForOf,
     MatTooltipModule,
     ReactiveFormsModule,
+    forwardRef(() => FormFieldDirective),
   ],
 })
 export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
@@ -46,7 +46,6 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
     'buttonColor',
     'accent'
   );
-
   public readonly tooltip$ = this.getOption$<{ text: string; icon?: string }>(
     'infoTooltip'
   );

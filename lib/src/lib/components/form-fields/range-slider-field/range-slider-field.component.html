@@ -3,7 +3,7 @@
     *ngIf="label$ | async as label"
     class="lab900-form-field-label"
     translate
-    >{{ label }}</span
+    >{{ label | translate }}</span
   >
   <lab900-mat-range-slider-field
     [formControlName]="fieldAttribute$ | async"

@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FormFieldErrorComponent } from '../../form-field-error/form-field-error.component';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'lab900-range-slider-field',
@@ -23,6 +24,7 @@ import { map } from 'rxjs/operators';
     MatRangeSliderFieldComponent,
     MatInputModule,
     FormFieldErrorComponent,
+    TranslateModule,
   ],
 })
 export class RangeSliderFieldComponent extends FormComponent<FormFieldRangeSlider> {

@@ -28,6 +28,7 @@ import { DragNDropFileFieldComponent } from '../components/form-fields/drag-n-dr
 import { AmountFieldComponent } from '../components/form-fields/amount-field/amount-field.component';
 import { SearchFieldComponent } from '../components/form-fields/search-field/search-field.component';
 import { UnknownFieldComponent } from '../components/form-fields/unknown-field/unknown-field.component';
+import { RepeaterFieldComponent } from '../components/form-fields/repeater-field/repeater-field.component';
 
 export const mapToComponent = (
   editType: EditType,
@@ -67,7 +68,7 @@ export const mapToComponent = (
     case EditType.TextArea:
       return TextareaFieldComponent;
     case EditType.Repeater:
-      return ReadonlyFieldComponent;
+      return RepeaterFieldComponent;
     case EditType.RadioButtons:
       return RadioButtonsFieldComponent;
     case EditType.Row:
