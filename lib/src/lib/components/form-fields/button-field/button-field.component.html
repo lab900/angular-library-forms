@@ -7,7 +7,7 @@
     [color]="color$ | async"
     [disabled]="disabled$ | async"
     (btnClick)="handleClick($event)"
-    [label]="label$ | async"
+    [label]="buttonLabel$ | async"
     [matTooltip]="(tooltip$ | async)?.text | translate"
     [matTooltipPosition]="(tooltip$ | async)?.position || 'above'"
     [prefixIcon]="prefixIcon$ | async"

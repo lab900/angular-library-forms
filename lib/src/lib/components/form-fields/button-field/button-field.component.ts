@@ -30,7 +30,7 @@ import { take, withLatestFrom } from 'rxjs/operators';
 export class ButtonFieldComponent extends FormComponent<FormFieldButton> {
   public readonly type$ = this.getOption$<Lab900ButtonType>('type');
   public readonly color$ = this.getOption$<ThemePalette>('color', 'primary');
-  public readonly label$ = this.getOption$<string>(
+  public readonly buttonLabel$ = this.getOption$<string>(
     'label',
     'No label provided'
   );
