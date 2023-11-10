@@ -1,21 +1,27 @@
 import { AbstractControl, UntypedFormGroup } from '@angular/forms';
-import { AfterViewInit, Directive, inject, Input } from '@angular/core';
-import { combineLatest, Observable, switchMap } from 'rxjs';
+import {
+  AfterViewInit,
+  Directive,
+  inject,
+  Input,
+  OnDestroy,
+} from '@angular/core';
+import { combineLatest, Observable, Subscription, switchMap } from 'rxjs';
 import { FieldConditions } from '../models/IFieldConditions';
 import { FormFieldUtils } from '../utils/form-field.utils';
-import { SubscriptionBasedDirective } from '../directives/subscription-based.directive';
 import { Lab900FormField } from '../models/lab900-form-field.type';
 import { FormFieldHint, ValueLabel } from '../models/form-field-base';
 import { filter, map, withLatestFrom } from 'rxjs/operators';
 import { FormFieldService } from '../services/form-field.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 type controlError = { error: string; errorParams?: Record<string, string> };
 
 @Directive()
 export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
-  extends SubscriptionBasedDirective
-  implements AfterViewInit
+  implements AfterViewInit, OnDestroy
 {
+  private subs?: Subscription[];
   protected readonly formFieldService: FormFieldService<S> =
     inject(FormFieldService);
 
@@ -127,24 +133,18 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   ]).pipe(map(([control, readonly]) => readonly || control?.disabled));
 
   public constructor() {
-    super();
-
-    this.addSubscription(
-      this.formFieldService.fieldControl$.pipe(
+    this.formFieldService.fieldControl$
+      .pipe(
         filter((control) => !!control),
-        switchMap((control) =>
-          control.valueChanges.pipe(
-            withLatestFrom(this.formFieldService.schema$)
-          )
-        )
-      ),
-      ([value, schema]) => {
-        //this.setFieldProperties();
+        switchMap((control) => control.valueChanges),
+        withLatestFrom(this.formFieldService.schema$),
+        takeUntilDestroyed()
+      )
+      .subscribe(([value, schema]) => {
         if (schema?.options?.onChangeFn) {
           schema?.options?.onChangeFn(value, this.fieldControl);
         }
-      }
-    );
+      });
   }
 
   public ngAfterViewInit(): void {
@@ -153,6 +153,10 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
         this.createConditions();
       }
     }
+  }
+
+  public ngOnDestroy(): void {
+    this.subs?.forEach((sub) => sub.unsubscribe());
   }
 
   public updateControlValue(value: any, markAsDirty = true): void {
@@ -189,9 +193,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
             }
           }
         );
-        if (subs?.length) {
-          this.subscriptions.concat(subs);
-        }
+        this.subs = [...(this.subs ?? []), ...subs];
       });
   }
 }

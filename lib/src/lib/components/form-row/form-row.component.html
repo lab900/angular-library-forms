@@ -1,32 +1,37 @@
-  <div *ngIf="showRow$ | async"
-    [hidden]="isHidden(schema)"
-    class="lab900-form-row {{ rowClass$ | async }}"
+<div
+  *ngIf="showRow$ | async"
+  [hidden]="isHidden(schema) | async"
+  class="lab900-form-row {{ rowClass$ | async }}"
+>
+  <span
+    *ngIf="rowTitle$ | async as title"
+    class="lab900-form-field-label lab900-form-row-label {{
+      rowTitleClass$ | async
+    }}"
   >
-    <span
-      *ngIf="(rowTitle$ | async) as title"
-      class="lab900-form-field-label lab900-form-row-label {{
-        rowTitleClass$ | async
-      }}"
-      >
-      {{title | translate}}}
-    </span>
-    <div class="form-row" [class.mobile-cols]="mobileCols$ | async">
-      <div
-        *ngFor="let field of nestedFields$ | async"
-        class="form-col"
-        [class.hidden]="isHidden(field)"
-        [style.width]="(100 * (field.options?.colspan || 12)) / 12 + '%'"
-      >
-        <ng-container
-          lab900FormField
-          [schema]="field"
-          [group]="$any(fieldAttribute ? group.get(fieldAttribute) : group)"
-        />
-        <div class="form-col__info" *ngIf="field?.options?.infoTooltip as tip">
-          <mat-icon [matTooltip]="tip?.text | translate">{{
-            tip?.icon || 'info'
-          }}</mat-icon>
-        </div>
+    {{ title | translate }}}
+  </span>
+  <div
+    class="form-row"
+    *ngIf="rowGroup$ | async as group"
+    [class.mobile-cols]="mobileCols$ | async"
+  >
+    <div
+      *ngFor="let field of nestedFields$ | async"
+      class="form-col"
+      [class.hidden]="isHidden(field) | async"
+      [style.width]="(100 * (field.options?.colspan || 12)) / 12 + '%'"
+    >
+      <ng-container
+        lab900FormField
+        [schema]="field"
+        [group]="group"
+      ></ng-container>
+      <div class="form-col__info" *ngIf="field?.options?.infoTooltip as tip">
+        <mat-icon [matTooltip]="tip?.text | translate">{{
+          tip?.icon || 'info'
+        }}</mat-icon>
       </div>
     </div>
   </div>
+</div>

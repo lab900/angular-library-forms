@@ -1,6 +1,6 @@
 <ng-container *ngIf="showRow$ | async">
   <div
-    [hidden]="isHidden(schema)"
+    [hidden]="isHidden(schema) | async"
     class="lab900-form-column {{ rowClass$ | async }}"
   >
     <span
@@ -13,10 +13,10 @@
     <div class="form-column" [class.mobile-cols]="mobileCols$ | async">
       <div
         *ngFor="let field of nestedFields$ | async"
-        [class.hidden]="isHidden(field)"
+        [class.hidden]="isHidden(field) | async"
         lab900FormField
         [schema]="field"
-        [group]="fieldAttribute ? group.get(fieldAttribute) : group"
+        [group]="columnGroup$ | async"
       >
         <div class="form-col__info" *ngIf="field?.options?.infoTooltip as tip">
           <mat-icon [matTooltip]="tip?.text | translate">{{

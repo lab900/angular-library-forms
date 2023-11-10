@@ -11,6 +11,8 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { MergingTranslateLoader } from './utils/merging-translate-loader';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { provideEnvironmentNgxMask } from 'ngx-mask';
+import { NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 export function TranslationLoaderFactory(
   http: HttpClient
@@ -34,6 +36,8 @@ export function TranslationLoaderFactory(
       },
       defaultLanguage: 'en',
     }),
+    MatNativeDateModule,
+    NgxMatNativeDateModule,
   ],
   providers: [
     provideHttpClient(),

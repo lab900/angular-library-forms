@@ -23,7 +23,6 @@ import { FormFieldFileUploadExampleComponent } from './examples/form-field-file-
 import { FormFieldInputsExampleComponent } from './examples/form-field-inputs-example/form-field-inputs-example.component';
 import { FormFieldMultiLanguageExampleComponent } from './examples/form-field-multi-language-example/form-field-multi-language-example.component';
 import { FormFieldNestedGroupsByAttributeExampleComponent } from './examples/form-field-nested-groups-by-attribute-example/form-field-nested-groups-by-attribute-example.component';
-import { FormFieldNestedGroupsExampleComponent } from './examples/form-field-nested-groups-example/form-field-nested-groups-example.component';
 import { FormFieldRadioButtonsExampleComponent } from './examples/form-field-radio-buttons-example/form-field-radio-buttons-example.component';
 import { FormFieldRangeSliderExampleComponent } from './examples/form-field-range-slider-example/form-field-range-slider-example.component';
 import { FormFieldRepeaterAdvancedExampleComponent } from './examples/form-field-repeater-advanced-example/form-field-repeater-advanced-example.component';
@@ -160,10 +159,10 @@ const routes: Routes = [
     ),
   ]),
   new ShowcaseRoute('form-field-nested-groups', 'Form Fields: Nested groups', [
-    new ShowcaseExample(
+    /*new ShowcaseExample(
       FormFieldNestedGroupsExampleComponent,
       'Nested groups with a row'
-    ),
+    ),*/
     new ShowcaseExample(
       FormFieldNestedGroupsByAttributeExampleComponent,
       'Nested groups by attributes'

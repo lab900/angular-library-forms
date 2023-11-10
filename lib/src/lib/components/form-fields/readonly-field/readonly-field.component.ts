@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldService } from '../../../services/form-field.service';
 import { combineLatest, Observable } from 'rxjs';
@@ -14,7 +14,7 @@ import { TranslateModule } from '@ngx-translate/core';
   standalone: true,
   imports: [AsyncPipe, TranslateModule, NgIf],
 })
-export class ReadonlyFieldComponent extends FormComponent implements OnDestroy {
+export class ReadonlyFieldComponent extends FormComponent {
   public readonly value$: Observable<string | undefined> = combineLatest([
     this.formFieldService.groupValue$,
     this.formFieldService.controlValue$,

@@ -19,7 +19,7 @@ import { Observable } from 'rxjs';
 import { FormFieldHint, FormIcon } from '../../models/form-field-base';
 import { MatInputModule } from '@angular/material/input';
 import { TranslateModule } from '@ngx-translate/core';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe, NgIf, NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '@lab900/ui';
 import { FormFieldErrorComponent } from '../form-field-error/form-field-error.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -39,6 +39,7 @@ import { MatIconModule } from '@angular/material/icon';
     IconComponent,
     FormFieldErrorComponent,
     MatIconModule,
+    NgTemplateOutlet,
   ],
 })
 export class FormFieldComponent<S extends Lab900FormField = Lab900FormField>

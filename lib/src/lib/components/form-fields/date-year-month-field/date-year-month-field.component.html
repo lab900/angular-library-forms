@@ -1,8 +1,6 @@
 <lab900-form-field
   [formGroup]="group$ | async"
   *ngIf="(hideField$ | async) === false"
-  class="lab900-date-field"
-  id="lab900-date-field-{{ fieldAttribute }}"
 >
   <input
     matInput

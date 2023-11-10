@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormFieldService } from '../../services/form-field.service';
 import { FormFieldDirective } from '../../directives/form-field.directive';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
 @Component({
@@ -66,21 +66,18 @@ export class FormColumnComponent extends FormComponent<FormColumn> {
     map((schema) => schema?.nestedFields ?? [])
   );
 
-  public columnIsReadonly(field: Lab900FormField): boolean {
-    return field.options?.readonly != null
-      ? FormFieldUtils.isReadOnly(
-          field.options,
-          this.group.value,
-          this.readonly
-        )
-      : FormFieldUtils.isReadOnly(
-          this.options,
-          this.group.value,
-          this.readonly
-        );
-  }
+  public readonly columnGroup$ = combineLatest([
+    this.group$,
+    this.formFieldService._fieldAttribute$.asObservable(),
+  ]).pipe(
+    map(([group, fieldAttribute]) =>
+      fieldAttribute ? group.get(fieldAttribute) : group
+    )
+  );
 
-  public isHidden(field: Lab900FormField): boolean {
-    return FormFieldUtils.isHidden(field.options, this.group);
+  public isHidden(field: Lab900FormField): Observable<boolean> {
+    return this.group$.pipe(
+      map((group) => FormFieldUtils.isHidden(field.options, group))
+    );
   }
 }

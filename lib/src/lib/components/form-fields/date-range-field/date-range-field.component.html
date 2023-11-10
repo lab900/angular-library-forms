@@ -2,20 +2,16 @@
   [formGroup]="group$ | async"
   *ngIf="(hideField$ | async) === false"
 >
-  <mat-date-range-input
-    *ngIf="dateFormGroup"
-    [formGroup]="dateFormGroup"
-    [rangePicker]="picker"
-  >
+  <mat-date-range-input [formGroup]="dateGroup$ | async" [rangePicker]="picker">
     <input
       matStartDate
-      [formControl]="dateFormGroup.get(this.options?.startKey || 'start')"
-      placeholder="{{ startLabel$ | async | translate }}"
+      [formControlName]="startAttr$ | async"
+      [placeholder]="startLabel$ | async | translate"
     />
     <input
       matEndDate
-      [formControl]="dateFormGroup.get(this.options?.endKey || 'end')"
-      placeholder="{{ endLabel$ | async | translate }}"
+      [formControlName]="endAttr$ | async"
+      [placeholder]="endLabel$ | async | translate"
     />
   </mat-date-range-input>
   <mat-datepicker-toggle
