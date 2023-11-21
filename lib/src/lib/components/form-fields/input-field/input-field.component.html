@@ -7,8 +7,21 @@
 >
   <mat-label *ngIf="schema.title">{{ schema.title | translate }}</mat-label>
   <input
+    *ngIf="options?.type === 'number'"
     matInput
-    #input
+    [type]="options?.type || 'text'"
+    placeholder="{{ placeholder | translate }}"
+    [formControlName]="fieldAttribute"
+    [required]="fieldIsRequired"
+    [readonly]="fieldIsReadonly"
+    [ngClass]="{ readonly: fieldIsReadonly }"
+    lab900InputAutofocus
+    [autofocus]="options?.autofocus"
+    [style]="options?.style || ''"
+  />
+  <input
+    *ngIf="options?.type !== 'number'"
+    matInput
     [type]="options?.type || 'text'"
     placeholder="{{ placeholder | translate }}"
     [formControlName]="fieldAttribute"
@@ -49,8 +62,7 @@
   <lab900-icon
     [icon]="schema.icon"
     *ngIf="schema?.icon?.position === 'left'"
-    matTextSuffix
-    class="input-field__icon-left"
+    matTextPrefix
   ></lab900-icon>
   <lab900-icon
     [icon]="schema.icon"
@@ -60,13 +72,13 @@
   <span class="lab900-input-field--suffix" *ngIf="suffix" matTextSuffix>{{
     suffix | translate
   }}</span>
-  <span class="lab900-input-field--prefix" *ngIf="prefix" matTextSuffix>{{
+  <span class="lab900-input-field--prefix" *ngIf="prefix" matTextPrefix>{{
     prefix | translate
   }}</span>
   <mat-hint
     *ngIf="
       hint &&
-      !(schema.options.hint.hideHintOnValidValue && input.value) &&
+      !(schema.options.hint.hideHintOnValidValue && fieldControl?.value) &&
       !fieldIsReadonly
     "
   >
@@ -75,7 +87,7 @@
   <mat-hint
     align="end"
     *ngIf="options?.maxLength && showLengthIndicator && !fieldIsReadonly"
-    >{{ input.value?.length || 0 }}/{{ options?.maxLength }}</mat-hint
+    >{{ fieldControl.value?.length || 0 }}/{{ options?.maxLength }}</mat-hint
   >
   <mat-error *ngIf="!valid && !fieldIsReadonly"
     ><span [innerHTML]="getErrorMessage() | async"></span
