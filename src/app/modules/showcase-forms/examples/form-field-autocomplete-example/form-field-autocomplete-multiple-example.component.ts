@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { Lab900FormConfig, EditType, ValueLabel } from '@lab900/forms';
+import { EditType, Lab900FormConfig, ValueLabel } from '@lab900/forms';
 import { of } from 'rxjs';
 
 @Component({
   selector: 'lab900-form-field-autocomplete-multiple-example',
-  template: '<lab900-form [schema]="formSchema"></lab900-form>',
+  template:
+    '<lab900-form #form [schema]="formSchema"></lab900-form><pre>{{form?.value | json }}</pre>',
 })
 export class FormFieldAutocompleteMultipleExampleComponent {
   public options: ValueLabel[] = [

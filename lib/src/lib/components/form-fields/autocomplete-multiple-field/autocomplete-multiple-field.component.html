@@ -21,8 +21,8 @@
     <mat-chip-row
       *ngFor="let opt of selectedOptions; let i = index"
       [removable]="!fieldIsReadonly"
-      selectable
       (removed)="remove(i)"
+      [value]="opt"
     >
       <div [innerHTML]="options.displayInputFn(opt) | translate"></div>
       <mat-icon *ngIf="!fieldIsReadonly" matChipRemove>cancel</mat-icon>
