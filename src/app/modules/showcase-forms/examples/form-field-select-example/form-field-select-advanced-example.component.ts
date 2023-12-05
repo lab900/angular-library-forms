@@ -62,7 +62,6 @@ export class FormFieldSelectAdvancedExampleComponent {
               selectOptions: (filter, fieldControl, schema) =>
                 this.getSelectOptions({
                   filter,
-                  author: fieldControl.value,
                   schema,
                 }),
               colspan: 4,
@@ -81,7 +80,6 @@ export class FormFieldSelectAdvancedExampleComponent {
               selectOptions: (filter, fieldControl, schema) =>
                 this.getSelectOptions({
                   filter,
-                  author: fieldControl.value,
                   schema,
                 }),
               colspan: 4,
@@ -117,7 +115,6 @@ export class FormFieldSelectAdvancedExampleComponent {
               selectOptions: (filter, fieldControl, schema) =>
                 this.getSelectOptions({
                   filter,
-                  author: fieldControl.value,
                   schema,
                 }),
               colspan: 4,

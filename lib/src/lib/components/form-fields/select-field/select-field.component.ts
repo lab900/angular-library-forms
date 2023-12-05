@@ -135,9 +135,10 @@ export class SelectFieldComponent<T>
     this.selectAllSub?.unsubscribe();
   }
 
-  public showClearButton = (value: T): boolean => {
-    if (!value) return false;
-    if (typeof this.options?.clearFieldButton?.enabled === 'function') {
+  public showClearButton = (value: T | T[]): boolean => {
+    if (!value || (Array.isArray(value) && !value.length)) {
+      return false;
+    } else if (typeof this.options?.clearFieldButton?.enabled === 'function') {
       return this.options.clearFieldButton.enabled(this.group.value);
     }
     return this.options?.clearFieldButton?.enabled;
@@ -236,7 +237,7 @@ export class SelectFieldComponent<T>
    * Add the current form control value to the select options
    */
   public addValueToOptions(): void {
-    let label;
+    let label: string;
     // TODO: Validate options, this is a required field if search or infinite scroll is used
     if (!this.options?.displaySelectedOptionFn) {
       label = "ERROR: Can't display";
@@ -244,12 +245,19 @@ export class SelectFieldComponent<T>
         `Please define a displaySelectedOptionFn to display your currently selected option for the field with attribute ${this.fieldAttribute} since it is not included in the current options`
       );
     }
-    this.selectOptions = coerceArray(this.fieldControl.value)
+    const compare = this.options?.compareWith || this.defaultCompare;
+    const missingOptions = coerceArray(this.fieldControl.value)
+      .filter(
+        (value) => !this.selectOptions.some((o) => compare(o.value, value))
+      )
       .map((v: T) => ({
         value: v,
         label: label ?? this.options.displaySelectedOptionFn(v),
-      }))
-      .concat(this.selectOptions);
+      }));
+
+    if (missingOptions?.length) {
+      this.selectOptions = missingOptions.concat(this.selectOptions);
+    }
   }
 
   public onConditionalChange(
@@ -386,7 +394,7 @@ export class SelectFieldComponent<T>
    */
   private handleGetOptions(
     optionsFn: FormFieldSelectOptionsFn<T>,
-    optionsFilter
+    optionsFilter: FormFieldSelectOptionsFilter
   ): Observable<ValueLabel<T>[]> {
     const values = optionsFn(optionsFilter);
     const values$ = isObservable(values) ? values : of(values);
@@ -458,7 +466,6 @@ export class SelectFieldComponent<T>
      */
     if (
       this.fieldControl?.value &&
-      !this.valueInOptions() &&
       !this.optionsFilter$.value?.searchQuery?.length
     ) {
       this.addValueToOptions();
