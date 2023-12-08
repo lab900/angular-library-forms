@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { FormFieldDateTimePicker } from './date-time-field.model';
 import { NgxMatDatetimepicker } from '@angular-material-components/datetime-picker';
 import { NgxMatSingleDateSelectionModel } from '@angular-material-components/datetime-picker/lib/date-selection-model';
+import moment from 'moment';
 
 @Component({
   selector: 'lab900-date-time-field',
@@ -48,7 +49,7 @@ export class DateTimeFieldComponent extends FormComponent<FormFieldDateTimePicke
     const model = (datePicker as any)?._componentRef?.instance
       ?._model as NgxMatSingleDateSelectionModel<any>;
     if (model && model.selection == null) {
-      model.add(new Date());
+      model.add(moment());
     }
   }
 }
