@@ -30,7 +30,17 @@
     [startView]="startView"
     [defaultTime]="defaultTime"
     [stepMinute]="stepMinute"
-  ></ngx-mat-datetime-picker>
+    (opened)="pickerOpened(picker)"
+  >
+    <ngx-mat-datepicker-actions>
+      <button mat-button ngxMatDatepickerCancel>
+        {{ 'GENERAL.CANCEL' | translate }}
+      </button>
+      <button mat-raised-button color="primary" ngxMatDatepickerApply>
+        {{ 'GENERAL.SAVE' | translate }}
+      </button>
+    </ngx-mat-datepicker-actions>
+  </ngx-mat-datetime-picker>
   <mat-hint
     *ngIf="
       hint &&

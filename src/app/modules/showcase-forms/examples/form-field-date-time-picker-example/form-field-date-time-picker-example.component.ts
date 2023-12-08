@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { Lab900FormConfig, EditType } from '@lab900/forms';
+import { EditType, Lab900FormConfig } from '@lab900/forms';
 
 @Component({
   selector: 'lab900-form-field-date-time-picker-example',
-  template: '<lab900-form [schema]="formSchema" [data]="data"></lab900-form>',
+  template: '<lab900-form [schema]="formSchema" ></lab900-form>',
 })
 export class FormFieldDateTimePickerExampleComponent {
   public data = { test: new Date() };
