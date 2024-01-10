@@ -7,7 +7,7 @@ import { Validators } from '@angular/forms';
   template:
     '<lab900-form #lab900FormContainer [schema]="schema"></lab900-form>',
 })
-export class FormCondtionalValidationExampleComponent {
+export class FormConditionalValidationExampleComponent {
   public schema: Lab900FormConfig = {
     fields: [
       {

@@ -105,7 +105,7 @@ export class FormFieldSelectAdvancedExampleComponent {
           },
           {
             attribute: 'books3',
-            title: 'Search multiple book',
+            title: 'Search multiple books',
             editType: EditType.Select,
             options: {
               compareWith: compare,

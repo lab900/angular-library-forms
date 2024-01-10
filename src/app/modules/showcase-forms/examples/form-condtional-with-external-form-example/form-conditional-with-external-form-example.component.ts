@@ -15,7 +15,7 @@ import { ValueLabel } from '@lab900/forms';
     ></lab900-form>
   `,
 })
-export class FormCondtionalWithExternalFormExampleComponent {
+export class FormConditionalWithExternalFormExampleComponent {
   public schema: Lab900FormConfig = {
     fields: [
       {

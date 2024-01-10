@@ -5,8 +5,8 @@ import { ShowcaseHomeComponent } from '../shared/components/showcase-home/showca
 import { ShowcaseExample } from '../shared/models/showcase-example.model';
 import { ShowcaseRoute } from '../shared/models/showcase-route.model';
 import { FormConditionalsExampleComponent } from './examples/form-conditionals-example/form-conditionals-example.component';
-import { FormCondtionalValidationExampleComponent } from './examples/form-condtional-validation-example/form-condtional-validation-example.component';
-import { FormCondtionalWithExternalFormExampleComponent } from './examples/form-condtional-with-external-form-example/form-condtional-with-external-form-example.component';
+import { FormConditionalValidationExampleComponent } from 'src/app/modules/showcase-forms/examples/form-condtional-validation-example/form-conditional-validation-example.component';
+import { FormConditionalWithExternalFormExampleComponent } from 'src/app/modules/showcase-forms/examples/form-condtional-with-external-form-example/form-conditional-with-external-form-example.component';
 import { FormContainerExampleComponent } from './examples/form-container-example/form-container-example.component';
 import { FormContainerReadonlyExampleComponent } from './examples/form-container-example/form-container-readonly-example.component';
 import { FormFieldAutocompleteExampleComponent } from './examples/form-field-autocomplete-example/form-field-autocomplete-example.component';
@@ -68,11 +68,11 @@ const routes: Routes = [
       'Conditional Form Container'
     ),
     new ShowcaseExample(
-      FormCondtionalValidationExampleComponent,
+      FormConditionalValidationExampleComponent,
       'Conditional validation'
     ),
     new ShowcaseExample(
-      FormCondtionalWithExternalFormExampleComponent,
+      FormConditionalWithExternalFormExampleComponent,
       'Conditionals across multiple forms'
     ),
   ]),
