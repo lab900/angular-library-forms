@@ -1,6 +1,6 @@
 {
   "name": "angular-library-forms",
-  "version": "16.0.0",
+  "version": "17.0.0",
   "repository": "https://github.com/lab900/angular-library-forms",
   "homepage": "https://lab900.github.io/angular-libraries/forms",
   "author": "Lab900 <info@lab900.com> (https://lab900.com)",
@@ -51,7 +51,7 @@
     "@ngx-translate/core": "^15.0.0",
     "moment": "^2.29.4",
     "ngx-markdown": "^17.1.1",
-    "ngx-mask": "^16.3.9",
+    "ngx-mask": "^17.0.4",
     "ngx-mat-select-search": "^7.0.4",
     "rxjs": "~7.8.1",
     "tslib": "^2.3.1",
