@@ -61,7 +61,7 @@ export class SelectFieldComponent<T>
   extends FormComponent<FormFieldSelect<T>>
   implements OnInit, OnDestroy
 {
-  public selectOptions: ValueLabel<T>[];
+  public selectOptions?: ValueLabel<T>[];
   private _select: MatSelect;
 
   private selectAllSub?: Subscription;
@@ -233,33 +233,6 @@ export class SelectFieldComponent<T>
     return options?.filter((o) => value.some((v) => compare(o.value, v)));
   }
 
-  /**
-   * Add the current form control value to the select options
-   */
-  public addValueToOptions(): void {
-    let label: string;
-    // TODO: Validate options, this is a required field if search or infinite scroll is used
-    if (!this.options?.displaySelectedOptionFn) {
-      label = "ERROR: Can't display";
-      console.error(
-        `Please define a displaySelectedOptionFn to display your currently selected option for the field with attribute ${this.fieldAttribute} since it is not included in the current options`
-      );
-    }
-    const compare = this.options?.compareWith || this.defaultCompare;
-    const missingOptions = coerceArray(this.fieldControl.value)
-      .filter(
-        (value) => !this.selectOptions.some((o) => compare(o.value, value))
-      )
-      .map((v: T) => ({
-        value: v,
-        label: label ?? this.options.displaySelectedOptionFn(v),
-      }));
-
-    if (missingOptions?.length) {
-      this.selectOptions = missingOptions.concat(this.selectOptions);
-    }
-  }
-
   public onConditionalChange(
     dependOn: string,
     value: string,
@@ -421,38 +394,17 @@ export class SelectFieldComponent<T>
   private afterGetOptionsSuccess(options: ValueLabel<T>[]): void {
     const compare = this.options?.compareWith || this.defaultCompare;
 
+    let newOptionsSet = this.selectOptions ?? [];
     if (this.optionsFilter$.value?.page > 0) {
-      /**
-       * concat options for infinite scroll
-       * duplicates are filtered out (can happen because of the option add)
-       */
-      this.selectOptions = this.selectOptions.concat(
-        options.filter((o) =>
-          this.selectOptions.some((so) => !compare(o.value, so.value))
-        )
-      );
+      newOptionsSet = newOptionsSet.concat(options);
     } else {
-      /**
-       * If the current (values) are in the old options but not in the new we should keep those options
-       */
+      newOptionsSet = options;
       if (
         !this.optionsFilter$.value?.searchQuery?.length &&
         this.valueInOptions() &&
-        !this.valueInOptions(options)
+        !this.valueInOptions(newOptionsSet)
       ) {
-        options = options.concat(this.getOptionsMatchingTheValue());
-      }
-      this.selectOptions = options;
-    }
-
-    if (this.conditionalItemToSelectWhenExists) {
-      const value = coerceArray(this.conditionalItemToSelectWhenExists);
-      const compare = this.options?.compareWith || this.defaultCompare;
-      const inOptions = this.selectOptions.some((o) =>
-        value.some((v) => compare(o.value, v))
-      );
-      if (inOptions) {
-        this.fieldControl.setValue(this.conditionalItemToSelectWhenExists);
+        newOptionsSet = newOptionsSet.concat(this.getOptionsMatchingTheValue());
       }
     }
 
@@ -468,9 +420,55 @@ export class SelectFieldComponent<T>
       this.fieldControl?.value &&
       !this.optionsFilter$.value?.searchQuery?.length
     ) {
-      this.addValueToOptions();
+      newOptionsSet = this.addValueToOptions(newOptionsSet);
     }
-
+    this.selectOptions = this.removeDuplicateOptions(newOptionsSet);
+    if (this.conditionalItemToSelectWhenExists) {
+      const value = coerceArray(this.conditionalItemToSelectWhenExists);
+      const inOptions = this.selectOptions.some((o) =>
+        value.some((v) => compare(o.value, v))
+      );
+      if (inOptions) {
+        this.fieldControl.setValue(this.conditionalItemToSelectWhenExists);
+      }
+    }
     this.loading$.next(false);
+  }
+
+  /**
+   * Add the current form control value to the select options
+   */
+  private addValueToOptions(options = this.selectOptions): ValueLabel<T>[] {
+    let label: string;
+    // TODO: Validate options, this is a required field if search or infinite scroll is used
+    if (!this.options?.displaySelectedOptionFn) {
+      label = "ERROR: Can't display";
+      console.error(
+        `Please define a displaySelectedOptionFn to display your currently selected option for the field with attribute ${this.fieldAttribute} since it is not included in the current options`
+      );
+    }
+    const compare = this.options?.compareWith || this.defaultCompare;
+    const missingOptions = coerceArray(this.fieldControl.value)
+      .filter((value) => !options?.some((o) => compare(o.value, value)))
+      .map((v: T) => ({
+        value: v,
+        label: label ?? this.options.displaySelectedOptionFn(v),
+      }));
+
+    if (missingOptions?.length) {
+      return missingOptions.concat(options);
+    }
+    return options;
+  }
+
+  private removeDuplicateOptions(items: ValueLabel<T>[]): ValueLabel<T>[] {
+    if (items?.length) {
+      const compare = this.options?.compareWith || this.defaultCompare;
+      return items.filter(
+        (item, idx, arr) =>
+          arr.findIndex(({ value }) => compare(item.value, value)) === idx
+      );
+    }
+    return [...new Set(items)];
   }
 }
