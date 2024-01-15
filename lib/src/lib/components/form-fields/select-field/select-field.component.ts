@@ -170,6 +170,12 @@ export class SelectFieldComponent<T>
       }
     );
 
+    this.addSubscription(this.fieldControl.valueChanges, (value) => {
+      if (value && !this.valueInOptions()) {
+        this.selectOptions = this.addValueToOptions();
+      }
+    });
+
     this.addSubscription(
       this.optionsFn$.asObservable().pipe(
         filter((optionsFn) => !!optionsFn),
@@ -212,7 +218,7 @@ export class SelectFieldComponent<T>
       this.optionsFilter$.value?.searchQuery?.length
     ) {
       if (!this.valueInOptions()) {
-        this.addValueToOptions();
+        this.selectOptions = this.addValueToOptions();
       }
       this.onSearch('');
     }
@@ -456,9 +462,9 @@ export class SelectFieldComponent<T>
       }));
 
     if (missingOptions?.length) {
-      return missingOptions.concat(options);
+      return missingOptions.concat(options ?? []);
     }
-    return options;
+    return options ?? [];
   }
 
   private removeDuplicateOptions(items: ValueLabel<T>[]): ValueLabel<T>[] {

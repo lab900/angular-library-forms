@@ -40,13 +40,11 @@ export class FormFieldSelectAdvancedExampleComponent {
   @ViewChild(Lab900Form)
   public formContainer?: Lab900Form<Book>;
 
-  public data: {
+  public data?: {
     books2: Book;
     books3: Book[];
-  } = {
-    books2: tolkienBook,
-    books3: [tolkienBook, tolkienBook2],
   };
+
   public formSchema: Lab900FormConfig = {
     fields: [
       {
@@ -171,7 +169,7 @@ export class FormFieldSelectAdvancedExampleComponent {
               },
               compareWith: compare,
               colspan: 6,
-              displaySelectedOptionFn: (value: Book) => value.title,
+              displaySelectedOptionFn: (value: Book) => value?.title,
               infiniteScroll: {
                 enabled: true,
               },
@@ -193,7 +191,14 @@ export class FormFieldSelectAdvancedExampleComponent {
     ],
   };
 
-  public constructor(private http: HttpClient) {}
+  public constructor(private http: HttpClient) {
+    setTimeout(() => {
+      this.data = {
+        books2: tolkienBook,
+        books3: [tolkienBook, tolkienBook2],
+      };
+    }, 5000);
+  }
 
   public getSelectOptions({
     filter,
