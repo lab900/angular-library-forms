@@ -47,4 +47,15 @@ export class FormFieldUtils {
       return fieldOptions?.hide ?? false;
     }
   }
+
+  public static infoTooltip(
+    fieldOptions: FormFieldBaseOptions,
+    group: UntypedFormGroup
+  ): { text: string; icon?: string; class?: string } | null {
+    if (typeof fieldOptions?.infoTooltip === 'function') {
+      return fieldOptions.infoTooltip(group.value) ?? null;
+    } else {
+      return fieldOptions?.infoTooltip ?? null;
+    }
+  }
 }

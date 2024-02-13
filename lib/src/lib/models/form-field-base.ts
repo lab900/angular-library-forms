@@ -49,5 +49,7 @@ export interface FormFieldBaseOptions {
   readonlyDisplay?: (data?: any) => any;
   visibleFn?: (item: any) => boolean;
   onChangeFn?: (value: any, currentControl?: AbstractControl) => void;
-  infoTooltip?: { text: string; icon?: string };
+  infoTooltip?:
+    | { text: string; icon?: string; class?: string }
+    | ((data?: any) => { text: string; icon?: string; class?: string } | null);
 }
