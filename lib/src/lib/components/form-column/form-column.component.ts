@@ -44,4 +44,10 @@ export class FormColumnComponent extends FormComponent<FormColumn> {
   public isHidden(field: Lab900FormField): boolean {
     return FormFieldUtils.isHidden(field.options, this.group);
   }
+
+  public infoTooltip(
+    field: Lab900FormField
+  ): { text: string; icon?: string; class?: string } | null {
+    return FormFieldUtils.infoTooltip(field.options, this.group);
+  }
 }

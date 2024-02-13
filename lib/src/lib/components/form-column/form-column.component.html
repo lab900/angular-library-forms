@@ -24,10 +24,12 @@
         [group]="fieldAttribute ? group.get(fieldAttribute) : group"
         [readonly]="columnIsReadonly(field)"
       >
-        <div class="form-col__info" *ngIf="field?.options?.infoTooltip as tip">
-          <mat-icon [matTooltip]="tip?.text | translate">{{
-            tip?.icon || 'info'
-          }}</mat-icon>
+        <div class="form-col__info" *ngIf="infoTooltip(field) as tip">
+          <mat-icon
+            [matTooltipClass]="tip.class"
+            [matTooltip]="tip.text | translate"
+            >{{ tip.icon || 'info' }}</mat-icon
+          >
         </div>
       </div>
     </div>
