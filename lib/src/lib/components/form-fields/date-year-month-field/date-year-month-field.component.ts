@@ -5,26 +5,12 @@ import {
   FormFieldDateYearMonthPickerOptions,
 } from './date-year-month-field.model';
 import { MatDatepicker } from '@angular/material/datepicker';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MAT_DATE_LOCALE,
-} from '@angular/material/core';
-import {
-  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
-  MomentDateAdapter,
-} from '@angular/material-moment-adapter';
-import { Moment } from 'moment';
+import { MAT_DATE_FORMATS } from '@angular/material/core';
 
 @Component({
   selector: 'lab900-date-year-month-field',
   templateUrl: './date-year-month-field.component.html',
   providers: [
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
-    },
     {
       provide: MAT_DATE_FORMATS,
       useValue: {
@@ -58,11 +44,11 @@ export class DateYearMonthFieldComponent extends FormComponent<FormFieldDateYear
   }
 
   public monthSelectedHandler(
-    chosenMonthDate: Moment,
-    picker: MatDatepicker<Moment>
+    chosenMonthDate: Date,
+    picker: MatDatepicker<Date>
   ): void {
     picker.close();
-    this.group.controls[this.fieldAttribute].setValue(chosenMonthDate.format());
+    this.group.controls[this.fieldAttribute].setValue(chosenMonthDate);
     this.group.controls[this.fieldAttribute].markAsDirty();
   }
 }
