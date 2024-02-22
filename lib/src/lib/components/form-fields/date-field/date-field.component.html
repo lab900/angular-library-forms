@@ -15,6 +15,7 @@
     [readonly]="fieldIsReadonly"
     [max]="maxDate"
     [min]="minDate"
+    [matDatepickerFilter]="options?.dateFilter"
   />
   <mat-datepicker-toggle
     [disabled]="fieldIsReadonly || fieldControl.disabled"
@@ -22,6 +23,7 @@
     [for]="picker"
   ></mat-datepicker-toggle>
   <mat-datepicker
+    [dateClass]="options?.dateClass"
     [disabled]="fieldIsReadonly || fieldControl.disabled"
     #picker
     [startView]="startView"

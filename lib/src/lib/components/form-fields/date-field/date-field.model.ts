@@ -20,7 +20,9 @@ export interface FormFieldDatePickerOptions<T = Date>
   dateClass?: MatCalendarCellClassFunction<T>;
 }
 
-export interface FormFieldDatePicker<T extends string | number = string>
-  extends FormFieldBase<T, FormFieldDatePickerOptions> {
+export interface FormFieldDatePicker<
+  T extends string | number = string,
+  D = Date
+> extends FormFieldBase<T, FormFieldDatePickerOptions<D>> {
   editType: EditType.Date;
 }

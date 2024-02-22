@@ -14,12 +14,6 @@ import { HttpClient } from '@angular/common/http';
 import { provideEnvironmentNgxMask } from 'ngx-mask';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { NgxMatMomentModule } from '@angular-material-components/moment-adapter';
-import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
-import {
-  NGX_MAT_DATE_FORMATS,
-  NgxMatDateAdapter,
-} from '@angular-material-components/datetime-picker';
-import { CustomDateAdapter, CustomDateTimeAdapter } from './date-adapters';
 
 export function TranslationLoaderFactory(
   http: HttpClient
@@ -56,25 +50,7 @@ export function TranslationLoaderFactory(
       defaultLanguage: 'en',
     }),
   ],
-  providers: [
-    provideEnvironmentNgxMask(),
-    {
-      provide: MAT_DATE_FORMATS,
-      useValue: CustomDateAdapter.DATE_FORMATS,
-    },
-    {
-      provide: NGX_MAT_DATE_FORMATS,
-      useValue: CustomDateTimeAdapter.DATE_FORMATS,
-    },
-    {
-      provide: DateAdapter,
-      useExisting: CustomDateAdapter,
-    },
-    {
-      provide: NgxMatDateAdapter,
-      useExisting: CustomDateTimeAdapter,
-    },
-  ],
+  providers: [provideEnvironmentNgxMask()],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

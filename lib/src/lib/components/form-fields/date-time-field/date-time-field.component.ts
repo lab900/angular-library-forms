@@ -1,9 +1,11 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, inject } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldDateTimePicker } from './date-time-field.model';
-import { NgxMatDatetimepicker } from '@angular-material-components/datetime-picker';
+import {
+  NgxMatDateAdapter,
+  NgxMatDatetimepicker,
+} from '@angular-material-components/datetime-picker';
 import { NgxMatSingleDateSelectionModel } from '@angular-material-components/datetime-picker/lib/date-selection-model';
-import moment from 'moment';
 
 @Component({
   selector: 'lab900-date-time-field',
@@ -12,6 +14,8 @@ import moment from 'moment';
 export class DateTimeFieldComponent extends FormComponent<FormFieldDateTimePicker> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
+
+  private readonly adapter = inject(NgxMatDateAdapter);
 
   public get startView(): 'month' | 'year' | 'multi-year' {
     return this.schema?.options?.startView ?? 'month';
@@ -44,7 +48,7 @@ export class DateTimeFieldComponent extends FormComponent<FormFieldDateTimePicke
     const model = (datePicker as any)?._componentRef?.instance
       ?._model as NgxMatSingleDateSelectionModel<any>;
     if (model && model.selection == null) {
-      model.add(moment());
+      model.add(this.adapter.today());
     }
   }
 }

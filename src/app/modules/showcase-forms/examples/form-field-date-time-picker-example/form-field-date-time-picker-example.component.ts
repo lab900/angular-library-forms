@@ -1,23 +1,35 @@
 import { Component } from '@angular/core';
 import { EditType, Lab900FormConfig } from '@lab900/forms';
+import moment, { Moment } from 'moment';
 
 @Component({
   selector: 'lab900-form-field-date-time-picker-example',
   template: '<lab900-form [schema]="formSchema" ></lab900-form>',
+  styles: [
+    `
+      ::ng-deep .mat-calendar-body-cell.weekend {
+        background-color: red;
+      }
+    `,
+  ],
 })
 export class FormFieldDateTimePickerExampleComponent {
-  public data = { test: new Date() };
+  public data = { test: moment() };
 
-  public formSchema: Lab900FormConfig = {
+  public formSchema: Lab900FormConfig<any, string, Moment> = {
     fields: [
       {
         attribute: 'test',
         title: 'Select a date & time',
         editType: EditType.DateTime,
         options: {
-          dateFilter: (date: Date | null) => {
-            const day = (date || new Date()).getDay();
+          dateFilter: (date: Moment | null) => {
+            const day = (date || moment()).get('day');
             return day !== 0 && day !== 6;
+          },
+          dateClass: (date: Moment | null) => {
+            const day = (date || moment()).get('day');
+            return day === 0 || day === 6 ? 'weekend' : '';
           },
         },
         conditions: [

@@ -13,6 +13,7 @@
     [formControlName]="fieldAttribute"
     [required]="fieldIsRequired"
     [readonly]="fieldIsReadonly"
+    [matDatepickerFilter]="options?.dateFilter"
     [max]="maxDate"
     [min]="minDate"
   />
@@ -30,6 +31,7 @@
     [startView]="startView"
     [defaultTime]="defaultTime"
     [stepMinute]="stepMinute"
+    [dateClass]="options?.dateClass"
     (opened)="pickerOpened(picker)"
   >
     <ngx-mat-datepicker-actions>

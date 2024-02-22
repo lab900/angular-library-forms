@@ -25,7 +25,11 @@ import { FormFieldAmount } from '../components/form-fields/amount-field/amount-f
 import { FormFieldSearch } from '../components/form-fields/search-field/field-search.model';
 import { FormColumn } from '../components/form-column/form-column.model';
 
-export type Lab900FormField<R = any, T extends string | number = string> =
+export type Lab900FormField<
+  R = any,
+  T extends string | number = string,
+  DATE = Date
+> =
   | FormFieldInput<T>
   | FormFieldPassword<T>
   | FormFieldMultiLang<T>
@@ -43,10 +47,10 @@ export type Lab900FormField<R = any, T extends string | number = string> =
   | FormFieldButton<T>
   | FormFieldSlideToggle<T>
   | FormFieldRangeSlider<T>
-  | FormFieldDatePicker<T>
-  | FormFieldDateYearMonthPicker<T>
-  | FormFieldDateTimePicker<T>
-  | FormFieldDateRange<T>
+  | FormFieldDatePicker<T, DATE>
+  | FormFieldDateYearMonthPicker<T, DATE>
+  | FormFieldDateTimePicker<T, DATE>
+  | FormFieldDateRange<T, DATE>
   | FormFieldAutocomplete<R, T>
   | FormFieldAutocompleteMulti<R, T>
   | FormFieldRepeater<T>
