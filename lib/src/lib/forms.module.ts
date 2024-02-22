@@ -1,6 +1,5 @@
 import {
   NgxMatDatetimePickerModule,
-  NgxMatNativeDateModule,
   NgxMatTimepickerModule,
 } from '@angular-material-components/datetime-picker';
 import { CommonModule } from '@angular/common';
@@ -13,10 +12,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
-import {
-  MatNativeDateModule,
-  MatPseudoCheckboxModule,
-} from '@angular/material/core';
+import { MatPseudoCheckboxModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import {
@@ -154,14 +150,12 @@ const customFields = [
     MatDialogModule,
     MatDatepickerModule,
     MatSelectModule,
-    MatNativeDateModule,
     MatAutocompleteModule,
     AngularEditorModule,
     HttpClientModule,
     TranslateModule,
     MatButtonToggleModule,
     MatChipsModule,
-    NgxMatNativeDateModule,
     NgxMatDatetimePickerModule,
     NgxMatTimepickerModule,
     MatProgressSpinnerModule,

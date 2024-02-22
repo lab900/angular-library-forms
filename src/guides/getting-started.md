@@ -73,3 +73,26 @@ Include the library stylesheet in your scss file.
 ```
 
 The lab900-forms mixin expects a [Material theme of config](https://material.angular.io/guide/theming).
+
+## Date(time) picker
+
+The date(time) pickers will require the following packages to be installed.
+
+```bash
+npm i @angular-material-components/datetime-picker @angular-material-components/moment-adapter --save-dev
+```
+
+Add the imports before importing the `Lab900FormsModule.forRoot()`.
+
+```ts
+MatMomentDateModule,
+  NgxMatMomentModule,
+  Lab900FormsModule.forRoot({
+    formField: {
+      appearance: 'fill',
+    },
+    amountField: {
+      locale: 'de-DE',
+    },
+  });
+```
