@@ -1,6 +1,5 @@
 import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { TranslateService } from '@ngx-translate/core';
 import {
   FormFieldDateYearMonthPicker,
   FormFieldDateYearMonthPickerOptions,
@@ -45,10 +44,6 @@ import { Moment } from 'moment';
 export class DateYearMonthFieldComponent extends FormComponent<FormFieldDateYearMonthPicker> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
-
-  public constructor(translateService: TranslateService) {
-    super(translateService);
-  }
 
   public get startView(): FormFieldDateYearMonthPickerOptions['startView'] {
     return this.schema?.options?.startView ?? 'multi-year';

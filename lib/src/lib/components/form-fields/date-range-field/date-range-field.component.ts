@@ -1,6 +1,5 @@
 import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { TranslateService } from '@ngx-translate/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { FormFieldDateRange } from './date-range-field.model';
 
@@ -11,10 +10,6 @@ import { FormFieldDateRange } from './date-range-field.model';
 export class DateRangeFieldComponent extends FormComponent<FormFieldDateRange> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
-
-  public constructor(translateService: TranslateService) {
-    super(translateService);
-  }
 
   public get dateFormGroup(): UntypedFormGroup {
     return this.group.get(this.fieldAttribute) as UntypedFormGroup;

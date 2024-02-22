@@ -1,5 +1,4 @@
 import { Component, HostBinding } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldSlideToggle } from './slide-toggle-field.model';
 
@@ -10,8 +9,4 @@ import { FormFieldSlideToggle } from './slide-toggle-field.model';
 export class SlideToggleFieldComponent extends FormComponent<FormFieldSlideToggle> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
-
-  public constructor(translateService: TranslateService) {
-    super(translateService);
-  }
 }

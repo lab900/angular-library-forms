@@ -1,10 +1,5 @@
-import { Component, HostBinding, Inject } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import {
-  LAB900_FORM_MODULE_SETTINGS,
-  Lab900FormModuleSettings,
-} from '../../../models/Lab900FormModuleSettings';
-import { TranslateService } from '@ngx-translate/core';
 import { FormFieldAmount } from './amount-field.model';
 
 @Component({
@@ -42,13 +37,5 @@ export class AmountFieldComponent extends FormComponent<FormFieldAmount> {
       return this.options.minDecimals(this.group.value);
     }
     return this.options?.minDecimals;
-  }
-
-  public constructor(
-    @Inject(LAB900_FORM_MODULE_SETTINGS)
-    public setting: Lab900FormModuleSettings,
-    translateService: TranslateService
-  ) {
-    super(translateService);
   }
 }

@@ -1,5 +1,4 @@
 import { Component, HostBinding } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldRangeSlider } from './range-slider-field.model';
 
@@ -10,8 +9,4 @@ import { FormFieldRangeSlider } from './range-slider-field.model';
 export class RangeSliderFieldComponent extends FormComponent<FormFieldRangeSlider> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
-
-  public constructor(translateService: TranslateService) {
-    super(translateService);
-  }
 }

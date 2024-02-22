@@ -1,5 +1,4 @@
 import { Component, HostBinding } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldRadioButtons } from './radio-buttons-field.model';
 
@@ -10,8 +9,4 @@ import { FormFieldRadioButtons } from './radio-buttons-field.model';
 export class RadioButtonsFieldComponent extends FormComponent<FormFieldRadioButtons> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
-
-  public constructor(translateService: TranslateService) {
-    super(translateService);
-  }
 }

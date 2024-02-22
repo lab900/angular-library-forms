@@ -6,7 +6,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { TranslateService } from '@ngx-translate/core';
 import {
   BehaviorSubject,
   concat,
@@ -124,10 +123,6 @@ export class SelectFieldComponent<T>
       );
     }
     return null;
-  }
-
-  public constructor(translateService: TranslateService) {
-    super(translateService);
   }
 
   public ngOnDestroy(): void {

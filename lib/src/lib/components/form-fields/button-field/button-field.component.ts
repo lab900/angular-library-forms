@@ -18,10 +18,6 @@ export class ButtonFieldComponent extends FormComponent<FormFieldButton> {
     buttonComp?.nativeElement?.children?.[0]?.setAttribute('type', 'button');
   }
 
-  public constructor(translateService: TranslateService) {
-    super(translateService);
-  }
-
   public handleClick(event: Event): void {
     event.stopPropagation();
     this.options?.onClick(this.group, this.schema, event);

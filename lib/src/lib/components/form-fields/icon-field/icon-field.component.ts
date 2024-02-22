@@ -1,6 +1,5 @@
 import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { TranslateService } from '@ngx-translate/core';
 import { FormFieldIcon } from './icon-field.model';
 
 @Component({
@@ -11,8 +10,4 @@ import { FormFieldIcon } from './icon-field.model';
 export class IconFieldComponent extends FormComponent<FormFieldIcon> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
-
-  public constructor(translateService: TranslateService) {
-    super(translateService);
-  }
 }

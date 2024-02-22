@@ -1,6 +1,5 @@
 import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { TranslateService } from '@ngx-translate/core';
 import { matFormFieldAnimations } from '@angular/material/form-field';
 import { CheckboxFieldModel } from './checkbox-field.model';
 
@@ -13,10 +12,6 @@ import { CheckboxFieldModel } from './checkbox-field.model';
 export class CheckboxFieldComponent extends FormComponent<CheckboxFieldModel> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
-
-  public constructor(translateService: TranslateService) {
-    super(translateService);
-  }
 
   public get indeterminate(): boolean {
     return (

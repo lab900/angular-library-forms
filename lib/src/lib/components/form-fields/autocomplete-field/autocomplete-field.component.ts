@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { BehaviorSubject, isObservable, Observable, of } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
 import { debounceTime, switchMap } from 'rxjs/operators';
 import { ValueLabel } from '../../../models/form-field-base';
 import { FormFieldAutocomplete } from './autocomplete-field.model';
@@ -29,10 +28,6 @@ export class AutocompleteFieldComponent<T>
   public filteredOptions: Observable<ValueLabel<T>[]>;
 
   public inputChange: BehaviorSubject<string> = new BehaviorSubject<string>('');
-
-  public constructor(translateService: TranslateService) {
-    super(translateService);
-  }
 
   public ngAfterViewInit(): void {
     super.ngAfterViewInit();

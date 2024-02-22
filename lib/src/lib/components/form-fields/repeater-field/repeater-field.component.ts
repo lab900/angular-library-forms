@@ -1,8 +1,7 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, inject } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { UntypedFormArray } from '@angular/forms';
 import { Lab900FormBuilderService } from '../../../services/form-builder.service';
-import { TranslateService } from '@ngx-translate/core';
 import { matFormFieldAnimations } from '@angular/material/form-field';
 import { FormFieldRepeater } from './repeater-field.model';
 
@@ -13,6 +12,10 @@ import { FormFieldRepeater } from './repeater-field.model';
   animations: [matFormFieldAnimations.transitionMessages],
 })
 export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
+  private readonly fb: Lab900FormBuilderService = inject(
+    Lab900FormBuilderService
+  );
+
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
@@ -34,13 +37,6 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
 
   public get repeaterArray(): UntypedFormArray {
     return this.group.get(this.fieldAttribute) as UntypedFormArray;
-  }
-
-  public constructor(
-    private fb: Lab900FormBuilderService,
-    translateService: TranslateService
-  ) {
-    super(translateService);
   }
 
   public addToArray(): void {

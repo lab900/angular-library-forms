@@ -1,5 +1,4 @@
 import { Component, HostBinding } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldButtonToggle } from './button-toggle-field.model';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
@@ -16,8 +15,8 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
   // It is used to calculate the readonly label and to check if the toggle needs to be deselected.
   private currentValue: any;
 
-  public constructor(translateService: TranslateService) {
-    super(translateService);
+  public constructor() {
+    super();
     setTimeout(() => {
       if (this.group?.controls) {
         this.currentValue = this.group.controls[this.fieldAttribute].value;

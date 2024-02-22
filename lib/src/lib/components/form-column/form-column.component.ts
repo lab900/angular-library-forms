@@ -1,5 +1,4 @@
 import { Component, HostBinding } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { FormComponent } from '../AbstractFormComponent';
 import { matFormFieldAnimations } from '@angular/material/form-field';
 import { FormFieldUtils } from '../../utils/form-field.utils';
@@ -15,10 +14,6 @@ import { Lab900FormField } from '../../models/lab900-form-field.type';
 export class FormColumnComponent extends FormComponent<FormColumn> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
-
-  public constructor(translateService: TranslateService) {
-    super(translateService);
-  }
 
   public get visible(): boolean {
     if (this.options && this.options.visibleFn) {

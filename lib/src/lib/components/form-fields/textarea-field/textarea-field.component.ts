@@ -1,11 +1,6 @@
-import { Component, HostBinding, Inject } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldTextarea } from './textarea-field.model';
-import {
-  LAB900_FORM_MODULE_SETTINGS,
-  Lab900FormModuleSettings,
-} from '../../../models/Lab900FormModuleSettings';
 
 @Component({
   selector: 'lab900-textarea-field',
@@ -21,13 +16,5 @@ export class TextareaFieldComponent extends FormComponent<FormFieldTextarea> {
       !!this.setting?.formField?.showLengthIndicator ||
       !!this.options?.showLengthIndicator
     );
-  }
-
-  public constructor(
-    @Inject(LAB900_FORM_MODULE_SETTINGS)
-    public setting: Lab900FormModuleSettings,
-    translateService: TranslateService
-  ) {
-    super(translateService);
   }
 }

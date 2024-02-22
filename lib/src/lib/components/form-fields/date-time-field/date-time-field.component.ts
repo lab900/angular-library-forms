@@ -1,6 +1,5 @@
 import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { TranslateService } from '@ngx-translate/core';
 import { FormFieldDateTimePicker } from './date-time-field.model';
 import { NgxMatDatetimepicker } from '@angular-material-components/datetime-picker';
 import { NgxMatSingleDateSelectionModel } from '@angular-material-components/datetime-picker/lib/date-selection-model';
@@ -13,10 +12,6 @@ import moment from 'moment';
 export class DateTimeFieldComponent extends FormComponent<FormFieldDateTimePicker> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
-
-  public constructor(translateService: TranslateService) {
-    super(translateService);
-  }
 
   public get startView(): 'month' | 'year' | 'multi-year' {
     return this.schema?.options?.startView ?? 'month';

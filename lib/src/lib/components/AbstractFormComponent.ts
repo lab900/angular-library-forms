@@ -7,6 +7,7 @@ import {
   AfterContentInit,
   AfterViewInit,
   Directive,
+  inject,
   Input,
   OnDestroy,
 } from '@angular/core';
@@ -18,12 +19,21 @@ import { SubscriptionBasedDirective } from '../directives/subscription-based.dir
 import { Lab900FormField } from '../models/lab900-form-field.type';
 import { ValueLabel } from '../models/form-field-base';
 import { Lab900FormBuilderService } from '../services/form-builder.service';
+import {
+  LAB900_FORM_MODULE_SETTINGS,
+  Lab900FormModuleSettings,
+} from '../models/Lab900FormModuleSettings';
 
 @Directive()
 export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   extends SubscriptionBasedDirective
   implements AfterViewInit, OnDestroy, AfterContentInit
 {
+  public readonly setting: Lab900FormModuleSettings = inject(
+    LAB900_FORM_MODULE_SETTINGS
+  );
+  protected readonly translateService = inject(TranslateService);
+
   @Input()
   public fieldAttribute?: string;
 
@@ -78,10 +88,6 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
       return this.options.placeholder(this.group.value);
     }
     return this.options?.placeholder;
-  }
-
-  protected constructor(protected translateService: TranslateService) {
-    super();
   }
 
   public getErrorMessage = (

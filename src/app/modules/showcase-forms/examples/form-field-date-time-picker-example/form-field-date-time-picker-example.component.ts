@@ -14,6 +14,12 @@ export class FormFieldDateTimePickerExampleComponent {
         attribute: 'test',
         title: 'Select a date & time',
         editType: EditType.DateTime,
+        options: {
+          dateFilter: (date: Date | null) => {
+            const day = (date || new Date()).getDay();
+            return day !== 0 && day !== 6;
+          },
+        },
         conditions: [
           {
             dependOn: 'urgent',

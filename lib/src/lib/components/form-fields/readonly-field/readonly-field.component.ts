@@ -1,6 +1,5 @@
 import { Component, HostBinding, OnDestroy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'lab900-readonly',
@@ -12,8 +11,8 @@ export class ReadonlyFieldComponent extends FormComponent implements OnDestroy {
 
   public value: any;
 
-  public constructor(translateService: TranslateService) {
-    super(translateService);
+  public constructor() {
+    super();
     setTimeout(() => {
       if (this.group?.controls && this.fieldAttribute) {
         this.setValue(this.group.controls[this.fieldAttribute].value);

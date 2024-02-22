@@ -1,5 +1,4 @@
 import { Component, ElementRef, HostBinding, ViewChild } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Lab900File } from '../../../models/Lab900File';
 import { formatBytes } from '../../../utils/image.utils';
 import { FormComponent } from '../../AbstractFormComponent';
@@ -16,10 +15,6 @@ export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDro
 
   @ViewChild('fileField')
   private fileFieldComponent: ElementRef;
-
-  public constructor(translateService: TranslateService) {
-    super(translateService);
-  }
 
   public get files(): Lab900File[] {
     return (this.fieldControl?.value as Lab900File[]) ?? [];

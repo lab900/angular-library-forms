@@ -12,7 +12,6 @@ import {
   MatAutocomplete,
   MatAutocompleteSelectedEvent,
 } from '@angular/material/autocomplete';
-import { TranslateService } from '@ngx-translate/core';
 import { debounceTime, switchMap } from 'rxjs/operators';
 import { ValueLabel } from '../../../models/form-field-base';
 import { FormFieldAutocompleteMulti } from './autocomplete-multiple-field.model';
@@ -40,10 +39,6 @@ export class AutocompleteMultipleFieldComponent<T>
 
   public get selectedOptions(): T[] {
     return this.group.controls[this.fieldAttribute]?.value ?? [];
-  }
-
-  public constructor(translateService: TranslateService) {
-    super(translateService);
   }
 
   public ngAfterViewInit(): void {

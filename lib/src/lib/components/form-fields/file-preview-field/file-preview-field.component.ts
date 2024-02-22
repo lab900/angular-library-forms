@@ -1,5 +1,10 @@
-import { Component, ElementRef, HostBinding, ViewChild } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import {
+  Component,
+  ElementRef,
+  HostBinding,
+  inject,
+  ViewChild,
+} from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormDialogDirective } from '../../../directives/form-dialog.directive';
 import { Lab900File } from '../../../models/Lab900File';
@@ -18,6 +23,7 @@ import { take } from 'rxjs/operators';
 export class FilePreviewFieldComponent<
   T
 > extends FormComponent<FormFieldFilePreview> {
+  private readonly dialog = inject(MatDialog);
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
@@ -26,13 +32,6 @@ export class FilePreviewFieldComponent<
 
   @ViewChild('FormDialogDirective')
   private lab900FormDialog: FormDialogDirective<T>;
-
-  public constructor(
-    translateService: TranslateService,
-    private dialog: MatDialog
-  ) {
-    super(translateService);
-  }
 
   public get files(): Lab900File[] {
     return (this.fieldControl?.value as Lab900File[]) ?? [];
