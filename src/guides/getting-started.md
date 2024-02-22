@@ -76,23 +76,44 @@ The lab900-forms mixin expects a [Material theme of config](https://material.ang
 
 ## Date(time) picker
 
-The date(time) pickers will require the following packages to be installed.
+The date-time picker will require the following package to be installed.
 
 ```bash
-npm i @angular-material-components/datetime-picker @angular-material-components/moment-adapter --save-dev
+npm i @angular-material-components/datetime-picker --save-dev
+```
+
+### Native dates
+
+Add the imports before importing the `Lab900FormsModule.forRoot()`.
+
+```ts
+MatNativeDateModule, NgxMatNativeDateModule, Lab900FormsModule.forRoot();
+```
+
+### Moment dates
+
+Install the following packages.
+
+```bash
+npm install moment @angular/material-moment-adapter@16.2.7 @angular-material-components/moment-adapter@16.2.7 --save-dev
 ```
 
 Add the imports before importing the `Lab900FormsModule.forRoot()`.
 
 ```ts
-MatMomentDateModule,
-  NgxMatMomentModule,
-  Lab900FormsModule.forRoot({
-    formField: {
-      appearance: 'fill',
-    },
-    amountField: {
-      locale: 'de-DE',
-    },
-  });
+MatMomentDateModule, NgxMatMomentModule, Lab900FormsModule.forRoot();
+```
+
+### Luxon dates
+
+**Unfortionally, a Luxon date adapter is not available for the dateTime picker.**
+
+```bash
+npm install luxon @angular/material-luxon-adapter@16.2.7 --save-dev
+```
+
+Add the imports before importing the `Lab900FormsModule.forRoot()`.
+
+```ts
+LuxonDateModule, Lab900FormsModule.forRoot();
 ```
