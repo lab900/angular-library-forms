@@ -62,7 +62,6 @@ export class Lab900Form<T> implements OnChanges {
   ) {}
 
   public ngOnChanges(changes: SimpleChanges): void {
-    console.log('ngOnChanges', changes);
     if (changes.schema && this.schema?.fields) {
       this.form = this.fb.createFormGroup<T>(
         this.schema.fields,
@@ -86,7 +85,6 @@ export class Lab900Form<T> implements OnChanges {
           if (fieldSchema?.editType === EditType.Repeater) {
             const nbOfControlRows = control.controls?.length ?? 0;
             const nbOfDataRows = data[key]?.length ?? 0;
-            console.log('rows', { nbOfControlRows, nbOfDataRows });
             if (nbOfControlRows < nbOfDataRows) {
               for (let i = nbOfControlRows; i < nbOfDataRows; i++) {
                 control.push(
