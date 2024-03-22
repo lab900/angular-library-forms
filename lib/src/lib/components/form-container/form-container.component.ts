@@ -6,7 +6,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
-import { DEFAULT_REPEATER_MIN_ROWS } from 'lib/src/lib/components/form-fields/repeater-field/repeater-field.component';
+import { DEFAULT_REPEATER_MIN_ROWS } from '../form-fields/repeater-field/repeater-field.component';
 import { Lab900FormConfig } from '../../models/Lab900FormConfig';
 import { Lab900FormBuilderService } from '../../services/form-builder.service';
 import { ValueLabel } from '../../models/form-field-base';
