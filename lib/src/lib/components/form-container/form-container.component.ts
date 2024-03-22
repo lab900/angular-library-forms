@@ -87,8 +87,26 @@ export class Lab900Form<T> implements OnChanges {
             (field: Lab900FormField) => field.attribute === key
           );
           if (fieldSchema?.editType === EditType.Repeater) {
-            this.fb.createFormArray(data, fieldSchema, control);
+            const nbOfControlRows = control.controls?.length ?? 0;
+            const nbOfDataRows = data[key]?.length ?? 0;
+            if (nbOfControlRows < nbOfDataRows) {
+              for (let i = nbOfControlRows; i < nbOfDataRows; i++) {
+                control.push(
+                  this.fb.createFormGroup(
+                    fieldSchema?.nestedFields,
+                    null,
+                    data[key][i]
+                  )
+                );
+              }
+            } else if (nbOfControlRows > nbOfDataRows) {
+              const minRows = fieldSchema?.options?.minRows ?? 1;
+              for (let i = nbOfControlRows; i > nbOfDataRows + minRows; i--) {
+                control.removeAt(i - 1);
+              }
+            }
           }
+          control.patchValue(data[key]);
         } else {
           control.patchValue(data[key]);
         }

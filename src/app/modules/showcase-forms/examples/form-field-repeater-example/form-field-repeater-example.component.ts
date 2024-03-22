@@ -20,13 +20,37 @@ function validateResources(): ValidatorFn {
 
 @Component({
   selector: 'lab900-form-field-repeater-example',
-  template:
-    '<lab900-form [schema]="formSchema" (click)="logValue(form)" [data]="data" #form></lab900-form>',
+  template: ` <button
+      mat-stroked-button
+      (click)="onClick(nullData)"
+      style="margin-right: 15px; margin-bottom: 15px;"
+    >
+      null data
+    </button>
+    <button
+      mat-stroked-button
+      (click)="onClick(defaultData)"
+      style="margin-right: 15px; margin-bottom: 15px;"
+    >
+      default data
+    </button>
+    <lab900-form
+      [schema]="formSchema"
+      (click)="logValue(form)"
+      [data]="data"
+      #form
+    ></lab900-form>`,
 })
 export class FormFieldRepeaterExampleComponent {
   @ViewChild(Lab900Form)
   public form: Lab900Form<any>;
 
+  public readonly defaultData: any = {
+    repeater: [{ value: 'default-a' }, { value: 'default-b' }],
+  };
+  public readonly nullData: any = {
+    repeater: null,
+  };
   public data: any = {
     repeater: [{ value: 'a' }, { value: 'b' }],
   };
@@ -70,6 +94,9 @@ export class FormFieldRepeaterExampleComponent {
     ],
   };
 
+  public onClick(data: any): void {
+    this.data = data;
+  }
   public logValue(form: any): void {
     console.log(form);
   }
