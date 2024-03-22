@@ -15,7 +15,6 @@ import {
   LAB900_FORM_MODULE_SETTINGS,
   Lab900FormModuleSettings,
 } from '../../models/Lab900FormModuleSettings';
-import { isDifferent } from '@lab900/ui';
 
 @Component({
   selector: 'lab900-form[schema]',
@@ -63,6 +62,7 @@ export class Lab900Form<T> implements OnChanges {
   ) {}
 
   public ngOnChanges(changes: SimpleChanges): void {
+    console.log('ngOnChanges', changes);
     if (changes.schema && this.schema?.fields) {
       this.form = this.fb.createFormGroup<T>(
         this.schema.fields,
@@ -71,17 +71,14 @@ export class Lab900Form<T> implements OnChanges {
       );
     }
     if (!changes?.data?.isFirstChange() && this.data) {
-      setTimeout(() =>
-        this.patchValues(this.data, changes?.data?.previousValue)
-      );
+      setTimeout(() => this.patchValues(this.data));
     }
   }
 
-  public patchValues(data: T, prevData?: T): void {
+  public patchValues(data: T): void {
     Object.keys(data).forEach((key: string) => {
       const control = this.form.controls[key];
-
-      if (control && isDifferent(data[key], prevData?.[key])) {
+      if (control) {
         if (control instanceof UntypedFormArray) {
           const fieldSchema = this.schema.fields.find(
             (field: Lab900FormField) => field.attribute === key
@@ -89,6 +86,7 @@ export class Lab900Form<T> implements OnChanges {
           if (fieldSchema?.editType === EditType.Repeater) {
             const nbOfControlRows = control.controls?.length ?? 0;
             const nbOfDataRows = data[key]?.length ?? 0;
+            console.log('rows', { nbOfControlRows, nbOfDataRows });
             if (nbOfControlRows < nbOfDataRows) {
               for (let i = nbOfControlRows; i < nbOfDataRows; i++) {
                 control.push(
@@ -100,9 +98,17 @@ export class Lab900Form<T> implements OnChanges {
                 );
               }
             } else if (nbOfControlRows > nbOfDataRows) {
-              const minRows = fieldSchema?.options?.minRows ?? 1;
-              for (let i = nbOfControlRows; i > nbOfDataRows + minRows; i--) {
+              for (let i = nbOfControlRows; i > nbOfDataRows; i--) {
                 control.removeAt(i - 1);
+              }
+              // re-add empty controls if there are now less than minRows
+              const minRows = fieldSchema?.options?.minRows ?? 1;
+              if (control.controls.length < minRows) {
+                for (let i = control.controls.length; i < minRows; i++) {
+                  control.push(
+                    this.fb.createFormGroup(fieldSchema?.nestedFields)
+                  );
+                }
               }
             }
           }
