@@ -6,6 +6,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
+import { DEFAULT_REPEATER_MIN_ROWS } from 'lib/src/lib/components/form-fields/repeater-field/repeater-field.component';
 import { Lab900FormConfig } from '../../models/Lab900FormConfig';
 import { Lab900FormBuilderService } from '../../services/form-builder.service';
 import { ValueLabel } from '../../models/form-field-base';
@@ -100,7 +101,8 @@ export class Lab900Form<T> implements OnChanges {
                 control.removeAt(i - 1);
               }
               // re-add empty controls if there are now less than minRows
-              const minRows = fieldSchema?.options?.minRows ?? 1;
+              const minRows =
+                fieldSchema?.options?.minRows ?? DEFAULT_REPEATER_MIN_ROWS;
               if (control.controls.length < minRows) {
                 for (let i = control.controls.length; i < minRows; i++) {
                   control.push(
