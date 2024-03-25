@@ -5,6 +5,8 @@ import { Lab900FormBuilderService } from '../../../services/form-builder.service
 import { matFormFieldAnimations } from '@angular/material/form-field';
 import { FormFieldRepeater } from './repeater-field.model';
 
+export const DEFAULT_REPEATER_MIN_ROWS = 1;
+
 @Component({
   selector: 'lab900-repeater-field',
   templateUrl: './repeater-field.component.html',
@@ -24,7 +26,7 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
   }
 
   public get minRows(): number {
-    return this.options?.minRows ?? 1;
+    return this.options?.minRows ?? DEFAULT_REPEATER_MIN_ROWS;
   }
 
   public get maxRows(): number {
