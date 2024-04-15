@@ -10,6 +10,7 @@ export * from './lib/models/editType';
 export * from './lib/models/IFieldConditions';
 export * from './lib/models/Lab900File';
 export * from './lib/utils/form-field.utils';
+export * from './lib/utils/helpers';
 export * from './lib/components/form-row/form-row.model';
 export * from './lib/components/form-column/form-column.model';
 

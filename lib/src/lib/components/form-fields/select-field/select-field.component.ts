@@ -8,7 +8,6 @@ import {
 import { FormComponent } from '../../AbstractFormComponent';
 import {
   BehaviorSubject,
-  concat,
   isObservable,
   Observable,
   of,
@@ -18,7 +17,6 @@ import {
 } from 'rxjs';
 import {
   catchError,
-  debounceTime,
   distinctUntilChanged,
   filter,
   map,
@@ -38,6 +36,7 @@ import { MatSelect } from '@angular/material/select';
 import { MatOption, MatPseudoCheckboxState } from '@angular/material/core';
 import { coerceArray } from '@angular/cdk/coercion';
 import { isDifferent } from '@lab900/ui';
+import { debounceTimeAfterFirst } from '../../../utils/helpers';
 
 @Component({
   selector: 'lab900-select-field',
@@ -60,7 +59,16 @@ export class SelectFieldComponent<T>
   extends FormComponent<FormFieldSelect<T>>
   implements OnInit, OnDestroy
 {
-  public selectOptions?: ValueLabel<T>[];
+  public readonly selectOptions$$ = new BehaviorSubject<ValueLabel<T>[]>([]);
+
+  public set selectOptions(value: ValueLabel<T>[]) {
+    this.selectOptions$$.next(value);
+  }
+
+  public get selectOptions(): ValueLabel<T>[] {
+    return this.selectOptions$$.value;
+  }
+
   private _select: MatSelect;
 
   private selectAllSub?: Subscription;
@@ -112,7 +120,8 @@ export class SelectFieldComponent<T>
       shareReplay(1)
     );
 
-  public loading$ = new BehaviorSubject<boolean>(true);
+  public readonly loading$ = new BehaviorSubject<boolean>(false);
+  private readonly fetchedOnFocus$$ = new BehaviorSubject<boolean>(false);
 
   public get selectedOption(): ValueLabel<T> {
     if (this.selectOptions && this.fieldControl.value) {
@@ -142,29 +151,15 @@ export class SelectFieldComponent<T>
   public defaultCompare = (o1: T, o2: T): boolean => o1 === o2;
 
   public ngOnInit(): void {
-    if (this.options?.selectOptions) {
-      const { selectOptions } = this.options;
-      this.updateOptionsFn(
-        typeof selectOptions === 'function'
-          ? (f) => selectOptions(f, this.fieldControl, this.schema)
-          : () => selectOptions
-      );
+    // load all options from the start
+    if (!this.options.fetchOptionsOnFocus) {
+      this.selectOptionsListener();
     }
 
-    this.addSubscription(
-      this.conditionalOptionsChange,
-      ({ condition, value }) => {
-        this.updateOptionsFn((f) =>
-          condition?.conditionalOptions(
-            value,
-            this.fieldControl,
-            f,
-            this.schema
-          )
-        );
-      }
-    );
-
+    // add the current value to the options without waiting for the options to be fetched
+    if (this.fieldControl.value) {
+      this.selectOptions = this.addValueToOptions();
+    }
     this.addSubscription(this.fieldControl.valueChanges, (value) => {
       if (value && !this.valueInOptions()) {
         this.selectOptions = this.addValueToOptions();
@@ -175,24 +170,11 @@ export class SelectFieldComponent<T>
       this.optionsFn$.asObservable().pipe(
         filter((optionsFn) => !!optionsFn),
         switchMap((optionsFn) =>
-          concat(
-            this.optionsFilter$.pipe(
-              take(1),
-              tap(() => this.loading$.next(true))
-            ), // only debounce after the initial value
-            this.optionsFilter$.pipe(
-              tap(() => this.loading$.next(true)),
-              debounceTime(this.options?.search?.debounceTime ?? 300)
-            )
-          ).pipe(
-            distinctUntilChanged((x: any, y: any) => {
-              if (isDifferent(x, y)) {
-                return false; // This means the values are different, so it will emit
-              } else {
-                this.loading$.next(false);
-                return true; // This means values are equal, it will not emit the current value
-              }
-            }),
+          this.optionsFilter$.pipe(
+            filter((filter) => !!filter),
+            debounceTimeAfterFirst(this.options?.search?.debounceTime ?? 300),
+            distinctUntilChanged((x: any, y: any) => !isDifferent(x, y)),
+            tap(() => this.loading$.next(true)),
             switchMap((optionsFilter) =>
               this.handleGetOptions(optionsFn, optionsFilter)
             )
@@ -201,6 +183,13 @@ export class SelectFieldComponent<T>
       ),
       this.afterGetOptionsSuccess.bind(this)
     );
+  }
+
+  public onFocus(): void {
+    if (this.options?.fetchOptionsOnFocus && !this.fetchedOnFocus$$.value) {
+      this.fetchedOnFocus$$.next(true);
+      this.selectOptionsListener();
+    }
   }
 
   /**
@@ -278,8 +267,8 @@ export class SelectFieldComponent<T>
   }
 
   private updateOptionsFn(optionsFn: FormFieldSelectOptionsFn<T>): void {
-    this.optionsFn$.next(optionsFn);
     this.optionsFilter$.next({ page: 0, searchQuery: '' });
+    this.optionsFn$.next(optionsFn);
   }
 
   // if no readonlyDisplay is defined, show the single selected value
@@ -433,7 +422,16 @@ export class SelectFieldComponent<T>
         this.fieldControl.setValue(this.conditionalItemToSelectWhenExists);
       }
     }
+
     this.loading$.next(false);
+    if (this.options.fetchOptionsOnFocus) {
+      // fix for the select not opening when the options are fetched on focus
+      setTimeout(() => {
+        if ((this.select as any)._focused && !(this.select as any)._panelOpen) {
+          this.select.open();
+        }
+      });
+    }
   }
 
   /**
@@ -471,5 +469,30 @@ export class SelectFieldComponent<T>
       );
     }
     return [...new Set(items)];
+  }
+
+  private selectOptionsListener(): void {
+    if (this.options?.selectOptions) {
+      const { selectOptions } = this.options;
+      this.updateOptionsFn(
+        typeof selectOptions === 'function'
+          ? (f) => selectOptions(f, this.fieldControl, this.schema)
+          : () => selectOptions
+      );
+    }
+
+    this.addSubscription(
+      this.conditionalOptionsChange,
+      ({ condition, value }) => {
+        this.updateOptionsFn((f) =>
+          condition?.conditionalOptions(
+            value,
+            this.fieldControl,
+            f,
+            this.schema
+          )
+        );
+      }
+    );
   }
 }

@@ -67,6 +67,7 @@ export class FormFieldSelectAdvancedExampleComponent {
               infiniteScroll: {
                 enabled: true,
               },
+              fetchOptionsOnFocus: true,
             },
           },
           {
@@ -92,13 +93,16 @@ export class FormFieldSelectAdvancedExampleComponent {
                     title: searchQuery,
                     key: searchQuery,
                   };
-                  select.selectOptions = [{ value: book, label: book.title }];
+                  select.selectOptions$$.next([
+                    { value: book, label: book.title },
+                  ]);
                   select.fieldControl.setValue({
                     title: searchQuery,
                     key: searchQuery,
                   });
                 },
               },
+              fetchOptionsOnFocus: true,
             },
           },
           {
@@ -130,6 +134,7 @@ export class FormFieldSelectAdvancedExampleComponent {
                   .map((book) => book.title)
                   .filter((x) => !!x)
                   .join('<br>'),
+              fetchOptionsOnFocus: true,
             },
           },
         ],
@@ -153,6 +158,7 @@ export class FormFieldSelectAdvancedExampleComponent {
                 },
               ],
               colspan: 6,
+              fetchOptionsOnFocus: true,
             },
           },
           {
@@ -176,6 +182,7 @@ export class FormFieldSelectAdvancedExampleComponent {
               search: {
                 enabled: true,
               },
+              fetchOptionsOnFocus: true,
             },
             conditions: [
               {

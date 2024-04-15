@@ -1,7 +1,6 @@
 <mat-form-field
   [formGroup]="group"
   *ngIf="!fieldIsReadonly && !fieldIsHidden"
-  [floatLabel]="loading$.value || fieldControl.disabled ? 'never' : 'auto'"
   class="lab900-select-field"
   [class.has-value]="fieldControl?.value?.length"
   id="lab900-select-field-{{ fieldAttribute }}"
@@ -29,6 +28,7 @@
     [panelClass]="options?.panelClass"
     (infiniteScroll)="onScroll()"
     (openedChange)="onOpenedChange($event)"
+    (focus)="onFocus()"
   >
     <mat-select-trigger *ngIf="options?.customTriggerFn">
       <div [innerHTML]="options?.customTriggerFn(fieldControl.value)"></div>
@@ -73,14 +73,14 @@
       *ngIf="
         options?.multiple &&
         options?.selectAll?.enabled &&
-        selectOptions?.length
+        (selectOptions$$ | async)?.length
       "
       class="mat-mdc-option mdc-list-item mat-mdc-option-multiple select-all"
       (click)="handleToggleAllSelection()"
     >
       <mat-pseudo-checkbox
         [state]="selectAllState$ | async"
-        [disabled]="options?.selectAll?.disabled"
+        [disabled]="options?.selectAll?.disabled || loading$.value"
       ></mat-pseudo-checkbox>
       <span class="mdc-list-item__primary-text">
         {{
@@ -90,7 +90,7 @@
       </span>
     </div>
     <mat-option
-      *ngFor="let item of selectOptions"
+      *ngFor="let item of selectOptions$$ | async"
       [value]="item.value"
       [disabled]="item.disabled || loading$.value"
     >

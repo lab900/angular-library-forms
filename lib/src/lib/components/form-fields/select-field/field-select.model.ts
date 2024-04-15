@@ -88,6 +88,11 @@ export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
   };
   panelWidth?: string | number | null;
   panelClass?: string | string[];
+  /**
+   * This will only request to select options once the select opens
+   * The current value will be the only option until the select is opened
+   */
+  fetchOptionsOnFocus?: boolean;
 }
 
 export interface FormFieldSelect<T, R extends string | number = string>
