@@ -1,10 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { EditType, Lab900FormConfig, Lab900Form } from '@lab900/forms';
+import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 
 @Component({
   selector: 'lab900-form-field-button-example',
-  template: '<lab900-form [schema]="formSchema"></lab900-form>',
+  template: '<lab900-form [schema]="formSchema"/>',
+  standalone: true,
+  imports: [Lab900Form],
 })
 export class FormFieldButtonExampleComponent {
   @ViewChild(Lab900Form)

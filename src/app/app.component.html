@@ -8,7 +8,13 @@
           </button>
         </div>
         <a [routerLink]="['/']" class="lab900-showcase__header__logo">
-          <img src="assets/images/logo-duo-dark.svg" />
+          <img
+            [ngSrc]="'assets/images/logo-duo-dark.svg'"
+            alt="{{ 'app.title' | translate }}"
+            width="40"
+            height="35"
+            priority="high"
+          />
           <h1>{{ 'app.title' | translate }}</h1>
         </a>
       </div>
@@ -25,11 +31,11 @@
         <lab900-nav-list
           [navItemGroups]="navItemsGroups"
           [showLevelArrows]="true"
-        ></lab900-nav-list>
+        />
       </mat-drawer>
       <mat-drawer-content>
         <main>
-          <router-outlet></router-outlet>
+          <router-outlet />
         </main>
       </mat-drawer-content>
     </mat-drawer-container>

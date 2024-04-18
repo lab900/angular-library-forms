@@ -1,18 +1,18 @@
 {
   "name": "@lab900/forms",
-  "version": "16.2.7",
+  "version": "17.0.0",
   "author": "Lab900 <info@lab900.com> (https://lab900.com)",
   "license": "MIT",
   "peerDependencies": {
-    "@angular/common": "~16.2.8",
-    "@angular/core": "~16.2.8",
-    "@angular/material": "~16.2.7",
-    "@ngx-translate/core": "^15.0.0",
-    "@angular/forms": "~16.2.8",
+    "@angular/common": ">=17.0.0",
+    "@angular/core": ">=17.0.0",
+    "@angular/material": ">=17.0.0",
+    "@ngx-translate/core": ">=15.0.0",
+    "@angular/forms": ">=17.0.0",
+    "@lab900/ui": ">=17.0.0",
     "@kolkov/angular-editor": "^3.0.0-beta.0",
-    "ngx-mask": "^16.3.9",
-    "ngx-mat-select-search": "^7.0.4",
-    "@lab900/ui": "^16.1.19 || 16.1.19-hotfix"
+    "ngx-mask": "^17.0.7",
+    "ngx-mat-select-search": "^7.0.4"
   },
   "repository": {
     "type": "git",

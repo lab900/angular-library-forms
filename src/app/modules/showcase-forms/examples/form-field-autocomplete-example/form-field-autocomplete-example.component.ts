@@ -1,17 +1,20 @@
 import { Component, ViewChild } from '@angular/core';
 import {
-  Lab900FormConfig,
-  Lab900Form,
   EditType,
+  Lab900Form,
+  Lab900FormConfig,
   ValueLabel,
 } from '@lab900/forms';
 import { of } from 'rxjs';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'lab900-form-field-autocomplete-example',
   styleUrls: ['./form-field-autocomplete-example.component.scss'],
   template:
-    '<lab900-form [schema]="formSchema"></lab900-form><button mat-raised-button color="primary" (click)="validate()">Submit</button>',
+    '<lab900-form [schema]="formSchema"/><button mat-raised-button color="primary" (click)="validate()">Submit</button>',
+  standalone: true,
+  imports: [Lab900Form, MatButton],
 })
 export class FormFieldAutocompleteExampleComponent {
   @ViewChild(Lab900Form)
@@ -58,7 +61,7 @@ export class FormFieldAutocompleteExampleComponent {
   private filter(value: string): ValueLabel[] {
     const filterValue = value.toLowerCase();
     return this.options.filter((option: ValueLabel) =>
-      option.label.toLowerCase().includes(filterValue)
+      option.label.toLowerCase().includes(filterValue),
     );
   }
 

@@ -32,11 +32,23 @@ import {
 } from './field-select.model';
 import { IFieldConditions } from '../../../models/IFieldConditions';
 import { ValueLabel } from '../../../models/form-field-base';
-import { MatSelect } from '@angular/material/select';
-import { MatOption, MatPseudoCheckboxState } from '@angular/material/core';
+import {
+  MatPseudoCheckbox,
+  MatPseudoCheckboxState,
+} from '@angular/material/core';
 import { coerceArray } from '@angular/cdk/coercion';
 import { isDifferent } from '@lab900/ui';
 import { debounceTimeAfterFirst } from '../../../utils/helpers';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
+import { SelectInfiniteScrollDirective } from './select-field-infinite-scroll.directive';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelect, MatSelectModule } from '@angular/material/select';
+import { MatOption } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'lab900-select-field',
@@ -53,6 +65,23 @@ import { debounceTimeAfterFirst } from '../../../utils/helpers';
         margin-left: 10px;
       }
     `,
+  ],
+  standalone: true,
+  imports: [
+    MatFormFieldModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+    NgIf,
+    TranslateModule,
+    SelectInfiniteScrollDirective,
+    NgxMatSelectSearchModule,
+    FormsModule,
+    AsyncPipe,
+    MatButton,
+    MatPseudoCheckbox,
+    NgForOf,
+    MatIconButton,
+    MatIcon,
   ],
 })
 export class SelectFieldComponent<T>
@@ -73,7 +102,7 @@ export class SelectFieldComponent<T>
 
   private selectAllSub?: Subscription;
   public readonly selectAllState$ = new BehaviorSubject<MatPseudoCheckboxState>(
-    'unchecked'
+    'unchecked',
   );
 
   @ViewChild('select')
@@ -117,7 +146,7 @@ export class SelectFieldComponent<T>
     .asObservable()
     .pipe(
       map((filter) => filter?.searchQuery ?? ''),
-      shareReplay(1)
+      shareReplay(1),
     );
 
   public readonly loading$ = new BehaviorSubject<boolean>(false);
@@ -128,7 +157,7 @@ export class SelectFieldComponent<T>
       return this.selectOptions.find((opt) =>
         this.options?.compareWith
           ? this.options?.compareWith(opt.value, this.fieldControl.value)
-          : this.defaultCompare(opt.value, this.fieldControl.value)
+          : this.defaultCompare(opt.value, this.fieldControl.value),
       );
     }
     return null;
@@ -152,7 +181,7 @@ export class SelectFieldComponent<T>
 
   public ngOnInit(): void {
     // load all options from the start
-    if (!this.options.fetchOptionsOnFocus) {
+    if (!this.options?.fetchOptionsOnFocus) {
       this.selectOptionsListener();
     }
 
@@ -176,12 +205,12 @@ export class SelectFieldComponent<T>
             distinctUntilChanged((x: any, y: any) => !isDifferent(x, y)),
             tap(() => this.loading$.next(true)),
             switchMap((optionsFilter) =>
-              this.handleGetOptions(optionsFn, optionsFilter)
-            )
-          )
-        )
+              this.handleGetOptions(optionsFn, optionsFilter),
+            ),
+          ),
+        ),
       ),
-      this.afterGetOptionsSuccess.bind(this)
+      this.afterGetOptionsSuccess.bind(this),
     );
   }
 
@@ -216,7 +245,7 @@ export class SelectFieldComponent<T>
   }
 
   public getOptionsMatchingTheValue(
-    options = this.selectOptions
+    options = this.selectOptions,
   ): ValueLabel<T>[] {
     const value = coerceArray(this.fieldControl.value);
     const compare = this.options?.compareWith || this.defaultCompare;
@@ -226,13 +255,13 @@ export class SelectFieldComponent<T>
   public onConditionalChange(
     dependOn: string,
     value: string,
-    firstRun: boolean
+    firstRun: boolean,
   ): void {
     setTimeout(() => {
       const condition = this.schema.conditions.find((c) =>
         (Array.isArray(c.dependOn) ? c.dependOn : [c.dependOn]).includes(
-          dependOn
-        )
+          dependOn,
+        ),
       );
       if (condition?.conditionalOptions) {
         if (!firstRun || !value) {
@@ -276,14 +305,14 @@ export class SelectFieldComponent<T>
   public getReadOnlyDisplay(): string {
     if (this.options?.readonlyDisplay) {
       return this.translateService.instant(
-        this.options.readonlyDisplay(this.fieldControl.value) || '-'
+        this.options.readonlyDisplay(this.fieldControl.value) || '-',
       );
     }
 
     if (this.selectedOption) {
       if (this.options?.displayOptionFn) {
         return this.translateService.instant(
-          this.options?.displayOptionFn(this.selectedOption)
+          this.options?.displayOptionFn(this.selectedOption),
         );
       } else {
         return this.translateService.instant(this.selectedOption.label);
@@ -321,7 +350,7 @@ export class SelectFieldComponent<T>
         .asObservable()
         .pipe(
           filter((loading) => !loading),
-          take(1)
+          take(1),
         )
         .subscribe(() => {
           setTimeout(() => {
@@ -357,7 +386,7 @@ export class SelectFieldComponent<T>
    */
   private handleGetOptions(
     optionsFn: FormFieldSelectOptionsFn<T>,
-    optionsFilter: FormFieldSelectOptionsFilter
+    optionsFilter: FormFieldSelectOptionsFilter,
   ): Observable<ValueLabel<T>[]> {
     const values = optionsFn(optionsFilter);
     const values$ = isObservable(values) ? values : of(values);
@@ -372,7 +401,7 @@ export class SelectFieldComponent<T>
         ) {
           this.fieldControl.setValue(options[0].value);
         }
-      })
+      }),
     );
   }
 
@@ -416,7 +445,7 @@ export class SelectFieldComponent<T>
     if (this.conditionalItemToSelectWhenExists) {
       const value = coerceArray(this.conditionalItemToSelectWhenExists);
       const inOptions = this.selectOptions.some((o) =>
-        value.some((v) => compare(o.value, v))
+        value.some((v) => compare(o.value, v)),
       );
       if (inOptions) {
         this.fieldControl.setValue(this.conditionalItemToSelectWhenExists);
@@ -424,7 +453,7 @@ export class SelectFieldComponent<T>
     }
 
     this.loading$.next(false);
-    if (this.options.fetchOptionsOnFocus) {
+    if (this.options?.fetchOptionsOnFocus) {
       // fix for the select not opening when the options are fetched on focus
       setTimeout(() => {
         if ((this.select as any)._focused && !(this.select as any)._panelOpen) {
@@ -443,7 +472,7 @@ export class SelectFieldComponent<T>
     if (!this.options?.displaySelectedOptionFn) {
       label = "ERROR: Can't display";
       console.error(
-        `Please define a displaySelectedOptionFn to display your currently selected option for the field with attribute ${this.fieldAttribute} since it is not included in the current options`
+        `Please define a displaySelectedOptionFn to display your currently selected option for the field with attribute ${this.fieldAttribute} since it is not included in the current options`,
       );
     }
     const compare = this.options?.compareWith || this.defaultCompare;
@@ -465,7 +494,7 @@ export class SelectFieldComponent<T>
       const compare = this.options?.compareWith || this.defaultCompare;
       return items.filter(
         (item, idx, arr) =>
-          arr.findIndex(({ value }) => compare(item.value, value)) === idx
+          arr.findIndex(({ value }) => compare(item.value, value)) === idx,
       );
     }
     return [...new Set(items)];
@@ -477,7 +506,7 @@ export class SelectFieldComponent<T>
       this.updateOptionsFn(
         typeof selectOptions === 'function'
           ? (f) => selectOptions(f, this.fieldControl, this.schema)
-          : () => selectOptions
+          : () => selectOptions,
       );
     }
 
@@ -489,10 +518,10 @@ export class SelectFieldComponent<T>
             value,
             this.fieldControl,
             f,
-            this.schema
-          )
+            this.schema,
+          ),
         );
-      }
+      },
     );
   }
 }

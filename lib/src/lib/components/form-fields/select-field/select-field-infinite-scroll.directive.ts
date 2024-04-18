@@ -20,6 +20,7 @@ const SELECT_ITEM_HEIGHT_EM = 3;
  */
 @Directive({
   selector: 'mat-select[lab900InfiniteScroll]',
+  standalone: true,
 })
 export class SelectInfiniteScrollDirective
   implements OnInit, OnDestroy, AfterViewInit
@@ -36,7 +37,10 @@ export class SelectInfiniteScrollDirective
 
   private destroyed$ = new Subject<boolean>();
 
-  public constructor(private matSelect: MatSelect, private ngZone: NgZone) {}
+  public constructor(
+    private matSelect: MatSelect,
+    private ngZone: NgZone,
+  ) {}
 
   public ngOnInit(): void {
     this.evaluateThreshold();
@@ -76,7 +80,7 @@ export class SelectInfiniteScrollDirective
         debounceTime(this.debounceTime),
         tap((event) => {
           this.handleScrollEvent(event);
-        })
+        }),
       )
       .subscribe();
   }

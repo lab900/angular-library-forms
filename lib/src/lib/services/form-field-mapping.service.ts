@@ -4,7 +4,7 @@ import { FormComponent } from '../components/AbstractFormComponent';
 import { EditType } from '../models/editType';
 import { LAB900_FORM_FIELD_TYPES } from '../models/Lab900FormModuleSettings';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class FormFieldMappingService {
   private readonly inputFieldComponent: Type<FormComponent>;
   private readonly passwordFieldComponent: Type<FormComponent>;

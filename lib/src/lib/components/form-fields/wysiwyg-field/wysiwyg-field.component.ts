@@ -1,8 +1,12 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { matFormFieldAnimations } from '@angular/material/form-field';
 import { FormComponent } from '../../AbstractFormComponent';
-import { AngularEditorConfig } from '@kolkov/angular-editor';
+import {
+  AngularEditorConfig,
+  AngularEditorModule,
+} from '@kolkov/angular-editor';
 import { WysiwgFieldModel } from './wysiwg-field.model';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'lab900-wysiwyg-field',
@@ -11,11 +15,13 @@ import { WysiwgFieldModel } from './wysiwg-field.model';
       <angular-editor
         [formControlName]="fieldAttribute"
         [config]="editorConfig"
-      ></angular-editor>
+      />
     </div>
   `,
   styleUrls: ['./wysiwyg-field.component.scss'],
   animations: [matFormFieldAnimations.transitionMessages],
+  standalone: true,
+  imports: [AngularEditorModule, ReactiveFormsModule],
 })
 export class WysiwygFieldComponent
   extends FormComponent<WysiwgFieldModel>

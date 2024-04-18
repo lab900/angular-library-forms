@@ -1,11 +1,26 @@
 import { Component, Inject, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { DialogFormData } from '../../models/dialogFormData';
 import { Lab900Form } from '../form-container/form-container.component';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'lab900-form-dialog',
   templateUrl: './form-dialog.component.html',
+  standalone: true,
+  imports: [
+    MatDialogContent,
+    Lab900Form,
+    MatDialogActions,
+    MatButton,
+    MatDialogClose,
+  ],
 })
 export class FormDialogComponent<T> {
   @ViewChild(Lab900Form)
@@ -14,7 +29,7 @@ export class FormDialogComponent<T> {
 
   public constructor(
     @Inject(MAT_DIALOG_DATA) public dialogFormData: DialogFormData<T>,
-    private dialogRef: MatDialogRef<FormDialogComponent<T>>
+    private dialogRef: MatDialogRef<FormDialogComponent<T>>,
   ) {}
 
   public submit(item: T): void {

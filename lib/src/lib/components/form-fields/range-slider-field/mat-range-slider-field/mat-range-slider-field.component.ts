@@ -1,6 +1,9 @@
 import { Component, ElementRef, Input, ViewEncapsulation } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BaseControlValueAccessorDirective } from '../../../../models/forms/BaseControlValueAccessor';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'lab900-mat-range-slider-field',
@@ -14,6 +17,8 @@ import { BaseControlValueAccessorDirective } from '../../../../models/forms/Base
     },
   ],
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [MatSliderModule, MatFormFieldModule, MatInputModule],
 })
 export class MatRangeSliderFieldComponent extends BaseControlValueAccessorDirective<
   number[]
@@ -62,7 +67,7 @@ export class MatRangeSliderFieldComponent extends BaseControlValueAccessorDirect
     const newValue = this.parseValue((event.target as any).value);
     this.updateSliderInstanceValues(
       0,
-      newValue >= this.min ? newValue : this.min
+      newValue >= this.min ? newValue : this.min,
     );
   }
 
@@ -70,7 +75,7 @@ export class MatRangeSliderFieldComponent extends BaseControlValueAccessorDirect
     const newValue = this.parseValue((event.target as any).value);
     this.updateSliderInstanceValues(
       1,
-      newValue <= this.max ? newValue : this.max
+      newValue <= this.max ? newValue : this.max,
     );
   }
 

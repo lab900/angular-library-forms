@@ -20,7 +20,7 @@
         (translateChange)="toggleTranslate($event)"
         [translateLabel]="translateLabel"
         [stopTranslateLabel]="stopTranslateLabel"
-      ></lab900-language-picker>
+      />
     </div>
     <div *ngIf="!translate">
       <mat-form-field class="lab900-input-field">
@@ -34,7 +34,7 @@
           (ngModelChange)="updateGlobalTranslation($event)"
           [required]="required"
           [readonly]="readonly"
-          [ngClass]="{ readonly: readonly }"
+          [class.readonly]="readonly"
         />
         <textarea
           *ngIf="useTextAreaField"
@@ -44,7 +44,7 @@
           (ngModelChange)="updateGlobalTranslation($event)"
           [required]="required"
           [readonly]="readonly"
-          [ngClass]="{ readonly: readonly }"
+          [class.readonly]="readonly"
         ></textarea>
       </mat-form-field>
     </div>
@@ -65,7 +65,7 @@
             (ngModelChange)="updateSingleLanguage($event, lang.value)"
             [required]="required"
             [readonly]="readonly"
-            [ngClass]="{ readonly: readonly }"
+            [class.readonly]="readonly"
             [disabled]="activeLanguage.disabled"
           />
           <textarea
@@ -76,7 +76,7 @@
             (ngModelChange)="updateSingleLanguage($event, lang.value)"
             [required]="required"
             [readonly]="readonly"
-            [ngClass]="{ readonly: readonly }"
+            [class.readonly]="readonly"
             [disabled]="activeLanguage.disabled"
           ></textarea>
         </mat-form-field>

@@ -14,14 +14,32 @@ import { ImagePreviewModalComponent } from '../../image-preview-modal/image-prev
 import { fetchImageBase64 } from '../../../utils/image.utils';
 import { FormFieldFilePreview } from './file-preview-field.model';
 import { take } from 'rxjs/operators';
+import { TranslateModule } from '@ngx-translate/core';
+import { NgForOf, NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { MatCard } from '@angular/material/card';
+import { MatIcon } from '@angular/material/icon';
+import { AuthImageDirective } from '../../../directives/auth-image.directive';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'lab900-file-preview-field',
   templateUrl: './file-preview-field.component.html',
   styleUrls: ['./file-preview-field.component.scss'],
+  standalone: true,
+  imports: [
+    TranslateModule,
+    NgIf,
+    MatButton,
+    MatCard,
+    MatIcon,
+    AuthImageDirective,
+    MatTooltip,
+    NgForOf,
+  ],
 })
 export class FilePreviewFieldComponent<
-  T
+  T,
 > extends FormComponent<FormFieldFilePreview> {
   private readonly dialog = inject(MatDialog);
   @HostBinding('class')
@@ -89,7 +107,7 @@ export class FilePreviewFieldComponent<
 
   public onMetaDataChanged(
     data: T,
-    originalData?: Lab900File
+    originalData?: Lab900File,
   ): Promise<boolean> {
     return new Promise<boolean>((resolve) => {
       const files = this.files;
@@ -109,7 +127,7 @@ export class FilePreviewFieldComponent<
       (listFile: Lab900File) =>
         listFile.fileName === file.fileName &&
         listFile.type === file.type &&
-        listFile.size === file.size
+        listFile.size === file.size,
     );
   }
 

@@ -1,5 +1,6 @@
 import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'lab900-unknown-field',
@@ -7,6 +8,8 @@ import { FormComponent } from '../../AbstractFormComponent';
     <p>Unknown schema:</p>
     <pre>{{ schema | json }}</pre>
   </div>`,
+  standalone: true,
+  imports: [JsonPipe],
 })
 export class UnknownFieldComponent extends FormComponent {
   @HostBinding('class')

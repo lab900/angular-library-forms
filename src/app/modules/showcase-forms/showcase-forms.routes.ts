@@ -1,5 +1,4 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { MarkdownPageComponent } from '../shared/components/markdown-page/markdown-page.component';
 import { ShowcaseHomeComponent } from '../shared/components/showcase-home/showcase-home.component';
 import { ShowcaseExample } from '../shared/models/showcase-example.model';
@@ -38,7 +37,7 @@ import { showcaseFormsNavItems } from './showcase-forms.nav-items';
 import { FormFieldAmountExampleComponent } from './examples/form-field-amount-example/form-field-amount-example.component';
 import { FormFieldSearchExampleComponent } from './examples/form-field-search-example/form-field-search-example.component';
 
-const routes: Routes = [
+export default [
   {
     path: '',
     component: ShowcaseHomeComponent,
@@ -57,23 +56,23 @@ const routes: Routes = [
       new ShowcaseExample(
         FormContainerReadonlyExampleComponent,
         'Form Container Readonly',
-        'form-container-example'
+        'form-container-example',
       ),
     ],
-    'guides/creating-forms.md'
+    'guides/creating-forms.md',
   ),
   new ShowcaseRoute('conditional-forms', 'Conditional forms', [
     new ShowcaseExample(
       FormConditionalsExampleComponent,
-      'Conditional Form Container'
+      'Conditional Form Container',
     ),
     new ShowcaseExample(
       FormCondtionalValidationExampleComponent,
-      'Conditional validation'
+      'Conditional validation',
     ),
     new ShowcaseExample(
       FormCondtionalWithExternalFormExampleComponent,
-      'Conditionals across multiple forms'
+      'Conditionals across multiple forms',
     ),
   ]),
   new ShowcaseRoute('form-field-autocomplete', 'Form Fields: Autocomplete', [
@@ -81,33 +80,33 @@ const routes: Routes = [
     new ShowcaseExample(
       FormFieldAutocompleteMultipleExampleComponent,
       'Autocomplete Multiple',
-      'form-field-autocomplete-example'
+      'form-field-autocomplete-example',
     ),
   ]),
   new ShowcaseRoute('form-field-repeater', 'Form Fields: Repeater', [
     new ShowcaseExample(
       FormFieldRepeaterAdvancedExampleComponent,
-      'Repeater (nested)'
+      'Repeater (nested)',
     ),
     new ShowcaseExample(FormFieldRepeaterExampleComponent, 'Repeater'),
     new ShowcaseExample(
       FormFieldRepeaterFixedExampleComponent,
-      'Repeater fixed'
+      'Repeater fixed',
     ),
   ]),
   new ShowcaseRoute('form-field-datepicker', 'Form Fields: Datepicker', [
     new ShowcaseExample(FormFieldDatePickerExampleComponent, 'Date picker'),
     new ShowcaseExample(
       FormFieldDateYearMonthPickerExampleComponent,
-      'Date Year Month picker'
+      'Date Year Month picker',
     ),
     new ShowcaseExample(
       FormFieldDateRangePickerExampleComponent,
-      'Date range picker'
+      'Date range picker',
     ),
     new ShowcaseExample(
       FormFieldDateTimePickerExampleComponent,
-      'Date time picker'
+      'Date time picker',
     ),
   ]),
   new ShowcaseRoute('form-field-input', 'Form Fields: Input & Textarea', [
@@ -133,7 +132,7 @@ const routes: Routes = [
     new ShowcaseExample(FormFieldSelectExampleComponent, 'Selects'),
     new ShowcaseExample(
       FormFieldSelectAdvancedExampleComponent,
-      'Advanced selects'
+      'Advanced selects',
     ),
   ]),
   new ShowcaseRoute('form-field-file-upload', 'Form Fields: File upload', [
@@ -145,43 +144,37 @@ const routes: Routes = [
     [
       new ShowcaseExample(
         FormFieldDragNDropFileExampleComponent,
-        'Drag And Drop'
+        'Drag And Drop',
       ),
       new ShowcaseExample(
         FormFieldDragNDropFileExampleFullWidthComponent,
-        'Drag And Drop Full Width'
+        'Drag And Drop Full Width',
       ),
-    ]
+    ],
   ),
   new ShowcaseRoute('form-field-multi-lang', 'Form Fields: Multi language', [
     new ShowcaseExample(
       FormFieldMultiLanguageExampleComponent,
-      'Multi language'
+      'Multi language',
     ),
   ]),
   new ShowcaseRoute('form-field-nested-groups', 'Form Fields: Nested groups', [
     new ShowcaseExample(
       FormFieldNestedGroupsExampleComponent,
-      'Nested groups with a row'
+      'Nested groups with a row',
     ),
     new ShowcaseExample(
       FormFieldNestedGroupsByAttributeExampleComponent,
-      'Nested groups by attributes'
+      'Nested groups by attributes',
     ),
   ]),
   new ShowcaseRoute('form-field-amount', 'Form Fields: Amount', [
     new ShowcaseExample(
       FormFieldAmountExampleComponent,
-      'Formatted amount field'
+      'Formatted amount field',
     ),
   ]),
   new ShowcaseRoute('form-field-search', 'Form Fields: Search', [
     new ShowcaseExample(FormFieldSearchExampleComponent, 'Search field'),
   ]),
-];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
-export class ShowcaseFormsRoutingModule {}
+] satisfies Routes;

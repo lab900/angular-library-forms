@@ -1,27 +1,36 @@
-<div *ngIf="data$ | async as data" class="showcase-home">
-  <header class="showcase-home__header" *ngIf="data.config as config">
-    <span class="showcase-home__header__version">{{ config.version }}</span>
-    <div class="row">
-      <mat-icon>{{ config?.icon }}</mat-icon>
-      <h1>{{ config.title | translate }}</h1>
-      <p>{{ config.description | translate }}</p>
-    </div>
-  </header>
-  <div class="showcase-home__links row" *ngIf="data.nav as navItemGroups">
-    <ng-container *ngFor="let group of navItemGroups">
-      <div *ngFor="let item of group.items" style="margin-bottom: 30px">
-        <h2>{{ item.label | translate }}</h2>
-        <div style="display: flex; flex-wrap: wrap">
-          <button
-            style="margin-right: 10px"
-            *ngFor="let link of item.children"
-            mat-raised-button
-            [routerLink]="['/' + link.route]"
-          >
-            {{ link.label | translate }}
-          </button>
+@if (data$ | async; as data) {
+  <div class="showcase-home">
+    @if (data.config; as config) {
+      <header class="showcase-home__header">
+        <span class="showcase-home__header__version">{{ config.version }}</span>
+        <div class="row">
+          <mat-icon>{{ config?.icon }}</mat-icon>
+          <h1>{{ config.title | translate }}</h1>
+          <p>{{ config.description | translate }}</p>
         </div>
+      </header>
+    }
+    @if (data.nav; as navItemGroups) {
+      <div class="showcase-home__links row">
+        @for (group of navItemGroups; track group) {
+          @for (item of group.items; track item) {
+            <div style="margin-bottom: 30px">
+              <h2>{{ item.label | translate }}</h2>
+              <div style="display: flex; flex-wrap: wrap">
+                @for (link of item.children; track link) {
+                  <button
+                    style="margin-right: 10px"
+                    mat-raised-button
+                    [routerLink]="['/' + link.route]"
+                  >
+                    {{ link.label | translate }}
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        }
       </div>
-    </ng-container>
+    }
   </div>
-</div>
+}

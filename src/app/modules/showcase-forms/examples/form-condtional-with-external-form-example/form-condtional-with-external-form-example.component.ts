@@ -1,19 +1,25 @@
 import { Component } from '@angular/core';
-import { EditType, Lab900FormConfig } from '@lab900/forms';
-import { ValueLabel } from '@lab900/forms';
+import {
+  EditType,
+  Lab900Form,
+  Lab900FormConfig,
+  ValueLabel,
+} from '@lab900/forms';
 
 @Component({
   selector: 'lab900-form-conditional-with-external-form-example',
   template: `
     <h2>Form 1</h2>
-    <lab900-form #form1 [schema]="schema"></lab900-form>
+    <lab900-form #form1 [schema]="schema" />
     <h2>Form 2</h2>
     <lab900-form
       #form2
       [schema]="schema2"
       [externalForms]="{ form1: form1.form }"
-    ></lab900-form>
+    />
   `,
+  standalone: true,
+  imports: [Lab900Form],
 })
 export class FormCondtionalWithExternalFormExampleComponent {
   public schema: Lab900FormConfig = {

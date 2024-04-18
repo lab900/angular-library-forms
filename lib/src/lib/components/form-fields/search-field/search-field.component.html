@@ -54,7 +54,7 @@
     matSuffix
     diameter="16"
     style="display: inline-flex"
-  ></mat-spinner>
+  />
   <mat-hint *ngIf="!!inputRef.value && (searchRef?.noResult$ | async) === true">
     {{
       options?.notFoundLabel ?? 'forms.search-field.notFoundLabel'

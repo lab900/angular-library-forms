@@ -30,7 +30,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   implements AfterViewInit, OnDestroy, AfterContentInit
 {
   public readonly setting: Lab900FormModuleSettings = inject(
-    LAB900_FORM_MODULE_SETTINGS
+    LAB900_FORM_MODULE_SETTINGS,
   );
   protected readonly translateService = inject(TranslateService);
 
@@ -91,7 +91,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   }
 
   public getErrorMessage = (
-    group: UntypedFormGroup = this.group
+    group: UntypedFormGroup = this.group,
   ): Observable<string> => {
     const field = group.get(String(this.fieldAttribute));
     let errors: ValidationErrors = field.errors;
@@ -117,7 +117,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
         ) {
           message = this.translateService.get(
             this.schema.errorMessages[key],
-            field.getError(key)
+            field.getError(key),
           );
         } else {
           message = this.getDefaultErrorMessage(key, field.getError(key));
@@ -153,14 +153,14 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     value: any,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    firstRun?: boolean
+    firstRun?: boolean,
   ): void {
     // Override in child component
   }
 
   private getDefaultErrorMessage(
     key: string,
-    interpolateParams: object = this.schema.options
+    interpolateParams: object = this.schema.options,
   ): Observable<string> {
     switch (key) {
       case 'required':
@@ -168,12 +168,12 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
       case 'minlength':
         return this.translateService.get(
           'forms.error.minlength',
-          interpolateParams
+          interpolateParams,
         );
       case 'maxlength':
         return this.translateService.get(
           'forms.error.maxlength',
-          interpolateParams
+          interpolateParams,
         );
       case 'min':
         return this.translateService.get('forms.error.min', interpolateParams);
@@ -182,32 +182,32 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
       case 'pattern':
         return this.translateService.get(
           'forms.error.pattern',
-          interpolateParams
+          interpolateParams,
         );
       case 'requireMatch':
         return this.translateService.get(
           'forms.error.requireMatch',
-          interpolateParams
+          interpolateParams,
         );
       case 'toManyDecimalSeparators':
         return this.translateService.get(
           'forms.error.toManyDecimalSeparators',
-          interpolateParams
+          interpolateParams,
         );
       case 'invalidNumber':
         return this.translateService.get(
           'forms.error.invalidNumber',
-          interpolateParams
+          interpolateParams,
         );
       case 'noSearchMatches':
         return this.translateService.get(
           'forms.error.noSearchMatches',
-          interpolateParams
+          interpolateParams,
         );
       default:
         return this.translateService.get(
           'forms.error.generic',
-          interpolateParams
+          interpolateParams,
         );
     }
   }
@@ -215,7 +215,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   public hide(): void {
     this.fieldIsHidden = FormFieldUtils.isHidden(
       this.schema?.options,
-      this.group
+      this.group,
     );
   }
 
@@ -223,7 +223,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     this.fieldIsReadonly = FormFieldUtils.isReadOnly(
       this.schema?.options,
       this.group.value,
-      this.readonly
+      this.readonly,
     );
   }
 
@@ -232,7 +232,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
       FormFieldUtils.isRequired(
         this.fieldIsReadonly,
         this.schema,
-        this.group.value
+        this.group.value,
       ) ?? false;
     if (this.fieldIsRequired != isRequired) {
       this.fieldIsRequired = isRequired;
@@ -242,8 +242,8 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
           ?.setValidators(
             Lab900FormBuilderService.addValidators(
               this.schema,
-              this.group.value
-            )
+              this.group.value,
+            ),
           );
       });
     }
@@ -265,7 +265,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
             if (this.onConditionalChange) {
               this.onConditionalChange(dependOn, value, firstRun);
             }
-          }
+          },
         );
         if (subs?.length) {
           this.subscriptions.concat(subs);

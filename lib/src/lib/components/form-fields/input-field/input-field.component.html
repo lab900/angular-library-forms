@@ -14,7 +14,7 @@
     [formControlName]="fieldAttribute"
     [required]="fieldIsRequired"
     [readonly]="fieldIsReadonly"
-    [ngClass]="{ readonly: fieldIsReadonly }"
+    [class.readonly]="fieldIsReadonly"
     lab900InputAutofocus
     [autofocus]="options?.autofocus"
     [style]="options?.style || ''"
@@ -27,7 +27,7 @@
     [formControlName]="fieldAttribute"
     [required]="fieldIsRequired"
     [readonly]="fieldIsReadonly"
-    [ngClass]="{ readonly: fieldIsReadonly }"
+    [class.readonly]="fieldIsReadonly"
     [mask]="options?.fieldMask?.mask"
     [prefix]="(options?.fieldMask?.prefix ?? setting?.fieldMask?.prefix) || ''"
     [suffix]="(options?.fieldMask?.suffix ?? setting?.fieldMask?.suffix) || ''"
@@ -63,12 +63,12 @@
     [icon]="schema.icon"
     *ngIf="schema?.icon?.position === 'left'"
     matTextPrefix
-  ></lab900-icon>
+  />
   <lab900-icon
     [icon]="schema.icon"
     *ngIf="schema?.icon?.position === 'right'"
     matTextSuffix
-  ></lab900-icon>
+  />
   <span class="lab900-input-field--suffix" *ngIf="suffix" matTextSuffix>{{
     suffix | translate
   }}</span>

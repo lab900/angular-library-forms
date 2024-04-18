@@ -18,11 +18,11 @@
     [min]="minDate"
   />
 
-  <mat-datepicker-toggle
+  <ngx-mat-datepicker-toggle
     [disabled]="fieldIsReadonly || fieldControl.disabled"
     matSuffix
     [for]="picker"
-  ></mat-datepicker-toggle>
+  />
   <ngx-mat-datetime-picker
     #picker
     [disabled]="fieldIsReadonly || fieldControl.disabled"

@@ -81,7 +81,7 @@
       <mat-pseudo-checkbox
         [state]="selectAllState$ | async"
         [disabled]="options?.selectAll?.disabled || loading$.value"
-      ></mat-pseudo-checkbox>
+      />
       <span class="mdc-list-item__primary-text">
         {{
           options.selectAll?.label || 'forms.select-field.selectAllLabel'
