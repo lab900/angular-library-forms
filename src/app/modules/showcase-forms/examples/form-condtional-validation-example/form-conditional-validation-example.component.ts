@@ -8,7 +8,7 @@ import { Validators } from '@angular/forms';
   standalone: true,
   imports: [Lab900Form],
 })
-export class FormCondtionalValidationExampleComponent {
+export class FormConditionalValidationExampleComponent {
   public schema: Lab900FormConfig = {
     fields: [
       {

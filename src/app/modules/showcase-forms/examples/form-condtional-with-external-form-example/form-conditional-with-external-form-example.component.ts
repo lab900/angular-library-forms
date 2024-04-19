@@ -21,7 +21,7 @@ import {
   standalone: true,
   imports: [Lab900Form],
 })
-export class FormCondtionalWithExternalFormExampleComponent {
+export class FormConditionalWithExternalFormExampleComponent {
   public schema: Lab900FormConfig = {
     fields: [
       {

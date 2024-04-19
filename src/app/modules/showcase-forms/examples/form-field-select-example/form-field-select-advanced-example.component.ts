@@ -31,7 +31,7 @@ const compare = (a: Book, b: Book): boolean =>
 
 @Component({
   selector: 'lab900-form-field-select-advanced-example',
-  template: ` <lab900-form [schema]="formSchema" [data]="data"> </lab900-form>
+  template: ` <lab900-form [schema]="formSchema" [data]="data" />
     <button (click)="logFormValue()">Log form data</button>`,
   standalone: true,
   imports: [Lab900Form],
@@ -109,7 +109,7 @@ export class FormFieldSelectAdvancedExampleComponent {
           },
           {
             attribute: 'books3',
-            title: 'Search multiple book',
+            title: 'Search multiple books',
             editType: EditType.Select,
             options: {
               compareWith: compare,
