@@ -1,55 +1,70 @@
-<div class="upload-file" [ngClass]="{ 'upload-file--compact': options.compact }">
-  <div
-    lab900DropFile
-    class="upload-file__container"
-    [ngClass]="{
-      'upload-file__container--compact': options.compact && !!files?.length
-    }"
-    (fileDropped)="handleFileList($event)"
-    (click)="fileField.click()"
-  >
-    <div class="instructions">
-      <mat-icon class="instructions__upload-icon">upload_file</mat-icon>
-      <span class="instructions__DD-text text-ellipsis">
-        {{ options.dropFilesText || "Drop Files" | translate }}
-      </span>
-      <div class="instructions__or-text-container">
-        <hr />
-        <span class="text-ellipsis">{{ "OR" | translate }}</span>
-        <hr />
-      </div>
-      <button
-        (click)="fileField.click(); $event.stopPropagation()"
-        color="primary"
-        class="instructions__upload-button text-ellipsis"
-        mat-flat-button
-      >
-        {{ options.dropFilesButton || "Upload Files" | translate }}
-      </button>
-    </div>
-    <input #fileField (change)="handleInput($event.target)" hidden type="file" [multiple]="options.maxFiles > 1" />
-  </div>
-
-  @if (!!files?.length) {
-    <div
-      class="file-list"
-      [ngClass]="{
-        'file-list--compact': options.compact,
-        'file-list--full': !options.compact
-      }"
-    >
-      @for (file of files; track file) {
-        <div class="file">
-          <span class="file__icon"><mat-icon>description</mat-icon></span>
-          <div class="file__info">
-            <div class="text-ellipsis">{{ file.name }}</div>
-            {{ formatBytes(file.size) }}
-          </div>
-          <button mat-icon-button class="file__icon" (click)="deleteFile(file)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
-      }
-    </div>
+@if (!fieldIsHidden && !fieldIsReadonly) {
+  @if (schema.title) {
+    <span class="lab900-form-field-label" translate>{{ schema.title }}</span>
   }
-</div>
+  <div class="upload-file" [class.upload-file--compact]="options.compact">
+    <div
+      lab900DropFile
+      class="upload-file__container"
+      [class.upload-file__container--compact]="
+        options.compact && !!files?.length
+      "
+      (fileDropped)="handleFileList($event)"
+      (click)="fileField.click()"
+    >
+      <div class="instructions">
+        <mat-icon class="instructions__upload-icon">upload_file</mat-icon>
+        <span class="instructions__DD-text text-ellipsis">
+          {{ options.dropFilesText || 'Drop Files' | translate }}
+        </span>
+        <div class="instructions__or-text-container">
+          <hr />
+          <span class="text-ellipsis">{{ 'OR' | translate }}</span>
+          <hr />
+        </div>
+        <button
+          (click)="fileField.click(); $event.stopPropagation()"
+          color="primary"
+          class="instructions__upload-button text-ellipsis"
+          mat-flat-button
+        >
+          {{ options.dropFilesButton || 'Upload Files' | translate }}
+        </button>
+      </div>
+      <input
+        #fileField
+        (change)="handleInput($event.target)"
+        hidden
+        type="file"
+        [multiple]="options.maxFiles > 1"
+      />
+    </div>
+
+    @if (!!files?.length) {
+      <div
+        class="file-list"
+        [ngClass]="{
+          'file-list--compact': options.compact,
+          'file-list--full': !options.compact
+        }"
+      >
+        @for (file of files; track file) {
+          <div class="file">
+            <span class="file__icon"><mat-icon>description</mat-icon></span>
+            <div class="file__info">
+              <div class="text-ellipsis">{{ file.name }}</div>
+              {{ formatBytes(file.size) }}
+            </div>
+            <button
+              mat-icon-button
+              class="file__icon"
+              (click)="deleteFile(file)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+}
