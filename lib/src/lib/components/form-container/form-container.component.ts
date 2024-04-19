@@ -22,7 +22,6 @@ import {
 } from '../../models/Lab900FormModuleSettings';
 import { FormFieldDirective } from '../../directives/form-field.directive';
 
-
 @Component({
   selector: 'lab900-form[schema]',
   templateUrl: './form-container.component.html',

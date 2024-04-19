@@ -20,8 +20,8 @@ import { MatIcon } from '@angular/material/icon';
     MatMenuItem,
     TranslateModule,
     MatTooltip,
-    MatIcon
-],
+    MatIcon,
+  ],
 })
 export class LanguagePickerComponent {
   @Input()

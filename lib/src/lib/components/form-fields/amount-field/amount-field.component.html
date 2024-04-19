@@ -4,7 +4,7 @@
     class="lab900-input-field {{ options?.align || 'left' }}"
     [class.spanFix]="options?.suffix || options?.prefix"
     id="lab900-input-field-{{ fieldAttribute }}"
-    >
+  >
     @if (schema.title) {
       <mat-label>{{ schema.title | translate }}</mat-label>
     }
@@ -23,37 +23,21 @@
       [style]="options?.style || ''"
       [maxDecimals]="maxDecimals"
       [minDecimals]="minDecimals"
-      />
-    @if (schema?.icon?.position === 'left') {
-      <lab900-icon
-        [icon]="schema.icon"
-        matPrefix
-        class="input-field__icon-left"
-      ></lab900-icon>
+    />
+    @if (schema?.icon?.position === "left") {
+      <lab900-icon [icon]="schema.icon" matPrefix class="input-field__icon-left"></lab900-icon>
     }
-    @if (schema?.icon?.position === 'right') {
-      <lab900-icon
-        [icon]="schema.icon"
-        matSuffix
-      ></lab900-icon>
+    @if (schema?.icon?.position === "right") {
+      <lab900-icon [icon]="schema.icon" matSuffix></lab900-icon>
     }
     @if (suffix) {
-      <span class="lab900-input-field--suffix" matTextSuffix>{{
-        suffix | translate
-      }}</span>
+      <span class="lab900-input-field--suffix" matTextSuffix>{{ suffix | translate }}</span>
     }
     @if (prefix) {
-      <span class="lab900-input-field--prefix" matTextPrefix>{{
-        prefix | translate
-      }}</span>
+      <span class="lab900-input-field--prefix" matTextPrefix>{{ prefix | translate }}</span>
     }
-    @if (
-      hint &&
-      !(schema.options.hint.hideHintOnValidValue && input.value) &&
-      !fieldIsReadonly
-      ) {
-      <mat-hint
-        >
+    @if (hint && !(schema.options.hint.hideHintOnValidValue && input.value) && !fieldIsReadonly) {
+      <mat-hint>
         <span [innerHTML]="hint | translate: hintValueTranslateData"></span>
       </mat-hint>
     }

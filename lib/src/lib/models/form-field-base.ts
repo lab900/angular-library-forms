@@ -15,7 +15,7 @@ export interface Icon {
 
 export interface FormFieldBase<
   T extends string | number = string,
-  O extends FormFieldBaseOptions = FormFieldBaseOptions
+  O extends FormFieldBaseOptions = FormFieldBaseOptions,
 > {
   attribute?: T;
   title?: string;

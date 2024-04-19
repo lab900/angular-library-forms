@@ -25,8 +25,8 @@ import { MatInputModule } from '@angular/material/input';
     NgxMatDatetimePickerModule,
     TranslateModule,
     MatButton,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class DateTimeFieldComponent extends FormComponent<FormFieldDateTimePicker> {
   @HostBinding('class')

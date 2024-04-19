@@ -12,7 +12,7 @@ export interface FormFieldDragNDropFileOptions extends FormFieldBaseOptions {
 }
 
 export interface FormFieldDragNDropFilePreview<
-  T extends string | number = string
+  T extends string | number = string,
 > extends FormFieldBase<T, FormFieldDragNDropFileOptions> {
   editType: EditType.DragNDrop;
 }

@@ -16,7 +16,7 @@ export interface FormFieldButtonOptions extends FormFieldBaseOptions {
   onClick?: (
     formGroup: UntypedFormGroup,
     currentScheme: Lab900FormField,
-    event: Event
+    event: Event,
   ) => any;
   label?: string;
   tooltip?: {

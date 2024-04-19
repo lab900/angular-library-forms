@@ -14,8 +14,8 @@ import { MatError } from '@angular/material/form-field';
     ReactiveFormsModule,
     MatRangeSliderFieldComponent,
     MatError,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class RangeSliderFieldComponent extends FormComponent<FormFieldRangeSlider> {
   @HostBinding('class')

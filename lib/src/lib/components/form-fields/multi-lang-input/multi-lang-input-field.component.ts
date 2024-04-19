@@ -14,8 +14,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     MultiLangFieldControlComponent,
     MatError,
     AsyncPipe,
-    ReactiveFormsModule
-],
+    ReactiveFormsModule,
+  ],
 })
 export class MultiLangInputFieldComponent extends FormComponent<FormFieldMultiLang> {
   @HostBinding('class')

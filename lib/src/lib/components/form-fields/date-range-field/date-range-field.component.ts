@@ -22,8 +22,8 @@ import { MatInputModule } from '@angular/material/input';
     ReactiveFormsModule,
     TranslateModule,
     MatDatepickerModule,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class DateRangeFieldComponent extends FormComponent<FormFieldDateRange> {
   @HostBinding('class')

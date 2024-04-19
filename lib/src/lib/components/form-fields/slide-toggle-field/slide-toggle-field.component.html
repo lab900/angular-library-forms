@@ -1,9 +1,5 @@
 @if (!fieldIsHidden) {
-  <div
-    [formGroup]="group"
-    class="lab900-slide-toggle-field mat-form-field-wrapper"
-    id="lab900-slide-toggle-field-{{ fieldAttribute }}"
-    >
+  <div [formGroup]="group" class="lab900-slide-toggle-field mat-form-field-wrapper" id="lab900-slide-toggle-field-{{ fieldAttribute }}">
     @if (schema.title) {
       <div class="lab900-slide-toggle-field__title">
         <mat-label>{{ schema.title | translate }}</mat-label>
@@ -15,14 +11,11 @@
       [required]="fieldIsRequired"
       [color]="options?.color || 'primary'"
       [labelPosition]="options?.labelPosition"
-      >
+    >
       {{ options?.label | translate }}
     </mat-slide-toggle>
     @if (touched && !valid && !fieldIsReadonly) {
-      <mat-error
-        class="lab900-slide-toggle-field__error"
-        >{{ getErrorMessage() | async }}</mat-error
-        >
-      }
-    </div>
-  }
+      <mat-error class="lab900-slide-toggle-field__error">{{ getErrorMessage() | async }}</mat-error>
+    }
+  </div>
+}

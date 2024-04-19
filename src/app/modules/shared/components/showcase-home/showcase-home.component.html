@@ -18,11 +18,7 @@
               <h2>{{ item.label | translate }}</h2>
               <div style="display: flex; flex-wrap: wrap">
                 @for (link of item.children; track link) {
-                  <button
-                    style="margin-right: 10px"
-                    mat-raised-button
-                    [routerLink]="['/' + link.route]"
-                  >
+                  <button style="margin-right: 10px" mat-raised-button [routerLink]="['/' + link.route]">
                     {{ link.label | translate }}
                   </button>
                 }

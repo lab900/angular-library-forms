@@ -9,7 +9,7 @@ export interface FormFieldDateYearMonthPickerOptions<T = Date>
 
 export interface FormFieldDateYearMonthPicker<
   T extends string | number = string,
-  D = Date
+  D = Date,
 > extends FormFieldBase<T, FormFieldDateYearMonthPickerOptions<D>> {
   editType: EditType.DateYearMonth;
 }

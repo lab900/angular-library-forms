@@ -6,7 +6,7 @@ export class FormFieldUtils {
   public static isReadOnly(
     fieldOptions: FormFieldBaseOptions,
     data: any,
-    readonly?: boolean
+    readonly?: boolean,
   ): boolean {
     let isReadOnly: boolean;
     if (readonly === true) {
@@ -22,7 +22,7 @@ export class FormFieldUtils {
   public static isRequired(
     isReadOnly: boolean,
     field: Lab900FormField<any>,
-    data: any
+    data: any,
   ): boolean {
     const { options, validators = [] } = field;
     if (isReadOnly) {
@@ -39,7 +39,7 @@ export class FormFieldUtils {
 
   public static isHidden(
     fieldOptions: FormFieldBaseOptions,
-    group: UntypedFormGroup
+    group: UntypedFormGroup,
   ): boolean {
     if (typeof fieldOptions?.hide === 'function') {
       return fieldOptions?.hide(group.value);
@@ -50,7 +50,7 @@ export class FormFieldUtils {
 
   public static infoTooltip(
     fieldOptions: FormFieldBaseOptions,
-    group: UntypedFormGroup
+    group: UntypedFormGroup,
   ): { text: string; icon?: string; class?: string } | null {
     if (typeof fieldOptions?.infoTooltip === 'function') {
       return fieldOptions.infoTooltip(group.value) ?? null;

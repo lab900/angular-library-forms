@@ -1,9 +1,5 @@
 @if (!fieldIsHidden) {
-  <mat-form-field
-    [formGroup]="group"
-    class="lab900-date-time-field"
-    id="lab900-date-time-field-{{ fieldAttribute }}"
-    >
+  <mat-form-field [formGroup]="group" class="lab900-date-time-field" id="lab900-date-time-field-{{ fieldAttribute }}">
     @if (schema.title) {
       <mat-label translate>{{ schema.title }}</mat-label>
     }
@@ -18,12 +14,8 @@
       [matDatepickerFilter]="options?.dateFilter"
       [max]="maxDate"
       [min]="minDate"
-      />
-    <ngx-mat-datepicker-toggle
-      [disabled]="fieldIsReadonly || fieldControl.disabled"
-      matSuffix
-      [for]="picker"
-      />
+    />
+    <ngx-mat-datepicker-toggle [disabled]="fieldIsReadonly || fieldControl.disabled" matSuffix [for]="picker" />
     <ngx-mat-datetime-picker
       #picker
       [disabled]="fieldIsReadonly || fieldControl.disabled"
@@ -34,29 +26,21 @@
       [stepMinute]="stepMinute"
       [dateClass]="options?.dateClass"
       (opened)="pickerOpened(picker)"
-      >
+    >
       <ngx-mat-datepicker-actions>
         <button mat-button ngxMatDatepickerCancel>
-          {{ 'GENERAL.CANCEL' | translate }}
+          {{ "GENERAL.CANCEL" | translate }}
         </button>
         <button mat-raised-button color="primary" ngxMatDatepickerApply>
-          {{ 'GENERAL.SAVE' | translate }}
+          {{ "GENERAL.SAVE" | translate }}
         </button>
       </ngx-mat-datepicker-actions>
     </ngx-mat-datetime-picker>
-    @if (
-      hint &&
-      !fieldIsReadonly &&
-      !(schema.options.hint.hideHintOnValidValue && input.value)
-      ) {
-      <mat-hint
-        ><span [innerHTML]="hint | translate: hintValueTranslateData"></span
-      ></mat-hint>
+    @if (hint && !fieldIsReadonly && !(schema.options.hint.hideHintOnValidValue && input.value)) {
+      <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
     }
     @if (!valid && !fieldIsReadonly) {
-      <mat-error
-        ><span [innerHTML]="getErrorMessage() | async"></span
-      ></mat-error>
+      <mat-error><span [innerHTML]="getErrorMessage() | async"></span></mat-error>
     }
   </mat-form-field>
 }

@@ -1,15 +1,9 @@
 @if (availableLanguages?.length && activeLanguage) {
   <div
     id="lab900-multi-lang-input-{{ this.formControlName }}"
-  class="lab900-multi-lang-input-wrapper lab900-multi-lang-input-wrapper--{{
-    setting?.formField?.appearance || 'standard'
-  }}"
-    >
-    <div
-    class="lab900-multi-lang-input lab900-multi-lang-input--{{
-      setting?.formField?.appearance || 'standard'
-    }}"
-      >
+    class="lab900-multi-lang-input-wrapper lab900-multi-lang-input-wrapper--{{ setting?.formField?.appearance || 'standard' }}"
+  >
+    <div class="lab900-multi-lang-input lab900-multi-lang-input--{{ setting?.formField?.appearance || 'standard' }}">
       <div>
         <lab900-language-picker
           [buttonColor]="buttonColor"
@@ -20,7 +14,7 @@
           (translateChange)="toggleTranslate($event)"
           [translateLabel]="translateLabel"
           [stopTranslateLabel]="stopTranslateLabel"
-          />
+        />
       </div>
       @if (!translate) {
         <div>
@@ -38,7 +32,7 @@
                 [required]="required"
                 [readonly]="readonly"
                 [class.readonly]="readonly"
-                />
+              />
             }
             @if (useTextAreaField) {
               <textarea
@@ -58,10 +52,7 @@
         <div>
           @for (lang of availableLanguages; track lang) {
             @if (lang.value === activeLanguage.value) {
-              <mat-form-field
-                class="lab900-input-field"
-                id="lab900-input-field-{{ this.formControlName }}-{{ lang.value }}"
-                >
+              <mat-form-field class="lab900-input-field" id="lab900-input-field-{{ this.formControlName }}-{{ lang.value }}">
                 @if (label) {
                   <mat-label>{{ label | translate }}</mat-label>
                 }
@@ -76,7 +67,7 @@
                     [readonly]="readonly"
                     [class.readonly]="readonly"
                     [disabled]="activeLanguage.disabled"
-                    />
+                  />
                 }
                 @if (useTextAreaField) {
                   <textarea

@@ -22,8 +22,8 @@ import { IconComponent } from '@lab900/ui';
     NgClass,
     AutofocusDirective,
     IconComponent,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class PasswordFieldComponent extends FormComponent<FormFieldPassword> {
   @HostBinding('class')

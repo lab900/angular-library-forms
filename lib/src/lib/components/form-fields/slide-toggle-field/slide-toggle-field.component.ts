@@ -17,8 +17,8 @@ import { TranslateModule } from '@ngx-translate/core';
     MatSlideToggle,
     TranslateModule,
     MatError,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class SlideToggleFieldComponent extends FormComponent<FormFieldSlideToggle> {
   @HostBinding('class')

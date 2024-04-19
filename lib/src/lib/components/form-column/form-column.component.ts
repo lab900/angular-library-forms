@@ -16,12 +16,7 @@ import { MatTooltip } from '@angular/material/tooltip';
   styleUrls: ['./form-column.component.scss'],
   animations: [matFormFieldAnimations.transitionMessages],
   standalone: true,
-  imports: [
-    TranslateModule,
-    FormFieldDirective,
-    MatIcon,
-    MatTooltip
-],
+  imports: [TranslateModule, FormFieldDirective, MatIcon, MatTooltip],
 })
 export class FormColumnComponent extends FormComponent<FormColumn> {
   @HostBinding('class')

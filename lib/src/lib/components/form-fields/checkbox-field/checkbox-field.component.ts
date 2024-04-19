@@ -23,8 +23,8 @@ import { TranslateModule } from '@ngx-translate/core';
     TranslateModule,
     MatHint,
     MatError,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class CheckboxFieldComponent extends FormComponent<CheckboxFieldModel> {
   @HostBinding('class')

@@ -35,8 +35,8 @@ import { MatIcon } from '@angular/material/icon';
     AsyncPipe,
     MatAutocomplete,
     MatIcon,
-    MatOption
-],
+    MatOption,
+  ],
 })
 export class AutocompleteFieldComponent<T>
   extends FormComponent<FormFieldAutocomplete<T>>

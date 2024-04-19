@@ -3,7 +3,6 @@ import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldIcon } from './icon-field.model';
 import { IconComponent } from '@lab900/ui';
 
-
 @Component({
   selector: 'lab900-icon-field',
   templateUrl: './icon-field.component.html',

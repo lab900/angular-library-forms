@@ -1,21 +1,9 @@
 <mat-card appearance="outlined" class="lab900-card">
-  <mat-card-header
-    style="
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 16px;
-    "
-  >
+  <mat-card-header style="display: flex; justify-content: space-between; align-items: center; padding: 8px 16px">
     <mat-card-title>
       <h3>{{ exampleTitle | translate }}</h3>
     </mat-card-title>
-    <button
-      mat-icon-button
-      (click)="toggleSourceView()"
-      matTooltip="Toggle source"
-      [disabled]="extensions.length === 0"
-    >
+    <button mat-icon-button (click)="toggleSourceView()" matTooltip="Toggle source" [disabled]="extensions.length === 0">
       <mat-icon>code</mat-icon>
     </button>
   </mat-card-header>
@@ -27,14 +15,7 @@
             <mat-tab [label]="ext">
               <markdown
                 lineNumbers
-                [src]="
-                  'examples/' +
-                  (fileDir || exampleName) +
-                  '/' +
-                  exampleName +
-                  '.component.' +
-                  (ext | lowercase)
-                "
+                [src]="'examples/' + (fileDir || exampleName) + '/' + exampleName + '.component.' + (ext | lowercase)"
                 [start]="0"
               />
             </mat-tab>

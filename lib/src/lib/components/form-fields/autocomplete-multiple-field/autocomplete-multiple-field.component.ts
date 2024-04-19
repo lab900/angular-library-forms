@@ -39,8 +39,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatChipInput,
     MatAutocomplete,
     MatOption,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class AutocompleteMultipleFieldComponent<T>
   extends FormComponent<FormFieldAutocompleteMulti<T, string>>

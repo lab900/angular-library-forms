@@ -26,8 +26,8 @@ import { IconComponent } from '@lab900/ui';
     MatTooltip,
     IconComponent,
     MatError,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonToggle> {
   @HostBinding('class')

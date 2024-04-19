@@ -11,7 +11,7 @@ export interface FormFieldDateTimePickerOptions<T = Date>
 
 export interface FormFieldDateTimePicker<
   T extends string | number = string,
-  D = Date
+  D = Date,
 > extends FormFieldBase<T, FormFieldDateTimePickerOptions<D>> {
   editType: EditType.DateTime;
 }

@@ -9,10 +9,10 @@ export abstract class SubscriptionBasedDirective implements OnDestroy {
     observable: Observable<T>,
     successCallback: (data: T) => void,
     errorCallback?: (error: any) => void,
-    completeCallback?: () => void
+    completeCallback?: () => void,
   ): void {
     this.subscriptions.push(
-      observable.subscribe(successCallback, errorCallback, completeCallback)
+      observable.subscribe(successCallback, errorCallback, completeCallback),
     );
   }
 

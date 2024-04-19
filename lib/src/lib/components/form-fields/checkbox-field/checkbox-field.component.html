@@ -1,9 +1,5 @@
 @if (!fieldIsHidden) {
-  <div
-    [formGroup]="group"
-    class="lab900-checkbox-field"
-    id="lab900-checkbox-field-{{ fieldAttribute }}"
-    >
+  <div [formGroup]="group" class="lab900-checkbox-field" id="lab900-checkbox-field-{{ fieldAttribute }}">
     <mat-checkbox
       #checkbox
       [color]="options?.color || 'primary'"
@@ -11,25 +7,16 @@
       [indeterminate]="indeterminate"
       [required]="fieldIsRequired"
       [disabled]="fieldIsReadonly"
-      >
+    >
       {{ schema.title | translate }}
     </mat-checkbox>
     @if (!fieldIsReadonly) {
-      <div
-        class="subscript-wrapper"
-        [@transitionMessages]="valid ? 'void' : 'enter'"
-        >
-        @if (
-          hint && !(schema.options.hint.hideHintOnValidValue && checkbox.value)
-          ) {
-          <mat-hint
-            ><span [innerHTML]="hint | translate: hintValueTranslateData"></span
-          ></mat-hint>
+      <div class="subscript-wrapper" [@transitionMessages]="valid ? 'void' : 'enter'">
+        @if (hint && !(schema.options.hint.hideHintOnValidValue && checkbox.value)) {
+          <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
         }
         @if (!valid) {
-          <mat-error
-            ><span [innerHTML]="getErrorMessage() | async"></span
-          ></mat-error>
+          <mat-error><span [innerHTML]="getErrorMessage() | async"></span></mat-error>
         }
       </div>
     }

@@ -16,12 +16,7 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrls: ['./form-row.component.scss'],
   animations: [matFormFieldAnimations.transitionMessages],
   standalone: true,
-  imports: [
-    FormFieldDirective,
-    MatIcon,
-    MatTooltip,
-    TranslateModule
-],
+  imports: [FormFieldDirective, MatIcon, MatTooltip, TranslateModule],
 })
 export class FormRowComponent extends FormComponent<FormRow> {
   @HostBinding('class')

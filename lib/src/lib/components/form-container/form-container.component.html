@@ -1,9 +1,5 @@
 @if (schema?.fields) {
-  <form
-    [formGroup]="form"
-    class="lab900-form"
-    [autocomplete]="setting?.disableBrowserAutocomplete ? 'off' : 'on'"
-    >
+  <form [formGroup]="form" class="lab900-form" [autocomplete]="setting?.disableBrowserAutocomplete ? 'off' : 'on'">
     <div class="lab900-form__inner">
       @for (field of schema.fields; track field) {
         <ng-container

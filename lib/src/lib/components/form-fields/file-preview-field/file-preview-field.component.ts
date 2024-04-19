@@ -33,8 +33,8 @@ import { MatTooltip } from '@angular/material/tooltip';
     MatCard,
     MatIcon,
     AuthImageDirective,
-    MatTooltip
-],
+    MatTooltip,
+  ],
 })
 export class FilePreviewFieldComponent<
   T,

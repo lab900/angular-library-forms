@@ -30,8 +30,8 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     MatTooltip,
     AsyncPipe,
     MatIcon,
-    MatProgressSpinner
-],
+    MatProgressSpinner,
+  ],
 })
 export class SearchFieldComponent<T> extends FormComponent<FormFieldSearch<T>> {
   @HostBinding('class')

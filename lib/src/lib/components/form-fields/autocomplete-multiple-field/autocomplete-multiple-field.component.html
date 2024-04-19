@@ -1,36 +1,20 @@
 @if (!fieldIsHidden) {
-  <mat-form-field
-    [formGroup]="group"
-    class="lab900-autocomplete-multi-field"
-    id="lab900-autocomplete-multi-field-{{ fieldAttribute }}"
-    >
+  <mat-form-field [formGroup]="group" class="lab900-autocomplete-multi-field" id="lab900-autocomplete-multi-field-{{ fieldAttribute }}">
     @if (schema.title) {
       <mat-label translate>{{ schema.title }}</mat-label>
     }
-    @if (
-      hint &&
-      !fieldIsReadonly &&
-      !(schema.options.hint.hideHintOnValidValue && input.value)
-      ) {
-      <mat-hint
-        ><span [innerHTML]="hint | translate: hintValueTranslateData"></span
-      ></mat-hint>
+    @if (hint && !fieldIsReadonly && !(schema.options.hint.hideHintOnValidValue && input.value)) {
+      <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
     }
     @if (!valid && !fieldIsReadonly) {
-      <mat-error
-        ><span [innerHTML]="getErrorMessage() | async"></span
-      ></mat-error>
+      <mat-error><span [innerHTML]="getErrorMessage() | async"></span></mat-error>
     }
     @if (!fieldIsReadonly) {
       <mat-icon matSuffix>search</mat-icon>
     }
     <mat-chip-grid #chipList [formControlName]="fieldAttribute">
       @for (opt of selectedOptions; track opt; let i = $index) {
-        <mat-chip-row
-          [removable]="!fieldIsReadonly"
-          (removed)="remove(i)"
-          [value]="opt"
-          >
+        <mat-chip-row [removable]="!fieldIsReadonly" (removed)="remove(i)" [value]="opt">
           <div [innerHTML]="options.displayInputFn(opt) | translate"></div>
           @if (!fieldIsReadonly) {
             <mat-icon matChipRemove>cancel</mat-icon>
@@ -45,23 +29,16 @@
         [matAutocomplete]="auto"
         [matChipInputFor]="chipList"
         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-        />
+      />
     </mat-chip-grid>
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
       @for (option of filteredOptions | async; track option) {
-        <mat-option
-          [value]="option?.value"
-          [disabled]="option?.disabled"
-          >
+        <mat-option [value]="option?.value" [disabled]="option?.disabled">
           @if (options?.displayOptionFn) {
-            <div
-              [innerHTML]="options.displayOptionFn(option) | translate"
-            ></div>
+            <div [innerHTML]="options.displayOptionFn(option) | translate"></div>
           }
           @if (!options?.displayOptionFn) {
-            {{
-            option.label | translate
-            }}
+            {{ option.label | translate }}
           }
         </mat-option>
       }

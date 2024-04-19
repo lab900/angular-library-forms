@@ -17,8 +17,8 @@ import { TranslateModule } from '@ngx-translate/core';
     MatLabel,
     ReactiveFormsModule,
     TranslateModule,
-    Lab900ButtonComponent
-],
+    Lab900ButtonComponent,
+  ],
 })
 export class ButtonFieldComponent extends FormComponent<FormFieldButton> {
   @HostBinding('class')

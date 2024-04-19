@@ -23,8 +23,8 @@ import { IconComponent } from '@lab900/ui';
     AutofocusDirective,
     NgxMaskDirective,
     IconComponent,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class InputFieldComponent extends FormComponent<FormFieldInput> {
   @HostBinding('class')

@@ -28,8 +28,8 @@ export const DEFAULT_REPEATER_MIN_ROWS = 1;
     MatMiniFabButton,
     MatError,
     AsyncPipe,
-    MatButton
-],
+    MatButton,
+  ],
 })
 export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
   private readonly fb: Lab900FormBuilderService = inject(

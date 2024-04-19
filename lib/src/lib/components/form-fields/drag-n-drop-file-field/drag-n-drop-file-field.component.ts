@@ -20,8 +20,8 @@ import { MatButton, MatIconButton } from '@angular/material/button';
     MatIcon,
     TranslateModule,
     MatButton,
-    MatIconButton
-],
+    MatIconButton,
+  ],
 })
 export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDropFilePreview> {
   @HostBinding('class')

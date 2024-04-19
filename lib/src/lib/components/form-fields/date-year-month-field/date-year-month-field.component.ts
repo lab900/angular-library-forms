@@ -41,8 +41,8 @@ import { MatInputModule } from '@angular/material/input';
     AsyncPipe,
     MatDatepickerModule,
     MatFormFieldModule,
-    MatInputModule
-],
+    MatInputModule,
+  ],
 })
 export class DateYearMonthFieldComponent extends FormComponent<FormFieldDateYearMonthPicker> {
   @HostBinding('class')

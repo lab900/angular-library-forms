@@ -79,8 +79,8 @@ import { MatOption } from '@angular/material/autocomplete';
     MatButton,
     MatPseudoCheckbox,
     MatIconButton,
-    MatIcon
-],
+    MatIcon,
+  ],
 })
 export class SelectFieldComponent<T>
   extends FormComponent<FormFieldSelect<T>>

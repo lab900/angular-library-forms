@@ -18,8 +18,8 @@ import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
     MatRadioGroup,
     MatRadioButton,
     MatError,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class RadioButtonsFieldComponent extends FormComponent<FormFieldRadioButtons> {
   @HostBinding('class')

@@ -36,8 +36,8 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     MatInputModule,
     TranslateModule,
-    FormsModule
-],
+    FormsModule,
+  ],
 })
 export class MultiLangFieldControlComponent
   extends BaseControlValueAccessorDirective<Record<string, string>>

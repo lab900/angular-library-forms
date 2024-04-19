@@ -24,8 +24,8 @@ import { IconComponent } from '@lab900/ui';
     AutofocusDirective,
     AmountInputDirective,
     IconComponent,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class AmountFieldComponent extends FormComponent<FormFieldAmount> {
   @HostBinding('class')

@@ -17,8 +17,8 @@ import { TranslateModule } from '@ngx-translate/core';
     MatInputModule,
     ReactiveFormsModule,
     TranslateModule,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class TextareaFieldComponent extends FormComponent<FormFieldTextarea> {
   @HostBinding('class')
