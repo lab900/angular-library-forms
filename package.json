@@ -12,6 +12,7 @@
     "build:forms": "ng build forms",
     "build:forms:prod": "npm run build:forms -- --configuration production",
     "watch:forms": "npm run build:forms -- --watch",
+    "predeploy:showcase": "npm run build:forms:prod",
     "deploy:showcase": "ng deploy",
     "test": "ng test",
     "lint": "ng lint",
