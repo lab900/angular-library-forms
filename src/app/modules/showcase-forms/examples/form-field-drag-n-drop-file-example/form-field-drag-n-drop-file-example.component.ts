@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, ViewChild } from '@angular/core';
 import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 
@@ -17,20 +16,33 @@ export class FormFieldDragNDropFileExampleComponent {
         editType: EditType.Row,
         nestedFields: [
           {
+            editType: EditType.Checkbox,
+            attribute: 'checkbox',
+            title: 'Show upload',
+            options: {
+              disabledIndeterminate: true,
+            },
+          },
+          {
             attribute: 'files',
-            title: 'My files',
+            title: 'My file uploader',
             editType: EditType.DragNDrop,
             options: {
               maxFiles: 1,
               colspan: 6,
+              hide: true,
             },
+            conditions: [
+              {
+                dependOn: 'checkbox',
+                showIfEquals: (checkbox: boolean) => !!checkbox,
+              },
+            ],
           },
         ],
       },
     ],
   };
-
-  public constructor(private http: HttpClient) {}
 
   public validate(): void {
     console.log(this.formContainer.form.controls.files.value);

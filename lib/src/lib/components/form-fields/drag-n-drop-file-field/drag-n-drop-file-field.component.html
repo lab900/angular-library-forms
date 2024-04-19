@@ -1,7 +1,12 @@
 <div
+  *ngIf="!fieldIsHidden && !fieldIsReadonly"
   class="upload-file"
   [ngClass]="{ 'upload-file--compact': options.compact }"
 >
+  <span *ngIf="schema.title" class="lab900-form-field-label" translate>{{
+    schema.title
+  }}</span>
+
   <div
     lab900DropFile
     class="upload-file__container"
