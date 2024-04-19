@@ -1,5 +1,7 @@
-<div *ngIf="filePath" class="markdown-page row">
-  <div class="page">
-    <markdown lineNumbers [src]="filePath" [start]="0"></markdown>
+@if (filePath) {
+  <div class="markdown-page row">
+    <div class="page">
+      <markdown lineNumbers [src]="filePath" [start]="0" />
+    </div>
   </div>
-</div>
+}

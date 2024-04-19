@@ -26,13 +26,13 @@ export interface IFieldConditions<T = any> {
   onChangeFn?: (
     value: T,
     currentControl: AbstractControl,
-    currentScheme: Lab900FormField
+    currentScheme: Lab900FormField,
   ) => any;
   conditionalOptions?: (
     value: T,
     currentControl: AbstractControl,
     options?: { page?: number; searchQuery?: string },
-    schema?: FormFieldSelect<T>
+    schema?: FormFieldSelect<T>,
   ) => any[] | Observable<any[]>;
   skipIfNotExists?: boolean;
   validators?: (value: T) => ValidatorFn[];
@@ -57,7 +57,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
   public onChangeFn?: (
     value: T,
     currentControl: AbstractControl,
-    currentScheme: Lab900FormField
+    currentScheme: Lab900FormField,
   ) => any;
   public conditionalOptions?: (value: T) => any;
   public skipIfNotExists = false;
@@ -70,7 +70,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
   private readonly schema: Lab900FormField;
   public constructor(
     private readonly component: FormComponent<any>,
-    fieldConditions?: IFieldConditions
+    fieldConditions?: IFieldConditions,
   ) {
     this.group = component.group;
     this.schema = component.schema;
@@ -81,7 +81,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
       this.setDependOnControls();
       if (!this.skipIfNotExists && !Object.keys(this.dependControls)?.length) {
         throw new Error(
-          `Can't create conditional form field: no control with name ${this.dependOn} found`
+          `Can't create conditional form field: no control with name ${this.dependOn} found`,
         );
       }
     }
@@ -89,7 +89,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
 
   private static valueIsEqualTo(
     value: any,
-    condition: ((obj: any) => boolean) | any
+    condition: ((obj: any) => boolean) | any,
   ): boolean {
     return typeof condition === 'function'
       ? condition(value)
@@ -107,7 +107,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
         return this.externalForms[this.externalFormId];
       } else {
         throw new Error(
-          `Can't create conditional form field: no externForm with id ${this.externalFormId} found`
+          `Can't create conditional form field: no externForm with id ${this.externalFormId} found`,
         );
       }
     }
@@ -116,20 +116,20 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
 
   public getDependControl(
     dependOn: string,
-    group: UntypedFormGroup
+    group: UntypedFormGroup,
   ): AbstractControl {
     let dependControl = group.get(dependOn);
     if (!dependControl && group.parent) {
       dependControl = this.getDependControl(
         dependOn,
-        group.parent as UntypedFormGroup
+        group.parent as UntypedFormGroup,
       );
     }
     return dependControl;
   }
 
   public start(
-    callback?: (dependOn: string, value: T, firstRun?: boolean) => void
+    callback?: (dependOn: string, value: T, firstRun?: boolean) => void,
   ): Subscription[] {
     const subs: Subscription[] = [];
     if (Object.keys(this.dependControls)?.length) {
@@ -140,11 +140,16 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
             control.valueChanges
               .pipe(
                 debounceTime(100),
-                distinctUntilChanged(this.distinctUntilChangedCompareFn)
+                distinctUntilChanged(this.distinctUntilChangedCompareFn),
               )
               .subscribe(() =>
-                this.runAll(key, this.getDependControlValues(), false, callback)
-              )
+                this.runAll(
+                  key,
+                  this.getDependControlValues(),
+                  false,
+                  callback,
+                ),
+              ),
           );
         }
       });
@@ -156,7 +161,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
     dependOn: string,
     value: T,
     firstRun: boolean,
-    callback?: (dependOn: string, value: T, firstRun?: boolean) => void
+    callback?: (dependOn: string, value: T, firstRun?: boolean) => void,
   ): void {
     if (firstRun || isDifferent(this.prevValue, value)) {
       if (this.onChangeFn && typeof this.onChangeFn === 'function') {
@@ -168,14 +173,14 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
         this.fieldControl.updateValueAndValidity();
         this.component.schema.validators = newValidators;
         this.component.fieldIsRequired = newValidators.includes(
-          Validators.required
+          Validators.required,
         );
       }
       if (!this.schema.options?.visibleFn) {
         this.runVisibilityConditions(value);
       } else {
         throw new Error(
-          `Can't create visibility conditions: visibleFn option is set and may cause conflicts`
+          `Can't create visibility conditions: visibleFn option is set and may cause conflicts`,
         );
       }
       this.runDisableConditions(value);
@@ -189,7 +194,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
   public run(
     key: string,
     condition: boolean,
-    callback: (isTrue: boolean) => void
+    callback: (isTrue: boolean) => void,
   ): void {
     // eslint-disable-next-line no-prototype-builtins
     if (this.hasOwnProperty(key)) {
@@ -208,22 +213,22 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
       this.run(
         'hideIfHasValue',
         this.hideIfHasValue && FieldConditions.hasValue(value),
-        (isTrue: boolean) => hide(isTrue)
+        (isTrue: boolean) => hide(isTrue),
       );
       this.run(
         'showIfHasValue',
         this.showIfHasValue && FieldConditions.hasValue(value),
-        (isTrue: boolean) => hide(!isTrue)
+        (isTrue: boolean) => hide(!isTrue),
       );
       this.run(
         'hideIfEquals',
         FieldConditions.valueIsEqualTo(value, this.hideIfEquals),
-        (isTrue: boolean) => hide(isTrue)
+        (isTrue: boolean) => hide(isTrue),
       );
       this.run(
         'showIfEquals',
         FieldConditions.valueIsEqualTo(value, this.showIfEquals),
-        (isTrue: boolean) => hide(!isTrue)
+        (isTrue: boolean) => hide(!isTrue),
       );
       // Refresh hide settings
       this.component.hide();
@@ -233,27 +238,27 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
   public runDisableConditions(value: T): void {
     const enable = (isTrue: boolean): any =>
       setTimeout(() =>
-        isTrue ? this.fieldControl.enable() : this.fieldControl.disable()
+        isTrue ? this.fieldControl.enable() : this.fieldControl.disable(),
       );
     this.run(
       'disableIfHasValue',
       this.disableIfHasValue && FieldConditions.hasValue(value),
-      (isTrue: boolean) => enable(!isTrue)
+      (isTrue: boolean) => enable(!isTrue),
     );
     this.run(
       'enableIfHasValue',
       this.enableIfHasValue && FieldConditions.hasValue(value),
-      (isTrue: boolean) => enable(isTrue)
+      (isTrue: boolean) => enable(isTrue),
     );
     this.run(
       'disableIfEquals',
       FieldConditions.valueIsEqualTo(value, this.disableIfEquals),
-      (isTrue: boolean) => enable(!isTrue)
+      (isTrue: boolean) => enable(!isTrue),
     );
     this.run(
       'enabledIfEquals',
       FieldConditions.valueIsEqualTo(value, this.enabledIfEquals),
-      (isTrue: boolean) => enable(isTrue)
+      (isTrue: boolean) => enable(isTrue),
     );
   }
 

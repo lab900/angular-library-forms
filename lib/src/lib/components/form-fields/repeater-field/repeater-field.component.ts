@@ -1,9 +1,15 @@
 import { Component, HostBinding, inject } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { UntypedFormArray } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormArray } from '@angular/forms';
 import { Lab900FormBuilderService } from '../../../services/form-builder.service';
-import { matFormFieldAnimations } from '@angular/material/form-field';
+import { MatError, matFormFieldAnimations } from '@angular/material/form-field';
 import { FormFieldRepeater } from './repeater-field.model';
+import { AsyncPipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatTooltip } from '@angular/material/tooltip';
+import { FormFieldDirective } from '../../../directives/form-field.directive';
+import { MatButton, MatMiniFabButton } from '@angular/material/button';
 
 export const DEFAULT_REPEATER_MIN_ROWS = 1;
 
@@ -12,10 +18,22 @@ export const DEFAULT_REPEATER_MIN_ROWS = 1;
   templateUrl: './repeater-field.component.html',
   styleUrls: ['./repeater-field.component.scss'],
   animations: [matFormFieldAnimations.transitionMessages],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatIcon,
+    TranslateModule,
+    MatTooltip,
+    FormFieldDirective,
+    MatMiniFabButton,
+    MatError,
+    AsyncPipe,
+    MatButton,
+  ],
 })
 export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
   private readonly fb: Lab900FormBuilderService = inject(
-    Lab900FormBuilderService
+    Lab900FormBuilderService,
   );
 
   @HostBinding('class')

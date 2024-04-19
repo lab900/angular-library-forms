@@ -3,6 +3,6 @@ export class ShowcaseExample {
     public component: any,
     public title?: string,
     public fileFolder?: string,
-    public extensions: string[] = ['TS']
+    public extensions: string[] = ['TS'],
   ) {}
 }

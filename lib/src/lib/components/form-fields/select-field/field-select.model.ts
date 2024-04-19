@@ -18,7 +18,7 @@ export interface FormFieldSelectOptionsFilter {
 export type FormFieldSelectOptionsFn<T> = (
   filter?: FormFieldSelectOptionsFilter,
   fieldControl?: AbstractControl,
-  schema?: FormFieldSelect<T>
+  schema?: FormFieldSelect<T>,
 ) => ValueLabel<T>[] | Observable<ValueLabel<T>[]>;
 
 export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {

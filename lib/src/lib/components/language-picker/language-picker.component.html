@@ -1,32 +1,25 @@
-<ng-container *ngIf="translate && languages?.length">
-  <button
-    mat-stroked-button
-    [matMenuTriggerFor]="langMenu"
-    [color]="buttonColor || 'primary'"
-  >
+@if (translate && languages?.length) {
+  <button mat-stroked-button [matMenuTriggerFor]="langMenu" [color]="buttonColor || 'primary'">
     <mat-icon>language</mat-icon>
     {{ activeLanguage.label | translate }}
   </button>
   <mat-menu #langMenu>
-    <button
-      mat-menu-item
-      *ngFor="let lang of languages"
-      (click)="activeLanguageChange.emit(lang)"
-      [disabled]="lang.value === activeLanguage.value || lang.disabled"
-    >
-      <mat-icon [style.color]="value && value[lang.value] ? 'green' : 'red'">{{
-        value && value[lang.value] ? 'done' : 'close'
-      }}</mat-icon>
-      {{ lang.label | translate }}
-    </button>
+    @for (lang of languages; track lang) {
+      <button mat-menu-item (click)="activeLanguageChange.emit(lang)" [disabled]="lang.value === activeLanguage.value || lang.disabled">
+        <mat-icon [style.color]="value && value[lang.value] ? 'green' : 'red'">{{
+          value && value[lang.value] ? "done" : "close"
+        }}</mat-icon>
+        {{ lang.label | translate }}
+      </button>
+    }
     <button mat-menu-item (click)="toggleTranslate()">
       <mat-icon>block</mat-icon>
       {{ stopTranslateLabel || "Don't translate" | translate }}
     </button>
   </mat-menu>
-</ng-container>
+}
 
-<ng-container *ngIf="!translate">
+@if (!translate) {
   <button
     mat-stroked-button
     [matTooltip]="translateLabel || 'Translate?' | translate"
@@ -35,4 +28,4 @@
   >
     <mat-icon>language</mat-icon>
   </button>
-</ng-container>
+}

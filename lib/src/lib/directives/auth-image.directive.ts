@@ -13,6 +13,7 @@ import { take } from 'rxjs/operators';
 
 @Directive({
   selector: '[lab900AuthImage]',
+  standalone: true,
 })
 export class AuthImageDirective implements OnChanges {
   @Input()
@@ -26,7 +27,7 @@ export class AuthImageDirective implements OnChanges {
 
   public constructor(
     private elementRef: ElementRef<HTMLElement>,
-    private renderer: Renderer2
+    private renderer: Renderer2,
   ) {}
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -48,7 +49,7 @@ export class AuthImageDirective implements OnChanges {
               this.setPlaceholder();
               image.remove();
             };
-          }
+          },
         )
           .pipe(take(1))
           .subscribe();
@@ -63,7 +64,7 @@ export class AuthImageDirective implements OnChanges {
       this.renderer.setStyle(
         this.elementRef.nativeElement,
         'background-image',
-        `url(${this.defaultImage})`
+        `url(${this.defaultImage})`,
       );
       this.elementRef.nativeElement.classList.remove('bg-loading');
       this.elementRef.nativeElement.classList.add('bg-loaded');
@@ -76,7 +77,7 @@ export class AuthImageDirective implements OnChanges {
       this.renderer.setStyle(
         this.elementRef.nativeElement,
         'background-image',
-        `url(${src})`
+        `url(${src})`,
       );
       this.elementRef.nativeElement.classList.remove('bg-loading');
       this.elementRef.nativeElement.classList.add('bg-loaded');

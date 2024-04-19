@@ -22,7 +22,7 @@ export interface FormFieldDatePickerOptions<T = Date>
 
 export interface FormFieldDatePicker<
   T extends string | number = string,
-  D = Date
+  D = Date,
 > extends FormFieldBase<T, FormFieldDatePickerOptions<D>> {
   editType: EditType.Date;
 }

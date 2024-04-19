@@ -11,14 +11,36 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {
   MatAutocomplete,
   MatAutocompleteSelectedEvent,
+  MatAutocompleteTrigger,
+  MatOption,
 } from '@angular/material/autocomplete';
 import { debounceTime, switchMap } from 'rxjs/operators';
 import { ValueLabel } from '../../../models/form-field-base';
 import { FormFieldAutocompleteMulti } from './autocomplete-multiple-field.model';
+import { ReactiveFormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatIcon } from '@angular/material/icon';
+import { MatChipGrid, MatChipInput, MatChipRow } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'lab900-autocomplete-multiple-field',
   templateUrl: './autocomplete-multiple-field.component.html',
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    TranslateModule,
+    MatIcon,
+    MatChipGrid,
+    MatChipRow,
+    MatAutocompleteTrigger,
+    MatChipInput,
+    MatAutocomplete,
+    MatOption,
+    AsyncPipe,
+  ],
 })
 export class AutocompleteMultipleFieldComponent<T>
   extends FormComponent<FormFieldAutocompleteMulti<T, string>>
@@ -56,7 +78,7 @@ export class AutocompleteMultipleFieldComponent<T>
       switchMap((input: string) => {
         const res = this.options.autocompleteOptions(input, this.fieldControl);
         return isObservable(res) ? res : of(res);
-      })
+      }),
     );
   }
 

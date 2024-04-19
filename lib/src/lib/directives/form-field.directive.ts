@@ -20,6 +20,7 @@ import { FormFieldMappingService } from '../services/form-field-mapping.service'
 
 @Directive({
   selector: '[lab900FormField]',
+  standalone: true,
 })
 export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
   @Input()
@@ -47,7 +48,7 @@ export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
   public constructor(
     private resolver: ComponentFactoryResolver,
     private container: ViewContainerRef,
-    private formFieldMappingService: FormFieldMappingService
+    private formFieldMappingService: FormFieldMappingService,
   ) {}
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -100,7 +101,7 @@ export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
       const attributeMap = this.schema?.attribute.split('.');
       this.component.instance.fieldAttribute = attributeMap.pop();
       this.component.instance.group = this.group.get(
-        attributeMap.join('.')
+        attributeMap.join('.'),
       ) as UntypedFormGroup;
     } else {
       this.component.instance.fieldAttribute = this.schema.attribute;
@@ -117,7 +118,7 @@ export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
       const supportedTypes = Object.keys(EditType).join(', ');
       throw new Error(
         `Trying to use an unsupported type (${this.schema.editType}).
-        Supported types: ${supportedTypes}`
+        Supported types: ${supportedTypes}`,
       );
     }
   }

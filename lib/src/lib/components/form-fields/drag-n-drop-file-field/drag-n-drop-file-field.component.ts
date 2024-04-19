@@ -3,11 +3,25 @@ import { Lab900File } from '../../../models/Lab900File';
 import { formatBytes } from '../../../utils/image.utils';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldDragNDropFilePreview } from './drag-n-drop-file-field.model';
+import { NgClass } from '@angular/common';
+import { FileDropDirective } from '../../../directives/file-drop.directive';
+import { MatIcon } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatButton, MatIconButton } from '@angular/material/button';
 
 @Component({
   selector: 'lab900-drag-n-drop-file-field',
   templateUrl: './drag-n-drop-file-field.component.html',
   styleUrls: ['./drag-n-drop-file-field.component.scss'],
+  standalone: true,
+  imports: [
+    NgClass,
+    FileDropDirective,
+    MatIcon,
+    TranslateModule,
+    MatButton,
+    MatIconButton,
+  ],
 })
 export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDropFilePreview> {
   @HostBinding('class')
@@ -34,7 +48,7 @@ export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDro
       if (files.length > this.options.maxFiles) {
         console.error(
           `Too many files loaded ${files.length}, max is ${this.options.maxFiles}.
-            Change property maxFiles to fix this.`
+            Change property maxFiles to fix this.`,
         );
         return;
       }

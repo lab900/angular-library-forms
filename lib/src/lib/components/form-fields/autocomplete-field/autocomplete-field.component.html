@@ -1,50 +1,39 @@
-<mat-form-field
-  [formGroup]="group"
-  *ngIf="!fieldIsHidden"
-  class="lab900-autocomplete-field"
-  id="lab900-autocomplete-field-{{ fieldAttribute }}"
->
-  <mat-label *ngIf="schema.title" translate>{{ schema.title }}</mat-label>
-  <input
-    #input
-    (input)="inputChanged($event)"
-    [formControlName]="fieldAttribute"
-    [matAutocomplete]="auto"
-    [readonly]="fieldIsReadonly"
-    [required]="fieldIsRequired"
-    matInput
-    placeholder="{{ placeholder | translate }}"
-    type="text"
-  />
-  <mat-hint
-    *ngIf="
-      hint &&
-      !fieldIsReadonly &&
-      !(schema.options.hint.hideHintOnValidValue && input.value)
-    "
-    ><span [innerHTML]="hint | translate: hintValueTranslateData"></span
-  ></mat-hint>
-  <mat-error *ngIf="!valid && !fieldIsReadonly"
-    ><span [innerHTML]="getErrorMessage() | async"></span
-  ></mat-error>
-  <mat-icon matSuffix *ngIf="!fieldIsReadonly">search</mat-icon>
-  <mat-autocomplete
-    #auto="matAutocomplete"
-    [displayWith]="options.displayInputFn"
-  >
-    <mat-option
-      *ngFor="let option of filteredOptions | async"
-      [value]="option?.value"
-      [disabled]="option?.disabled"
-    >
-      <div
-        *ngIf="options?.displayOptionFn"
-        [innerHTML]="options.displayOptionFn(option) | translate"
-      ></div>
-      <div
-        *ngIf="!options?.displayOptionFn"
-        [innerHTML]="option.label | translate"
-      ></div>
-    </mat-option>
-  </mat-autocomplete>
-</mat-form-field>
+@if (!fieldIsHidden) {
+  <mat-form-field [formGroup]="group" class="lab900-autocomplete-field" id="lab900-autocomplete-field-{{ fieldAttribute }}">
+    @if (schema.title) {
+      <mat-label translate>{{ schema.title }}</mat-label>
+    }
+    <input
+      #input
+      (input)="inputChanged($event)"
+      [formControlName]="fieldAttribute"
+      [matAutocomplete]="auto"
+      [readonly]="fieldIsReadonly"
+      [required]="fieldIsRequired"
+      matInput
+      placeholder="{{ placeholder | translate }}"
+      type="text"
+    />
+    @if (hint && !fieldIsReadonly && !(schema.options.hint.hideHintOnValidValue && input.value)) {
+      <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
+    }
+    @if (!valid && !fieldIsReadonly) {
+      <mat-error><span [innerHTML]="getErrorMessage() | async"></span></mat-error>
+    }
+    @if (!fieldIsReadonly) {
+      <mat-icon matSuffix>search</mat-icon>
+    }
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="options.displayInputFn">
+      @for (option of filteredOptions | async; track option) {
+        <mat-option [value]="option?.value" [disabled]="option?.disabled">
+          @if (options?.displayOptionFn) {
+            <div [innerHTML]="options.displayOptionFn(option) | translate"></div>
+          }
+          @if (!options?.displayOptionFn) {
+            <div [innerHTML]="option.label | translate"></div>
+          }
+        </mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+}

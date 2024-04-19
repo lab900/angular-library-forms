@@ -7,7 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { EditType } from '../models/editType';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { FormFieldUtils } from '../utils/form-field.utils';
 import { Lab900FormField } from '../models/lab900-form-field.type';
 import { FormFieldAutocomplete } from '../components/form-fields/autocomplete-field/autocomplete-field.model';
@@ -16,11 +16,11 @@ import { FormFieldRepeater } from '../components/form-fields/repeater-field/repe
 
 @Injectable()
 export class Lab900FormBuilderService {
-  public constructor(private fb: UntypedFormBuilder) {}
+  private readonly fb = inject(UntypedFormBuilder);
 
   public static addValidators(
     field: Lab900FormField,
-    data: any
+    data: any,
   ): ValidatorFn[] {
     const validators: ValidatorFn[] = field?.validators ?? [];
     if (
@@ -28,7 +28,7 @@ export class Lab900FormBuilderService {
       FormFieldUtils.isRequired(
         FormFieldUtils.isReadOnly(field.options, data),
         field,
-        data
+        data,
       )
     ) {
       validators.push(Validators.required);
@@ -57,7 +57,7 @@ export class Lab900FormBuilderService {
   public createFormGroup<T = any>(
     fields: Lab900FormField[],
     group?: UntypedFormGroup,
-    data?: T
+    data?: T,
   ): UntypedFormGroup {
     let formGroup = group ? group : this.fb.group({});
     fields.forEach((field) => {
@@ -69,10 +69,10 @@ export class Lab900FormBuilderService {
           const nestedGroup = this.createFormGroup(
             field.nestedFields,
             null,
-            data?.[field.attribute]
+            data?.[field.attribute],
           );
           nestedGroup.setValidators(
-            Lab900FormBuilderService.addValidators(field, data)
+            Lab900FormBuilderService.addValidators(field, data),
           );
           formGroup.addControl(field.attribute, nestedGroup);
         } else {
@@ -92,14 +92,14 @@ export class Lab900FormBuilderService {
   public createFormArray<T = any>(
     formData: T,
     field: FormFieldRepeater,
-    formArray: UntypedFormArray = this.fb.array([])
+    formArray: UntypedFormArray = this.fb.array([]),
   ): UntypedFormArray {
     formArray.clear();
     const data: any[] = this.getFieldValue(field.attribute, formData);
     if (Array.isArray(data) && data?.length) {
       data.forEach((nestedData) => {
         formArray.push(
-          this.createFormGroup(field.nestedFields, undefined, nestedData)
+          this.createFormGroup(field.nestedFields, undefined, nestedData),
         );
       });
     }
@@ -115,7 +115,7 @@ export class Lab900FormBuilderService {
   private createFormField(
     field: Lab900FormField,
     fieldGroup: UntypedFormGroup,
-    formData: any
+    formData: any,
   ): void {
     const attributeMap = field.attribute.split('.');
     const attribute = attributeMap[attributeMap.length - 1];
@@ -124,7 +124,7 @@ export class Lab900FormBuilderService {
     if (field.editType === EditType.Repeater) {
       const repeaterArray = this.createFormArray(formData, field);
       repeaterArray.setValidators(
-        Lab900FormBuilderService.addValidators(field, data)
+        Lab900FormBuilderService.addValidators(field, data),
       );
       fieldGroup.addControl(attribute, repeaterArray);
     } else if (field.editType === EditType.DateRange) {
@@ -136,7 +136,7 @@ export class Lab900FormBuilderService {
         this.fb.group({
           [startKey]: data?.[startKey],
           [endKey]: data?.[endKey],
-        })
+        }),
       );
     } else {
       if (
@@ -151,7 +151,7 @@ export class Lab900FormBuilderService {
       }
       const formControl = new UntypedFormControl(
         data,
-        Lab900FormBuilderService.addValidators(field, data)
+        Lab900FormBuilderService.addValidators(field, data),
       );
       fieldGroup.addControl(attribute, formControl);
     }
@@ -159,7 +159,7 @@ export class Lab900FormBuilderService {
 
   private setFieldGroup(
     attribute: string,
-    parentGroup: UntypedFormGroup
+    parentGroup: UntypedFormGroup,
   ): UntypedFormGroup {
     let fieldGroup = parentGroup;
     if (attribute?.includes('.')) {

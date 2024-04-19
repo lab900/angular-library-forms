@@ -2,6 +2,7 @@
  * Public API Surface of forms
  */
 
+export * from './lib/forms.providers';
 export * from './lib/models/Lab900FormConfig';
 export * from './lib/models/lab900-form-field.type';
 export * from './lib/models/form-field-base';
@@ -34,7 +35,5 @@ export * from './lib/directives/auth-image.directive';
 export * from './lib/directives/auto-focus.directive';
 
 export * from './lib/validators/multi-language.validator';
-
-export * from './lib/forms.module';
 
 export * from './assets/i18n';

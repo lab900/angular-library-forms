@@ -4,12 +4,19 @@ import { matFormFieldAnimations } from '@angular/material/form-field';
 import { FormFieldUtils } from '../../utils/form-field.utils';
 import { FormRow } from './form-row.model';
 import { Lab900FormField } from '../../models/lab900-form-field.type';
+import { FormFieldDirective } from '../../directives/form-field.directive';
+import { MatIcon } from '@angular/material/icon';
+
+import { MatTooltip } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'lab900-form-row',
   templateUrl: './form-row.component.html',
   styleUrls: ['./form-row.component.scss'],
   animations: [matFormFieldAnimations.transitionMessages],
+  standalone: true,
+  imports: [FormFieldDirective, MatIcon, MatTooltip, TranslateModule],
 })
 export class FormRowComponent extends FormComponent<FormRow> {
   @HostBinding('class')
@@ -27,12 +34,12 @@ export class FormRowComponent extends FormComponent<FormRow> {
       ? FormFieldUtils.isReadOnly(
           field.options,
           this.group.value,
-          this.readonly
+          this.readonly,
         )
       : FormFieldUtils.isReadOnly(
           this.options,
           this.group.value,
-          this.readonly
+          this.readonly,
         );
   }
 
@@ -41,7 +48,7 @@ export class FormRowComponent extends FormComponent<FormRow> {
   }
 
   public infoTooltip(
-    field: Lab900FormField
+    field: Lab900FormField,
   ): { text: string; icon?: string; class?: string } | null {
     return FormFieldUtils.infoTooltip(field.options, this.group);
   }

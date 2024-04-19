@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import {
-  Lab900FormConfig,
   EditType,
+  Lab900Form,
+  Lab900FormConfig,
   multiLanguageValidator,
   ValueLabel,
 } from '@lab900/forms';
@@ -20,8 +21,10 @@ const languages: ValueLabel[] = [
       [availableLanguages]="languages"
       [schema]="formSchema"
       [data]="data"
-    ></lab900-form>
+    />
   `,
+  standalone: true,
+  imports: [Lab900Form],
 })
 export class FormFieldMultiLanguageExampleComponent {
   public readonly languages = languages;

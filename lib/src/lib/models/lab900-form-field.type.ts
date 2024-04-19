@@ -28,7 +28,7 @@ import { FormColumn } from '../components/form-column/form-column.model';
 export type Lab900FormField<
   R = any,
   T extends string | number = string,
-  DATE = Date
+  DATE = Date,
 > =
   | FormFieldInput<T>
   | FormFieldPassword<T>

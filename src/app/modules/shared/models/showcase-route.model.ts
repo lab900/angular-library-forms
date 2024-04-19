@@ -17,7 +17,7 @@ export class ShowcaseRoute implements Route {
     public path: string,
     title: string,
     examples?: ShowcaseExample[],
-    docFile?: string
+    docFile?: string,
   ) {
     this.data = { title, path, examples, docFile };
   }

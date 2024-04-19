@@ -1,11 +1,30 @@
 import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldInput } from './input-field.model';
+import { ReactiveFormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatInputModule } from '@angular/material/input';
+import { AutofocusDirective } from '../../../directives/auto-focus.directive';
+import { NgxMaskDirective } from 'ngx-mask';
+import { IconComponent } from '@lab900/ui';
 
 @Component({
   selector: 'lab900-input-field',
   templateUrl: './input-field.component.html',
   styleUrls: ['./input-field.component.scss'],
+  standalone: true,
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    AutofocusDirective,
+    NgxMaskDirective,
+    IconComponent,
+    AsyncPipe,
+  ],
 })
 export class InputFieldComponent extends FormComponent<FormFieldInput> {
   @HostBinding('class')

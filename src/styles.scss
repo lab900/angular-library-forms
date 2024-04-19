@@ -1,9 +1,11 @@
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
-@use '../dist/@lab900/forms/theming' as theme;
-@import 'src/assets/styles/green.palette';
-@import 'src/assets/styles/grey.palette';
+@use '@lab900/ui/theming' as ui;
+@use '../dist/@lab900/forms/theming' as forms;
+
+@import 'green.palette';
+@import 'grey.palette';
 
 // Plus imports for other components in your app.
 
@@ -34,13 +36,15 @@ $angular-libraries-theme: mat.define-light-theme(
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include mat.all-component-themes($angular-libraries-theme);
-@include theme.lab900-forms($angular-libraries-theme);
+@include ui.lab900-ui($angular-libraries-theme);
+@include forms.lab900-forms($angular-libraries-theme);
 
 /* You can add global styles to this file, and also import other style files */
 html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
@@ -103,12 +107,14 @@ pre[class*='language-'] {
   border-radius: 0 !important;
 }
 
-.clickable-cell > a {
-  border-bottom: 1px solid $palette-lab900green-500;
+.table-footer-highlight {
+  background-color: #03ada5;
+  padding: 0 !important;
+  text-align: center !important;
 }
 
 .row {
-  max-width: 800px;
+  max-width: 1000px;
   margin: auto;
   padding: 50px 30px;
 
@@ -121,11 +127,8 @@ pre[class*='language-'] {
   }
 }
 
-.readonlyInputCustomContainerClass {
-  max-width: fit-content;
-  padding: 5px 15px;
-  color: #737d99;
-  background-color: rgba($color: #737d99, $alpha: 0.5);
-  font-size: 12px;
-  margin-bottom: 19px;
+.action-button {
+  &--red {
+    color: #e57373 !important;
+  }
 }

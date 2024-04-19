@@ -5,7 +5,7 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BaseControlValueAccessorDirective } from '../../../../models/forms/BaseControlValueAccessor';
 import { ThemePalette } from '@angular/material/core';
 import {
@@ -13,6 +13,11 @@ import {
   Lab900FormModuleSettings,
 } from '../../../../models/Lab900FormModuleSettings';
 import { ValueLabel } from '../../../../models/form-field-base';
+import { LanguagePickerComponent } from '../../../language-picker/language-picker.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+
+import { TranslateModule } from '@ngx-translate/core';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'lab900-multi-lang-field-control',
@@ -24,6 +29,14 @@ import { ValueLabel } from '../../../../models/form-field-base';
       useExisting: MultiLangFieldControlComponent,
       multi: true,
     },
+  ],
+  standalone: true,
+  imports: [
+    LanguagePickerComponent,
+    MatFormFieldModule,
+    MatInputModule,
+    TranslateModule,
+    FormsModule,
   ],
 })
 export class MultiLangFieldControlComponent
@@ -64,11 +77,11 @@ export class MultiLangFieldControlComponent
 
   public globalTranslation: string;
 
-  public translate = false;
+  public translate: boolean = false;
 
   public constructor(
     @Inject(LAB900_FORM_MODULE_SETTINGS)
-    public setting: Lab900FormModuleSettings
+    public setting: Lab900FormModuleSettings,
   ) {
     super();
   }
@@ -88,7 +101,7 @@ export class MultiLangFieldControlComponent
     const valuesArray = Object.values(this.value);
     const hasValues = !!valuesArray.some((v) => !!v);
     this.toggleTranslate(
-      hasValues && !valuesArray.every((v) => v === valuesArray[0])
+      hasValues && !valuesArray.every((v) => v === valuesArray[0]),
     );
   }
 
@@ -122,9 +135,12 @@ export class MultiLangFieldControlComponent
   }
 
   private updateAllToGlobalTranslation(): void {
-    this.value = this.availableLanguages.reduce((acc, lang) => {
-      return { ...acc, [lang.value]: this.globalTranslation };
-    }, {} as Record<string, string>);
+    this.value = this.availableLanguages.reduce(
+      (acc, lang) => {
+        return { ...acc, [lang.value]: this.globalTranslation };
+      },
+      {} as Record<string, string>,
+    );
     this.onChange(this.value);
   }
 }

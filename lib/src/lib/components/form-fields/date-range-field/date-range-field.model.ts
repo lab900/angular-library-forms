@@ -12,7 +12,7 @@ export interface FormFieldDateRangeOptions<T = Date>
 
 export interface FormFieldDateRange<
   T extends string | number = string,
-  D = Date
+  D = Date,
 > extends FormFieldBase<T, FormFieldDateRangeOptions<D>> {
   editType: EditType.DateRange;
 }

@@ -5,7 +5,11 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  UntypedFormArray,
+  UntypedFormGroup,
+} from '@angular/forms';
 import { DEFAULT_REPEATER_MIN_ROWS } from '../form-fields/repeater-field/repeater-field.component';
 import { Lab900FormConfig } from '../../models/Lab900FormConfig';
 import { Lab900FormBuilderService } from '../../services/form-builder.service';
@@ -16,11 +20,14 @@ import {
   LAB900_FORM_MODULE_SETTINGS,
   Lab900FormModuleSettings,
 } from '../../models/Lab900FormModuleSettings';
+import { FormFieldDirective } from '../../directives/form-field.directive';
 
 @Component({
   selector: 'lab900-form[schema]',
   templateUrl: './form-container.component.html',
   styleUrls: ['./form-container.component.scss'],
+  standalone: true,
+  imports: [FormFieldDirective, ReactiveFormsModule],
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 export class Lab900Form<T> implements OnChanges {
@@ -59,7 +66,7 @@ export class Lab900Form<T> implements OnChanges {
   public constructor(
     private fb: Lab900FormBuilderService,
     @Inject(LAB900_FORM_MODULE_SETTINGS)
-    public setting: Lab900FormModuleSettings
+    public setting: Lab900FormModuleSettings,
   ) {}
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -67,7 +74,7 @@ export class Lab900Form<T> implements OnChanges {
       this.form = this.fb.createFormGroup<T>(
         this.schema.fields,
         null,
-        this.data
+        this.data,
       );
     }
     if (!changes?.data?.isFirstChange() && this.data) {
@@ -81,7 +88,7 @@ export class Lab900Form<T> implements OnChanges {
       if (control) {
         if (control instanceof UntypedFormArray) {
           const fieldSchema = this.schema.fields.find(
-            (field: Lab900FormField) => field.attribute === key
+            (field: Lab900FormField) => field.attribute === key,
           );
           if (fieldSchema?.editType === EditType.Repeater) {
             const nbOfControlRows = control.controls?.length ?? 0;
@@ -92,8 +99,8 @@ export class Lab900Form<T> implements OnChanges {
                   this.fb.createFormGroup(
                     fieldSchema?.nestedFields,
                     null,
-                    data[key][i]
-                  )
+                    data[key][i],
+                  ),
                 );
               }
             } else if (nbOfControlRows > nbOfDataRows) {
@@ -106,7 +113,7 @@ export class Lab900Form<T> implements OnChanges {
               if (control.controls.length < minRows) {
                 for (let i = control.controls.length; i < minRows; i++) {
                   control.push(
-                    this.fb.createFormGroup(fieldSchema?.nestedFields)
+                    this.fb.createFormGroup(fieldSchema?.nestedFields),
                   );
                 }
               }
@@ -126,7 +133,7 @@ export class Lab900Form<T> implements OnChanges {
       if (control) {
         if (control instanceof UntypedFormArray) {
           const fieldSchema = this.schema.fields.find(
-            (field: Lab900FormField) => field.attribute === key
+            (field: Lab900FormField) => field.attribute === key,
           );
           if (fieldSchema?.editType === EditType.Repeater) {
             this.fb.createFormArray(data, fieldSchema, control);

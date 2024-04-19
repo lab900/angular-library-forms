@@ -15,9 +15,7 @@
     "target": "ES2022",
     "lib": ["es2018", "dom"],
     "paths": {
-      "angular-libraries": ["dist/angular-libraries"],
-      "@lab900/forms": ["dist/@lab900/forms"],
-      "@lab900/ui": ["dist/@lab900/ui"]
+      "@lab900/forms": ["dist/@lab900/forms"]
     },
     "useDefineForClassFields": false
   },

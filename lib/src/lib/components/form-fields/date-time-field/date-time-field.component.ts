@@ -4,12 +4,29 @@ import { FormFieldDateTimePicker } from './date-time-field.model';
 import {
   NgxMatDateAdapter,
   NgxMatDatetimepicker,
+  NgxMatDatetimePickerModule,
 } from '@angular-material-components/datetime-picker';
 import { NgxMatSingleDateSelectionModel } from '@angular-material-components/datetime-picker/lib/date-selection-model';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ReactiveFormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatButton } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'lab900-date-time-field',
   templateUrl: './date-time-field.component.html',
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    NgxMatDatetimePickerModule,
+    TranslateModule,
+    MatButton,
+    AsyncPipe,
+  ],
 })
 export class DateTimeFieldComponent extends FormComponent<FormFieldDateTimePicker> {
   @HostBinding('class')
