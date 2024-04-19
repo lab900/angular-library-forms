@@ -6,6 +6,7 @@ import {
 import {
   AfterContentInit,
   AfterViewInit,
+  ChangeDetectorRef,
   Directive,
   inject,
   Input,
@@ -33,6 +34,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     LAB900_FORM_MODULE_SETTINGS,
   );
   protected readonly translateService = inject(TranslateService);
+  protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   @Input()
   public fieldAttribute?: string;
@@ -217,6 +219,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
       this.schema?.options,
       this.group,
     );
+    this.changeDetectorRef.markForCheck();
   }
 
   private isReadonly(): void {
@@ -225,6 +228,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
       this.group.value,
       this.readonly,
     );
+    this.changeDetectorRef.markForCheck();
   }
 
   private isRequired(): void {
@@ -245,6 +249,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
               this.group.value,
             ),
           );
+        this.changeDetectorRef.markForCheck();
       });
     }
   }
