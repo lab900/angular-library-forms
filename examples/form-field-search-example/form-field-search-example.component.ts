@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
-import { EditType, Lab900FormConfig } from '@lab900/forms';
+import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { of } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { JsonPipe } from '@angular/common';
 
-const iso6346Pattern = new RegExp(
-  '[a-zA-Z]{3}[ujzUJZ]{1}\\-[0-9]{6}\\/[0-9]{1}'
-);
 @Component({
   selector: 'lab900-form-field-select-example',
-  template: `<lab900-form #f [schema]="formSchema"></lab900-form>
+  template: `<lab900-form #f [schema]="formSchema" />
     <hr style="margin-top: 30px" />
     {{ f.value | json }}`,
+  standalone: true,
+  imports: [Lab900Form, JsonPipe],
 })
 export class FormFieldSearchExampleComponent {
   public readonly formSchema: Lab900FormConfig = {

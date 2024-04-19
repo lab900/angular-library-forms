@@ -1,11 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
 import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { Validators } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'lab900-form-field-inputs-example',
   template:
-    '<lab900-form [schema]="formSchema"></lab900-form><button mat-raised-button color="primary" (click)="validate()">Submit</button>',
+    '<lab900-form [schema]="formSchema"/><button mat-raised-button color="primary" (click)="validate()">Submit</button>',
+  standalone: true,
+  imports: [Lab900Form, MatButton],
 })
 export class FormFieldInputsExampleComponent {
   @ViewChild(Lab900Form)
@@ -92,7 +95,7 @@ export class FormFieldInputsExampleComponent {
         },
         validators: [
           Validators.pattern(
-            /^(?=\D*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z]).{12,}$/
+            /^(?=\D*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z]).{12,}$/,
           ),
         ],
         errorMessages: {

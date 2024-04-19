@@ -65,5 +65,5 @@ Add the `<lab900-form>` to your component template and bind a schema to it.
 You can also pass a data object to fill the form inputs.
 
 ```html
-<lab900-form [schema]="myFormSchema" [data]="myFormData"> </lab900-form>
+<lab900-form [schema]="myFormSchema" [data]="myFormData" />
 ```

@@ -1,10 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { EditType, Lab900FormConfig, Lab900Form } from '@lab900/forms';
+import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 
 @Component({
   selector: 'lab900-form-field-slide-toggle-example',
   template:
-    '<lab900-form [schema]="formSchema" (click)="logValue()" [data]="formData"></lab900-form>',
+    '<lab900-form [schema]="formSchema" (click)="logValue()" [data]="formData"/>',
+  standalone: true,
+  imports: [Lab900Form],
 })
 export class FormFieldSlideToggleExampleComponent {
   @ViewChild(Lab900Form)

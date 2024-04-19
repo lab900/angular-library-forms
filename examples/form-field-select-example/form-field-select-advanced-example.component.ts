@@ -31,8 +31,10 @@ const compare = (a: Book, b: Book): boolean =>
 
 @Component({
   selector: 'lab900-form-field-select-advanced-example',
-  template: ` <lab900-form [schema]="formSchema" [data]="data"> </lab900-form>
+  template: ` <lab900-form [schema]="formSchema" [data]="data" />
     <button (click)="logFormValue()">Log form data</button>`,
+  standalone: true,
+  imports: [Lab900Form],
 })
 export class FormFieldSelectAdvancedExampleComponent {
   private readonly MAX_ITEMS_FOR_SELECT_ALL = 157;
@@ -40,13 +42,11 @@ export class FormFieldSelectAdvancedExampleComponent {
   @ViewChild(Lab900Form)
   public formContainer?: Lab900Form<Book>;
 
-  public data: {
+  public data?: {
     books2: Book;
     books3: Book[];
-  } = {
-    books2: tolkienBook,
-    books3: [tolkienBook, tolkienBook2],
   };
+
   public formSchema: Lab900FormConfig = {
     fields: [
       {
@@ -62,7 +62,6 @@ export class FormFieldSelectAdvancedExampleComponent {
               selectOptions: (filter, fieldControl, schema) =>
                 this.getSelectOptions({
                   filter,
-                  author: fieldControl.value,
                   schema,
                 }),
               colspan: 4,
@@ -70,6 +69,7 @@ export class FormFieldSelectAdvancedExampleComponent {
               infiniteScroll: {
                 enabled: true,
               },
+              fetchOptionsOnFocus: true,
             },
           },
           {
@@ -81,7 +81,6 @@ export class FormFieldSelectAdvancedExampleComponent {
               selectOptions: (filter, fieldControl, schema) =>
                 this.getSelectOptions({
                   filter,
-                  author: fieldControl.value,
                   schema,
                 }),
               colspan: 4,
@@ -96,18 +95,21 @@ export class FormFieldSelectAdvancedExampleComponent {
                     title: searchQuery,
                     key: searchQuery,
                   };
-                  select.selectOptions = [{ value: book, label: book.title }];
+                  select.selectOptions$$.next([
+                    { value: book, label: book.title },
+                  ]);
                   select.fieldControl.setValue({
                     title: searchQuery,
                     key: searchQuery,
                   });
                 },
               },
+              fetchOptionsOnFocus: true,
             },
           },
           {
             attribute: 'books3',
-            title: 'Search multiple book',
+            title: 'Search multiple books',
             editType: EditType.Select,
             options: {
               compareWith: compare,
@@ -117,7 +119,6 @@ export class FormFieldSelectAdvancedExampleComponent {
               selectOptions: (filter, fieldControl, schema) =>
                 this.getSelectOptions({
                   filter,
-                  author: fieldControl.value,
                   schema,
                 }),
               colspan: 4,
@@ -135,6 +136,7 @@ export class FormFieldSelectAdvancedExampleComponent {
                   .map((book) => book.title)
                   .filter((x) => !!x)
                   .join('<br>'),
+              fetchOptionsOnFocus: true,
             },
           },
         ],
@@ -158,6 +160,7 @@ export class FormFieldSelectAdvancedExampleComponent {
                 },
               ],
               colspan: 6,
+              fetchOptionsOnFocus: true,
             },
           },
           {
@@ -174,13 +177,14 @@ export class FormFieldSelectAdvancedExampleComponent {
               },
               compareWith: compare,
               colspan: 6,
-              displaySelectedOptionFn: (value: Book) => value.title,
+              displaySelectedOptionFn: (value: Book) => value?.title,
               infiniteScroll: {
                 enabled: true,
               },
               search: {
                 enabled: true,
               },
+              fetchOptionsOnFocus: true,
             },
             conditions: [
               {
@@ -196,7 +200,14 @@ export class FormFieldSelectAdvancedExampleComponent {
     ],
   };
 
-  public constructor(private http: HttpClient) {}
+  public constructor(private http: HttpClient) {
+    setTimeout(() => {
+      this.data = {
+        books2: tolkienBook,
+        books3: [tolkienBook, tolkienBook2],
+      };
+    }, 5000);
+  }
 
   public getSelectOptions({
     filter,
@@ -225,7 +236,7 @@ export class FormFieldSelectAdvancedExampleComponent {
             label: d.title,
             value: d,
           }));
-        })
+        }),
       );
   }
 
