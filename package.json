@@ -37,9 +37,9 @@
     "@lab900/ui": "^17.0.0",
     "@ngx-translate/core": "^15.0.0",
     "ngx-markdown": "^17.2.0",
-    "prismjs": "^1.29.0",
     "ngx-mask": "^17.0.7",
     "ngx-mat-select-search": "7.0.6",
+    "prismjs": "^1.29.0",
     "rxjs": "~7.8.1",
     "tslib": "^2.3.1",
     "zone.js": "~0.14.4"
@@ -59,6 +59,7 @@
     "@types/node": "^20.11.1",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
+    "angular-cli-ghpages": "^2.0.0-beta.2",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",

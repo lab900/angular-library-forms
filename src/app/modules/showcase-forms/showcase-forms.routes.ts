@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { MarkdownPageComponent } from '../shared/components/markdown-page/markdown-page.component';
-import { ShowcaseHomeComponent } from '../shared/components/showcase-home/showcase-home.component';
 import { ShowcaseExample } from '../shared/models/showcase-example.model';
 import { ShowcaseRoute } from '../shared/models/showcase-route.model';
 import { FormConditionalsExampleComponent } from './examples/form-conditionals-example/form-conditionals-example.component';
@@ -40,12 +38,14 @@ import { FormConditionalValidationExampleComponent } from './examples/form-condt
 export default [
   {
     path: '',
-    component: ShowcaseHomeComponent,
+    loadComponent: () =>
+      import('../shared/components/showcase-home/showcase-home.component'),
     data: { config: showcaseFormsConfig, nav: showcaseFormsNavItems },
   },
   {
     path: 'getting-started',
-    component: MarkdownPageComponent,
+    loadComponent: () =>
+      import('../shared/components/markdown-page/markdown-page.component'),
     data: { filePath: 'guides/getting-started.md' },
   },
   new ShowcaseRoute(

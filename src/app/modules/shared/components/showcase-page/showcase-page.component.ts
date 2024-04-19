@@ -5,8 +5,8 @@ import { Lab900PageHeaderComponent, PageHeaderNavItem } from '@lab900/ui';
 import { SubscriptionBasedDirective } from '../../directives/subscription-based.directive';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MarkdownPageComponent } from '../markdown-page/markdown-page.component';
 import { ExampleViewerComponent } from '../example-viewer/example-viewer.component';
+import MarkdownPageComponent from '../markdown-page/markdown-page.component';
 
 @Component({
   selector: 'lab900-showcase-page',

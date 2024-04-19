@@ -23,7 +23,7 @@ import { AsyncPipe } from '@angular/common';
     AsyncPipe,
   ],
 })
-export class ShowcaseHomeComponent {
+export default class ShowcaseHomeComponent {
   public data$: Observable<{
     config: ShowcaseConfigModel;
     nav: NavItemGroup[];

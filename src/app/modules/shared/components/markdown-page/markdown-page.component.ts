@@ -12,7 +12,7 @@ import { MarkdownModule } from 'ngx-markdown';
   standalone: true,
   imports: [MarkdownModule],
 })
-export class MarkdownPageComponent extends SubscriptionBasedDirective {
+export default class MarkdownPageComponent extends SubscriptionBasedDirective {
   @Input()
   public filePath: string;
 
