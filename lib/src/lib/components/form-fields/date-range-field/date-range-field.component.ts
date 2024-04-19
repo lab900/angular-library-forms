@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, computed, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { FormFieldDateRange } from './date-range-field.model';
@@ -33,11 +33,19 @@ export class DateRangeFieldComponent extends FormComponent<FormFieldDateRange> {
     return this.group.get(this.fieldAttribute) as UntypedFormGroup;
   }
 
-  public get maxDate(): Date | null {
-    return this.options?.maxDate;
-  }
+  public maxDate = computed(() => {
+    return this.options()?.maxDate;
+  });
 
-  public get minDate(): Date | null {
-    return this.schema?.options?.minDate;
-  }
+  public minDate = computed(() => {
+    return this.options()?.minDate;
+  });
+
+  public startKey = computed(() => {
+    return this.options()?.startKey ?? 'start';
+  });
+
+  public endKey = computed(() => {
+    return this.options()?.endKey ?? 'end';
+  });
 }

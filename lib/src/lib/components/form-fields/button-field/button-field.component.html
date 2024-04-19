@@ -1,8 +1,12 @@
 @if (!fieldIsHidden) {
-  <div [formGroup]="group" class="lab900-button-field button-field mat-form-field-wrapper" id="lab900-button-field-{{ fieldAttribute }}">
-    @if (schema.title) {
+  <div
+    [formGroup]="group"
+    class="lab900-button-field button-field mat-form-field-wrapper"
+    id="lab900-button-field-{{ fieldAttribute }}"
+  >
+    @if (title()) {
       <div class="lab900-button-field__label">
-        <mat-label>{{ schema.title | translate }}</mat-label>
+        <mat-label>{{ title() | translate }}</mat-label>
       </div>
     }
     <lab900-button

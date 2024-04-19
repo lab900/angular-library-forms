@@ -2,6 +2,7 @@ import {
   ComponentFactoryResolver,
   ComponentRef,
   Directive,
+  input,
   Input,
   OnChanges,
   OnDestroy,
@@ -23,8 +24,7 @@ import { FormFieldMappingService } from '../services/form-field-mapping.service'
   standalone: true,
 })
 export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
-  @Input()
-  public schema: Lab900FormField;
+  public readonly schema = input.required<Lab900FormField>();
 
   @Input()
   public group: UntypedFormGroup;
@@ -87,9 +87,9 @@ export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
         EditType.ButtonToggle,
         EditType.SlideToggle,
         EditType.Button,
-      ].includes(this.schema.editType)
+      ].includes(this.schema().editType)
         ? ReadonlyFieldComponent
-        : this.formFieldMappingService.mapToComponent(this.schema);
+        : this.formFieldMappingService.mapToComponent(this.schema());
     const component = this.resolver.resolveComponentFactory<FormComponent>(c);
     this.component = this.container.createComponent(component);
     this.setComponentProps();
@@ -97,14 +97,14 @@ export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
 
   private setComponentProps(): void {
     this.component.instance.schema = this.schema;
-    if (this.schema?.attribute?.includes('.')) {
-      const attributeMap = this.schema?.attribute.split('.');
+    if (this.schema()?.attribute?.includes('.')) {
+      const attributeMap = this.schema()?.attribute.split('.');
       this.component.instance.fieldAttribute = attributeMap.pop();
       this.component.instance.group = this.group.get(
         attributeMap.join('.'),
       ) as UntypedFormGroup;
     } else {
-      this.component.instance.fieldAttribute = this.schema.attribute;
+      this.component.instance.fieldAttribute = this.schema().attribute;
       this.component.instance.group = this.group;
     }
     this.component.instance.readonly = this.readonly;
@@ -114,10 +114,10 @@ export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   private validateType(): void {
-    if (!this.formFieldMappingService.mapToComponent(this.schema)) {
+    if (!this.formFieldMappingService.mapToComponent(this.schema())) {
       const supportedTypes = Object.keys(EditType).join(', ');
       throw new Error(
-        `Trying to use an unsupported type (${this.schema.editType}).
+        `Trying to use an unsupported type (${this.schema().editType}).
         Supported types: ${supportedTypes}`,
       );
     }

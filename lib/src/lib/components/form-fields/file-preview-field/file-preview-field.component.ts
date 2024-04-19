@@ -1,8 +1,10 @@
 import {
   Component,
+  computed,
   ElementRef,
   HostBinding,
   inject,
+  Signal,
   ViewChild,
 } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
@@ -130,7 +132,7 @@ export class FilePreviewFieldComponent<
   }
 
   public handleImageClick(file: Lab900File): void {
-    if (this.options?.canEditFileMetaData && !this.fieldIsReadonly) {
+    if (this.options()?.canEditFileMetaData && !this.fieldIsReadonly) {
       this.openMetaDataDialog(file);
     } else if (file.imageSrc != null) {
       this.openPreviewDialog(file);
@@ -140,7 +142,7 @@ export class FilePreviewFieldComponent<
   private openMetaDataDialog(file: Lab900File): void {
     this.dialog.open(FormDialogComponent, {
       data: {
-        schema: this.options?.fileMetaDataConfig,
+        schema: this.options()?.fileMetaDataConfig,
         data: file,
         submit: this.onMetaDataChanged.bind(this),
       },
@@ -154,8 +156,8 @@ export class FilePreviewFieldComponent<
           image: file,
         },
       });
-    } else if (this.options?.httpCallback) {
-      fetchImageBase64(this.options.httpCallback, file, (result) => {
+    } else if (this.options()?.httpCallback) {
+      fetchImageBase64(this.options().httpCallback, file, (result) => {
         file.imageBase64 = result as string;
         this.dialog.open(ImagePreviewModalComponent, {
           data: {
@@ -168,12 +170,15 @@ export class FilePreviewFieldComponent<
     }
   }
 
-  public showOverlay(file: Lab900File): boolean {
-    if (typeof this.options?.showOverlay === 'function') {
-      return this.options?.showOverlay(file);
-    } else {
-      return this.options?.showOverlay ?? false;
-    }
+  public showOverlay(file: Lab900File): Signal<boolean> {
+    return computed(() => {
+      const overlay = this.options()?.showOverlay;
+      if (typeof overlay === 'function') {
+        return overlay(file);
+      } else {
+        return overlay ?? false;
+      }
+    });
   }
 
   private setFieldControlValue(files: Lab900File[]): void {

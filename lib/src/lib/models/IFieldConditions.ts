@@ -73,7 +73,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
     fieldConditions?: IFieldConditions,
   ) {
     this.group = component.group;
-    this.schema = component.schema;
+    this.schema = component.schema as any;
     this.fieldControl = component.fieldControl;
     this.externalForms = component?.externalForms;
     if (fieldConditions) {
@@ -171,7 +171,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
         const newValidators = this.validators(value);
         this.fieldControl.setValidators(newValidators);
         this.fieldControl.updateValueAndValidity();
-        this.component.schema.validators = newValidators;
+        this.component.schema().validators = newValidators;
         this.component.fieldIsRequired = newValidators.includes(
           Validators.required,
         );
@@ -210,6 +210,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
           ...(this.schema.options ?? {}),
           hide: isTrue,
         });
+      console.log(this);
       this.run(
         'hideIfHasValue',
         this.hideIfHasValue && FieldConditions.hasValue(value),
@@ -218,7 +219,10 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
       this.run(
         'showIfHasValue',
         this.showIfHasValue && FieldConditions.hasValue(value),
-        (isTrue: boolean) => hide(!isTrue),
+        (isTrue: boolean) => {
+          console.log(isTrue);
+          return hide(!isTrue);
+        },
       );
       this.run(
         'hideIfEquals',
@@ -228,7 +232,10 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
       this.run(
         'showIfEquals',
         FieldConditions.valueIsEqualTo(value, this.showIfEquals),
-        (isTrue: boolean) => hide(!isTrue),
+        (isTrue: boolean) => {
+          console.log(isTrue);
+          return hide(!isTrue);
+        },
       );
       // Refresh hide settings
       this.component.hide();

@@ -1,13 +1,11 @@
-import {
-  AbstractControl,
-  UntypedFormGroup,
-  ValidationErrors,
-} from '@angular/forms';
+import { UntypedFormGroup, ValidationErrors } from '@angular/forms';
 import {
   AfterContentInit,
   AfterViewInit,
+  computed,
   Directive,
   inject,
+  input,
   Input,
   OnDestroy,
 } from '@angular/core';
@@ -34,14 +32,35 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   );
   protected readonly translateService = inject(TranslateService);
 
-  @Input()
-  public fieldAttribute?: string;
+  /*
+   * Form Group & control state
+   */
+  public group = input.required<UntypedFormGroup>();
+  public fieldAttribute = input<string>();
+  public fieldControl = computed(() =>
+    this.fieldAttribute() ? this.group().get(this.fieldAttribute()) : null,
+  );
+  public valid = computed(() => !!this.fieldControl()?.valid);
+  public touched = computed(() => !!this.fieldControl()?.touched);
 
-  @Input()
-  public group: UntypedFormGroup;
+  /**
+   * Schema/config state
+   */
+  public schema = input.required<S>();
+  public readonly title = computed(() => this.schema().title);
+  public readonly options = computed(() => <S['options']>this.schema().options);
+  public readonly hint = computed(() => this.options()?.hint?.value);
+  public readonly hintValueTranslateData = computed(
+    () => this.options()?.hint?.valueTranslateData,
+  );
 
-  @Input()
-  public schema: S;
+  public readonly placeholder = computed(() => {
+    const placeholder = this.options()?.placeholder;
+    if (typeof placeholder === 'function') {
+      return placeholder(this.group().value);
+    }
+    return placeholder;
+  });
 
   @Input()
   public language?: string;
@@ -59,41 +78,10 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   public fieldIsHidden!: boolean;
   public fieldIsRequired!: boolean;
 
-  public get fieldControl(): AbstractControl {
-    return this.group.get(this.fieldAttribute);
-  }
-
-  public get valid(): boolean {
-    return this.fieldControl?.valid;
-  }
-
-  public get options(): S['options'] {
-    return this.schema?.options;
-  }
-
-  public get touched(): boolean {
-    return this.fieldControl?.touched;
-  }
-
-  public get hint(): string {
-    return this.options?.hint?.value;
-  }
-
-  public get hintValueTranslateData(): object {
-    return this.options?.hint?.valueTranslateData;
-  }
-
-  public get placeholder(): string {
-    if (typeof this.options?.placeholder === 'function') {
-      return this.options.placeholder(this.group.value);
-    }
-    return this.options?.placeholder;
-  }
-
   public getErrorMessage = (
-    group: UntypedFormGroup = this.group,
+    group: UntypedFormGroup = this.group(),
   ): Observable<string> => {
-    const field = group.get(String(this.fieldAttribute));
+    const field = group.get(String(this.fieldAttribute()));
     let errors: ValidationErrors = field.errors;
     let message = this.translateService.get('forms.error.generic');
     if (field instanceof UntypedFormGroup && field.controls) {
@@ -112,11 +100,11 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     Object.keys(errors).forEach((key: string) => {
       if (field.hasError(key)) {
         if (
-          this.schema.errorMessages &&
-          Object.keys(this.schema.errorMessages).includes(key)
+          this.schema().errorMessages &&
+          Object.keys(this.schema().errorMessages).includes(key)
         ) {
           message = this.translateService.get(
-            this.schema.errorMessages[key],
+            this.schema().errorMessages[key],
             field.getError(key),
           );
         } else {
@@ -128,20 +116,20 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   };
 
   public ngAfterContentInit(): void {
-    if (this.group) {
+    if (this.group()) {
       this.setFieldProperties();
     }
   }
 
   public ngAfterViewInit(): void {
-    if (this.group) {
-      this.addSubscription(this.group.valueChanges, (value) => {
+    if (this.group()) {
+      this.addSubscription(this.group().valueChanges, (value) => {
         this.setFieldProperties();
-        if (this.schema?.options?.onChangeFn) {
-          this.schema?.options?.onChangeFn(value, this.fieldControl);
+        if (this.options()?.onChangeFn) {
+          this.options()?.onChangeFn(value, this.fieldControl());
         }
       });
-      if (this.schema?.conditions?.length) {
+      if (this.schema()?.conditions?.length) {
         this.createConditions();
       }
     }
@@ -160,7 +148,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
 
   private getDefaultErrorMessage(
     key: string,
-    interpolateParams: object = this.schema.options,
+    interpolateParams: object = this.options(),
   ): Observable<string> {
     switch (key) {
       case 'required':
@@ -213,16 +201,14 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   }
 
   public hide(): void {
-    this.fieldIsHidden = FormFieldUtils.isHidden(
-      this.schema?.options,
-      this.group,
-    );
+    this.fieldIsHidden = FormFieldUtils.isHidden(this.options(), this.group);
+    console.log('hide?', this.fieldIsHidden);
   }
 
   private isReadonly(): void {
     this.fieldIsReadonly = FormFieldUtils.isReadOnly(
-      this.schema?.options,
-      this.group.value,
+      this.options(),
+      this.group().value,
       this.readonly,
     );
   }
@@ -231,20 +217,18 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     const isRequired =
       FormFieldUtils.isRequired(
         this.fieldIsReadonly,
-        this.schema,
-        this.group.value,
+        this.schema(),
+        this.group().value,
       ) ?? false;
     if (this.fieldIsRequired != isRequired) {
       this.fieldIsRequired = isRequired;
       setTimeout(() => {
-        this.group
-          ?.get(this.fieldAttribute)
-          ?.setValidators(
-            Lab900FormBuilderService.addValidators(
-              this.schema,
-              this.group.value,
-            ),
-          );
+        this.fieldControl()?.setValidators(
+          Lab900FormBuilderService.addValidators(
+            this.schema(),
+            this.group().value,
+          ),
+        );
       });
     }
   }
@@ -256,8 +240,8 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   }
 
   private createConditions(): void {
-    this.schema.conditions
-      .filter((c) => c.dependOn)
+    this.schema()
+      .conditions.filter((c) => c.dependOn)
       .map((c) => new FieldConditions(this, c))
       .forEach((conditions: FieldConditions) => {
         const subs = conditions.start(

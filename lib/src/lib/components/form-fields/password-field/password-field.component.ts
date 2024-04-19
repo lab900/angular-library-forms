@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, computed, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldPassword } from './password-field.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -33,4 +33,8 @@ export class PasswordFieldComponent extends FormComponent<FormFieldPassword> {
   public togglePasswordVisibility(): void {
     this.passwordVisible = !this.passwordVisible;
   }
+
+  public icon = computed(() => {
+    return this.schema().icon;
+  });
 }

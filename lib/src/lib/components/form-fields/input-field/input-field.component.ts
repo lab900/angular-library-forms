@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, computed, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldInput } from './input-field.model';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -30,22 +30,35 @@ export class InputFieldComponent extends FormComponent<FormFieldInput> {
   @HostBinding('class')
   public classList = `lab900-form-field`;
 
-  public get showLengthIndicator(): boolean {
+  public showLengthIndicator = computed(() => {
     return (
-      !!this.setting?.formField?.showLengthIndicator ||
-      !!this.options?.showLengthIndicator
+      !!this.options()?.maxLength &&
+      (!!this.setting?.formField?.showLengthIndicator ||
+        !!this.options()?.showLengthIndicator)
     );
-  }
-  public get suffix(): string {
-    if (typeof this.options?.suffix === 'function') {
-      return this.options.suffix(this.group.value);
+  });
+
+  public suffix = computed(() => {
+    const suffix = this.options()?.suffix;
+    if (typeof suffix === 'function') {
+      return suffix(this.group.value);
     }
-    return this.options?.suffix;
-  }
-  public get prefix(): string {
-    if (typeof this.options?.prefix === 'function') {
-      return this.options.prefix(this.group.value);
+    return suffix;
+  });
+
+  public prefix = computed(() => {
+    const prefix = this.options()?.prefix;
+    if (typeof prefix === 'function') {
+      return prefix(this.group.value);
     }
-    return this.options?.prefix;
-  }
+    return prefix;
+  });
+
+  public mask = computed(() => {
+    return this.options()?.fieldMask;
+  });
+
+  public icon = computed(() => {
+    return this.schema().icon;
+  });
 }

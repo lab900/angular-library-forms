@@ -29,15 +29,16 @@ export class ReadonlyFieldComponent extends FormComponent implements OnDestroy {
   }
 
   private setValue(value: any): void {
-    this.value = this.options?.readonlyDisplay
-      ? this.options?.readonlyDisplay(this.group.value)
+    this.value = this.options()?.readonlyDisplay
+      ? this.options()?.readonlyDisplay(this.group.value)
       : value;
   }
 
   public getReadonlyContainerClass(): string {
-    if (typeof this.options?.readonlyContainerClass === 'function') {
-      return this.options.readonlyContainerClass(this.group.value);
+    const readonlyContainerClass = this.options()?.readonlyContainerClass;
+    if (typeof readonlyContainerClass === 'function') {
+      return readonlyContainerClass(this.group.value);
     }
-    return this.options?.readonlyContainerClass;
+    return readonlyContainerClass;
   }
 }

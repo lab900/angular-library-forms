@@ -74,9 +74,12 @@ export class AutocompleteMultipleFieldComponent<T>
 
   private initFilteredOptionsListener(): void {
     this.filteredOptions = this.inputChange.pipe(
-      debounceTime(this.options.debounceTime ?? 300),
+      debounceTime(this.options().debounceTime ?? 300),
       switchMap((input: string) => {
-        const res = this.options.autocompleteOptions(input, this.fieldControl);
+        const res = this.options().autocompleteOptions(
+          input,
+          this.fieldControl,
+        );
         return isObservable(res) ? res : of(res);
       }),
     );

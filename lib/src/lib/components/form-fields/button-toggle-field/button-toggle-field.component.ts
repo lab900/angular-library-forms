@@ -53,17 +53,17 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
   // This calculates the readonly label. If the readonlyDisplay() function is set, this is used.
   // Otherwise the button label is displayed
   public get label(): string {
-    const option = this.options.buttonOptions.find(
+    const option = this.options().buttonOptions.find(
       (o) => o.value === this.currentValue,
     );
-    return this.options?.readonlyDisplay
-      ? this.options?.readonlyDisplay(this.group.value)
+    return this.options()?.readonlyDisplay
+      ? this.options()?.readonlyDisplay(this.group.value)
       : option?.label;
   }
 
   // If the deselect option is set and the previous value of the toggle is the same as the current value the toggle will be deselected
   public onChange($event: MatButtonToggleChange): void {
-    if (this.options?.deselectOnClick && this.currentValue === $event.value) {
+    if (this.options()?.deselectOnClick && this.currentValue === $event.value) {
       setTimeout(() => {
         this.group.controls[this.fieldAttribute].setValue(null);
         this.group.controls[this.fieldAttribute].markAsDirty();

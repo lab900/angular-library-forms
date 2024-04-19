@@ -1,13 +1,13 @@
 @if (!fieldIsHidden && !fieldIsReadonly) {
-  @if (schema.title) {
-    <span class="lab900-form-field-label" translate>{{ schema.title }}</span>
+  @if (title()) {
+    <span class="lab900-form-field-label" translate>{{ title() }}</span>
   }
-  <div class="upload-file" [class.upload-file--compact]="options.compact">
+  <div class="upload-file" [class.upload-file--compact]="options().compact">
     <div
       lab900DropFile
       class="upload-file__container"
       [class.upload-file__container--compact]="
-        options.compact && !!files?.length
+        options().compact && !!files?.length
       "
       (fileDropped)="handleFileList($event)"
       (click)="fileField.click()"
@@ -15,7 +15,7 @@
       <div class="instructions">
         <mat-icon class="instructions__upload-icon">upload_file</mat-icon>
         <span class="instructions__DD-text text-ellipsis">
-          {{ options.dropFilesText || 'Drop Files' | translate }}
+          {{ options().dropFilesText || 'Drop Files' | translate }}
         </span>
         <div class="instructions__or-text-container">
           <hr />
@@ -28,7 +28,7 @@
           class="instructions__upload-button text-ellipsis"
           mat-flat-button
         >
-          {{ options.dropFilesButton || 'Upload Files' | translate }}
+          {{ options().dropFilesButton || 'Upload Files' | translate }}
         </button>
       </div>
       <input
@@ -36,7 +36,7 @@
         (change)="handleInput($event.target)"
         hidden
         type="file"
-        [multiple]="options.maxFiles > 1"
+        [multiple]="options().maxFiles > 1"
       />
     </div>
 
@@ -44,8 +44,8 @@
       <div
         class="file-list"
         [ngClass]="{
-          'file-list--compact': options.compact,
-          'file-list--full': !options.compact
+          'file-list--compact': options().compact,
+          'file-list--full': !options().compact
         }"
       >
         @for (file of files; track file) {

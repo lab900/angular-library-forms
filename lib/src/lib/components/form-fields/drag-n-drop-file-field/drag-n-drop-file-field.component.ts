@@ -45,9 +45,9 @@ export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDro
 
   private ingestFiles(files: Lab900File[]): void {
     if (files) {
-      if (files.length > this.options.maxFiles) {
+      if (files.length > this.options().maxFiles) {
         console.error(
-          `Too many files loaded ${files.length}, max is ${this.options.maxFiles}.
+          `Too many files loaded ${files.length}, max is ${this.options().maxFiles}.
             Change property maxFiles to fix this.`,
         );
         return;

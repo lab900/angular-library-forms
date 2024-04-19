@@ -1,31 +1,47 @@
 @if (!fieldIsHidden) {
-  <mat-form-field [formGroup]="group" class="lab900-date-field" id="lab900-date-field-{{ fieldAttribute }}">
-    @if (schema.title) {
-      <mat-label translate>{{ schema.title }}</mat-label>
+  <mat-form-field
+    [formGroup]="group"
+    class="lab900-date-field"
+    id="lab900-date-field-{{ fieldAttribute }}"
+  >
+    @if (title()) {
+      <mat-label translate>{{ title() }}</mat-label>
     }
     <input
       #input
       matInput
-      placeholder="{{ placeholder | translate }}"
+      placeholder="{{ placeholder() | translate }}"
       [matDatepicker]="picker"
       [formControlName]="fieldAttribute"
       [required]="fieldIsRequired"
       [readonly]="fieldIsReadonly"
-      [max]="maxDate"
-      [min]="minDate"
+      [max]="maxDate()"
+      [min]="minDate()"
     />
-    <mat-datepicker-toggle [disabled]="fieldIsReadonly || fieldControl.disabled" matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker-toggle
+      [disabled]="fieldIsReadonly || fieldControl.disabled"
+      matSuffix
+      [for]="picker"
+    />
     <mat-datepicker
       [disabled]="fieldIsReadonly || fieldControl.disabled"
       #picker
-      [startView]="startView"
+      [startView]="startView()"
       (monthSelected)="monthSelectedHandler($event, picker)"
-    ></mat-datepicker>
-    @if (hint && !fieldIsReadonly && !(schema.options.hint.hideHintOnValidValue && input.value)) {
-      <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
+    />
+    @if (
+      hint() &&
+      !fieldIsReadonly &&
+      !(options().hint.hideHintOnValidValue && input.value)
+    ) {
+      <mat-hint
+        ><span [innerHTML]="hint() | translate: hintValueTranslateData()"></span
+      ></mat-hint>
     }
     @if (!valid && !fieldIsReadonly) {
-      <mat-error><span [innerHTML]="getErrorMessage() | async"></span></mat-error>
+      <mat-error
+        ><span [innerHTML]="getErrorMessage() | async"></span
+      ></mat-error>
     }
   </mat-form-field>
 }

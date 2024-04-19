@@ -1,31 +1,51 @@
 @if (!fieldIsHidden && dateFormGroup) {
-  <mat-form-field [formGroup]="group" class="lab900-date-range-field" id="lab900-date-range-field-{{ fieldAttribute }}">
-    @if (schema.title) {
-      <mat-label translate>{{ schema.title }}</mat-label>
+  <mat-form-field
+    [formGroup]="group"
+    class="lab900-date-range-field"
+    id="lab900-date-range-field-{{ fieldAttribute }}"
+  >
+    @if (title()) {
+      <mat-label translate>{{ title() }}</mat-label>
     }
-    <mat-date-range-input [formGroup]="dateFormGroup" [rangePicker]="picker" [dateFilter]="options?.dateFilter">
+    <mat-date-range-input
+      [formGroup]="dateFormGroup"
+      [rangePicker]="picker"
+      [dateFilter]="options()?.dateFilter"
+    >
       <input
         matStartDate
-        [formControl]="dateFormGroup.get(options?.startKey || 'start')"
-        placeholder="{{ options?.startLabel || 'Start date' | translate }}"
+        [formControl]="dateFormGroup.get(startKey())"
+        placeholder="{{ options()?.startLabel || 'Start date' | translate }}"
       />
       <input
         matEndDate
-        [formControl]="dateFormGroup.get(options?.endKey || 'end')"
-        placeholder="{{ options?.endLabel || 'End date' | translate }}"
+        [formControl]="dateFormGroup.get(endKey())"
+        placeholder="{{ options()?.endLabel || 'End date' | translate }}"
       />
     </mat-date-range-input>
-    <mat-datepicker-toggle [disabled]="fieldIsReadonly || dateFormGroup.disabled" matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker-toggle
+      [disabled]="fieldIsReadonly || dateFormGroup.disabled"
+      matSuffix
+      [for]="picker"
+    />
     <mat-date-range-picker
-      [dateClass]="options?.dateClass"
+      [dateClass]="options()?.dateClass"
       [disabled]="fieldIsReadonly || dateFormGroup.disabled"
       #picker
-    ></mat-date-range-picker>
-    @if (hint && !fieldIsReadonly && !(schema.options.hint.hideHintOnValidValue && dateFormGroup.value)) {
-      <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
+    />
+    @if (
+      hint() &&
+      !fieldIsReadonly &&
+      !(options().hint.hideHintOnValidValue && dateFormGroup.value)
+    ) {
+      <mat-hint
+        ><span [innerHTML]="hint() | translate: hintValueTranslateData"></span
+      ></mat-hint>
     }
     @if (!valid && !fieldIsReadonly) {
-      <mat-error><span [innerHTML]="getErrorMessage() | async"></span></mat-error>
+      <mat-error
+        ><span [innerHTML]="getErrorMessage() | async"></span
+      ></mat-error>
     }
   </mat-form-field>
 }

@@ -153,8 +153,8 @@ export class SelectFieldComponent<T>
   public get selectedOption(): ValueLabel<T> {
     if (this.selectOptions && this.fieldControl.value) {
       return this.selectOptions.find((opt) =>
-        this.options?.compareWith
-          ? this.options?.compareWith(opt.value, this.fieldControl.value)
+        this.options()?.compareWith
+          ? this.options()?.compareWith(opt.value, this.fieldControl.value)
           : this.defaultCompare(opt.value, this.fieldControl.value),
       );
     }
@@ -167,19 +167,20 @@ export class SelectFieldComponent<T>
   }
 
   public showClearButton = (value: T | T[]): boolean => {
+    const clearFieldButton = this.options()?.clearFieldButton;
     if (!value || (Array.isArray(value) && !value.length)) {
       return false;
-    } else if (typeof this.options?.clearFieldButton?.enabled === 'function') {
-      return this.options.clearFieldButton.enabled(this.group.value);
+    } else if (typeof clearFieldButton?.enabled === 'function') {
+      return clearFieldButton?.enabled(this.group.value);
     }
-    return this.options?.clearFieldButton?.enabled;
+    return !!clearFieldButton?.enabled;
   };
 
   public defaultCompare = (o1: T, o2: T): boolean => o1 === o2;
 
   public ngOnInit(): void {
     // load all options from the start
-    if (!this.options?.fetchOptionsOnFocus) {
+    if (!this.options()?.fetchOptionsOnFocus) {
       this.selectOptionsListener();
     }
 
@@ -199,7 +200,7 @@ export class SelectFieldComponent<T>
         switchMap((optionsFn) =>
           this.optionsFilter$.pipe(
             filter((filter) => !!filter),
-            debounceTimeAfterFirst(this.options?.search?.debounceTime ?? 300),
+            debounceTimeAfterFirst(this.options()?.search?.debounceTime ?? 300),
             distinctUntilChanged((x: any, y: any) => !isDifferent(x, y)),
             tap(() => this.loading$.next(true)),
             switchMap((optionsFilter) =>
@@ -213,7 +214,7 @@ export class SelectFieldComponent<T>
   }
 
   public onFocus(): void {
-    if (this.options?.fetchOptionsOnFocus && !this.fetchedOnFocus$$.value) {
+    if (this.options()?.fetchOptionsOnFocus && !this.fetchedOnFocus$$.value) {
       this.fetchedOnFocus$$.next(true);
       this.selectOptionsListener();
     }
@@ -246,7 +247,7 @@ export class SelectFieldComponent<T>
     options = this.selectOptions,
   ): ValueLabel<T>[] {
     const value = coerceArray(this.fieldControl.value);
-    const compare = this.options?.compareWith || this.defaultCompare;
+    const compare = this.options()?.compareWith || this.defaultCompare;
     return options?.filter((o) => value.some((v) => compare(o.value, v)));
   }
 
@@ -256,7 +257,7 @@ export class SelectFieldComponent<T>
     firstRun: boolean,
   ): void {
     setTimeout(() => {
-      const condition = this.schema.conditions.find((c) =>
+      const condition = this.schema().conditions.find((c) =>
         (Array.isArray(c.dependOn) ? c.dependOn : [c.dependOn]).includes(
           dependOn,
         ),
@@ -277,7 +278,7 @@ export class SelectFieldComponent<T>
   }
 
   public onScroll(): void {
-    if (this.options?.infiniteScroll?.enabled && !this.loading$.value) {
+    if (this.options()?.infiniteScroll?.enabled && !this.loading$.value) {
       const currentFilter = this.optionsFilter$.value;
       this.optionsFilter$.next({
         ...currentFilter,
@@ -288,7 +289,7 @@ export class SelectFieldComponent<T>
   }
 
   public onSearch(searchQuery: string): void {
-    if (this.options?.search?.enabled) {
+    if (this.options()?.search?.enabled) {
       this.optionsFilter$.next({ searchQuery, page: 0 });
     }
   }
@@ -301,16 +302,16 @@ export class SelectFieldComponent<T>
   // if no readonlyDisplay is defined, show the single selected value
   // does not work with multi select > use readonlyDisplay in that case
   public getReadOnlyDisplay(): string {
-    if (this.options?.readonlyDisplay) {
+    if (this.options()?.readonlyDisplay) {
       return this.translateService.instant(
-        this.options.readonlyDisplay(this.fieldControl.value) || '-',
+        this.options().readonlyDisplay(this.fieldControl.value) || '-',
       );
     }
 
     if (this.selectedOption) {
-      if (this.options?.displayOptionFn) {
+      if (this.options()?.displayOptionFn) {
         return this.translateService.instant(
-          this.options?.displayOptionFn(this.selectedOption),
+          this.options()?.displayOptionFn(this.selectedOption),
         );
       } else {
         return this.translateService.instant(this.selectedOption.label);
@@ -322,8 +323,8 @@ export class SelectFieldComponent<T>
 
   public handleClearFieldButtonClick($event: Event): void {
     $event.stopPropagation();
-    if (this.options?.clearFieldButton?.click) {
-      this.options.clearFieldButton.click(this.fieldControl, $event);
+    if (this.options()?.clearFieldButton?.click) {
+      this.options().clearFieldButton.click(this.fieldControl, $event);
     } else {
       this.fieldControl.setValue(null);
       this.fieldControl.markAsTouched();
@@ -339,7 +340,7 @@ export class SelectFieldComponent<T>
   }
 
   public handleToggleAllSelection(): void {
-    if (this.schema.options.infiniteScroll?.enabled) {
+    if (this.options().infiniteScroll?.enabled) {
       this.optionsFilter$.next({
         ...this.optionsFilter$.value,
         getAll: true,
@@ -361,7 +362,7 @@ export class SelectFieldComponent<T>
   }
 
   public handleAddNew(searchQuery: string): void {
-    this.options?.search?.addNewFn(searchQuery, this);
+    this.options()?.search?.addNewFn(searchQuery, this);
   }
 
   private toggleAllSelection(): void {
@@ -395,7 +396,7 @@ export class SelectFieldComponent<T>
         if (
           options?.length === 1 &&
           !this.fieldControl.value &&
-          this.schema.options?.autoselectOnlyOption
+          this.options()?.autoselectOnlyOption
         ) {
           this.fieldControl.setValue(options[0].value);
         }
@@ -409,7 +410,7 @@ export class SelectFieldComponent<T>
    * @private
    */
   private afterGetOptionsSuccess(options: ValueLabel<T>[]): void {
-    const compare = this.options?.compareWith || this.defaultCompare;
+    const compare = this.options()?.compareWith || this.defaultCompare;
 
     let newOptionsSet = this.selectOptions ?? [];
     if (this.optionsFilter$.value?.page > 0) {
@@ -451,7 +452,7 @@ export class SelectFieldComponent<T>
     }
 
     this.loading$.next(false);
-    if (this.options?.fetchOptionsOnFocus) {
+    if (this.options()?.fetchOptionsOnFocus) {
       // fix for the select not opening when the options are fetched on focus
       setTimeout(() => {
         if ((this.select as any)._focused && !(this.select as any)._panelOpen) {
@@ -467,18 +468,18 @@ export class SelectFieldComponent<T>
   private addValueToOptions(options = this.selectOptions): ValueLabel<T>[] {
     let label: string;
     // TODO: Validate options, this is a required field if search or infinite scroll is used
-    if (!this.options?.displaySelectedOptionFn) {
+    if (!this.options()?.displaySelectedOptionFn) {
       label = "ERROR: Can't display";
       console.error(
         `Please define a displaySelectedOptionFn to display your currently selected option for the field with attribute ${this.fieldAttribute} since it is not included in the current options`,
       );
     }
-    const compare = this.options?.compareWith || this.defaultCompare;
+    const compare = this.options()?.compareWith || this.defaultCompare;
     const missingOptions = coerceArray(this.fieldControl.value)
       .filter((value) => !options?.some((o) => compare(o.value, value)))
       .map((v: T) => ({
         value: v,
-        label: label ?? this.options.displaySelectedOptionFn(v),
+        label: label ?? this.options().displaySelectedOptionFn(v),
       }));
 
     if (missingOptions?.length) {
@@ -489,7 +490,7 @@ export class SelectFieldComponent<T>
 
   private removeDuplicateOptions(items: ValueLabel<T>[]): ValueLabel<T>[] {
     if (items?.length) {
-      const compare = this.options?.compareWith || this.defaultCompare;
+      const compare = this.options()?.compareWith || this.defaultCompare;
       return items.filter(
         (item, idx, arr) =>
           arr.findIndex(({ value }) => compare(item.value, value)) === idx,
@@ -499,11 +500,11 @@ export class SelectFieldComponent<T>
   }
 
   private selectOptionsListener(): void {
-    if (this.options?.selectOptions) {
-      const { selectOptions } = this.options;
+    if (this.options()?.selectOptions) {
+      const selectOptions = this.options()?.selectOptions;
       this.updateOptionsFn(
         typeof selectOptions === 'function'
-          ? (f) => selectOptions(f, this.fieldControl, this.schema)
+          ? (f) => selectOptions(f, this.fieldControl, this.schema())
           : () => selectOptions,
       );
     }
@@ -516,7 +517,7 @@ export class SelectFieldComponent<T>
             value,
             this.fieldControl,
             f,
-            this.schema,
+            this.schema(),
           ),
         );
       },

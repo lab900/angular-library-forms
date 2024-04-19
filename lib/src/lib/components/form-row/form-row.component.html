@@ -1,13 +1,26 @@
-@if (visible && schema) {
-  <div [hidden]="isHidden(schema)" class="lab900-form-row {{ options?.customClass }}">
-    @if ((fieldIsReadonly && options?.readonlyLabel) || schema.title) {
-      <span class="lab900-form-field-label lab900-form-row-label {{ options?.customTitleClass }}">{{
-        (!fieldIsReadonly ? schema.title : options?.readonlyLabel || schema.title) | translate
-      }}</span>
+@if (visible() && schema()) {
+  <div
+    [hidden]="isHidden(schema())"
+    class="lab900-form-row {{ options()?.customClass }}"
+  >
+    @if ((fieldIsReadonly && options()?.readonlyLabel) || title()) {
+      <span
+        class="lab900-form-field-label lab900-form-row-label {{
+          options()?.customTitleClass
+        }}"
+        >{{
+          (!fieldIsReadonly ? title() : options()?.readonlyLabel || title())
+            | translate
+        }}</span
+      >
     }
-    <div class="form-row" [class.mobile-cols]="schema.options?.mobileCols">
-      @for (field of schema.nestedFields; track field) {
-        <div class="form-col" [class.hidden]="isHidden(field)" [style.width]="(100 * (field.options?.colspan || 12)) / 12 + '%'">
+    <div class="form-row" [class.mobile-cols]="options()?.mobileCols">
+      @for (field of nestedFields(); track field) {
+        <div
+          class="form-col"
+          [class.hidden]="isHidden(field)"
+          [style.width]="(100 * (field.options?.colspan || 12)) / 12 + '%'"
+        >
           <ng-container
             lab900FormField
             [schema]="field"
@@ -16,7 +29,11 @@
           ></ng-container>
           @if (infoTooltip(field); as tip) {
             <div class="form-col__info">
-              <mat-icon [matTooltipClass]="tip.class" [matTooltip]="tip.text | translate">{{ tip.icon || "info" }}</mat-icon>
+              <mat-icon
+                [matTooltipClass]="tip.class"
+                [matTooltip]="tip.text | translate"
+                >{{ tip.icon || 'info' }}</mat-icon
+              >
             </div>
           }
         </div>

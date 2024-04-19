@@ -1,4 +1,4 @@
-import { Component, HostBinding, inject } from '@angular/core';
+import { Component, computed, HostBinding, inject } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { ReactiveFormsModule, UntypedFormArray } from '@angular/forms';
 import { Lab900FormBuilderService } from '../../../services/form-builder.service';
@@ -39,35 +39,39 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
-  public get addLabel(): string {
-    return this.options?.addLabel ?? 'Add new';
-  }
+  public addLabel = computed(() => {
+    return this.options()?.addLabel ?? 'Add new';
+  });
 
-  public get minRows(): number {
-    return this.options?.minRows ?? DEFAULT_REPEATER_MIN_ROWS;
-  }
+  public minRows = computed(() => {
+    return this.options()?.minRows ?? DEFAULT_REPEATER_MIN_ROWS;
+  });
 
-  public get maxRows(): number {
-    return this.options?.maxRows;
-  }
+  public maxRows = computed(() => {
+    return this.options()?.maxRows;
+  });
 
-  public get fixedList(): boolean {
-    return this.options?.fixedList;
-  }
+  public fixedList = computed(() => {
+    return this.options()?.fixedList;
+  });
+
+  public nestedFields = computed(() => {
+    return this.schema().nestedFields;
+  });
 
   public get repeaterArray(): UntypedFormArray {
     return this.group.get(this.fieldAttribute) as UntypedFormArray;
   }
 
   public addToArray(): void {
-    const formGroup = this.fb.createFormGroup(this.schema.nestedFields);
+    const formGroup = this.fb.createFormGroup(this.nestedFields());
     this.repeaterArray.push(formGroup);
     this.repeaterArray.markAsDirty();
     this.repeaterArray.markAsTouched();
   }
 
   public removeFromArray(index: number): void {
-    if (this.repeaterArray.length > this.minRows) {
+    if (this.repeaterArray.length > this.minRows()) {
       this.repeaterArray.removeAt(index);
       this.repeaterArray.markAsDirty();
       this.repeaterArray.markAsTouched();

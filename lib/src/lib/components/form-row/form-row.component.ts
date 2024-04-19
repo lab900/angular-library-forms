@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, computed, HostBinding } from '@angular/core';
 import { FormComponent } from '../AbstractFormComponent';
 import { matFormFieldAnimations } from '@angular/material/form-field';
 import { FormFieldUtils } from '../../utils/form-field.utils';
@@ -22,12 +22,16 @@ export class FormRowComponent extends FormComponent<FormRow> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
-  public get visible(): boolean {
-    if (this.options && this.options.visibleFn) {
-      return this.options.visibleFn(this);
+  public visible = computed(() => {
+    if (this.options()?.visibleFn) {
+      return this.options().visibleFn(this);
     }
     return true;
-  }
+  });
+
+  public nestedFields = computed(() => {
+    return this.schema().nestedFields;
+  });
 
   public rowIsReadonly(field: Lab900FormField): boolean {
     return field.options?.readonly != null
@@ -37,7 +41,7 @@ export class FormRowComponent extends FormComponent<FormRow> {
           this.readonly,
         )
       : FormFieldUtils.isReadOnly(
-          this.options,
+          this.options(),
           this.group.value,
           this.readonly,
         );

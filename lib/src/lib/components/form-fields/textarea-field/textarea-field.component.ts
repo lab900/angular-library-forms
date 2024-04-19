@@ -27,7 +27,7 @@ export class TextareaFieldComponent extends FormComponent<FormFieldTextarea> {
   public get showLengthIndicator(): boolean {
     return (
       !!this.setting?.formField?.showLengthIndicator ||
-      !!this.options?.showLengthIndicator
+      !!this.options()?.showLengthIndicator
     );
   }
 }

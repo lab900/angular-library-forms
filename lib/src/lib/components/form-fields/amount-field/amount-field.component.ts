@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, computed, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldAmount } from './amount-field.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -31,31 +31,39 @@ export class AmountFieldComponent extends FormComponent<FormFieldAmount> {
   @HostBinding('class')
   public classList = `lab900-form-field`;
 
-  public get suffix(): string {
-    if (typeof this.options?.suffix === 'function') {
-      return this.options.suffix(this.group.value);
-    }
-    return this.options?.suffix;
-  }
+  public icon = computed(() => {
+    return this.schema().icon;
+  });
 
-  public get prefix(): string {
-    if (typeof this.options?.prefix === 'function') {
-      return this.options.prefix(this.group.value);
+  public suffix = computed(() => {
+    const suffix = this.options()?.suffix;
+    if (typeof suffix === 'function') {
+      return suffix(this.group.value);
     }
-    return this.options?.prefix;
-  }
+    return suffix;
+  });
 
-  public get maxDecimals(): number {
-    if (typeof this.options?.maxDecimals === 'function') {
-      return this.options.maxDecimals(this.group.value);
+  public prefix = computed(() => {
+    const prefix = this.options()?.prefix;
+    if (typeof prefix === 'function') {
+      return prefix(this.group.value);
     }
-    return this.options?.maxDecimals;
-  }
+    return prefix;
+  });
 
-  public get minDecimals(): number {
-    if (typeof this.options?.minDecimals === 'function') {
-      return this.options.minDecimals(this.group.value);
+  public maxDecimals = computed(() => {
+    const maxDecimals = this.options()?.maxDecimals;
+    if (typeof maxDecimals === 'function') {
+      return maxDecimals(this.group.value);
     }
-    return this.options?.minDecimals;
-  }
+    return maxDecimals;
+  });
+
+  public minDecimals = computed(() => {
+    const minDecimals = this.options()?.minDecimals;
+    if (typeof minDecimals === 'function') {
+      return minDecimals(this.group.value);
+    }
+    return minDecimals;
+  });
 }

@@ -1,7 +1,9 @@
 @if (!fieldIsHidden) {
   <div
     [formGroup]="group"
-    class="lab900-multi-lang-field lab900-multi-lang-field--{{ setting?.formField?.appearance || 'standard' }}"
+    class="lab900-multi-lang-field lab900-multi-lang-field--{{
+      setting?.formField?.appearance || 'standard'
+    }}"
     id="lab900-multi-lang-field-{{ fieldAttribute }}"
     style="padding-bottom: 1.34375em"
   >
@@ -11,11 +13,11 @@
       [availableLanguages]="availableLanguages"
       [required]="fieldIsRequired"
       [readonly]="fieldIsReadonly"
-      [label]="schema.title"
-      [buttonColor]="options?.buttonColor"
-      [translateLabel]="options?.translateLabel"
-      [stopTranslateLabel]="options?.stopTranslateLabel"
-      [useTextAreaField]="options?.useTextAreaField"
+      [label]="title()"
+      [buttonColor]="options()?.buttonColor"
+      [translateLabel]="options()?.translateLabel"
+      [stopTranslateLabel]="options()?.stopTranslateLabel"
+      [useTextAreaField]="options()?.useTextAreaField"
     />
     @if (!valid && fieldControl.touched && !fieldIsReadonly) {
       <div>

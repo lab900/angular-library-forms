@@ -1,14 +1,24 @@
 @if (!fieldIsHidden) {
-  <div [formGroup]="group" class="lab900-radio-buttons-field" id="lab900-radio-buttons-field-{{ fieldAttribute }}">
-    @if (schema.title) {
+  <div
+    [formGroup]="group"
+    class="lab900-radio-buttons-field"
+    id="lab900-radio-buttons-field-{{ fieldAttribute }}"
+  >
+    @if (title()) {
       <div class="lab900-radio-buttons-field__label">
-        <mat-label>{{ schema.title | translate }}</mat-label>
+        <mat-label>{{ title() | translate }}</mat-label>
       </div>
     }
     <!-- ToDo: Disable when readonly -->
-    <mat-radio-group [formControlName]="fieldAttribute" [color]="options?.color || 'primary'" [required]="fieldIsRequired">
-      @for (value of options?.radioOptions; track value) {
-        <mat-radio-button [value]="value.value" [disabled]="value.disabled">{{ value.label | translate }}</mat-radio-button>
+    <mat-radio-group
+      [formControlName]="fieldAttribute"
+      [color]="options()?.color || 'primary'"
+      [required]="fieldIsRequired"
+    >
+      @for (value of options()?.radioOptions; track value) {
+        <mat-radio-button [value]="value.value" [disabled]="value.disabled">{{
+          value.label | translate
+        }}</mat-radio-button>
       }
     </mat-radio-group>
     @if (group.controls[fieldAttribute].touched && !valid && !fieldIsReadonly) {

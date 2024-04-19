@@ -1,7 +1,9 @@
 @if (!fieldIsHidden) {
   <div class="lab900-readonly-field" [class]="getReadonlyContainerClass()">
-    @if (options?.readonlyLabel || schema.title) {
-      <span class="lab900-readonly-field__label">{{ options?.readonlyLabel || schema.title | translate }}</span>
+    @if (options()?.readonlyLabel || title()) {
+      <span class="lab900-readonly-field__label">{{
+        options()?.readonlyLabel || title() | translate
+      }}</span>
     }
     <div [innerHTML]="value || '-' | translate"></div>
   </div>
