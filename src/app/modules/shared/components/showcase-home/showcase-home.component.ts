@@ -3,10 +3,11 @@ import { Observable } from 'rxjs';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ShowcaseConfigModel } from '../../models/showcase-config.model';
 import { NavItemGroup } from '@lab900/ui';
-import { CommonModule } from '@angular/common';
+
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'lab900-showcase-home',
@@ -15,11 +16,11 @@ import { MatButtonModule } from '@angular/material/button';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    CommonModule,
     MatIconModule,
     TranslateModule,
     RouterLink,
     MatButtonModule,
+    AsyncPipe,
   ],
 })
 export class ShowcaseHomeComponent {

@@ -15,7 +15,7 @@ import { fetchImageBase64 } from '../../../utils/image.utils';
 import { FormFieldFilePreview } from './file-preview-field.model';
 import { take } from 'rxjs/operators';
 import { TranslateModule } from '@ngx-translate/core';
-import { NgForOf, NgIf } from '@angular/common';
+
 import { MatButton } from '@angular/material/button';
 import { MatCard } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
@@ -29,14 +29,12 @@ import { MatTooltip } from '@angular/material/tooltip';
   standalone: true,
   imports: [
     TranslateModule,
-    NgIf,
     MatButton,
     MatCard,
     MatIcon,
     AuthImageDirective,
-    MatTooltip,
-    NgForOf,
-  ],
+    MatTooltip
+],
 })
 export class FilePreviewFieldComponent<
   T,

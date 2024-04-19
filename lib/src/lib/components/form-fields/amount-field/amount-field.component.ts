@@ -2,7 +2,7 @@ import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldAmount } from './amount-field.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { AsyncPipe, NgClass, NgIf } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
@@ -18,15 +18,14 @@ import { IconComponent } from '@lab900/ui';
   imports: [
     MatFormFieldModule,
     MatInputModule,
-    NgIf,
     ReactiveFormsModule,
     TranslateModule,
     NgClass,
     AutofocusDirective,
     AmountInputDirective,
     IconComponent,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class AmountFieldComponent extends FormComponent<FormFieldAmount> {
   @HostBinding('class')

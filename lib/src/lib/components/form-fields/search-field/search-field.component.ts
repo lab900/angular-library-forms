@@ -3,7 +3,7 @@ import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldSearch } from './field-search.model';
 import { take } from 'rxjs/operators';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { AsyncPipe, NgClass, NgIf } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
@@ -21,7 +21,6 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   imports: [
     MatFormFieldModule,
     MatInputModule,
-    NgIf,
     ReactiveFormsModule,
     TranslateModule,
     NgClass,
@@ -31,8 +30,8 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     MatTooltip,
     AsyncPipe,
     MatIcon,
-    MatProgressSpinner,
-  ],
+    MatProgressSpinner
+],
 })
 export class SearchFieldComponent<T> extends FormComponent<FormFieldSearch<T>> {
   @HostBinding('class')

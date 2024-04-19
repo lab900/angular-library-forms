@@ -3,7 +3,7 @@ import { ThemePalette } from '@angular/material/core';
 import { ValueLabel } from '../../models/form-field-base';
 import { MatButton } from '@angular/material/button';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
-import { NgForOf, NgIf } from '@angular/common';
+
 import { TranslateModule } from '@ngx-translate/core';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
@@ -18,12 +18,10 @@ import { MatIcon } from '@angular/material/icon';
     MatMenuTrigger,
     MatMenu,
     MatMenuItem,
-    NgForOf,
     TranslateModule,
     MatTooltip,
-    NgIf,
-    MatIcon,
-  ],
+    MatIcon
+],
 })
 export class LanguagePickerComponent {
   @Input()

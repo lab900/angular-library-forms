@@ -2,7 +2,7 @@ import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldSlideToggle } from './slide-toggle-field.model';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatError, MatLabel } from '@angular/material/form-field';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { TranslateModule } from '@ngx-translate/core';
@@ -13,13 +13,12 @@ import { TranslateModule } from '@ngx-translate/core';
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    NgIf,
     MatLabel,
     MatSlideToggle,
     TranslateModule,
     MatError,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class SlideToggleFieldComponent extends FormComponent<FormFieldSlideToggle> {
   @HostBinding('class')

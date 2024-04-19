@@ -8,7 +8,7 @@ import {
 import { CheckboxFieldModel } from './checkbox-field.model';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -20,12 +20,11 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [
     MatCheckbox,
     ReactiveFormsModule,
-    NgIf,
     TranslateModule,
     MatHint,
     MatError,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class CheckboxFieldComponent extends FormComponent<CheckboxFieldModel> {
   @HostBinding('class')

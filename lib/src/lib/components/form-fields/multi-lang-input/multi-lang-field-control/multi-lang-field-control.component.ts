@@ -15,7 +15,7 @@ import {
 import { ValueLabel } from '../../../../models/form-field-base';
 import { LanguagePickerComponent } from '../../../language-picker/language-picker.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { NgIf } from '@angular/common';
+
 import { TranslateModule } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
 
@@ -35,10 +35,9 @@ import { MatInputModule } from '@angular/material/input';
     LanguagePickerComponent,
     MatFormFieldModule,
     MatInputModule,
-    NgIf,
     TranslateModule,
-    FormsModule,
-  ],
+    FormsModule
+],
 })
 export class MultiLangFieldControlComponent
   extends BaseControlValueAccessorDirective<Record<string, string>>

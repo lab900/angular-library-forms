@@ -3,7 +3,7 @@ import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldRadioButtons } from './radio-buttons-field.model';
 import { MatError, MatLabel } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 
@@ -14,14 +14,12 @@ import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
   imports: [
     MatLabel,
     ReactiveFormsModule,
-    NgIf,
     TranslateModule,
     MatRadioGroup,
     MatRadioButton,
-    NgForOf,
     MatError,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class RadioButtonsFieldComponent extends FormComponent<FormFieldRadioButtons> {
   @HostBinding('class')

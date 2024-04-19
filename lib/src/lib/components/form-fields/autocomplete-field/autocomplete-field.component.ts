@@ -12,7 +12,7 @@ import { ValueLabel } from '../../../models/form-field-base';
 import { FormFieldAutocomplete } from './autocomplete-field.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   MatAutocomplete,
   MatAutocompleteTrigger,
@@ -30,15 +30,13 @@ import { MatIcon } from '@angular/material/icon';
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    NgIf,
     MatAutocompleteTrigger,
     TranslateModule,
     AsyncPipe,
     MatAutocomplete,
     MatIcon,
-    MatOption,
-    NgForOf,
-  ],
+    MatOption
+],
 })
 export class AutocompleteFieldComponent<T>
   extends FormComponent<FormFieldAutocomplete<T>>

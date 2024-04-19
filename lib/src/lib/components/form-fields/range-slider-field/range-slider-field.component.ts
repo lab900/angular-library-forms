@@ -1,7 +1,7 @@
 import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldRangeSlider } from './range-slider-field.model';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatRangeSliderFieldComponent } from './mat-range-slider-field/mat-range-slider-field.component';
 import { MatError } from '@angular/material/form-field';
@@ -11,12 +11,11 @@ import { MatError } from '@angular/material/form-field';
   templateUrl: './range-slider-field.component.html',
   standalone: true,
   imports: [
-    NgIf,
     ReactiveFormsModule,
     MatRangeSliderFieldComponent,
     MatError,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class RangeSliderFieldComponent extends FormComponent<FormFieldRangeSlider> {
   @HostBinding('class')

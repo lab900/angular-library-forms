@@ -18,7 +18,7 @@ import { debounceTime, switchMap } from 'rxjs/operators';
 import { ValueLabel } from '../../../models/form-field-base';
 import { FormFieldAutocompleteMulti } from './autocomplete-multiple-field.model';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatChipGrid, MatChipInput, MatChipRow } from '@angular/material/chips';
@@ -31,18 +31,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,
-    NgIf,
     TranslateModule,
     MatIcon,
     MatChipGrid,
     MatChipRow,
-    NgForOf,
     MatAutocompleteTrigger,
     MatChipInput,
     MatAutocomplete,
     MatOption,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class AutocompleteMultipleFieldComponent<T>
   extends FormComponent<FormFieldAutocompleteMulti<T, string>>

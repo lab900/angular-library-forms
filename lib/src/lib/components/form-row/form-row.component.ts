@@ -6,7 +6,7 @@ import { FormRow } from './form-row.model';
 import { Lab900FormField } from '../../models/lab900-form-field.type';
 import { FormFieldDirective } from '../../directives/form-field.directive';
 import { MatIcon } from '@angular/material/icon';
-import { NgForOf, NgIf } from '@angular/common';
+
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -19,11 +19,9 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [
     FormFieldDirective,
     MatIcon,
-    NgIf,
     MatTooltip,
-    TranslateModule,
-    NgForOf,
-  ],
+    TranslateModule
+],
 })
 export class FormRowComponent extends FormComponent<FormRow> {
   @HostBinding('class')

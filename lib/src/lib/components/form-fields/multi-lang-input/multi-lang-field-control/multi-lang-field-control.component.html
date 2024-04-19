@@ -1,86 +1,100 @@
-<div
-  id="lab900-multi-lang-input-{{ this.formControlName }}"
+@if (availableLanguages?.length && activeLanguage) {
+  <div
+    id="lab900-multi-lang-input-{{ this.formControlName }}"
   class="lab900-multi-lang-input-wrapper lab900-multi-lang-input-wrapper--{{
     setting?.formField?.appearance || 'standard'
   }}"
-  *ngIf="availableLanguages?.length && activeLanguage"
->
-  <div
+    >
+    <div
     class="lab900-multi-lang-input lab900-multi-lang-input--{{
       setting?.formField?.appearance || 'standard'
     }}"
-  >
-    <div>
-      <lab900-language-picker
-        [buttonColor]="buttonColor"
-        [value]="value"
-        [languages]="availableLanguages"
-        [(activeLanguage)]="activeLanguage"
-        [translate]="translate"
-        (translateChange)="toggleTranslate($event)"
-        [translateLabel]="translateLabel"
-        [stopTranslateLabel]="stopTranslateLabel"
-      />
-    </div>
-    <div *ngIf="!translate">
-      <mat-form-field class="lab900-input-field">
-        <mat-label *ngIf="label">{{ label | translate }}</mat-label>
-        <input
-          *ngIf="!useTextAreaField"
-          matInput
-          type="text"
-          (blur)="blur()"
-          [ngModel]="globalTranslation"
-          (ngModelChange)="updateGlobalTranslation($event)"
-          [required]="required"
-          [readonly]="readonly"
-          [class.readonly]="readonly"
-        />
-        <textarea
-          *ngIf="useTextAreaField"
-          matInput
-          (blur)="blur()"
-          [ngModel]="globalTranslation"
-          (ngModelChange)="updateGlobalTranslation($event)"
-          [required]="required"
-          [readonly]="readonly"
-          [class.readonly]="readonly"
-        ></textarea>
-      </mat-form-field>
-    </div>
-    <div *ngIf="translate">
-      <ng-container *ngFor="let lang of availableLanguages">
-        <mat-form-field
-          *ngIf="lang.value === activeLanguage.value"
-          class="lab900-input-field"
-          id="lab900-input-field-{{ this.formControlName }}-{{ lang.value }}"
-        >
-          <mat-label *ngIf="label">{{ label | translate }}</mat-label>
-          <input
-            *ngIf="!useTextAreaField"
-            matInput
-            type="text"
-            (blur)="blur()"
-            [ngModel]="value && value[lang.value]"
-            (ngModelChange)="updateSingleLanguage($event, lang.value)"
-            [required]="required"
-            [readonly]="readonly"
-            [class.readonly]="readonly"
-            [disabled]="activeLanguage.disabled"
+      >
+      <div>
+        <lab900-language-picker
+          [buttonColor]="buttonColor"
+          [value]="value"
+          [languages]="availableLanguages"
+          [(activeLanguage)]="activeLanguage"
+          [translate]="translate"
+          (translateChange)="toggleTranslate($event)"
+          [translateLabel]="translateLabel"
+          [stopTranslateLabel]="stopTranslateLabel"
           />
-          <textarea
-            *ngIf="useTextAreaField"
-            matInput
-            (blur)="blur()"
-            [ngModel]="value && value[lang.value]"
-            (ngModelChange)="updateSingleLanguage($event, lang.value)"
-            [required]="required"
-            [readonly]="readonly"
-            [class.readonly]="readonly"
-            [disabled]="activeLanguage.disabled"
-          ></textarea>
-        </mat-form-field>
-      </ng-container>
+      </div>
+      @if (!translate) {
+        <div>
+          <mat-form-field class="lab900-input-field">
+            @if (label) {
+              <mat-label>{{ label | translate }}</mat-label>
+            }
+            @if (!useTextAreaField) {
+              <input
+                matInput
+                type="text"
+                (blur)="blur()"
+                [ngModel]="globalTranslation"
+                (ngModelChange)="updateGlobalTranslation($event)"
+                [required]="required"
+                [readonly]="readonly"
+                [class.readonly]="readonly"
+                />
+            }
+            @if (useTextAreaField) {
+              <textarea
+                matInput
+                (blur)="blur()"
+                [ngModel]="globalTranslation"
+                (ngModelChange)="updateGlobalTranslation($event)"
+                [required]="required"
+                [readonly]="readonly"
+                [class.readonly]="readonly"
+              ></textarea>
+            }
+          </mat-form-field>
+        </div>
+      }
+      @if (translate) {
+        <div>
+          @for (lang of availableLanguages; track lang) {
+            @if (lang.value === activeLanguage.value) {
+              <mat-form-field
+                class="lab900-input-field"
+                id="lab900-input-field-{{ this.formControlName }}-{{ lang.value }}"
+                >
+                @if (label) {
+                  <mat-label>{{ label | translate }}</mat-label>
+                }
+                @if (!useTextAreaField) {
+                  <input
+                    matInput
+                    type="text"
+                    (blur)="blur()"
+                    [ngModel]="value && value[lang.value]"
+                    (ngModelChange)="updateSingleLanguage($event, lang.value)"
+                    [required]="required"
+                    [readonly]="readonly"
+                    [class.readonly]="readonly"
+                    [disabled]="activeLanguage.disabled"
+                    />
+                }
+                @if (useTextAreaField) {
+                  <textarea
+                    matInput
+                    (blur)="blur()"
+                    [ngModel]="value && value[lang.value]"
+                    (ngModelChange)="updateSingleLanguage($event, lang.value)"
+                    [required]="required"
+                    [readonly]="readonly"
+                    [class.readonly]="readonly"
+                    [disabled]="activeLanguage.disabled"
+                  ></textarea>
+                }
+              </mat-form-field>
+            }
+          }
+        </div>
+      }
     </div>
   </div>
-</div>
+}

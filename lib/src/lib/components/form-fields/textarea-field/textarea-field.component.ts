@@ -2,7 +2,7 @@ import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldTextarea } from './textarea-field.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { TranslateModule } from '@ngx-translate/core';
@@ -15,11 +15,10 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [
     MatFormFieldModule,
     MatInputModule,
-    NgIf,
     ReactiveFormsModule,
     TranslateModule,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class TextareaFieldComponent extends FormComponent<FormFieldTextarea> {
   @HostBinding('class')

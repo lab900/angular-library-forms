@@ -4,7 +4,7 @@ import { FormFieldButton } from './button-field.model';
 import { Lab900ButtonComponent } from '@lab900/ui';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatLabel } from '@angular/material/form-field';
-import { NgIf } from '@angular/common';
+
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -15,11 +15,10 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [
     MatTooltip,
     MatLabel,
-    NgIf,
     ReactiveFormsModule,
     TranslateModule,
-    Lab900ButtonComponent,
-  ],
+    Lab900ButtonComponent
+],
 })
 export class ButtonFieldComponent extends FormComponent<FormFieldButton> {
   @HostBinding('class')

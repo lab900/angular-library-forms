@@ -21,14 +21,14 @@ import {
   Lab900FormModuleSettings,
 } from '../../models/Lab900FormModuleSettings';
 import { FormFieldDirective } from '../../directives/form-field.directive';
-import { NgForOf, NgIf } from '@angular/common';
+
 
 @Component({
   selector: 'lab900-form[schema]',
   templateUrl: './form-container.component.html',
   styleUrls: ['./form-container.component.scss'],
   standalone: true,
-  imports: [FormFieldDirective, NgForOf, ReactiveFormsModule, NgIf],
+  imports: [FormFieldDirective, ReactiveFormsModule],
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 export class Lab900Form<T> implements OnChanges {

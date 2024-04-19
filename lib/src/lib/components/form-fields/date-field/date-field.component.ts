@@ -3,7 +3,7 @@ import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldDatePicker } from './date-field.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
@@ -16,12 +16,11 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    NgIf,
     MatDatepickerModule,
     TranslateModule,
     AsyncPipe,
-    MatDatepickerModule,
-  ],
+    MatDatepickerModule
+],
 })
 export class DateFieldComponent extends FormComponent<FormFieldDatePicker> {
   @HostBinding('class')

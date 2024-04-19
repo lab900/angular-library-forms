@@ -4,7 +4,7 @@ import { ReactiveFormsModule, UntypedFormArray } from '@angular/forms';
 import { Lab900FormBuilderService } from '../../../services/form-builder.service';
 import { MatError, matFormFieldAnimations } from '@angular/material/form-field';
 import { FormFieldRepeater } from './repeater-field.model';
-import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -21,17 +21,15 @@ export const DEFAULT_REPEATER_MIN_ROWS = 1;
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    NgIf,
     MatIcon,
     TranslateModule,
     MatTooltip,
-    NgForOf,
     FormFieldDirective,
     MatMiniFabButton,
     MatError,
     AsyncPipe,
-    MatButton,
-  ],
+    MatButton
+],
 })
 export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
   private readonly fb: Lab900FormBuilderService = inject(

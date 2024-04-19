@@ -3,7 +3,7 @@ import { Lab900File } from '../../../models/Lab900File';
 import { formatBytes } from '../../../utils/image.utils';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldDragNDropFilePreview } from './drag-n-drop-file-field.model';
-import { NgClass, NgForOf, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { FileDropDirective } from '../../../directives/file-drop.directive';
 import { MatIcon } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
@@ -20,10 +20,8 @@ import { MatButton, MatIconButton } from '@angular/material/button';
     MatIcon,
     TranslateModule,
     MatButton,
-    MatIconButton,
-    NgIf,
-    NgForOf,
-  ],
+    MatIconButton
+],
 })
 export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDropFilePreview> {
   @HostBinding('class')

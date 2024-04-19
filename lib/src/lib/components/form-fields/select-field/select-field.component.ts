@@ -40,7 +40,7 @@ import { coerceArray } from '@angular/cdk/coercion';
 import { isDifferent } from '@lab900/ui';
 import { debounceTimeAfterFirst } from '../../../utils/helpers';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { SelectInfiniteScrollDirective } from './select-field-infinite-scroll.directive';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
@@ -71,7 +71,6 @@ import { MatOption } from '@angular/material/autocomplete';
     MatFormFieldModule,
     MatSelectModule,
     ReactiveFormsModule,
-    NgIf,
     TranslateModule,
     SelectInfiniteScrollDirective,
     NgxMatSelectSearchModule,
@@ -79,10 +78,9 @@ import { MatOption } from '@angular/material/autocomplete';
     AsyncPipe,
     MatButton,
     MatPseudoCheckbox,
-    NgForOf,
     MatIconButton,
-    MatIcon,
-  ],
+    MatIcon
+],
 })
 export class SelectFieldComponent<T>
   extends FormComponent<FormFieldSelect<T>>

@@ -5,7 +5,7 @@ import { FormFieldUtils } from '../../utils/form-field.utils';
 import { FormColumn } from './form-column.model';
 import { Lab900FormField } from '../../models/lab900-form-field.type';
 import { TranslateModule } from '@ngx-translate/core';
-import { NgForOf, NgIf } from '@angular/common';
+
 import { FormFieldDirective } from '../../directives/form-field.directive';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -18,12 +18,10 @@ import { MatTooltip } from '@angular/material/tooltip';
   standalone: true,
   imports: [
     TranslateModule,
-    NgIf,
-    NgForOf,
     FormFieldDirective,
     MatIcon,
-    MatTooltip,
-  ],
+    MatTooltip
+],
 })
 export class FormColumnComponent extends FormComponent<FormColumn> {
   @HostBinding('class')

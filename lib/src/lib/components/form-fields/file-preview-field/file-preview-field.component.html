@@ -6,61 +6,69 @@
     [multiple]="options?.multiple"
     [accept]="options?.accept"
     (change)="fileChange($event)"
-  />
-  <button
-    *ngIf="!fieldIsReadonly"
-    mat-raised-button
-    color="primary"
-    (click)="fileField.click()"
-  >
-    {{ options?.fileUploadButtonText || 'form.button.upload' | translate }}
-  </button>
-  <div class="images-wrapper" *ngIf="files?.length">
-    <ng-container *ngFor="let file of files">
-      <mat-card
-        appearance="outlined"
-        class="image-wrapper"
-        (click)="handleImageClick(file)"
+    />
+  @if (!fieldIsReadonly) {
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="fileField.click()"
       >
-        <mat-icon
-          *ngIf="!fieldIsReadonly"
-          (click)="$event.stopPropagation(); removeFile(file)"
-          class="delete-image"
-          >close</mat-icon
-        >
-        <div
-          *ngIf="showOverlay(file) && options?.overlay"
-          class="image"
+      {{ options?.fileUploadButtonText || 'form.button.upload' | translate }}
+    </button>
+  }
+  @if (files?.length) {
+    <div class="images-wrapper">
+      @for (file of files; track file) {
+        <mat-card
+          appearance="outlined"
+          class="image-wrapper"
+          (click)="handleImageClick(file)"
+          >
+          @if (!fieldIsReadonly) {
+            <mat-icon
+              (click)="$event.stopPropagation(); removeFile(file)"
+              class="delete-image"
+              >close</mat-icon
+              >
+            }
+            @if (showOverlay(file) && options?.overlay) {
+              <div
+                class="image"
           style="background-color: {{
             this.options.overlay.backgroundColor
           }}; color: {{ this.options.overlay.textColor }}"
-        >
-          <span>
-            {{ options.overlay.text | translate }}
-          </span>
+                >
+                <span>
+                  {{ options.overlay.text | translate }}
+                </span>
+              </div>
+            }
+            @if (!showOverlay(file)) {
+              <div
+                lab900AuthImage
+                class="image"
+                [image]="file"
+                [httpCallback]="options?.httpCallback"
+              ></div>
+            }
+            <div class="file-name">
+              @if (file.fileName) {
+                <p
+                  [class.ellipse]="!!file.imageSrc"
+                  [matTooltip]="file.fileName"
+                  >
+                  {{ file.fileName }}
+                </p>
+              }
+              @if (options?.canEditFileMetaData && !fieldIsReadonly) {
+                <mat-icon
+                  (click)="$event.stopPropagation(); openPreviewDialog(file)"
+                  >visibility</mat-icon
+                  >
+                }
+              </div>
+            </mat-card>
+          }
         </div>
-        <div
-          *ngIf="!showOverlay(file)"
-          lab900AuthImage
-          class="image"
-          [image]="file"
-          [httpCallback]="options?.httpCallback"
-        ></div>
-        <div class="file-name">
-          <p
-            *ngIf="file.fileName"
-            [class.ellipse]="!!file.imageSrc"
-            [matTooltip]="file.fileName"
-          >
-            {{ file.fileName }}
-          </p>
-          <mat-icon
-            *ngIf="options?.canEditFileMetaData && !fieldIsReadonly"
-            (click)="$event.stopPropagation(); openPreviewDialog(file)"
-            >visibility</mat-icon
-          >
-        </div>
-      </mat-card>
-    </ng-container>
-  </div>
-</div>
+      }
+    </div>

@@ -1,140 +1,165 @@
-<mat-form-field
-  [formGroup]="group"
-  *ngIf="!fieldIsReadonly && !fieldIsHidden"
-  class="lab900-select-field"
-  [class.has-value]="fieldControl?.value?.length"
-  id="lab900-select-field-{{ fieldAttribute }}"
->
-  <mat-label *ngIf="schema?.title">
-    <ng-container *ngIf="loading$.value">{{
-      'form.field.loading' | translate
-    }}</ng-container>
-    <ng-container *ngIf="schema.title && !loading$.value">{{
-      schema.title | translate
-    }}</ng-container>
-  </mat-label>
-  <mat-select
-    #select
-    placeholder="{{ placeholder | translate }}"
-    [compareWith]="options?.compareWith ? options?.compareWith : defaultCompare"
-    [formControlName]="fieldAttribute"
-    [multiple]="options?.multiple"
-    [required]="fieldIsRequired"
-    lab900InfiniteScroll
-    [complete]="!options?.infiniteScroll?.enabled"
-    [threshold]="options?.infiniteScroll?.threshold || '15%'"
-    [debounceTime]="options?.infiniteScroll?.debounceTime || 150"
-    [panelWidth]="options?.panelWidth ?? 'auto'"
-    [panelClass]="options?.panelClass"
-    (infiniteScroll)="onScroll()"
-    (openedChange)="onOpenedChange($event)"
-    (focus)="onFocus()"
-  >
-    <mat-select-trigger *ngIf="options?.customTriggerFn">
-      <div [innerHTML]="options?.customTriggerFn(fieldControl.value)"></div>
-    </mat-select-trigger>
-    <mat-option *ngIf="options?.search?.enabled" style="background: #fff">
-      <ngx-mat-select-search
-        [ngModel]="searchQuery$ | async"
-        [searching]="loading$.value"
-        (ngModelChange)="onSearch($event)"
-        [ngModelOptions]="{ standalone: true }"
+@if (!fieldIsReadonly && !fieldIsHidden) {
+  <mat-form-field
+    [formGroup]="group"
+    class="lab900-select-field"
+    [class.has-value]="fieldControl?.value?.length"
+    id="lab900-select-field-{{ fieldAttribute }}"
+    >
+    @if (schema?.title) {
+      <mat-label>
+        @if (loading$.value) {
+          {{
+          'form.field.loading' | translate
+          }}
+        }
+        @if (schema.title && !loading$.value) {
+          {{
+          schema.title | translate
+          }}
+        }
+      </mat-label>
+    }
+    <mat-select
+      #select
+      placeholder="{{ placeholder | translate }}"
+      [compareWith]="options?.compareWith ? options?.compareWith : defaultCompare"
+      [formControlName]="fieldAttribute"
+      [multiple]="options?.multiple"
+      [required]="fieldIsRequired"
+      lab900InfiniteScroll
+      [complete]="!options?.infiniteScroll?.enabled"
+      [threshold]="options?.infiniteScroll?.threshold || '15%'"
+      [debounceTime]="options?.infiniteScroll?.debounceTime || 150"
+      [panelWidth]="options?.panelWidth ?? 'auto'"
+      [panelClass]="options?.panelClass"
+      (infiniteScroll)="onScroll()"
+      (openedChange)="onOpenedChange($event)"
+      (focus)="onFocus()"
+      >
+      @if (options?.customTriggerFn) {
+        <mat-select-trigger>
+          <div [innerHTML]="options?.customTriggerFn(fieldControl.value)"></div>
+        </mat-select-trigger>
+      }
+      @if (options?.search?.enabled) {
+        <mat-option style="background: #fff">
+          <ngx-mat-select-search
+            [ngModel]="searchQuery$ | async"
+            [searching]="loading$.value"
+            (ngModelChange)="onSearch($event)"
+            [ngModelOptions]="{ standalone: true }"
         [placeholderLabel]="
           options?.search?.placeholder ?? 'form.field.search' | translate
         "
         [disableScrollToActiveOnOptionsChanged]="
           options?.infiniteScroll?.enabled
         "
-        [clearSearchInput]="options?.search?.clearOnClose ?? false"
-      >
-        <div class="no-entries-found" ngxMatSelectNoEntriesFound>
-          <ng-container *ngIf="searchQuery$ | async as searchQuery">
-            <span>{{
-              options?.search?.notFoundLabel ?? 'form.field.no_options_found'
-                | translate: { searchQuery: searchQuery }
-            }}</span>
-            <button
-              mat-button
-              [color]="options?.search?.addNewBtnColor ?? 'primary'"
-              *ngIf="options?.search?.addNewFn"
-              (click)="handleAddNew(searchQuery)"
+            [clearSearchInput]="options?.search?.clearOnClose ?? false"
             >
-              <mat-icon>add</mat-icon>
-              <span>{{
-                options?.search?.addNewLabel ?? 'form.field.add_new'
+            <div class="no-entries-found" ngxMatSelectNoEntriesFound>
+              @if (searchQuery$ | async; as searchQuery) {
+                <span>{{
+                  options?.search?.notFoundLabel ?? 'form.field.no_options_found'
                   | translate: { searchQuery: searchQuery }
-              }}</span>
-            </button>
-          </ng-container>
-        </div>
-      </ngx-mat-select-search>
-    </mat-option>
-    <div
-      *ngIf="
+                }}</span>
+                @if (options?.search?.addNewFn) {
+                  <button
+                    mat-button
+                    [color]="options?.search?.addNewBtnColor ?? 'primary'"
+                    (click)="handleAddNew(searchQuery)"
+                    >
+                    <mat-icon>add</mat-icon>
+                    <span>{{
+                      options?.search?.addNewLabel ?? 'form.field.add_new'
+                      | translate: { searchQuery: searchQuery }
+                    }}</span>
+                  </button>
+                }
+              }
+            </div>
+          </ngx-mat-select-search>
+        </mat-option>
+      }
+      @if (
         options?.multiple &&
         options?.selectAll?.enabled &&
         (selectOptions$$ | async)?.length
-      "
-      class="mat-mdc-option mdc-list-item mat-mdc-option-multiple select-all"
-      (click)="handleToggleAllSelection()"
-    >
-      <mat-pseudo-checkbox
-        [state]="selectAllState$ | async"
-        [disabled]="options?.selectAll?.disabled || loading$.value"
-      />
-      <span class="mdc-list-item__primary-text">
-        {{
-          options.selectAll?.label || 'forms.select-field.selectAllLabel'
+        ) {
+        <div
+          class="mat-mdc-option mdc-list-item mat-mdc-option-multiple select-all"
+          (click)="handleToggleAllSelection()"
+          >
+          <mat-pseudo-checkbox
+            [state]="selectAllState$ | async"
+            [disabled]="options?.selectAll?.disabled || loading$.value"
+            />
+          <span class="mdc-list-item__primary-text">
+            {{
+            options.selectAll?.label || 'forms.select-field.selectAllLabel'
             | translate
-        }}
-      </span>
+            }}
+          </span>
+        </div>
+      }
+      @for (item of selectOptions$$ | async; track item) {
+        <mat-option
+          [value]="item.value"
+          [disabled]="item.disabled || loading$.value"
+          >
+          @if (options?.displayOptionFn) {
+            <div
+              [innerHTML]="options.displayOptionFn(item) | translate"
+            ></div>
+          }
+          @if (!options?.displayOptionFn) {
+            <div
+              [innerHTML]="item.label | translate"
+            ></div>
+          }
+        </mat-option>
+      }
+    </mat-select>
+    @if (showClearButton(this.fieldControl.value)) {
+      <button
+        matSuffix
+        mat-icon-button
+        type="button"
+        aria-label="Clear"
+        (click)="handleClearFieldButtonClick($event)"
+        >
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+    @if (hint && !(schema.options.hint.hideHintOnValidValue && select.value)) {
+      <mat-hint
+        ><span [innerHTML]="hint | translate: hintValueTranslateData"></span
+      ></mat-hint>
+    }
+    @if (!valid) {
+      <mat-error
+        ><span [innerHTML]="getErrorMessage(this.group) | async"></span
+      ></mat-error>
+    }
+  </mat-form-field>
+}
+
+@if (fieldIsReadonly && !fieldIsHidden) {
+  <div class="lab900-readonly-field">
+    @if (options?.readonlyLabel || schema.title) {
+      <span
+        class="lab900-readonly-field__label"
+        >{{ options?.readonlyLabel || schema.title | translate }}</span
+        >
+      }
+      @if (!loading$.value || !fieldControl.value) {
+        <div
+          [innerHTML]="getReadOnlyDisplay()"
+        ></div>
+      }
+      @if (loading$.value && fieldControl.value) {
+        <div>
+          {{ 'form.field.loading' | translate }}
+        </div>
+      }
     </div>
-    <mat-option
-      *ngFor="let item of selectOptions$$ | async"
-      [value]="item.value"
-      [disabled]="item.disabled || loading$.value"
-    >
-      <div
-        *ngIf="options?.displayOptionFn"
-        [innerHTML]="options.displayOptionFn(item) | translate"
-      ></div>
-      <div
-        *ngIf="!options?.displayOptionFn"
-        [innerHTML]="item.label | translate"
-      ></div>
-    </mat-option>
-  </mat-select>
-  <button
-    *ngIf="showClearButton(this.fieldControl.value)"
-    matSuffix
-    mat-icon-button
-    type="button"
-    aria-label="Clear"
-    (click)="handleClearFieldButtonClick($event)"
-  >
-    <mat-icon>close</mat-icon>
-  </button>
-
-  <mat-hint
-    *ngIf="hint && !(schema.options.hint.hideHintOnValidValue && select.value)"
-    ><span [innerHTML]="hint | translate: hintValueTranslateData"></span
-  ></mat-hint>
-  <mat-error *ngIf="!valid"
-    ><span [innerHTML]="getErrorMessage(this.group) | async"></span
-  ></mat-error>
-</mat-form-field>
-
-<div class="lab900-readonly-field" *ngIf="fieldIsReadonly && !fieldIsHidden">
-  <span
-    *ngIf="options?.readonlyLabel || schema.title"
-    class="lab900-readonly-field__label"
-    >{{ options?.readonlyLabel || schema.title | translate }}</span
-  >
-  <div
-    *ngIf="!loading$.value || !fieldControl.value"
-    [innerHTML]="getReadOnlyDisplay()"
-  ></div>
-  <div *ngIf="loading$.value && fieldControl.value">
-    {{ 'form.field.loading' | translate }}
-  </div>
-</div>
+  }
