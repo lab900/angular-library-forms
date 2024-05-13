@@ -8,7 +8,7 @@
     <mat-label>{{ schema.title | translate }}</mat-label>
   </div>
   <mat-slide-toggle
-    [disabled]="fieldIsReadonly"
+    [class.readonly]="fieldIsReadonly"
     [formControlName]="fieldAttribute"
     [required]="fieldIsRequired"
     [color]="options?.color || 'primary'"
