@@ -65,6 +65,8 @@ export default [
     new ShowcaseExample(
       FormConditionalsExampleComponent,
       'Conditional Form Container',
+      null,
+      ['TS', 'config.ts']
     ),
     new ShowcaseExample(
       FormConditionalValidationExampleComponent,
