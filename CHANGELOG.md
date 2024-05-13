@@ -8,7 +8,7 @@
 
 ### Breaking changes
 
-- Functionality of displayOptionFn prop on Selectors is removed.
+- Functionality of displayOptionFn prop on Selectors is removed
 
 ## 17.0.0
 
