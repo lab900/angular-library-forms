@@ -1,5 +1,8 @@
 # Changelog
 
+### 17.0.1
+Fix disabled state of SlideToggle component
+
 ## 17.0.0
 
 Upgrade to Angular 17
