@@ -1,10 +1,14 @@
 # Changelog
 
-### 17.0.1
+## 17.0.1
+
 - Fix disabled state of SlideToggle component
 - Configuration is now visible in examples
-- Functionality of displayOptionFn prop on Selectors is removed.
 - Prop selectedDisplayFn error is ajusted
+
+### Breaking changes
+
+- Functionality of displayOptionFn prop on Selectors is removed.
 
 ## 17.0.0
 
