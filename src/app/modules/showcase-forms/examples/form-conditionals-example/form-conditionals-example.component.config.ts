@@ -1,6 +1,10 @@
 import { EditType, Lab900FormConfig } from '@lab900/forms';
 import { ValueLabel } from '@lab900/forms';
 
+export const formConditionalsData = {
+  country: 'BEL',
+};
+
 export const formConditionalsExample: Lab900FormConfig = {
   fields: [
     {

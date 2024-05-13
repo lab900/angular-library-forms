@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { Lab900Form, Lab900FormConfig } from '@lab900/forms';
-import { formConditionalsExample } from './config/form-conditionals-example';
-import { formConditionalsData } from './config/form-conditionals-data';
+import { formConditionalsData, formConditionalsExample } from './form-conditionals-example.component.config';
 import { MatButton } from '@angular/material/button';
 
 @Component({
