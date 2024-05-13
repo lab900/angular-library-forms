@@ -72,12 +72,7 @@
       }
       @for (item of selectOptions$$ | async; track item) {
         <mat-option [value]="item.value" [disabled]="item.disabled || loading$.value">
-          @if (options?.displayOptionFn) {
-            <div [innerHTML]="options.displayOptionFn(item) | translate"></div>
-          }
-          @if (!options?.displayOptionFn) {
-            <div [innerHTML]="item.label | translate"></div>
-          }
+          <div [innerHTML]="item.label | translate"></div>
         </mat-option>
       }
     </mat-select>

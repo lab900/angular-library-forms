@@ -32,7 +32,6 @@ export class FormFieldSelectExampleComponent {
             attribute: 'somePropName',
             editType: EditType.Select,
             options: {
-              displayOptionFn: (value: ValueLabel) => value.label,
               placeholder: 'select yes or no',
               selectOptions: [
                 {

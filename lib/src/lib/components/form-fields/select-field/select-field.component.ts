@@ -308,13 +308,7 @@ export class SelectFieldComponent<T>
     }
 
     if (this.selectedOption) {
-      if (this.options?.displayOptionFn) {
-        return this.translateService.instant(
-          this.options?.displayOptionFn(this.selectedOption),
-        );
-      } else {
-        return this.translateService.instant(this.selectedOption.label);
-      }
+      return this.translateService.instant(this.selectedOption.label);
     } else {
       return '-';
     }
@@ -465,8 +459,11 @@ export class SelectFieldComponent<T>
    * Add the current form control value to the select options
    */
   private addValueToOptions(options = this.selectOptions): ValueLabel<T>[] {
+    if(!this.options?.infiniteScroll?.enabled && !this.options?.search?.enabled) {
+      return options;
+    }
+
     let label: string;
-    // TODO: Validate options, this is a required field if search or infinite scroll is used
     if (!this.options?.displaySelectedOptionFn) {
       label = "ERROR: Can't display";
       console.error(

@@ -29,7 +29,6 @@ export class FormConditionalWithExternalFormExampleComponent {
         editType: EditType.Select,
         title: 'Type',
         options: {
-          displayOptionFn: (value: ValueLabel) => value.label,
           colspan: 6,
           selectOptions: [
             { value: 'a', label: 'a value' },

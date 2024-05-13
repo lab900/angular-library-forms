@@ -26,12 +26,7 @@
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="options.displayInputFn">
       @for (option of filteredOptions | async; track option) {
         <mat-option [value]="option?.value" [disabled]="option?.disabled">
-          @if (options?.displayOptionFn) {
-            <div [innerHTML]="options.displayOptionFn(option) | translate"></div>
-          }
-          @if (!options?.displayOptionFn) {
             <div [innerHTML]="option.label | translate"></div>
-          }
         </mat-option>
       }
     </mat-autocomplete>
