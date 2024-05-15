@@ -135,6 +135,7 @@ export default [
     new ShowcaseExample(
       FormFieldSelectAdvancedExampleComponent,
       'Advanced selects',
+      'form-field-select-example',
     ),
   ]),
   new ShowcaseRoute('form-field-file-upload', 'Form Fields: File upload', [
