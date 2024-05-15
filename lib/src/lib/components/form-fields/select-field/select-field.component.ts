@@ -179,7 +179,10 @@ export class SelectFieldComponent<T>
 
   public ngOnInit(): void {
     // load all options from the start
-    if (!this.options?.fetchOptionsOnFocus) {
+    if (
+      typeof this.options?.selectOptions !== 'function' ||
+      !this.options?.fetchOptionsOnFocus
+    ) {
       this.selectOptionsListener();
     }
 
@@ -459,12 +462,11 @@ export class SelectFieldComponent<T>
    * Add the current form control value to the select options
    */
   private addValueToOptions(options = this.selectOptions): ValueLabel<T>[] {
-    if(!this.options?.infiniteScroll?.enabled && !this.options?.search?.enabled) {
-      return options;
-    }
-
     let label: string;
-    if (!this.options?.displaySelectedOptionFn) {
+    if (
+      typeof this.options?.selectOptions === 'function' &&
+      !this.options?.displaySelectedOptionFn
+    ) {
       label = "ERROR: Can't display";
       console.error(
         `Please define a displaySelectedOptionFn to display your currently selected option for the field with attribute ${this.fieldAttribute} since it is not included in the current options`,
@@ -475,7 +477,7 @@ export class SelectFieldComponent<T>
       .filter((value) => !options?.some((o) => compare(o.value, value)))
       .map((v: T) => ({
         value: v,
-        label: label ?? this.options.displaySelectedOptionFn(v),
+        label: label ?? this.options.displaySelectedOptionFn?.(v),
       }));
 
     if (missingOptions?.length) {
