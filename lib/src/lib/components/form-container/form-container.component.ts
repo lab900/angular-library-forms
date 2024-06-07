@@ -43,6 +43,13 @@ export class Lab900Form<T> implements OnChanges {
   @Input()
   public data?: T;
 
+  /**
+   * Don't trigger the valueChanges event when the data is set
+   * Default: true (because historical reasons, as this was always the case in the past)
+   */
+  @Input()
+  public emitEventOnDataChange = true;
+
   @Input()
   public language?: string;
 
@@ -78,11 +85,11 @@ export class Lab900Form<T> implements OnChanges {
       );
     }
     if (!changes?.data?.isFirstChange() && this.data) {
-      setTimeout(() => this.patchValues(this.data));
+      setTimeout(() => this.patchValues(this.data, this.emitEventOnDataChange));
     }
   }
 
-  public patchValues(data: T): void {
+  public patchValues(data: T, emitEvent = true): void {
     Object.keys(data).forEach((key: string) => {
       const control = this.form.controls[key];
       if (control) {
@@ -119,15 +126,15 @@ export class Lab900Form<T> implements OnChanges {
               }
             }
           }
-          control.patchValue(data[key]);
+          control.patchValue(data[key], { emitEvent });
         } else {
-          control.patchValue(data[key]);
+          control.patchValue(data[key], { emitEvent });
         }
       }
     });
   }
 
-  public setValues(data: T): void {
+  public setValues(data: T, emitEvent = true): void {
     Object.keys(data).forEach((key: string) => {
       const control = this.form.controls[key];
       if (control) {
@@ -139,7 +146,7 @@ export class Lab900Form<T> implements OnChanges {
             this.fb.createFormArray(data, fieldSchema, control);
           }
         }
-        control.setValue(data[key]);
+        control.setValue(data[key], { emitEvent });
       }
     });
   }
