@@ -130,6 +130,20 @@ export class FormFieldInputsExampleComponent {
         errorMessages: { pattern: 'Invalid ISO-6364 format' },
       },
       {
+        attribute: 'maskAndPatternShowMask',
+        title: 'Mask and Pattern - show mask',
+        editType: EditType.Input,
+        options: {
+          style: 'letter-spacing: 4px',
+          fieldMask: {
+            showMaskTyped: true,
+            shownMaskExpression: '__|__|__',
+            mask: '00|00|00',
+            specialCharacters: ['|'],
+          },
+        },
+      },
+      {
         attribute: 'readOnlyInput',
         title: 'Read-only input',
         editType: EditType.Input,
