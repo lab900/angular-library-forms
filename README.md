@@ -30,7 +30,7 @@ $ npm run start
 
 ## Hotfixing older versions
 If you need to fix a bug in an older minor or major versions, you can create a branch from the tag of that version.
-Create a patch version of the fix and release it.
+Create a patch version of the fix and release it. Don't forget to apply the fix to the `main` branch as well (if needed).
 
 ## Releasing a new version
 
