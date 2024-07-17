@@ -21,6 +21,13 @@ $ npm run watch:forms # in a separate terminal
 $ npm run start
 ```
 
+## Developing new features or fixing bugs
+1. Create a new branch from `main`
+2. Make your changes
+3. Create & release a [pre-release](#pre-release-version) version (optional).
+4. Create a pull request to merge your branch into `main`
+5. Create & release a new version after merging.
+
 ## Releasing a new version
 
 1. Update the [CHANGELOG](/CHANGELOG.md) with the new version
