@@ -11,6 +11,7 @@ import {
 
 @Pipe({
   name: 'amount',
+  standalone: true,
 })
 export class AmountPipe implements PipeTransform {
   private readonly locale: string;
@@ -18,7 +19,7 @@ export class AmountPipe implements PipeTransform {
   public constructor(
     @Inject(LAB900_FORM_MODULE_SETTINGS)
     private setting: Lab900FormModuleSettings,
-    @Inject(LOCALE_ID) appLocale: string
+    @Inject(LOCALE_ID) appLocale: string,
   ) {
     this.locale = setting?.amountField?.locale ?? appLocale;
   }

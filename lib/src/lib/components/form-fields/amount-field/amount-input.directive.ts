@@ -31,6 +31,7 @@ import {
       multi: true,
     },
   ],
+  standalone: true,
 })
 export class AmountInputDirective implements OnChanges, ControlValueAccessor {
   public focused = false;
@@ -51,7 +52,7 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
     @Inject(LOCALE_ID) appLocale: string,
     @Inject(LAB900_FORM_MODULE_SETTINGS)
     public setting: Lab900FormModuleSettings,
-    private elementRef: ElementRef<HTMLInputElement>
+    private elementRef: ElementRef<HTMLInputElement>,
   ) {
     this.locale = setting?.amountField?.locale ?? appLocale;
     this.decimalSeparator = getDecimalSeparator(this.locale);
@@ -73,7 +74,9 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
   public onChange = (_: number): void => {};
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   public onTouched = (): void => {};
 
   public registerOnChange(fn: (_: number) => void): void {
@@ -101,7 +104,7 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
       }
     }
     this.onChange(
-      !validateValue?.length || isNaN(+validateValue) ? null : +validateValue
+      !validateValue?.length || isNaN(+validateValue) ? null : +validateValue,
     );
   }
 
@@ -112,7 +115,7 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
       const pastedInput: string = event.clipboardData.getData('text/plain');
       if (pastedInput?.length) {
         const newValue = amountToNumber(
-          this.getUnformattedValue(pastedInput)
+          this.getUnformattedValue(pastedInput),
         ) as any;
         this.elementRef.nativeElement.value = newValue;
         this.onChange(newValue);
@@ -128,7 +131,7 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
       this.elementRef.nativeElement.type = 'number';
       this.elementRef.nativeElement.setAttribute('step', '0.01');
       this.elementRef.nativeElement.value = amountToNumber(
-        this.getUnformattedValue(value)
+        this.getUnformattedValue(value),
       ) as any;
     }
   }

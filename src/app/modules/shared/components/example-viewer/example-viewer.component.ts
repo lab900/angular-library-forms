@@ -1,11 +1,19 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
-  ContentChild,
   ElementRef,
   Input,
   ViewChild,
 } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MarkdownModule } from 'ngx-markdown';
+import { LowerCasePipe } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 export interface ExampleFile {
   extension: string;
@@ -16,7 +24,18 @@ export interface ExampleFile {
 @Component({
   selector: 'lab900-example-viewer',
   templateUrl: './example-viewer.component.html',
-  styleUrls: ['./example-viewer.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatCardModule,
+    TranslateModule,
+    MatButtonModule,
+    MatTabsModule,
+    MarkdownModule,
+    LowerCasePipe,
+    MatIconModule,
+    MatTooltipModule,
+  ],
 })
 export class ExampleViewerComponent implements AfterViewInit {
   @Input()
@@ -48,7 +67,7 @@ export class ExampleViewerComponent implements AfterViewInit {
     this.exampleName =
       this.exampleComponent?.nativeElement?.children?.[0]?.localName.replace(
         'lab900-',
-        ''
+        '',
       );
   }
 }

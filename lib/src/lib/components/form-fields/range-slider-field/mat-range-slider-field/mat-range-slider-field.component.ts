@@ -1,20 +1,14 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  ViewEncapsulation,
-} from '@angular/core';
+import { Component, ElementRef, Input, ViewEncapsulation } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import * as noUiSlider from 'nouislider';
 import { BaseControlValueAccessorDirective } from '../../../../models/forms/BaseControlValueAccessor';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'lab900-mat-range-slider-field',
   templateUrl: './mat-range-slider-field.component.html',
-  styleUrls: ['./nouislider.scss', './mat-range-slider-field.component.scss'],
+  styleUrls: ['./mat-range-slider-field.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -23,12 +17,12 @@ import { BaseControlValueAccessorDirective } from '../../../../models/forms/Base
     },
   ],
   encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [MatSliderModule, MatFormFieldModule, MatInputModule],
 })
-export class MatRangeSliderFieldComponent
-  extends BaseControlValueAccessorDirective<number[]>
-  implements AfterViewInit, OnChanges
-{
-  private rangeSlider: noUiSlider.noUiSlider;
+export class MatRangeSliderFieldComponent extends BaseControlValueAccessorDirective<
+  number[]
+> {
   private latestUnencodedValues: number[];
 
   @Input()
@@ -59,39 +53,12 @@ export class MatRangeSliderFieldComponent
   public writeValue(value: any): void {
     this.value = value ? value : [this.min, this.max];
     this.latestUnencodedValues = this.value;
-    if (this.rangeSlider) {
-      setTimeout(() => {
-        this.rangeSlider.set(value);
-      });
-    }
-  }
-
-  public ngAfterViewInit(): void {
-    this.rangeSlider = noUiSlider.create(
-      this.el.nativeElement.querySelector('.noUiSlider'),
-      this.getSliderOptions()
-    );
-    this.attachSliderInstanceUpdateHandler();
-  }
-
-  public ngOnChanges(changes: SimpleChanges): void {
-    if (this.rangeSlider && (changes.min || changes.max)) {
-      setTimeout(() => {
-        this.rangeSlider.updateOptions({
-          range: {
-            min: this.min,
-            max: this.max,
-          },
-        });
-      });
-    }
   }
 
   public updateSliderInstanceValues(key: number, value: number): void {
     if (value[key] !== this.latestUnencodedValues[key]) {
       this.value[key] = value;
       this.latestUnencodedValues = this.value;
-      this.rangeSlider.set(this.value);
       this.onChange(this.value);
     }
   }
@@ -100,7 +67,7 @@ export class MatRangeSliderFieldComponent
     const newValue = this.parseValue((event.target as any).value);
     this.updateSliderInstanceValues(
       0,
-      newValue >= this.min ? newValue : this.min
+      newValue >= this.min ? newValue : this.min,
     );
   }
 
@@ -108,7 +75,7 @@ export class MatRangeSliderFieldComponent
     const newValue = this.parseValue((event.target as any).value);
     this.updateSliderInstanceValues(
       1,
-      newValue <= this.max ? newValue : this.max
+      newValue <= this.max ? newValue : this.max,
     );
   }
 
@@ -135,41 +102,5 @@ export class MatRangeSliderFieldComponent
       default:
         return `${value}`;
     }
-  }
-
-  public attachSliderInstanceUpdateHandler(): void {
-    this.rangeSlider.on(
-      'update',
-      (values: string[], handle: number, unencodedValues: number[]) => {
-        unencodedValues = unencodedValues.map((value) => Math.round(value));
-        if (
-          unencodedValues[0] !== this.latestUnencodedValues[0] ||
-          unencodedValues[1] !== this.latestUnencodedValues[1]
-        ) {
-          this.value = unencodedValues;
-          this.latestUnencodedValues = this.value;
-          this.onChange(this.value);
-        }
-      }
-    );
-  }
-
-  private getSliderOptions(): noUiSlider.Options {
-    let options: noUiSlider.Options = {
-      start: this.value,
-      connect: true,
-      range: {
-        min: this.min,
-        max: this.max,
-      },
-    };
-
-    if (typeof this.steps !== undefined) {
-      options = {
-        ...options,
-        step: this.steps,
-      };
-    }
-    return options;
   }
 }

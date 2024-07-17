@@ -1,18 +1,16 @@
 import { Component, ViewChild } from '@angular/core';
-import { Lab900FormConfig, Lab900Form } from '@lab900/forms';
-import { formConditionalsExample } from './config/form-conditionals-example';
-import { formConditionalsData } from './config/form-conditionals-data';
+import { Lab900Form, Lab900FormConfig } from '@lab900/forms';
+import { formConditionalsData, formConditionalsExample } from './form-conditionals-example.component.config';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'lab900-form-container-example',
+  selector: 'lab900-form-conditionals-example',
   template: `
-    <lab900-form
-      #lab900FormContainer
-      [schema]="formFields"
-      [data]="formData"
-    ></lab900-form>
+    <lab900-form #lab900FormContainer [schema]="formFields" [data]="formData" />
     <button mat-stroked-button (click)="submitForm()">Submit Form</button>
   `,
+  standalone: true,
+  imports: [Lab900Form, MatButton],
 })
 export class FormConditionalsExampleComponent {
   public formFields: Lab900FormConfig = formConditionalsExample;

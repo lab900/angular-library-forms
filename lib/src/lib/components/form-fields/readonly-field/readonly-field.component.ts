@@ -1,10 +1,13 @@
 import { Component, HostBinding, OnDestroy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { TranslateService } from '@ngx-translate/core';
+
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'lab900-readonly',
   templateUrl: './readonly-field.component.html',
+  standalone: true,
+  imports: [TranslateModule],
 })
 export class ReadonlyFieldComponent extends FormComponent implements OnDestroy {
   @HostBinding('class')
@@ -12,14 +15,14 @@ export class ReadonlyFieldComponent extends FormComponent implements OnDestroy {
 
   public value: any;
 
-  public constructor(translateService: TranslateService) {
-    super(translateService);
+  public constructor() {
+    super();
     setTimeout(() => {
       if (this.group?.controls && this.fieldAttribute) {
         this.setValue(this.group.controls[this.fieldAttribute].value);
         this.addSubscription(
           this.group.controls[this.fieldAttribute].valueChanges,
-          (value: any) => setTimeout(() => this.setValue(value))
+          (value: any) => setTimeout(() => this.setValue(value)),
         );
       }
     });

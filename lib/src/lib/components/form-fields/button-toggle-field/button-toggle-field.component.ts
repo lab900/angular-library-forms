@@ -1,12 +1,33 @@
 import { Component, HostBinding } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldButtonToggle } from './button-toggle-field.model';
-import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import {
+  MatButtonToggle,
+  MatButtonToggleChange,
+  MatButtonToggleGroup,
+} from '@angular/material/button-toggle';
+import { ReactiveFormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
+import { MatError, MatLabel } from '@angular/material/form-field';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatTooltip } from '@angular/material/tooltip';
+import { IconComponent } from '@lab900/ui';
 
 @Component({
   selector: 'lab900-button-toggle-field',
   templateUrl: './button-toggle-field.component.html',
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatLabel,
+    TranslateModule,
+    MatButtonToggleGroup,
+    MatButtonToggle,
+    MatTooltip,
+    IconComponent,
+    MatError,
+    AsyncPipe,
+  ],
 })
 export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonToggle> {
   @HostBinding('class')
@@ -16,14 +37,14 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
   // It is used to calculate the readonly label and to check if the toggle needs to be deselected.
   private currentValue: any;
 
-  public constructor(translateService: TranslateService) {
-    super(translateService);
+  public constructor() {
+    super();
     setTimeout(() => {
       if (this.group?.controls) {
         this.currentValue = this.group.controls[this.fieldAttribute].value;
         this.addSubscription(
           this.group.controls[this.fieldAttribute].valueChanges,
-          (value: any) => setTimeout(() => (this.currentValue = value))
+          (value: any) => setTimeout(() => (this.currentValue = value)),
         );
       }
     });
@@ -33,7 +54,7 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
   // Otherwise the button label is displayed
   public get label(): string {
     const option = this.options.buttonOptions.find(
-      (o) => o.value === this.currentValue
+      (o) => o.value === this.currentValue,
     );
     return this.options?.readonlyDisplay
       ? this.options?.readonlyDisplay(this.group.value)

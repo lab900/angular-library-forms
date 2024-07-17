@@ -2,12 +2,12 @@ import { Directive, HostListener, Input } from '@angular/core';
 import { FormDialogComponent } from '../components/form-dialog/form-dialog.component';
 import { Lab900FormConfig } from '../models/Lab900FormConfig';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { SubscriptionBasedDirective } from './subscription-based.directive';
 
 @Directive({
   selector: '[lab900FormDialog]',
+  standalone: true,
 })
-export class FormDialogDirective<T> extends SubscriptionBasedDirective {
+export class FormDialogDirective<T> {
   @Input()
   public schema: Lab900FormConfig;
 
@@ -23,15 +23,13 @@ export class FormDialogDirective<T> extends SubscriptionBasedDirective {
   @Input()
   public disabled = false;
 
-  public constructor(public dialog: MatDialog) {
-    super();
-  }
+  public constructor(public dialog: MatDialog) {}
 
   @HostListener('click') public onMouseEnter(): void {
     if (this.disabled) {
       return;
     }
-    const dialog = this.dialog.open(FormDialogComponent, {
+    this.dialog.open(FormDialogComponent, {
       data: {
         schema: this.schema,
         data: this.data,
@@ -39,6 +37,5 @@ export class FormDialogDirective<T> extends SubscriptionBasedDirective {
       },
       ...this.dialogOptions,
     });
-    this.addSubscription(dialog.beforeClosed(), (data) => {});
   }
 }

@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import { Lab900FormConfig, EditType } from '@lab900/forms';
+import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 
 @Component({
   selector: 'lab900-form-field-repeater-advanced-example',
-  template: '<lab900-form [schema]="formSchema"></lab900-form>',
+  template: '<lab900-form [schema]="formSchema"/>',
+  standalone: true,
+  imports: [Lab900Form],
 })
 export class FormFieldRepeaterAdvancedExampleComponent {
   public formSchema: Lab900FormConfig = {
@@ -33,7 +35,7 @@ export class FormFieldRepeaterAdvancedExampleComponent {
               visibleFn: (item: any) => {
                 if (
                   (item.group.parent.controls as Array<any>).indexOf(
-                    item.group
+                    item.group,
                   ) ===
                   (item.group.parent.controls as Array<any>).length - 1
                 ) {

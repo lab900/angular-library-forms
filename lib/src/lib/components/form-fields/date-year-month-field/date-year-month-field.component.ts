@@ -1,31 +1,25 @@
 import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { TranslateService } from '@ngx-translate/core';
 import {
   FormFieldDateYearMonthPicker,
   FormFieldDateYearMonthPickerOptions,
 } from './date-year-month-field.model';
-import { MatDatepicker } from '@angular/material/datepicker';
 import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MAT_DATE_LOCALE,
-} from '@angular/material/core';
-import {
-  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
-  MomentDateAdapter,
-} from '@angular/material-moment-adapter';
-import { Moment } from 'moment';
+  MatDatepicker,
+  MatDatepickerModule,
+} from '@angular/material/datepicker';
+import { MAT_DATE_FORMATS } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ReactiveFormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'lab900-date-year-month-field',
   templateUrl: './date-year-month-field.component.html',
+  standalone: true,
   providers: [
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
-    },
     {
       provide: MAT_DATE_FORMATS,
       useValue: {
@@ -41,14 +35,18 @@ import { Moment } from 'moment';
       },
     },
   ],
+  imports: [
+    ReactiveFormsModule,
+    TranslateModule,
+    AsyncPipe,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatInputModule,
+  ],
 })
 export class DateYearMonthFieldComponent extends FormComponent<FormFieldDateYearMonthPicker> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
-
-  public constructor(translateService: TranslateService) {
-    super(translateService);
-  }
 
   public get startView(): FormFieldDateYearMonthPickerOptions['startView'] {
     return this.schema?.options?.startView ?? 'multi-year';
@@ -63,11 +61,11 @@ export class DateYearMonthFieldComponent extends FormComponent<FormFieldDateYear
   }
 
   public monthSelectedHandler(
-    chosenMonthDate: Moment,
-    picker: MatDatepicker<Moment>
+    chosenMonthDate: Date,
+    picker: MatDatepicker<Date>,
   ): void {
     picker.close();
-    this.group.controls[this.fieldAttribute].setValue(chosenMonthDate.format());
+    this.group.controls[this.fieldAttribute].setValue(chosenMonthDate);
     this.group.controls[this.fieldAttribute].markAsDirty();
   }
 }

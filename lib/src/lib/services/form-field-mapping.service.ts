@@ -4,7 +4,7 @@ import { FormComponent } from '../components/AbstractFormComponent';
 import { EditType } from '../models/editType';
 import { LAB900_FORM_FIELD_TYPES } from '../models/Lab900FormModuleSettings';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class FormFieldMappingService {
   private readonly inputFieldComponent: Type<FormComponent>;
   private readonly passwordFieldComponent: Type<FormComponent>;
@@ -90,8 +90,6 @@ export class FormFieldMappingService {
         return this.dateFieldComponent;
       case EditType.DateYearMonth:
         return this.dateYearMonthFieldComponent;
-      case EditType.File:
-        return this.fileFieldComponent;
       case EditType.FilePreview:
         return this.filePreviewFieldComponent;
       case EditType.Select:

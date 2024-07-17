@@ -5,7 +5,7 @@ import { Lab900File } from '../models/Lab900File';
 export const fetchImageBase64 = (
   httpCallback: (image: Lab900File) => Observable<Blob>,
   image: Lab900File,
-  callback: (result: string | ArrayBuffer | null) => void
+  callback: (result: string | ArrayBuffer | null) => void,
 ): Observable<void> => {
   return httpCallback(image).pipe(
     map((imageBlob: Blob) => {
@@ -14,11 +14,11 @@ export const fetchImageBase64 = (
         callback(reader.result);
       };
       return reader.readAsDataURL(imageBlob);
-    })
+    }),
   );
 };
 
-export function formatBytes(bytes: number, decimals: number = 2): string {
+export function formatBytes(bytes: number, decimals = 2): string {
   if (bytes === 0) return '0 Bytes';
 
   const k = 1024;

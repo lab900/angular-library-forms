@@ -1,5 +1,10 @@
-import { Component, ElementRef, HostBinding, ViewChild } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import {
+  Component,
+  ElementRef,
+  HostBinding,
+  inject,
+  ViewChild,
+} from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormDialogDirective } from '../../../directives/form-dialog.directive';
 import { Lab900File } from '../../../models/Lab900File';
@@ -8,15 +13,33 @@ import { MatDialog } from '@angular/material/dialog';
 import { ImagePreviewModalComponent } from '../../image-preview-modal/image-preview-modal.component';
 import { fetchImageBase64 } from '../../../utils/image.utils';
 import { FormFieldFilePreview } from './file-preview-field.model';
+import { take } from 'rxjs/operators';
+import { TranslateModule } from '@ngx-translate/core';
+
+import { MatButton } from '@angular/material/button';
+import { MatCard } from '@angular/material/card';
+import { MatIcon } from '@angular/material/icon';
+import { AuthImageDirective } from '../../../directives/auth-image.directive';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'lab900-file-preview-field',
   templateUrl: './file-preview-field.component.html',
   styleUrls: ['./file-preview-field.component.scss'],
+  standalone: true,
+  imports: [
+    TranslateModule,
+    MatButton,
+    MatCard,
+    MatIcon,
+    AuthImageDirective,
+    MatTooltip,
+  ],
 })
 export class FilePreviewFieldComponent<
-  T
+  T,
 > extends FormComponent<FormFieldFilePreview> {
+  private readonly dialog = inject(MatDialog);
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
@@ -25,13 +48,6 @@ export class FilePreviewFieldComponent<
 
   @ViewChild('FormDialogDirective')
   private lab900FormDialog: FormDialogDirective<T>;
-
-  public constructor(
-    translateService: TranslateService,
-    private dialog: MatDialog
-  ) {
-    super(translateService);
-  }
 
   public get files(): Lab900File[] {
     return (this.fieldControl?.value as Lab900File[]) ?? [];
@@ -89,7 +105,7 @@ export class FilePreviewFieldComponent<
 
   public onMetaDataChanged(
     data: T,
-    originalData?: Lab900File
+    originalData?: Lab900File,
   ): Promise<boolean> {
     return new Promise<boolean>((resolve) => {
       const files = this.files;
@@ -109,7 +125,7 @@ export class FilePreviewFieldComponent<
       (listFile: Lab900File) =>
         listFile.fileName === file.fileName &&
         listFile.type === file.type &&
-        listFile.size === file.size
+        listFile.size === file.size,
     );
   }
 
@@ -139,17 +155,16 @@ export class FilePreviewFieldComponent<
         },
       });
     } else if (this.options?.httpCallback) {
-      this.addSubscription(
-        fetchImageBase64(this.options.httpCallback, file, (result) => {
-          file.imageBase64 = result as string;
-          this.dialog.open(ImagePreviewModalComponent, {
-            data: {
-              image: file,
-            },
-          });
-        }),
-        () => {}
-      );
+      fetchImageBase64(this.options.httpCallback, file, (result) => {
+        file.imageBase64 = result as string;
+        this.dialog.open(ImagePreviewModalComponent, {
+          data: {
+            image: file,
+          },
+        });
+      })
+        .pipe(take(1))
+        .subscribe();
     }
   }
 

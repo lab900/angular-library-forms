@@ -18,7 +18,7 @@ export interface FormFieldSelectOptionsFilter {
 export type FormFieldSelectOptionsFn<T> = (
   filter?: FormFieldSelectOptionsFilter,
   fieldControl?: AbstractControl,
-  schema?: FormFieldSelect<T>
+  schema?: FormFieldSelect<T>,
 ) => ValueLabel<T>[] | Observable<ValueLabel<T>[]>;
 
 export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
@@ -86,6 +86,13 @@ export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
     label?: string;
     disabled?: boolean;
   };
+  panelWidth?: string | number | null;
+  panelClass?: string | string[];
+  /**
+   * This will only request to select options once the select opens
+   * The current value will be the only option until the select is opened
+   */
+  fetchOptionsOnFocus?: boolean;
 }
 
 export interface FormFieldSelect<T, R extends string | number = string>

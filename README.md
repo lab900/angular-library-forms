@@ -8,28 +8,33 @@
 
 </p>
 
-A set of Angular 11+ form components build on top of [Angular Material](https://material.angular.io/). \
+A set of Angular 17+ form components build on top of [Angular Material](https://material.angular.io/). \
 View the [showcase](https://lab900.github.io/angular-library-forms) for guides & examples
 
 ## Getting started
 
 - [Forms library](https://lab900.github.io/angular-library-forms/getting-started)
 
-## Dev setup
+## Run the project locally
 
-1. Go to project root in terminal
-2. $ npm i --legacy-peer-deps
-3. $ npm run watch:forms
-4. $ npm run start
+```bash
+$ npm i
+$ npm run watch:forms # in a separate terminal
+$ npm run start
+```
 
-## Automatic deployment via Google Cloud
+## Releasing a new version
 
-1. Start working from the dev branch for new features. Make pull requests to dev before merging.
-2. Any push to dev will automatically trigger a deploy to NPM with an alpha release (e.g. 3.0.1-alpha.1). The alpha build numbers are automatically incremented and the main version is kept.
-3. Any push to main will automatically trigger a deploy to NPM with the version found in lib/package.json. This means you need to manually set the version in the package.json to release a full version.
+1. Bump the lib version
+2. Tag the commit with the version number
+3. Push the tag to the repository
+4. The deployment will be triggered automatically
 
-## Manual Deploy to NPM (deprecated)
+```bash
+$ cd lib/forms
+$ npm version YOUR_VERSION
+$ cd ../../
+$ git tag YOUR_VERSION
+$ git push origin YOUR_VERSION
+```
 
-1. $ npm login
-2. $ ./deploy.sh
-3. Commit and push version increment to repository

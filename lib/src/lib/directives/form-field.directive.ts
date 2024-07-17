@@ -9,7 +9,7 @@ import {
   SimpleChanges,
   ViewContainerRef,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { FormComponent } from '../components/AbstractFormComponent';
 import { ReadonlyFieldComponent } from '../components/form-fields/readonly-field/readonly-field.component';
@@ -20,13 +20,14 @@ import { FormFieldMappingService } from '../services/form-field-mapping.service'
 
 @Directive({
   selector: '[lab900FormField]',
+  standalone: true,
 })
 export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
   @Input()
   public schema: Lab900FormField;
 
   @Input()
-  public group: FormGroup;
+  public group: UntypedFormGroup;
 
   @Input()
   public language?: string;
@@ -38,7 +39,7 @@ export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
   public readonly = false;
 
   @Input()
-  public externalForms?: Record<string, FormGroup>;
+  public externalForms?: Record<string, UntypedFormGroup>;
 
   public component: ComponentRef<FormComponent>;
 
@@ -47,7 +48,7 @@ export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
   public constructor(
     private resolver: ComponentFactoryResolver,
     private container: ViewContainerRef,
-    private formFieldMappingService: FormFieldMappingService
+    private formFieldMappingService: FormFieldMappingService,
   ) {}
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -100,8 +101,8 @@ export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
       const attributeMap = this.schema?.attribute.split('.');
       this.component.instance.fieldAttribute = attributeMap.pop();
       this.component.instance.group = this.group.get(
-        attributeMap.join('.')
-      ) as FormGroup;
+        attributeMap.join('.'),
+      ) as UntypedFormGroup;
     } else {
       this.component.instance.fieldAttribute = this.schema.attribute;
       this.component.instance.group = this.group;
@@ -117,7 +118,7 @@ export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
       const supportedTypes = Object.keys(EditType).join(', ');
       throw new Error(
         `Trying to use an unsupported type (${this.schema.editType}).
-        Supported types: ${supportedTypes}`
+        Supported types: ${supportedTypes}`,
       );
     }
   }

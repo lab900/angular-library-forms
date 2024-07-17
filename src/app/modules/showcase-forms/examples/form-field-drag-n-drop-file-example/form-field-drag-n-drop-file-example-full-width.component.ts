@@ -1,11 +1,13 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, ViewChild } from '@angular/core';
 import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'lab900-form-field-drag-n-drop-file-example',
+  selector: 'lab900-form-field-drag-n-drop-file-example-full-width',
   template:
-    '<lab900-form [schema]="formSchema"></lab900-form><button mat-raised-button color="primary" (click)="validate()">Submit</button>',
+    '<lab900-form [schema]="formSchema"/><button mat-raised-button color="primary" (click)="validate()">Submit</button>',
+  standalone: true,
+  imports: [Lab900Form, MatButton],
 })
 export class FormFieldDragNDropFileExampleFullWidthComponent {
   @ViewChild(Lab900Form)
@@ -39,8 +41,6 @@ export class FormFieldDragNDropFileExampleFullWidthComponent {
       },
     ],
   };
-
-  public constructor(private http: HttpClient) {}
 
   public validate(): void {
     console.log(this.formContainer.form.controls.files.value);

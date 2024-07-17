@@ -1,5 +1,5 @@
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogContent } from '@angular/material/dialog';
 import { Lab900File } from '../../models/Lab900File';
 
 interface DialogData {
@@ -8,14 +8,17 @@ interface DialogData {
 
 @Component({
   selector: 'lab900-image-preview-modal',
-  templateUrl: './image-preview-modal.component.html',
-  styleUrls: ['./image-preview-modal.component.scss'],
+  template: ` <mat-dialog-content>
+    <img
+      style="width: 100%"
+      class="image"
+      [src]="image.imageBase64"
+      [alt]="image.fileName"
+    />
+  </mat-dialog-content>`,
+  standalone: true,
+  imports: [MatDialogContent],
 })
 export class ImagePreviewModalComponent {
-  public image: Lab900File;
-  public error = true;
-
-  public constructor(@Inject(MAT_DIALOG_DATA) private data: DialogData) {
-    this.image = data.image;
-  }
+  public readonly image: Lab900File = inject(MAT_DIALOG_DATA).image;
 }

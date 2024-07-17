@@ -1,21 +1,50 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { NavItemGroup } from '@lab900/ui';
+import { Lab900NavListComponent, NavItemGroup } from '@lab900/ui';
 import { showcaseFormsNavItems } from './modules/showcase-forms/showcase-forms.nav-items';
-import { TranslateService } from '@ngx-translate/core';
-import { MatIconRegistry } from '@angular/material/icon';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { MatIcon, MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import packageInfo from '../../package.json';
-import { MatDrawer, MatDrawerMode } from '@angular/material/sidenav';
-import { MediaChange, MediaObserver } from '@angular/flex-layout';
-import { NavigationEnd, Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { filter, map, takeUntil } from 'rxjs/operators';
+import {
+  MatDrawer,
+  MatDrawerContainer,
+  MatDrawerContent,
+  MatDrawerMode,
+} from '@angular/material/sidenav';
+import {
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterOutlet,
+} from '@angular/router';
+import { Observable, Subject } from 'rxjs';
+import { filter, map, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { SubscriptionBasedDirective } from './modules/shared/directives/subscription-based.directive';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatIconAnchor, MatIconButton } from '@angular/material/button';
+import { AsyncPipe, NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'lab900-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  standalone: true,
+  imports: [
+    MatToolbar,
+    MatIcon,
+    MatIconButton,
+    TranslateModule,
+    RouterLink,
+    MatDrawerContainer,
+    Lab900NavListComponent,
+    AsyncPipe,
+    MatDrawer,
+    RouterOutlet,
+    MatIconAnchor,
+    MatDrawerContent,
+    NgOptimizedImage,
+  ],
 })
 export class AppComponent
   extends SubscriptionBasedDirective
@@ -26,7 +55,7 @@ export class AppComponent
   public readonly gitUrl = packageInfo.repository;
   public readonly navItemsGroups: NavItemGroup[] = [...showcaseFormsNavItems];
   public language = 'en';
-  public sideNavMode: MatDrawerMode = 'side';
+  public readonly sideNavMode$: Observable<MatDrawerMode>;
 
   @ViewChild('drawer')
   private drawer: MatDrawer;
@@ -35,22 +64,10 @@ export class AppComponent
     private translateService: TranslateService,
     private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer,
-    private media: MediaObserver,
-    private router: Router
+    private router: Router,
+    private breakpointObserver: BreakpointObserver,
   ) {
     super();
-    this.addSubscription(
-      this.router.events.pipe(takeUntil(this.unsub)),
-      (e) => {
-        if (
-          e instanceof NavigationEnd &&
-          this.drawer &&
-          this.sideNavMode === 'over'
-        ) {
-          this.drawer.close();
-        }
-      }
-    );
 
     this.translateService.setDefaultLang('en');
     this.translateService.use('en');
@@ -58,43 +75,43 @@ export class AppComponent
     this.matIconRegistry.addSvgIcon(
       'github',
       this.domSanitizer.bypassSecurityTrustResourceUrl(
-        'assets/images/github-logo.svg'
-      )
+        'assets/images/github-logo.svg',
+      ),
     );
     this.matIconRegistry.addSvgIcon(
       'lab900',
       this.domSanitizer.bypassSecurityTrustResourceUrl(
-        'assets/images/logo-duo-dark.svg'
-      )
+        'assets/images/logo-duo-dark.svg',
+      ),
+    );
+
+    this.sideNavMode$ = this.breakpointObserver
+      .observe([Breakpoints.XSmall, Breakpoints.Small, Breakpoints.Medium])
+      .pipe(map(({ matches }) => (matches ? 'over' : 'side')));
+
+    this.addSubscription(
+      this.router.events.pipe(
+        takeUntil(this.unsub),
+        withLatestFrom(this.sideNavMode$),
+        filter(
+          ([e, sideNavMode]) =>
+            e instanceof NavigationEnd &&
+            sideNavMode === 'over' &&
+            this.drawer.opened,
+        ),
+      ),
+      () => {
+        this.drawer.close();
+      },
     );
   }
 
   public ngOnInit(): void {
     this.language = this.translateService.currentLang;
-    this.watchMedia();
   }
 
   public ngOnDestroy(): void {
     this.unsub.next();
     this.unsub.unsubscribe();
-  }
-
-  public languageChanged(language: string): void {
-    this.translateService.use(language);
-  }
-
-  private watchMedia(): void {
-    this.addSubscription(
-      this.media.asObservable().pipe(
-        takeUntil(this.unsub),
-        filter((changes: MediaChange[]) => changes.length > 0),
-        map((changes: MediaChange[]) => changes[0])
-      ),
-      (change: MediaChange) => {
-        this.sideNavMode = ['xs', 'sm', 'md'].includes(change.mqAlias)
-          ? 'over'
-          : 'side';
-      }
-    );
   }
 }

@@ -6,7 +6,6 @@ import { CheckboxFieldModel } from '../components/form-fields/checkbox-field/che
 import { FormFieldDatePicker } from '../components/form-fields/date-field/date-field.model';
 import { FormFieldDateRange } from '../components/form-fields/date-range-field/date-range-field.model';
 import { FormFieldDateTimePicker } from '../components/form-fields/date-time-field/date-time-field.model';
-import { FormFieldFile } from '../components/form-fields/file-field/file-field.model';
 import { FormFieldFilePreview } from '../components/form-fields/file-preview-field/file-preview-field.model';
 import { FormFieldIcon } from '../components/form-fields/icon-field/icon-field.model';
 import { FormFieldInput } from '../components/form-fields/input-field/input-field.model';
@@ -26,7 +25,11 @@ import { FormFieldAmount } from '../components/form-fields/amount-field/amount-f
 import { FormFieldSearch } from '../components/form-fields/search-field/field-search.model';
 import { FormColumn } from '../components/form-column/form-column.model';
 
-export type Lab900FormField<R = any, T extends string | number = string> =
+export type Lab900FormField<
+  R = any,
+  T extends string | number = string,
+  DATE = Date,
+> =
   | FormFieldInput<T>
   | FormFieldPassword<T>
   | FormFieldMultiLang<T>
@@ -36,7 +39,6 @@ export type Lab900FormField<R = any, T extends string | number = string> =
   | CheckboxFieldModel<T>
   | FormFieldRadioButtons<T>
   | FormFieldFilePreview<T>
-  | FormFieldFile<T>
   | FormFieldDragNDropFilePreview<T>
   | FormFieldIcon<T>
   | FormRow<T>
@@ -45,10 +47,10 @@ export type Lab900FormField<R = any, T extends string | number = string> =
   | FormFieldButton<T>
   | FormFieldSlideToggle<T>
   | FormFieldRangeSlider<T>
-  | FormFieldDatePicker<T>
-  | FormFieldDateYearMonthPicker<T>
-  | FormFieldDateTimePicker<T>
-  | FormFieldDateRange<T>
+  | FormFieldDatePicker<T, DATE>
+  | FormFieldDateYearMonthPicker<T, DATE>
+  | FormFieldDateTimePicker<T, DATE>
+  | FormFieldDateRange<T, DATE>
   | FormFieldAutocomplete<R, T>
   | FormFieldAutocompleteMulti<R, T>
   | FormFieldRepeater<T>

@@ -1,18 +1,41 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, inject } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { FormArray } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormArray } from '@angular/forms';
 import { Lab900FormBuilderService } from '../../../services/form-builder.service';
-import { TranslateService } from '@ngx-translate/core';
-import { matFormFieldAnimations } from '@angular/material/form-field';
+import { MatError, matFormFieldAnimations } from '@angular/material/form-field';
 import { FormFieldRepeater } from './repeater-field.model';
+import { AsyncPipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatTooltip } from '@angular/material/tooltip';
+import { FormFieldDirective } from '../../../directives/form-field.directive';
+import { MatButton, MatMiniFabButton } from '@angular/material/button';
+
+export const DEFAULT_REPEATER_MIN_ROWS = 1;
 
 @Component({
   selector: 'lab900-repeater-field',
   templateUrl: './repeater-field.component.html',
   styleUrls: ['./repeater-field.component.scss'],
   animations: [matFormFieldAnimations.transitionMessages],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatIcon,
+    TranslateModule,
+    MatTooltip,
+    FormFieldDirective,
+    MatMiniFabButton,
+    MatError,
+    AsyncPipe,
+    MatButton,
+  ],
 })
 export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
+  private readonly fb: Lab900FormBuilderService = inject(
+    Lab900FormBuilderService,
+  );
+
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
@@ -21,7 +44,7 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
   }
 
   public get minRows(): number {
-    return this.options?.minRows ?? 1;
+    return this.options?.minRows ?? DEFAULT_REPEATER_MIN_ROWS;
   }
 
   public get maxRows(): number {
@@ -32,15 +55,8 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
     return this.options?.fixedList;
   }
 
-  public get repeaterArray(): FormArray {
-    return this.group.get(this.fieldAttribute) as FormArray;
-  }
-
-  public constructor(
-    private fb: Lab900FormBuilderService,
-    translateService: TranslateService
-  ) {
-    super(translateService);
+  public get repeaterArray(): UntypedFormArray {
+    return this.group.get(this.fieldAttribute) as UntypedFormArray;
   }
 
   public addToArray(): void {

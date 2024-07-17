@@ -1,26 +1,21 @@
 {
   "name": "@lab900/forms",
-  "version": "4.2.1",
+  "version": "17.0.3",
   "author": "Lab900 <info@lab900.com> (https://lab900.com)",
   "license": "MIT",
   "peerDependencies": {
-    "@angular/common": "~12.2.14",
-    "@angular/core": "~12.2.14",
-    "@angular/material": "~12.2.13",
-    "@angular/flex-layout": "^12.0.0-beta.35",
-    "@ngx-translate/core": "^13.0.0",
-    "lodash": "^4.17.20",
-    "@angular/forms": "~12.2.14",
-    "@kolkov/angular-editor": "^1.1.4",
-    "@types/nouislider": "^9.0.7",
-    "nouislider": "^14.7.0",
-    "ngx-mask": "12.0.0",
-    "@angular-material-components/datetime-picker": "^6.0.3",
-    "ng-mat-select-infinite-scroll": "^3.0.0",
-    "ngx-mat-select-search": "^5.0.0"
+    "@angular/common": ">=17.0.0",
+    "@angular/core": ">=17.0.0",
+    "@angular/material": ">=17.0.0",
+    "@ngx-translate/core": ">=15.0.0",
+    "@angular/forms": ">=17.0.0",
+    "@lab900/ui": ">=17.0.0",
+    "@kolkov/angular-editor": "^3.0.0-beta.0",
+    "ngx-mask": "^17.0.7",
+    "ngx-mat-select-search": "^7.0.4"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/lab900/angular-libraries.git"
+    "url": "git://github.com/lab900/angular-library-forms.git"
   }
 }

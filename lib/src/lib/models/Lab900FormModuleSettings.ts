@@ -22,11 +22,12 @@ export interface Lab900FormModuleSettings {
   formField?: Lab900FormFieldOptions;
   fieldMask?: Partial<IConfig>;
   amountField?: Lab900AmountFieldOptions;
+  disableBrowserAutocomplete?: boolean;
 }
 
 export const defaultFormModuleSettings: Lab900FormModuleSettings = {
   formField: {
-    appearance: 'standard',
+    appearance: 'outline',
     floatLabel: 'auto',
     hideRequiredMarker: false,
     showLengthIndicator: true,

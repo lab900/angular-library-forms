@@ -28,6 +28,7 @@ import { FormFieldSearchOptions } from './field-search.model';
       multi: true,
     },
   ],
+  standalone: true,
 })
 export class SearchInputDirective<T>
   implements ControlValueAccessor, OnChanges
@@ -52,13 +53,13 @@ export class SearchInputDirective<T>
           tap(() => this.noResult$.next(false)),
           filter(
             (searchQuery) =>
-              !this.value || searchQuery !== this.getCurrentValueLabel()
+              !this.value || searchQuery !== this.getCurrentValueLabel(),
           ),
           tap(() => this.searching$.next(true)),
           debounceTime(this.options?.debounceTime ?? 500),
           switchMap((searchQuery) =>
-            searchQuery?.length ? this.options.searchFn(searchQuery) : of(null)
-          )
+            searchQuery?.length ? this.options.searchFn(searchQuery) : of(null),
+          ),
         )
         .subscribe((result) => {
           this.searching$.next(false);
@@ -80,7 +81,9 @@ export class SearchInputDirective<T>
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
   public onChange = (_: T | null): void => {};
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   public onTouched = (): void => {};
 
   public registerOnChange(fn: (_: T | null) => void): void {

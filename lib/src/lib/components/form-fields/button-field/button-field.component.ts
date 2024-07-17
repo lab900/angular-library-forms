@@ -1,18 +1,33 @@
-import { Component, HostBinding } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, ElementRef, HostBinding, ViewChild } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldButton } from './button-field.model';
+import { Lab900ButtonComponent } from '@lab900/ui';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatLabel } from '@angular/material/form-field';
+
+import { ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'lab900-button-field',
   templateUrl: './button-field.component.html',
+  standalone: true,
+  imports: [
+    MatTooltip,
+    MatLabel,
+    ReactiveFormsModule,
+    TranslateModule,
+    Lab900ButtonComponent,
+  ],
 })
 export class ButtonFieldComponent extends FormComponent<FormFieldButton> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
-  public constructor(translateService: TranslateService) {
-    super(translateService);
+  @ViewChild(Lab900ButtonComponent, { read: ElementRef })
+  public set buttonComp(buttonComp: ElementRef) {
+    // fix for trigger action on enter
+    buttonComp?.nativeElement?.children?.[0]?.setAttribute('type', 'button');
   }
 
   public handleClick(event: Event): void {

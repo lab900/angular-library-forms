@@ -1,16 +1,31 @@
-import { Component, HostBinding, Inject } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import {
-  LAB900_FORM_MODULE_SETTINGS,
-  Lab900FormModuleSettings,
-} from '../../../models/Lab900FormModuleSettings';
-import { TranslateService } from '@ngx-translate/core';
 import { FormFieldAmount } from './amount-field.model';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { AsyncPipe, NgClass } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatInputModule } from '@angular/material/input';
+import { AutofocusDirective } from '../../../directives/auto-focus.directive';
+import { AmountInputDirective } from './amount-input.directive';
+import { IconComponent } from '@lab900/ui';
 
 @Component({
   selector: 'lab900-amount-field',
   templateUrl: './amount-field.component.html',
   styleUrls: ['./amount-field.component.scss'],
+  standalone: true,
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    NgClass,
+    AutofocusDirective,
+    AmountInputDirective,
+    IconComponent,
+    AsyncPipe,
+  ],
 })
 export class AmountFieldComponent extends FormComponent<FormFieldAmount> {
   @HostBinding('class')
@@ -42,13 +57,5 @@ export class AmountFieldComponent extends FormComponent<FormFieldAmount> {
       return this.options.minDecimals(this.group.value);
     }
     return this.options?.minDecimals;
-  }
-
-  public constructor(
-    @Inject(LAB900_FORM_MODULE_SETTINGS)
-    public setting: Lab900FormModuleSettings,
-    translateService: TranslateService
-  ) {
-    super(translateService);
   }
 }

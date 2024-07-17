@@ -1,29 +1,34 @@
-import { Component, HostBinding, Inject } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { TranslateService } from '@ngx-translate/core';
-import {
-  LAB900_FORM_MODULE_SETTINGS,
-  Lab900FormModuleSettings,
-} from '../../../models/Lab900FormModuleSettings';
 import { FormFieldPassword } from './password-field.model';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { AsyncPipe, NgClass } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { TranslateModule } from '@ngx-translate/core';
+import { AutofocusDirective } from '../../../directives/auto-focus.directive';
+import { IconComponent } from '@lab900/ui';
 
 @Component({
   selector: 'lab900-password-field',
   templateUrl: './password-field.component.html',
   styleUrls: ['./password-field.component.scss'],
+  standalone: true,
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    NgClass,
+    AutofocusDirective,
+    IconComponent,
+    AsyncPipe,
+  ],
 })
 export class PasswordFieldComponent extends FormComponent<FormFieldPassword> {
   @HostBinding('class')
   public classList = `lab900-form-field`;
   public passwordVisible = false;
-
-  public constructor(
-    @Inject(LAB900_FORM_MODULE_SETTINGS)
-    public setting: Lab900FormModuleSettings,
-    translateService: TranslateService
-  ) {
-    super(translateService);
-  }
 
   public togglePasswordVisibility(): void {
     this.passwordVisible = !this.passwordVisible;

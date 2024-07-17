@@ -1,9 +1,12 @@
-import { Component, OnInit, HostBinding } from '@angular/core';
+import { Component, HostBinding, OnInit } from '@angular/core';
 import { matFormFieldAnimations } from '@angular/material/form-field';
 import { FormComponent } from '../../AbstractFormComponent';
-import { AngularEditorConfig } from '@kolkov/angular-editor';
-import { TranslateService } from '@ngx-translate/core';
+import {
+  AngularEditorConfig,
+  AngularEditorModule,
+} from '@kolkov/angular-editor';
 import { WysiwgFieldModel } from './wysiwg-field.model';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'lab900-wysiwyg-field',
@@ -12,11 +15,13 @@ import { WysiwgFieldModel } from './wysiwg-field.model';
       <angular-editor
         [formControlName]="fieldAttribute"
         [config]="editorConfig"
-      ></angular-editor>
+      />
     </div>
   `,
   styleUrls: ['./wysiwyg-field.component.scss'],
   animations: [matFormFieldAnimations.transitionMessages],
+  standalone: true,
+  imports: [AngularEditorModule, ReactiveFormsModule],
 })
 export class WysiwygFieldComponent
   extends FormComponent<WysiwgFieldModel>
@@ -26,10 +31,6 @@ export class WysiwygFieldComponent
   public classList = 'lab900-form-field';
 
   public editorConfig: AngularEditorConfig;
-
-  public constructor(translateService: TranslateService) {
-    super(translateService);
-  }
 
   public ngOnInit(): void {
     this.editorConfig = {

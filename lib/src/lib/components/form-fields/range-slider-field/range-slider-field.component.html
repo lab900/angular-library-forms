@@ -1,26 +1,22 @@
-<div
-  [formGroup]="group"
-  *ngIf="!fieldIsHidden"
-  class="lab900-range-slider-field"
-  id="lab900-range-slider-field-{{ fieldAttribute }}"
->
-  <span *ngIf="schema.title" class="lab900-form-field-label" translate>{{
-    schema.title
-  }}</span>
-  <lab900-mat-range-slider-field
-    [formControlName]="fieldAttribute"
-    [fromLabel]="options?.fromLabel || 'From'"
-    [toLabel]="options?.toLabel || 'To'"
-    [min]="options?.min"
-    [max]="options?.max"
-    [steps]="options?.steps"
-    [format]="options?.format"
-    [required]="fieldIsRequired"
-  ></lab900-mat-range-slider-field>
-  <div
-    class="radio-buttons-field__error"
-    *ngIf="group.controls[fieldAttribute].touched && !valid && !fieldIsReadonly"
-  >
-    <mat-error>{{ getErrorMessage() | async }}</mat-error>
+@if (!fieldIsHidden) {
+  <div [formGroup]="group" class="lab900-range-slider-field" id="lab900-range-slider-field-{{ fieldAttribute }}">
+    @if (schema.title) {
+      <span class="lab900-form-field-label" translate>{{ schema.title }}</span>
+    }
+    <lab900-mat-range-slider-field
+      [formControlName]="fieldAttribute"
+      [fromLabel]="options?.fromLabel || 'From'"
+      [toLabel]="options?.toLabel || 'To'"
+      [min]="options?.min"
+      [max]="options?.max"
+      [steps]="options?.steps"
+      [format]="options?.format"
+      [required]="fieldIsRequired"
+    />
+    @if (group.controls[fieldAttribute].touched && !valid && !fieldIsReadonly) {
+      <div class="radio-buttons-field__error">
+        <mat-error>{{ getErrorMessage() | async }}</mat-error>
+      </div>
+    }
   </div>
-</div>
+}
