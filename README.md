@@ -28,6 +28,10 @@ $ npm run start
 4. Create a pull request to merge your branch into `main`
 5. Create & release a new version after merging.
 
+## Hotfixing older versions
+If you need to fix a bug in an older minor or major versions, you can create a branch from the tag of that version.
+Create a patch version of the fix and release it.
+
 ## Releasing a new version
 
 1. Update the [CHANGELOG](/CHANGELOG.md) with the new version
