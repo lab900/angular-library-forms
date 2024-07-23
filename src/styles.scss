@@ -13,17 +13,17 @@
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
 @include mat.core();
-@include mat.typography-hierarchy(mat.define-typography-config());
+@include mat.typography-hierarchy(mat.m2-define-typography-config());
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$angular-libraries-primary: mat.define-palette($mat-lab900green);
-$angular-libraries-accent: mat.define-palette($mat-lab900grey);
+$angular-libraries-primary: mat.m2-define-palette($mat-lab900green);
+$angular-libraries-accent: mat.m2-define-palette($mat-lab900grey);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-$angular-libraries-theme: mat.define-light-theme(
+$angular-libraries-theme: mat.m2-define-light-theme(
   (
     color: (
       primary: $angular-libraries-primary,

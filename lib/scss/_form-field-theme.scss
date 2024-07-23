@@ -2,7 +2,7 @@
 @use '@angular/material' as mat;
 
 @mixin lab900-form-field($config-or-theme, $margin: 16px) {
-  $configTypo: mat.get-typography-config($config-or-theme);
+  $configTypo: mat.m2-get-typography-config($config-or-theme);
 
   .readonly {
     opacity: 0.6;
