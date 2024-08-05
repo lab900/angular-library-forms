@@ -31,10 +31,13 @@ const languages: ValueLabel[] = [
   imports: [Lab900Form],
 })
 export class FormFieldMultiLanguageExampleComponent {
-  public languages = signal<ValueLabel[]>(languages);
-  public formSchema = signal<Lab900FormConfig | undefined>(undefined);
-
-  public data = signal(undefined);
+  protected readonly languages = signal<ValueLabel[]>(languages);
+  protected readonly formSchema = signal<Lab900FormConfig | undefined>(
+    undefined,
+  );
+  protected readonly data = signal<
+    Record<string, { en?: string; nl?: string; fr?: string }> | undefined
+  >(undefined);
 
   public constructor() {
     setTimeout(() => {
