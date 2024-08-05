@@ -7,8 +7,10 @@ import {
   AfterContentInit,
   AfterViewInit,
   ChangeDetectorRef,
+  computed,
   Directive,
   inject,
+  input,
   Input,
   OnDestroy,
 } from '@angular/core';
@@ -42,17 +44,26 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   @Input()
   public group: UntypedFormGroup;
 
-  @Input()
-  public schema: S;
+  public readonly _schema = input.required<S>({ alias: 'schema' });
+  public readonly _options = computed<S['options']>(
+    () => this._schema().options,
+  );
+  public readonly _label = computed<string | undefined>(
+    () => this._schema().title,
+  );
 
-  @Input()
-  public language?: string;
+  public get options(): S['options'] {
+    return this._options();
+  }
+  public get schema(): S {
+    return this._schema();
+  }
 
   @Input()
   public externalForms?: Record<string, UntypedFormGroup>;
 
-  @Input()
-  public availableLanguages?: ValueLabel[];
+  public readonly language = input<string | undefined>(undefined);
+  public readonly availableLanguages = input<ValueLabel[]>([]);
 
   @Input()
   public readonly = false; // Global form readonly flag
@@ -67,10 +78,6 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
 
   public get valid(): boolean {
     return this.fieldControl?.valid;
-  }
-
-  public get options(): S['options'] {
-    return this.schema?.options;
   }
 
   public get touched(): boolean {

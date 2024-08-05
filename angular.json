@@ -80,7 +80,7 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "namedChunks": false,
+              "namedChunks": true,
               "extractLicenses": true,
               "budgets": [
                 {
@@ -94,6 +94,11 @@
                   "maximumError": "10kb"
                 }
               ]
+            },
+            "development": {
+              "sourceMap": true,
+              "optimization": false,
+              "namedChunks": true
             }
           },
           "defaultConfiguration": "production"
@@ -106,9 +111,12 @@
           "configurations": {
             "production": {
               "buildTarget": "lab900-forms:build:production"
+            },
+            "development": {
+              "buildTarget": "lab900-forms:build:development"
             }
           },
-          "defaultConfiguration": ""
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",

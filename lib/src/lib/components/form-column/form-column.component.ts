@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, computed, HostBinding } from '@angular/core';
 import { FormComponent } from '../AbstractFormComponent';
 import { matFormFieldAnimations } from '@angular/material/form-field';
 import { FormFieldUtils } from '../../utils/form-field.utils';
@@ -22,12 +22,14 @@ export class FormColumnComponent extends FormComponent<FormColumn> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
-  public get visible(): boolean {
-    if (this.options && this.options.visibleFn) {
-      return this.options.visibleFn(this);
+  public readonly visible = computed(() => {
+    const options = this._options();
+    if (options && options.visibleFn) {
+      return options.visibleFn(this);
     }
     return true;
-  }
+  });
+  protected readonly nestedFields = computed(() => this._schema().nestedFields);
 
   public columnIsReadonly(field: Lab900FormField): boolean {
     return field.options?.readonly != null

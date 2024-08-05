@@ -1,22 +1,41 @@
-@if (visible && schema) {
-  <div [hidden]="isHidden(schema)" class="lab900-form-row {{ options?.customClass }}">
-    @if ((fieldIsReadonly && options?.readonlyLabel) || schema.title) {
-      <span class="lab900-form-field-label lab900-form-row-label {{ options?.customTitleClass }}">{{
-        (!fieldIsReadonly ? schema.title : options?.readonlyLabel || schema.title) | translate
-      }}</span>
+@if (visible() && _schema()) {
+  <div
+    [hidden]="isHidden(schema)"
+    class="lab900-form-row {{ _options()?.customClass }}"
+  >
+    @if ((fieldIsReadonly && _options()?.readonlyLabel) || _label()) {
+      <span
+        class="lab900-form-field-label lab900-form-row-label {{
+          _options()?.customTitleClass
+        }}"
+        >{{
+          (!fieldIsReadonly ? _label() : _options()?.readonlyLabel || _label())
+            | translate
+        }}</span
+      >
     }
-    <div class="form-row" [class.mobile-cols]="schema.options?.mobileCols">
-      @for (field of schema.nestedFields; track field) {
-        <div class="form-col" [class.hidden]="isHidden(field)" [style.width]="(100 * (field.options?.colspan || 12)) / 12 + '%'">
+    <div class="form-row" [class.mobile-cols]="_options()?.mobileCols">
+      @for (field of nestedFields(); track field) {
+        <div
+          class="form-col"
+          [class.hidden]="isHidden(field)"
+          [style.width]="(100 * (field.options?.colspan || 12)) / 12 + '%'"
+        >
           <ng-container
             lab900FormField
             [schema]="field"
+            [availableLanguages]="availableLanguages()"
+            [language]="language()"
             [group]="fieldAttribute ? group.get(fieldAttribute) : group"
             [readonly]="rowIsReadonly(field)"
-          ></ng-container>
+          />
           @if (infoTooltip(field); as tip) {
             <div class="form-col__info">
-              <mat-icon [matTooltipClass]="tip.class" [matTooltip]="tip.text | translate">{{ tip.icon || "info" }}</mat-icon>
+              <mat-icon
+                [matTooltipClass]="tip.class"
+                [matTooltip]="tip.text | translate"
+                >{{ tip.icon || 'info' }}</mat-icon
+              >
             </div>
           }
         </div>
