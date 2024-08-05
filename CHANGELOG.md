@@ -1,5 +1,12 @@
 # Changelog
 
+## 18.0.1
+- Fix issues with MultiLang inputs
+
+## 18.0.0
+
+- Angular 18 update
+
 ## 17.0.1
 
 - Fix disabled state of SlideToggle component
