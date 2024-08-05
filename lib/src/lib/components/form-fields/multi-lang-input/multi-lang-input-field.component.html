@@ -1,14 +1,16 @@
 @if (!fieldIsHidden) {
   <div
     [formGroup]="group"
-    class="lab900-multi-lang-field lab900-multi-lang-field--{{ setting?.formField?.appearance || 'standard' }}"
+    class="lab900-multi-lang-field lab900-multi-lang-field--{{
+      setting?.formField?.appearance || 'standard'
+    }}"
     id="lab900-multi-lang-field-{{ fieldAttribute }}"
     style="padding-bottom: 1.34375em"
   >
     <lab900-multi-lang-field-control
       [formControlName]="fieldAttribute"
-      [defaultLanguage]="language"
-      [availableLanguages]="availableLanguages"
+      [defaultLanguage]="language()"
+      [availableLanguages]="availableLanguages()"
       [required]="fieldIsRequired"
       [readonly]="fieldIsReadonly"
       [label]="schema.title"

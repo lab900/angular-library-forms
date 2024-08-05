@@ -1,4 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  model,
+} from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 import { ValueLabel } from '../../models/form-field-base';
 import { MatButton } from '@angular/material/button';
@@ -12,6 +17,7 @@ import { MatIcon } from '@angular/material/icon';
   selector: 'lab900-language-picker',
   templateUrl: './language-picker.component.html',
   styleUrls: ['./language-picker.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
     MatButton,
@@ -24,34 +30,15 @@ import { MatIcon } from '@angular/material/icon';
   ],
 })
 export class LanguagePickerComponent {
-  @Input()
-  public translate = false;
-
-  @Input()
-  public value?: Record<string, string>;
-
-  @Output()
-  public translateChange = new EventEmitter<boolean>();
-
-  @Input()
-  public buttonColor?: ThemePalette;
-
-  @Input()
-  public languages: ValueLabel[] = [];
-
-  @Input()
-  public activeLanguage: ValueLabel;
-
-  @Output()
-  public readonly activeLanguageChange = new EventEmitter<ValueLabel>();
-
-  @Input()
-  public translateLabel?: string;
-
-  @Input()
-  public stopTranslateLabel?: string;
+  public readonly translating = model<boolean>(false);
+  public readonly activeLanguage = model<ValueLabel>();
+  public readonly buttonColor = input<ThemePalette>('primary');
+  public readonly languages = input.required<ValueLabel[]>();
+  public readonly value = input<Record<string, string> | undefined>(undefined);
+  public readonly translateLabel = input<string>('Translate');
+  public readonly stopTranslateLabel = input<string>('Stop translating');
 
   public toggleTranslate(): void {
-    this.translateChange.emit(!this.translate);
+    this.translating.set(!this.translating());
   }
 }

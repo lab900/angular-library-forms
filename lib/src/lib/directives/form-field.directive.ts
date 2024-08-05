@@ -1,16 +1,16 @@
 import {
-  ComponentFactoryResolver,
   ComponentRef,
   Directive,
+  effect,
+  inject,
+  input,
   Input,
   OnChanges,
-  OnDestroy,
   OnInit,
   SimpleChanges,
   ViewContainerRef,
 } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs';
 import { FormComponent } from '../components/AbstractFormComponent';
 import { ReadonlyFieldComponent } from '../components/form-fields/readonly-field/readonly-field.component';
 import { EditType } from '../models/editType';
@@ -22,18 +22,18 @@ import { FormFieldMappingService } from '../services/form-field-mapping.service'
   selector: '[lab900FormField]',
   standalone: true,
 })
-export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
+export class FormFieldDirective implements OnChanges, OnInit {
+  private readonly container = inject(ViewContainerRef);
+  private readonly formFieldMappingService = inject(FormFieldMappingService);
+
   @Input()
   public schema: Lab900FormField;
 
   @Input()
   public group: UntypedFormGroup;
 
-  @Input()
-  public language?: string;
-
-  @Input()
-  public availableLanguages?: ValueLabel[];
+  public readonly language = input<string | undefined>(undefined);
+  public readonly availableLanguages = input<ValueLabel[]>([]);
 
   @Input()
   public readonly = false;
@@ -41,15 +41,23 @@ export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
   @Input()
   public externalForms?: Record<string, UntypedFormGroup>;
 
-  public component: ComponentRef<FormComponent>;
+  public component?: ComponentRef<FormComponent>;
 
-  public statusChangeSubscription: Subscription;
-
-  public constructor(
-    private resolver: ComponentFactoryResolver,
-    private container: ViewContainerRef,
-    private formFieldMappingService: FormFieldMappingService,
-  ) {}
+  public constructor() {
+    effect(() => {
+      if (this.component) {
+        this.component.setInput(
+          'availableLanguages',
+          this.availableLanguages(),
+        );
+      }
+    });
+    effect(() => {
+      if (this.component) {
+        this.component.setInput('language', this.language);
+      }
+    });
+  }
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (this.component && changes.readonly) {
@@ -69,12 +77,6 @@ export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
     this.createComponent();
   }
 
-  public ngOnDestroy(): void {
-    if (this.statusChangeSubscription) {
-      this.statusChangeSubscription.unsubscribe();
-    }
-  }
-
   private createComponent(): void {
     this.container.clear();
     const c =
@@ -90,27 +92,28 @@ export class FormFieldDirective implements OnChanges, OnInit, OnDestroy {
       ].includes(this.schema.editType)
         ? ReadonlyFieldComponent
         : this.formFieldMappingService.mapToComponent(this.schema);
-    const component = this.resolver.resolveComponentFactory<FormComponent>(c);
-    this.component = this.container.createComponent(component);
+    this.component = this.container.createComponent(c);
     this.setComponentProps();
   }
 
   private setComponentProps(): void {
-    this.component.instance.schema = this.schema;
+    if (!this.component) {
+      return;
+    }
+    this.component.setInput('schema', this.schema);
     if (this.schema?.attribute?.includes('.')) {
       const attributeMap = this.schema?.attribute.split('.');
-      this.component.instance.fieldAttribute = attributeMap.pop();
-      this.component.instance.group = this.group.get(
-        attributeMap.join('.'),
-      ) as UntypedFormGroup;
+      this.component.setInput('fieldAttribute', attributeMap.pop());
+      this.component.setInput(
+        'group',
+        this.group.get(attributeMap.join('.')) as UntypedFormGroup,
+      );
     } else {
-      this.component.instance.fieldAttribute = this.schema.attribute;
-      this.component.instance.group = this.group;
+      this.component.setInput('fieldAttribute', this.schema.attribute);
+      this.component.setInput('group', this.group);
     }
-    this.component.instance.readonly = this.readonly;
-    this.component.instance.availableLanguages = this.availableLanguages;
-    this.component.instance.language = this.language;
-    this.component.instance.externalForms = this.externalForms;
+    this.component.setInput('readonly', this.readonly);
+    this.component.setInput('externalForms', this.externalForms);
   }
 
   private validateType(): void {

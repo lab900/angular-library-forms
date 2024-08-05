@@ -9,6 +9,7 @@ import {
   ChangeDetectorRef,
   Directive,
   inject,
+  input,
   Input,
   OnDestroy,
 } from '@angular/core';
@@ -46,13 +47,10 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   public schema: S;
 
   @Input()
-  public language?: string;
-
-  @Input()
   public externalForms?: Record<string, UntypedFormGroup>;
 
-  @Input()
-  public availableLanguages?: ValueLabel[];
+  public readonly language = input<string | undefined>(undefined);
+  public readonly availableLanguages = input<ValueLabel[]>([]);
 
   @Input()
   public readonly = false; // Global form readonly flag

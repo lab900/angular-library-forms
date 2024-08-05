@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import {
   EditType,
   Lab900Form,
@@ -15,19 +15,21 @@ const languages: ValueLabel[] = [
 
 @Component({
   selector: 'lab900-form-field-multi-language-example',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <lab900-form
       language="nl"
-      [availableLanguages]="languages"
+      [availableLanguages]="languages()"
       [schema]="formSchema"
-      [data]="data"
+      [data]="data()"
+      [emitEventOnDataChange]="false"
     />
   `,
   standalone: true,
   imports: [Lab900Form],
 })
 export class FormFieldMultiLanguageExampleComponent {
-  public readonly languages = languages;
+  public languages = signal<ValueLabel[]>(languages);
   public formSchema: Lab900FormConfig = {
     fields: [
       {
@@ -72,14 +74,14 @@ export class FormFieldMultiLanguageExampleComponent {
     ],
   };
 
-  public data;
+  public data = signal(undefined);
 
   public constructor() {
     setTimeout(() => {
-      this.data = {
+      this.data.set({
         multiLangField: { en: 'field en', nl: 'field nl', fr: 'field fr' },
         multiLangField2: { en: 'field', nl: 'field', fr: 'field' },
-      };
+      });
     }, 100);
   }
 }

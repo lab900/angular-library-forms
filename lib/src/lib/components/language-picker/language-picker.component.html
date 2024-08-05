@@ -1,29 +1,36 @@
-@if (translate && languages?.length) {
-  <button mat-stroked-button [matMenuTriggerFor]="langMenu" [color]="buttonColor || 'primary'">
+@if (translating() && languages().length) {
+  <button
+    mat-stroked-button
+    [matMenuTriggerFor]="langMenu"
+    [color]="buttonColor()"
+  >
     <mat-icon>language</mat-icon>
-    {{ activeLanguage.label | translate }}
+    {{ activeLanguage().label | translate }}
   </button>
   <mat-menu #langMenu>
-    @for (lang of languages; track lang) {
-      <button mat-menu-item (click)="activeLanguageChange.emit(lang)" [disabled]="lang.value === activeLanguage.value || lang.disabled">
-        <mat-icon [style.color]="value && value[lang.value] ? 'green' : 'red'">{{
-          value && value[lang.value] ? "done" : "close"
-        }}</mat-icon>
+    @for (lang of languages(); track lang.value) {
+      <button
+        mat-menu-item
+        (click)="activeLanguage.set(lang)"
+        [disabled]="lang.value === activeLanguage().value || lang.disabled"
+      >
+        <mat-icon
+          [style.color]="value() && value()[lang.value] ? 'green' : 'red'"
+          >{{ value() && value()[lang.value] ? 'done' : 'close' }}
+        </mat-icon>
         {{ lang.label | translate }}
       </button>
     }
     <button mat-menu-item (click)="toggleTranslate()">
       <mat-icon>block</mat-icon>
-      {{ stopTranslateLabel || "Don't translate" | translate }}
+      {{ stopTranslateLabel() | translate }}
     </button>
   </mat-menu>
-}
-
-@if (!translate) {
+} @else {
   <button
     mat-stroked-button
-    [matTooltip]="translateLabel || 'Translate?' | translate"
-    [color]="buttonColor || 'primary'"
+    [matTooltip]="translateLabel() | translate"
+    [color]="buttonColor()"
     (click)="toggleTranslate()"
   >
     <mat-icon>language</mat-icon>

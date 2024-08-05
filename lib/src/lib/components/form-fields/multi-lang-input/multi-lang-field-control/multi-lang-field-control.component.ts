@@ -1,17 +1,16 @@
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
-  Inject,
-  Input,
-  OnChanges,
-  SimpleChanges,
+  effect,
+  inject,
+  input,
+  model,
+  signal,
 } from '@angular/core';
-import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { BaseControlValueAccessorDirective } from '../../../../models/forms/BaseControlValueAccessor';
+import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
-import {
-  LAB900_FORM_MODULE_SETTINGS,
-  Lab900FormModuleSettings,
-} from '../../../../models/Lab900FormModuleSettings';
+import { LAB900_FORM_MODULE_SETTINGS } from '../../../../models/Lab900FormModuleSettings';
 import { ValueLabel } from '../../../../models/form-field-base';
 import { LanguagePickerComponent } from '../../../language-picker/language-picker.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -23,13 +22,7 @@ import { MatInputModule } from '@angular/material/input';
   selector: 'lab900-multi-lang-field-control',
   templateUrl: './multi-lang-field-control.component.html',
   styleUrls: ['./multi-lang-field-control.component.scss'],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: MultiLangFieldControlComponent,
-      multi: true,
-    },
-  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
     LanguagePickerComponent,
@@ -39,57 +32,59 @@ import { MatInputModule } from '@angular/material/input';
     FormsModule,
   ],
 })
-export class MultiLangFieldControlComponent
-  extends BaseControlValueAccessorDirective<Record<string, string>>
-  implements OnChanges
-{
-  @Input()
-  public defaultLanguage?: string;
+export class MultiLangFieldControlComponent implements ControlValueAccessor {
+  private readonly cdr = inject(ChangeDetectorRef);
+  public readonly appearance =
+    inject(LAB900_FORM_MODULE_SETTINGS)?.formField?.appearance ?? 'standard';
 
-  @Input()
-  public required?: boolean;
+  public readonly availableLanguages = input.required<ValueLabel[]>();
+  public readonly label = input.required<string>();
+  public readonly defaultLanguage = input<string | undefined>();
+  public readonly required = input<boolean>(false);
+  public readonly readonly = input<boolean>(false);
+  public readonly buttonColor = input<ThemePalette>('primary');
+  public readonly translateLabel = input<string>('Translate');
+  public readonly stopTranslateLabel = input<string>('Stop translating');
+  public readonly useTextAreaField = input<boolean>(false);
+  public readonly disabled = model<boolean>(false);
 
-  @Input()
-  public readonly?: boolean;
+  public readonly activeLanguage = signal<ValueLabel | undefined>(undefined);
+  public readonly translating = signal<boolean>(false);
 
-  @Input()
-  public buttonColor?: ThemePalette;
+  protected value?: Record<string, string>;
+  protected globalTranslation?: string;
 
-  @Input()
-  public availableLanguages?: ValueLabel[];
+  public constructor(public readonly control?: NgControl) {
+    if (this.control) {
+      this.control.valueAccessor = this;
+    }
 
-  @Input()
-  public formControlName: string;
-
-  @Input()
-  public label: string;
-
-  @Input()
-  public translateLabel?: string;
-
-  @Input()
-  public stopTranslateLabel?: string;
-
-  @Input()
-  public useTextAreaField = false;
-
-  public activeLanguage?: ValueLabel;
-
-  public globalTranslation: string;
-
-  public translate: boolean = false;
-
-  public constructor(
-    @Inject(LAB900_FORM_MODULE_SETTINGS)
-    public setting: Lab900FormModuleSettings,
-  ) {
-    super();
+    effect(
+      () => {
+        if (this.availableLanguages()?.length) {
+          this.resetDefaultLanguage();
+        }
+      },
+      { allowSignalWrites: true },
+    );
   }
 
-  public ngOnChanges(changes: SimpleChanges): void {
-    if (changes?.availableLanguages && this.availableLanguages?.length) {
-      this.resetDefaultLanguage();
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
+  public onChange(_: Record<string, string>): void {}
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
+  public onTouched(_?: any): void {}
+
+  public registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  public registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  public setDisabledState?(isDisabled: boolean): void {
+    this.disabled.set(isDisabled);
   }
 
   public blur(): void {
@@ -103,11 +98,12 @@ export class MultiLangFieldControlComponent
     this.toggleTranslate(
       hasValues && !valuesArray.every((v) => v === valuesArray[0]),
     );
+    this.cdr.markForCheck();
   }
 
   public toggleTranslate(value: boolean): void {
-    this.translate = value;
-    if (!this.translate) {
+    this.translating.set(value);
+    if (!value) {
       this.globalTranslation = Object.values(this.value).find((v) => !!v);
       this.updateAllToGlobalTranslation();
       this.resetDefaultLanguage();
@@ -116,7 +112,7 @@ export class MultiLangFieldControlComponent
 
   public updateGlobalTranslation(value: string): void {
     this.globalTranslation = value;
-    if (!this.translate) {
+    if (!this.translating()) {
       this.updateAllToGlobalTranslation();
     }
     this.onTouched();
@@ -129,13 +125,15 @@ export class MultiLangFieldControlComponent
   }
 
   public resetDefaultLanguage(): void {
-    this.activeLanguage =
-      this.availableLanguages.find((l) => l.value === this.defaultLanguage) ??
-      this.availableLanguages[0];
+    const defaultLang =
+      this.availableLanguages().find(
+        (l) => l.value === this.defaultLanguage(),
+      ) ?? this.availableLanguages()[0];
+    this.activeLanguage.set(defaultLang);
   }
 
   private updateAllToGlobalTranslation(): void {
-    this.value = this.availableLanguages.reduce(
+    this.value = this.availableLanguages()?.reduce(
       (acc, lang) => {
         return { ...acc, [lang.value]: this.globalTranslation };
       },

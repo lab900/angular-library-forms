@@ -1,9 +1,11 @@
 import {
   Component,
-  Inject,
-  Input,
-  OnChanges,
-  SimpleChanges,
+  computed,
+  effect,
+  inject,
+  input,
+  model,
+  untracked,
 } from '@angular/core';
 import {
   ReactiveFormsModule,
@@ -16,85 +18,80 @@ import { Lab900FormBuilderService } from '../../services/form-builder.service';
 import { ValueLabel } from '../../models/form-field-base';
 import { Lab900FormField } from '../../models/lab900-form-field.type';
 import { EditType } from '../../models/editType';
-import {
-  LAB900_FORM_MODULE_SETTINGS,
-  Lab900FormModuleSettings,
-} from '../../models/Lab900FormModuleSettings';
+import { LAB900_FORM_MODULE_SETTINGS } from '../../models/Lab900FormModuleSettings';
 import { FormFieldDirective } from '../../directives/form-field.directive';
 
 @Component({
-  selector: 'lab900-form[schema]',
+  selector: 'lab900-form',
   templateUrl: './form-container.component.html',
   styleUrls: ['./form-container.component.scss'],
   standalone: true,
   imports: [FormFieldDirective, ReactiveFormsModule],
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
-export class Lab900Form<T> implements OnChanges {
-  @Input()
-  public schema!: Lab900FormConfig;
+export class Lab900Form<T> {
+  private readonly fb = inject(Lab900FormBuilderService);
+  public readonly setting = inject(LAB900_FORM_MODULE_SETTINGS);
+
+  public readonly data = model<T | undefined>(undefined);
+  public readonly schema = input.required<Lab900FormConfig>();
+  protected readonly fields = computed(() => this.schema().fields);
 
   /**
    * You can add a object of other form groups which could be used in the conditional fields
    */
-  @Input()
-  public externalForms?: Record<string, UntypedFormGroup>;
-
-  @Input()
-  public data?: T;
+  public readonly externalForms = input<
+    Record<string, UntypedFormGroup> | undefined
+  >();
 
   /**
    * Don't trigger the valueChanges event when the data is set
    * Default: true (because historical reasons, as this was always the case in the past)
    */
-  @Input()
-  public emitEventOnDataChange = true;
+  public readonly emitEventOnDataChange = input<boolean>(true);
 
-  @Input()
-  public language?: string;
+  public readonly language = input<string | undefined>(undefined);
+  public readonly availableLanguages = input<ValueLabel[]>([]);
+  protected readonly _form = computed(() => {
+    return this.fb.createFormGroup<T>(
+      this.fields(),
+      null,
+      untracked(this.data), // don't create a new form when data changes
+    );
+  });
+  public readonly controls = computed(() => this._form().controls);
+  public readonly readonly = computed(() => this.schema()?.readonly);
 
-  @Input()
-  public availableLanguages?: ValueLabel[];
-
-  public form: UntypedFormGroup;
+  public get form(): UntypedFormGroup {
+    return this._form();
+  }
 
   public get valid(): boolean {
-    return this.form.valid;
+    return this._form().valid;
   }
 
   public get value(): T {
-    return this.form.value as T;
+    return this._form().value as T;
   }
 
-  public get readonly(): boolean {
-    return this.schema?.readonly;
-  }
-
-  public constructor(
-    private fb: Lab900FormBuilderService,
-    @Inject(LAB900_FORM_MODULE_SETTINGS)
-    public setting: Lab900FormModuleSettings,
-  ) {}
-
-  public ngOnChanges(changes: SimpleChanges): void {
-    if (changes.schema && this.schema?.fields) {
-      this.form = this.fb.createFormGroup<T>(
-        this.schema.fields,
-        null,
-        this.data,
-      );
-    }
-    if (!changes?.data?.isFirstChange() && this.data) {
-      setTimeout(() => this.patchValues(this.data, this.emitEventOnDataChange));
-    }
+  public constructor() {
+    effect(
+      () => {
+        const form = untracked(this._form);
+        if (this.data() && form) {
+          this.patchValues(this.data(), untracked(this.emitEventOnDataChange));
+        }
+      },
+      { allowSignalWrites: true },
+    );
   }
 
   public patchValues(data: T, emitEvent = true): void {
     Object.keys(data).forEach((key: string) => {
-      const control = this.form.controls[key];
+      const control = untracked(this.controls)[key];
       if (control) {
         if (control instanceof UntypedFormArray) {
-          const fieldSchema = this.schema.fields.find(
+          const fieldSchema = untracked(this.fields).find(
             (field: Lab900FormField) => field.attribute === key,
           );
           if (fieldSchema?.editType === EditType.Repeater) {
@@ -136,10 +133,10 @@ export class Lab900Form<T> implements OnChanges {
 
   public setValues(data: T, emitEvent = true): void {
     Object.keys(data).forEach((key: string) => {
-      const control = this.form.controls[key];
+      const control = untracked(this.controls)[key];
       if (control) {
         if (control instanceof UntypedFormArray) {
-          const fieldSchema = this.schema.fields.find(
+          const fieldSchema = untracked(this.fields).find(
             (field: Lab900FormField) => field.attribute === key,
           );
           if (fieldSchema?.editType === EditType.Repeater) {
