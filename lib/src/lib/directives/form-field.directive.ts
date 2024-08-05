@@ -1,13 +1,11 @@
 import {
   ComponentRef,
+  computed,
   Directive,
   effect,
   inject,
   input,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
+  signal,
   ViewContainerRef,
 } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
@@ -22,65 +20,21 @@ import { FormFieldMappingService } from '../services/form-field-mapping.service'
   selector: '[lab900FormField]',
   standalone: true,
 })
-export class FormFieldDirective implements OnChanges, OnInit {
+export class FormFieldDirective {
   private readonly container = inject(ViewContainerRef);
   private readonly formFieldMappingService = inject(FormFieldMappingService);
 
-  @Input()
-  public schema: Lab900FormField;
-
-  @Input()
-  public group: UntypedFormGroup;
-
+  public readonly schema = input.required<Lab900FormField>();
+  public readonly group = input.required<UntypedFormGroup>();
   public readonly language = input<string | undefined>(undefined);
   public readonly availableLanguages = input<ValueLabel[]>([]);
-
-  @Input()
-  public readonly = false;
-
-  @Input()
-  public externalForms?: Record<string, UntypedFormGroup>;
-
-  public component?: ComponentRef<FormComponent>;
-
-  public constructor() {
-    effect(() => {
-      if (this.component) {
-        this.component.setInput(
-          'availableLanguages',
-          this.availableLanguages(),
-        );
-      }
-    });
-    effect(() => {
-      if (this.component) {
-        this.component.setInput('language', this.language);
-      }
-    });
-  }
-
-  public ngOnChanges(changes: SimpleChanges): void {
-    if (this.component && changes.readonly) {
-      const { previousValue } = changes.readonly;
-      const hadPrevious =
-        previousValue !== null && typeof previousValue !== 'undefined';
-      if (hadPrevious && changes.readonly?.previousValue !== this.readonly) {
-        this.createComponent();
-      } else {
-        this.setComponentProps();
-      }
-    }
-  }
-
-  public ngOnInit(): void {
+  public readonly readonly = input<boolean>(false);
+  public readonly externalForms = input<
+    Record<string, UntypedFormGroup> | undefined
+  >(undefined);
+  public readonly componentType = computed(() => {
     this.validateType();
-    this.createComponent();
-  }
-
-  private createComponent(): void {
-    this.container.clear();
-    const c =
-      this.readonly &&
+    return this.readonly() &&
       ![
         EditType.Row,
         EditType.Column,
@@ -89,38 +43,81 @@ export class FormFieldDirective implements OnChanges, OnInit {
         EditType.ButtonToggle,
         EditType.SlideToggle,
         EditType.Button,
-      ].includes(this.schema.editType)
-        ? ReadonlyFieldComponent
-        : this.formFieldMappingService.mapToComponent(this.schema);
-    this.component = this.container.createComponent(c);
-    this.setComponentProps();
+      ].includes(this.schema().editType)
+      ? ReadonlyFieldComponent
+      : this.formFieldMappingService.mapToComponent(this.schema());
+  });
+  public readonly component = signal<ComponentRef<FormComponent> | undefined>(
+    undefined,
+  );
+
+  public constructor() {
+    effect(
+      () => {
+        const componentType = this.componentType();
+        if (componentType) {
+          this.createComponent();
+        }
+      },
+      { allowSignalWrites: true },
+    );
+    effect(() => {
+      const schema = this.schema();
+      const component = this.component();
+      if (schema?.attribute?.includes('.')) {
+        const attributeMap = schema?.attribute.split('.');
+        component.setInput('fieldAttribute', attributeMap.pop());
+        component.setInput(
+          'group',
+          this.group().get(attributeMap.join('.')) as UntypedFormGroup,
+        );
+      } else {
+        component.setInput('fieldAttribute', schema.attribute);
+        component.setInput('group', this.group());
+      }
+    });
+    effect(() => {
+      const component = this.component();
+      if (component) {
+        component.setInput('availableLanguages', this.availableLanguages());
+      }
+    });
+    effect(() => {
+      const component = this.component();
+      if (component) {
+        component.setInput('language', this.language());
+      }
+    });
+    effect(() => {
+      const component = this.component();
+      if (component) {
+        component.setInput('schema', this.schema());
+      }
+    });
+    effect(() => {
+      const component = this.component();
+      if (component) {
+        component.setInput('readonly', this.readonly());
+      }
+    });
+    effect(() => {
+      const component = this.component();
+      if (component) {
+        component.setInput('externalForms', this.externalForms());
+      }
+    });
   }
 
-  private setComponentProps(): void {
-    if (!this.component) {
-      return;
-    }
-    this.component.setInput('schema', this.schema);
-    if (this.schema?.attribute?.includes('.')) {
-      const attributeMap = this.schema?.attribute.split('.');
-      this.component.setInput('fieldAttribute', attributeMap.pop());
-      this.component.setInput(
-        'group',
-        this.group.get(attributeMap.join('.')) as UntypedFormGroup,
-      );
-    } else {
-      this.component.setInput('fieldAttribute', this.schema.attribute);
-      this.component.setInput('group', this.group);
-    }
-    this.component.setInput('readonly', this.readonly);
-    this.component.setInput('externalForms', this.externalForms);
+  private createComponent(): void {
+    this.container.clear();
+    this.component.set(this.container.createComponent(this.componentType()));
   }
 
   private validateType(): void {
-    if (!this.formFieldMappingService.mapToComponent(this.schema)) {
+    if (!this.formFieldMappingService.mapToComponent(this.schema())) {
       const supportedTypes = Object.keys(EditType).join(', ');
       throw new Error(
-        `Trying to use an unsupported type (${this.schema.editType}).
+        `Trying to use an unsupported type (${this.schema().editType}).
         Supported types: ${supportedTypes}`,
       );
     }

@@ -17,62 +17,22 @@ const languages: ValueLabel[] = [
   selector: 'lab900-form-field-multi-language-example',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <lab900-form
-      language="nl"
-      [availableLanguages]="languages()"
-      [schema]="formSchema"
-      [data]="data()"
-      [emitEventOnDataChange]="false"
-    />
+    @if (formSchema() && languages()) {
+      <lab900-form
+        language="nl"
+        [availableLanguages]="languages()"
+        [schema]="formSchema()"
+        [data]="data()"
+        [emitEventOnDataChange]="false"
+      />
+    }
   `,
   standalone: true,
   imports: [Lab900Form],
 })
 export class FormFieldMultiLanguageExampleComponent {
   public languages = signal<ValueLabel[]>(languages);
-  public formSchema: Lab900FormConfig = {
-    fields: [
-      {
-        attribute: 'multiLangField',
-        title: 'Multi language field',
-        editType: EditType.MultiLangInput,
-        validators: [multiLanguageValidator()],
-        errorMessages: {
-          missingTranslations: 'missing translations',
-        },
-      },
-      {
-        attribute: 'multiLangField2',
-        title: 'Multi language field',
-        editType: EditType.MultiLangInput,
-        validators: [multiLanguageValidator()],
-        errorMessages: {
-          missingTranslations: 'missing translations',
-        },
-      },
-      {
-        attribute: 'multiLangField3',
-        title: 'Multi language field',
-        editType: EditType.MultiLangInput,
-        validators: [multiLanguageValidator()],
-        errorMessages: {
-          missingTranslations: 'missing translations',
-        },
-      },
-      {
-        attribute: 'multiLangField4',
-        title: 'Multi language field (TextArea)',
-        editType: EditType.MultiLangInput,
-        validators: [multiLanguageValidator()],
-        options: {
-          useTextAreaField: true,
-        },
-        errorMessages: {
-          missingTranslations: 'missing translations',
-        },
-      },
-    ],
-  };
+  public formSchema = signal<Lab900FormConfig | undefined>(undefined);
 
   public data = signal(undefined);
 
@@ -81,6 +41,49 @@ export class FormFieldMultiLanguageExampleComponent {
       this.data.set({
         multiLangField: { en: 'field en', nl: 'field nl', fr: 'field fr' },
         multiLangField2: { en: 'field', nl: 'field', fr: 'field' },
+      });
+      this.formSchema.set({
+        fields: [
+          {
+            attribute: 'multiLangField',
+            title: 'Multi language field',
+            editType: EditType.MultiLangInput,
+            validators: [multiLanguageValidator()],
+            errorMessages: {
+              missingTranslations: 'missing translations',
+            },
+          },
+          {
+            attribute: 'multiLangField2',
+            title: 'Multi language field',
+            editType: EditType.MultiLangInput,
+            validators: [multiLanguageValidator()],
+            errorMessages: {
+              missingTranslations: 'missing translations',
+            },
+          },
+          {
+            attribute: 'multiLangField3',
+            title: 'Multi language field',
+            editType: EditType.MultiLangInput,
+            validators: [multiLanguageValidator()],
+            errorMessages: {
+              missingTranslations: 'missing translations',
+            },
+          },
+          {
+            attribute: 'multiLangField4',
+            title: 'Multi language field (TextArea)',
+            editType: EditType.MultiLangInput,
+            validators: [multiLanguageValidator()],
+            options: {
+              useTextAreaField: true,
+            },
+            errorMessages: {
+              missingTranslations: 'missing translations',
+            },
+          },
+        ],
       });
     }, 100);
   }

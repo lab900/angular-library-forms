@@ -13,13 +13,13 @@
       [availableLanguages]="availableLanguages()"
       [required]="fieldIsRequired"
       [readonly]="fieldIsReadonly"
-      [label]="schema.title"
-      [buttonColor]="options?.buttonColor"
-      [translateLabel]="options?.translateLabel"
-      [stopTranslateLabel]="options?.stopTranslateLabel"
-      [useTextAreaField]="options?.useTextAreaField"
+      [label]="_label()"
+      [buttonColor]="_options()?.buttonColor"
+      [translateLabel]="_options()?.translateLabel"
+      [stopTranslateLabel]="_options()?.stopTranslateLabel"
+      [useTextAreaField]="_options()?.useTextAreaField"
     />
-    @if (!valid && fieldControl.touched && !fieldIsReadonly) {
+    @if (!valid && touched && !fieldIsReadonly) {
       <div>
         <mat-error>{{ getErrorMessage() | async }}</mat-error>
       </div>
