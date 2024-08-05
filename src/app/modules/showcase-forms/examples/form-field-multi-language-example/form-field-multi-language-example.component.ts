@@ -45,22 +45,27 @@ export class FormFieldMultiLanguageExampleComponent {
       this.formSchema.set({
         fields: [
           {
-            attribute: 'multiLangField',
-            title: 'Multi language field',
-            editType: EditType.MultiLangInput,
-            validators: [multiLanguageValidator()],
-            errorMessages: {
-              missingTranslations: 'missing translations',
-            },
-          },
-          {
-            attribute: 'multiLangField2',
-            title: 'Multi language field',
-            editType: EditType.MultiLangInput,
-            validators: [multiLanguageValidator()],
-            errorMessages: {
-              missingTranslations: 'missing translations',
-            },
+            editType: EditType.Row,
+            nestedFields: [
+              {
+                attribute: 'multiLangField',
+                title: 'Multi language field',
+                editType: EditType.MultiLangInput,
+                validators: [multiLanguageValidator()],
+                errorMessages: {
+                  missingTranslations: 'missing translations',
+                },
+              },
+              {
+                attribute: 'multiLangField2',
+                title: 'Multi language field',
+                editType: EditType.MultiLangInput,
+                validators: [multiLanguageValidator()],
+                errorMessages: {
+                  missingTranslations: 'missing translations',
+                },
+              },
+            ],
           },
           {
             attribute: 'multiLangField3',

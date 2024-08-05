@@ -1,22 +1,37 @@
-@if (visible && schema) {
-  <div [hidden]="isHidden(schema)" class="lab900-form-column {{ options?.customClass }}">
-    @if ((fieldIsReadonly && options?.readonlyLabel) || schema.title) {
-      <span class="lab900-form-field-label lab900-form-column-label {{ options?.customTitleClass }}">{{
-        (!fieldIsReadonly ? schema.title : options?.readonlyLabel || schema.title) | translate
-      }}</span>
+@if (visible() && _schema()) {
+  <div
+    [hidden]="isHidden(schema)"
+    class="lab900-form-column {{ _options()?.customClass }}"
+  >
+    @if ((fieldIsReadonly && _options()?.readonlyLabel) || _label()) {
+      <span
+        class="lab900-form-field-label lab900-form-column-label {{
+          _options()?.customTitleClass
+        }}"
+        >{{
+          (!fieldIsReadonly ? _label() : _options()?.readonlyLabel || _label())
+            | translate
+        }}</span
+      >
     }
-    <div class="form-column" [class.mobile-cols]="schema.options?.mobileCols">
-      @for (field of schema.nestedFields; track field) {
+    <div class="form-column" [class.mobile-cols]="_options()?.mobileCols">
+      @for (field of nestedFields(); track field) {
         <div
           [class.hidden]="isHidden(field)"
           lab900FormField
           [schema]="field"
+          [availableLanguages]="availableLanguages()"
+          [language]="language()"
           [group]="fieldAttribute ? group.get(fieldAttribute) : group"
           [readonly]="columnIsReadonly(field)"
         >
           @if (infoTooltip(field); as tip) {
             <div class="form-col__info">
-              <mat-icon [matTooltipClass]="tip.class" [matTooltip]="tip.text | translate">{{ tip.icon || "info" }}</mat-icon>
+              <mat-icon
+                [matTooltipClass]="tip.class"
+                [matTooltip]="tip.text | translate"
+                >{{ tip.icon || 'info' }}</mat-icon
+              >
             </div>
           }
         </div>
