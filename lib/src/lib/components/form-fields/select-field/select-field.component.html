@@ -106,6 +106,9 @@
           [disabled]="item.disabled || loading$.value"
         >
           <div [innerHTML]="item.label | translate"></div>
+          @if (item.color) {
+            <span class="color-circle" [style.background-color]="item.color">pj</span>
+          }
         </mat-option>
       }
     </mat-select>

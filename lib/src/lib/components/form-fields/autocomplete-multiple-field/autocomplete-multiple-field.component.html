@@ -35,6 +35,9 @@
       @for (option of filteredOptions | async; track option) {
         <mat-option [value]="option?.value" [disabled]="option?.disabled">
           {{ option.label | translate }}
+          @if (option.color) {
+            <span class="color-circle" [style.background-color]="option.color"></span>
+          }
         </mat-option>
       }
     </mat-autocomplete>

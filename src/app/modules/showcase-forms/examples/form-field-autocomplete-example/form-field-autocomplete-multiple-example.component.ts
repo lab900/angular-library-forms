@@ -17,10 +17,10 @@ import { JsonPipe } from '@angular/common';
 })
 export class FormFieldAutocompleteMultipleExampleComponent {
   public options: ValueLabel[] = [
-    { name: 'Mary' },
+    { name: 'casy', label: 'Mary', color: 'red' },
     { name: 'Shelley' },
-    { name: 'Igor' },
-  ].map((value) => ({ value, label: value.name }));
+    { name: 'Igor', color: 'blue' },
+  ].map((value) => ({ value, label: value.name, color: value.color }));
 
   public formSchema: Lab900FormConfig = {
     fields: [
@@ -30,7 +30,8 @@ export class FormFieldAutocompleteMultipleExampleComponent {
         editType: EditType.AutocompleteMultiple,
         options: {
           autocompleteOptions: (value: string) => of(this.filter(value)),
-          displayInputFn: (user: { name: string }) => user?.name,
+          displayInputFn: (user: { name: string; color: string }) =>
+            `${user?.name}`,
         },
       },
     ],

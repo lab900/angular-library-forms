@@ -21,14 +21,14 @@ export class FormFieldAutocompleteExampleComponent {
   public formContainer: Lab900Form<any>;
 
   public options: ValueLabel[] = [
-    { name: 'Mary' },
-    { name: 'Shelley' },
-    { name: 'Igor' },
+    { name: 'John', color: 'red' },
+    { name: 'Shelley', color: 'green' },
+    { name: 'Igor', color: 'blue' },
   ].map((value) => {
     const image =
       'https://firebasestorage.googleapis.com/v0/b/lab900-website-production.appspot.com/o/public%2Fproject-images%2Fyou%2Fyou-mockup.svg?alt=media';
-    const label = `<div class="user-option"><img width="20" height="20" src="${image}"> ${value.name}</div>`;
-    return { value, label };
+    const label = `<div class="user-option"><img width="20" height="20" src="${image}"> ${value.name} <span class="color-circle" style="background-color:${value.color}"></span></div>`;
+    return { value, label, color: value.color };
   });
 
   public formSchema: Lab900FormConfig = {

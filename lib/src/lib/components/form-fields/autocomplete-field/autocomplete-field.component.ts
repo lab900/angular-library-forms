@@ -25,6 +25,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
   selector: 'lab900-autocomplete-field',
   templateUrl: './autocomplete-field.component.html',
+  styleUrls: ['./autocomplete-field.component.scss'],
   standalone: true,
   imports: [
     MatFormFieldModule,
