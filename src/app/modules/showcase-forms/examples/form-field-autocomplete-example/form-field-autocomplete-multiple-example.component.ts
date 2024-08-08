@@ -17,7 +17,7 @@ import { JsonPipe } from '@angular/common';
 })
 export class FormFieldAutocompleteMultipleExampleComponent {
   public options: ValueLabel[] = [
-    { name: 'casy', label: 'Mary', color: 'red' },
+    { name: 'Mary', color: 'red' },
     { name: 'Shelley' },
     { name: 'Igor', color: 'blue' },
   ].map((value) => ({ value, label: value.name, color: value.color }));

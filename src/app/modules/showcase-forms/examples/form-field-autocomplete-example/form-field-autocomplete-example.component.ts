@@ -21,8 +21,8 @@ export class FormFieldAutocompleteExampleComponent {
   public formContainer: Lab900Form<any>;
 
   public options: ValueLabel[] = [
-    { name: 'John', color: 'red' },
-    { name: 'Shelley', color: 'green' },
+    { name: 'Mary', color: 'red' },
+    { name: 'Shelley' },
     { name: 'Igor', color: 'blue' },
   ].map((value) => {
     const image =
