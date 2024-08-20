@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, inject } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldInput } from './input-field.model';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
 import { AutofocusDirective } from '../../../directives/auto-focus.directive';
-import { NgxMaskDirective } from 'ngx-mask';
+import { NgxMaskDirective, NgxMaskService } from 'ngx-mask';
 import { IconComponent } from '@lab900/ui';
 
 @Component({
@@ -27,21 +27,22 @@ import { IconComponent } from '@lab900/ui';
   ],
 })
 export class InputFieldComponent extends FormComponent<FormFieldInput> {
+  protected readonly defaultSpecialCharacters = inject(NgxMaskService).specialCharacters;
+
   @HostBinding('class')
   public classList = `lab900-form-field`;
 
   public get showLengthIndicator(): boolean {
-    return (
-      !!this.setting?.formField?.showLengthIndicator ||
-      !!this.options?.showLengthIndicator
-    );
+    return !!this.setting?.formField?.showLengthIndicator || !!this.options?.showLengthIndicator;
   }
+
   public get suffix(): string {
     if (typeof this.options?.suffix === 'function') {
       return this.options.suffix(this.group.value);
     }
     return this.options?.suffix;
   }
+
   public get prefix(): string {
     if (typeof this.options?.prefix === 'function') {
       return this.options.prefix(this.group.value);

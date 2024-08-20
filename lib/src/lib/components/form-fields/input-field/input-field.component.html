@@ -8,7 +8,7 @@
     @if (schema.title) {
       <mat-label>{{ schema.title | translate }}</mat-label>
     }
-    @if (options?.type === "number") {
+    @if (options?.type === 'number') {
       <input
         matInput
         [type]="options?.type || 'text'"
@@ -22,7 +22,7 @@
         [style]="options?.style || ''"
       />
     }
-    @if (options?.type !== "number") {
+    @if (options?.type !== 'number') {
       <input
         matInput
         [type]="options?.type || 'text'"
@@ -34,8 +34,12 @@
         [mask]="options?.fieldMask?.mask"
         [prefix]="(options?.fieldMask?.prefix ?? setting?.fieldMask?.prefix) || ''"
         [suffix]="(options?.fieldMask?.suffix ?? setting?.fieldMask?.suffix) || ''"
-        [placeHolderCharacter]="options?.fieldMask?.placeHolderCharacter ?? setting?.fieldMask?.placeHolderCharacter ?? ''"
-        [dropSpecialCharacters]="options?.fieldMask?.dropSpecialCharacters ?? setting?.fieldMask?.dropSpecialCharacters ?? true"
+        [placeHolderCharacter]="
+          options?.fieldMask?.placeHolderCharacter ?? setting?.fieldMask?.placeHolderCharacter ?? ''
+        "
+        [dropSpecialCharacters]="
+          options?.fieldMask?.dropSpecialCharacters ?? setting?.fieldMask?.dropSpecialCharacters ?? true
+        "
         [allowNegativeNumbers]="options?.fieldMask?.allowNegativeNumbers ?? setting?.fieldMask?.allowNegativeNumbers"
         [showMaskTyped]="options?.fieldMask?.showMaskTyped ?? setting?.fieldMask?.showMaskTyped"
         [decimalMarker]="options?.fieldMask?.decimalMarker ?? setting?.fieldMask?.decimalMarker"
@@ -43,16 +47,18 @@
         [patterns]="options?.fieldMask?.patterns ?? setting?.fieldMask?.patterns"
         [showTemplate]="options?.fieldMask?.showTemplate ?? setting?.fieldMask?.showTemplate"
         [shownMaskExpression]="options?.fieldMask?.shownMaskExpression ?? setting?.fieldMask?.shownMaskExpression"
-        [specialCharacters]="options?.fieldMask?.specialCharacters ?? setting?.fieldMask?.specialCharacters"
+        [specialCharacters]="
+          options?.fieldMask?.specialCharacters ?? setting?.fieldMask?.specialCharacters ?? defaultSpecialCharacters
+        "
         lab900InputAutofocus
         [autofocus]="options?.autofocus"
         [style]="options?.style || ''"
       />
     }
-    @if (schema?.icon?.position === "left") {
+    @if (schema?.icon?.position === 'left') {
       <lab900-icon [icon]="schema.icon" matTextPrefix />
     }
-    @if (schema?.icon?.position === "right") {
+    @if (schema?.icon?.position === 'right') {
       <lab900-icon [icon]="schema.icon" matTextSuffix />
     }
     @if (suffix) {

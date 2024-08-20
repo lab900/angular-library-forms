@@ -1,17 +1,25 @@
 # Changelog
 
+## 18.0.4
+
+- Fix masking issues
+
 ## 18.0.3
 - Fix issues with MultiLang inputs
 
 ## 18.0.0
 
 - Angular 18 update
+- 
+## 17.0.4
+
+- Fix masking issues
 
 ## 17.0.1
 
 - Fix disabled state of SlideToggle component
 - Configuration is now visible in examples
-- Prop selectedDisplayFn error is ajusted
+- Prop selectedDisplayFn error is adjusted
 
 ### Breaking changes
 
