@@ -93,11 +93,7 @@ export class FormFieldInputsExampleComponent {
             passwordHiddenIcon: { name: 'visibility' },
           },
         },
-        validators: [
-          Validators.pattern(
-            /^(?=\D*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z]).{12,}$/,
-          ),
-        ],
+        validators: [Validators.pattern(/^(?=\D*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z]).{12,}$/)],
         errorMessages: {
           pattern: 'Does not match pattern',
         },
@@ -120,7 +116,7 @@ export class FormFieldInputsExampleComponent {
         editType: EditType.Input,
         options: {
           placeholder: 'ABC(UJZ)-000000/0',
-          pattern: new RegExp('[a-zA-Z]{3}[ujzUJZ]{1}\\-[0-9]{6}\\/[0-9]{1}'),
+          pattern: new RegExp('[a-zA-Z]{4}-[0-9]{6}/[0-9]'),
           fieldMask: {
             mask: 'SSSS-000000/0',
             dropSpecialCharacters: false,

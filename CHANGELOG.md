@@ -1,5 +1,9 @@
 # Changelog
 
+## 17.0.4
+
+- Fix masking issues
+
 ## 17.0.1
 
 - Fix disabled state of SlideToggle component
