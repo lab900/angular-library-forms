@@ -45,7 +45,7 @@
     }
     @if (!valid && !fieldIsReadonly) {
       <mat-error>
-        <span [innerHTML]="getErrorMessage() | async"></span>
+        <span [innerHTML]="errorMessage()"></span>
       </mat-error>
     }
   </mat-form-field>

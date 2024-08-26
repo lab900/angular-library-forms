@@ -1,55 +1,71 @@
-import {
-  AbstractControl,
-  UntypedFormGroup,
-  ValidationErrors,
-} from '@angular/forms';
-import {
-  AfterContentInit,
-  AfterViewInit,
-  ChangeDetectorRef,
-  computed,
-  Directive,
-  inject,
-  input,
-  Input,
-  OnDestroy,
-} from '@angular/core';
+import { AbstractControl, UntypedFormGroup, ValidationErrors } from '@angular/forms';
+import { ChangeDetectorRef, computed, Directive, effect, inject, input, Input, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable, switchMap } from 'rxjs';
 import { FieldConditions } from '../models/IFieldConditions';
 import { FormFieldUtils } from '../utils/form-field.utils';
 import { SubscriptionBasedDirective } from '../directives/subscription-based.directive';
 import { Lab900FormField } from '../models/lab900-form-field.type';
 import { ValueLabel } from '../models/form-field-base';
 import { Lab900FormBuilderService } from '../services/form-builder.service';
-import {
-  LAB900_FORM_MODULE_SETTINGS,
-  Lab900FormModuleSettings,
-} from '../models/Lab900FormModuleSettings';
+import { LAB900_FORM_MODULE_SETTINGS, Lab900FormModuleSettings } from '../models/Lab900FormModuleSettings';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 
 @Directive()
 export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   extends SubscriptionBasedDirective
-  implements AfterViewInit, OnDestroy, AfterContentInit
+  implements OnDestroy
 {
-  public readonly setting: Lab900FormModuleSettings = inject(
-    LAB900_FORM_MODULE_SETTINGS,
-  );
+  public readonly setting: Lab900FormModuleSettings = inject(LAB900_FORM_MODULE_SETTINGS);
   protected readonly translateService = inject(TranslateService);
   protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   @Input()
   public fieldAttribute?: string;
 
-  @Input()
-  public group: UntypedFormGroup;
+  public _group = input.required<UntypedFormGroup>({ alias: 'group' });
+  public get group(): UntypedFormGroup {
+    return this._group();
+  }
 
   public readonly _schema = input.required<S>({ alias: 'schema' });
-  public readonly _options = computed<S['options']>(
-    () => this._schema().options,
+  public readonly _options = computed<S['options']>(() => this._schema().options);
+  public readonly label = computed<string | undefined>(() => this._schema().title);
+  public readonly readonlyLabel = computed<string | undefined>(
+    () => this._schema().options?.readonlyLabel ?? this.label(),
   );
-  public readonly _label = computed<string | undefined>(
-    () => this._schema().title,
+
+  public readonly errorMessage = toSignal<string>(
+    toObservable(this._group).pipe(
+      switchMap(() => {
+        const field = this.fieldControl;
+        let errors: ValidationErrors = field.errors;
+        let message = this.translateService.stream('forms.error.generic');
+        if (field instanceof UntypedFormGroup && field.controls) {
+          errors = field.errors ?? {};
+          for (const controlsKey in field.controls) {
+            if ('controlsKey' in field.controls) {
+              errors = { ...errors, ...field.get(controlsKey).errors };
+            }
+          }
+        }
+
+        if (!errors) {
+          return EMPTY;
+        }
+        const errorMessages = this._schema().errorMessages;
+        Object.keys(errors).forEach((key: string) => {
+          if (field.hasError(key)) {
+            if (errorMessages && Object.keys(errorMessages).includes(key)) {
+              message = this.translateService.stream(errorMessages[key], field.getError(key));
+            } else {
+              message = this.getDefaultErrorMessage(key, field.getError(key));
+            }
+          }
+        });
+        return message;
+      }),
+    ),
   );
 
   public get options(): S['options'] {
@@ -99,61 +115,26 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     return this.options?.placeholder;
   }
 
-  public getErrorMessage = (
-    group: UntypedFormGroup = this.group,
-  ): Observable<string> => {
-    const field = group.get(String(this.fieldAttribute));
-    let errors: ValidationErrors = field.errors;
-    let message = this.translateService.get('forms.error.generic');
-    if (field instanceof UntypedFormGroup && field.controls) {
-      errors = field.errors ?? {};
-      for (const controlsKey in field.controls) {
-        if ('controlsKey' in field.controls) {
-          errors = { ...errors, ...field.get(controlsKey).errors };
-        }
-      }
-    }
-
-    if (!errors) {
-      return;
-    }
-
-    Object.keys(errors).forEach((key: string) => {
-      if (field.hasError(key)) {
-        if (
-          this.schema.errorMessages &&
-          Object.keys(this.schema.errorMessages).includes(key)
-        ) {
-          message = this.translateService.get(
-            this.schema.errorMessages[key],
-            field.getError(key),
-          );
-        } else {
-          message = this.getDefaultErrorMessage(key, field.getError(key));
-        }
+  public constructor() {
+    super();
+    effect(() => {
+      const group = this._group();
+      const options = this._options();
+      if (group) {
+        this.setFieldProperties();
+        group.valueChanges.subscribe(() => {
+          this.setFieldProperties();
+          if (options?.onChangeFn) {
+            options.onChangeFn(group.value, this.fieldControl);
+          }
+        });
       }
     });
-    return message;
-  };
-
-  public ngAfterContentInit(): void {
-    if (this.group) {
-      this.setFieldProperties();
-    }
-  }
-
-  public ngAfterViewInit(): void {
-    if (this.group) {
-      this.addSubscription(this.group.valueChanges, (value) => {
-        this.setFieldProperties();
-        if (this.schema?.options?.onChangeFn) {
-          this.schema?.options?.onChangeFn(value, this.fieldControl);
-        }
-      });
-      if (this.schema?.conditions?.length) {
+    effect(() => {
+      if (this._schema().conditions?.length) {
         this.createConditions();
       }
-    }
+    });
   }
 
   public onConditionalChange(
@@ -167,95 +148,51 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     // Override in child component
   }
 
-  private getDefaultErrorMessage(
-    key: string,
-    interpolateParams: object = this.schema.options,
-  ): Observable<string> {
+  private getDefaultErrorMessage(key: string, interpolateParams: object = this.schema.options): Observable<string> {
     switch (key) {
       case 'required':
-        return this.translateService.get('forms.error.required');
+        return this.translateService.stream('forms.error.required');
       case 'minlength':
-        return this.translateService.get(
-          'forms.error.minlength',
-          interpolateParams,
-        );
+        return this.translateService.stream('forms.error.minlength', interpolateParams);
       case 'maxlength':
-        return this.translateService.get(
-          'forms.error.maxlength',
-          interpolateParams,
-        );
+        return this.translateService.stream('forms.error.maxlength', interpolateParams);
       case 'min':
-        return this.translateService.get('forms.error.min', interpolateParams);
+        return this.translateService.stream('forms.error.min', interpolateParams);
       case 'max':
-        return this.translateService.get('forms.error.max', interpolateParams);
+        return this.translateService.stream('forms.error.max', interpolateParams);
       case 'pattern':
-        return this.translateService.get(
-          'forms.error.pattern',
-          interpolateParams,
-        );
+        return this.translateService.stream('forms.error.pattern', interpolateParams);
       case 'requireMatch':
-        return this.translateService.get(
-          'forms.error.requireMatch',
-          interpolateParams,
-        );
+        return this.translateService.stream('forms.error.requireMatch', interpolateParams);
       case 'toManyDecimalSeparators':
-        return this.translateService.get(
-          'forms.error.toManyDecimalSeparators',
-          interpolateParams,
-        );
+        return this.translateService.stream('forms.error.toManyDecimalSeparators', interpolateParams);
       case 'invalidNumber':
-        return this.translateService.get(
-          'forms.error.invalidNumber',
-          interpolateParams,
-        );
+        return this.translateService.stream('forms.error.invalidNumber', interpolateParams);
       case 'noSearchMatches':
-        return this.translateService.get(
-          'forms.error.noSearchMatches',
-          interpolateParams,
-        );
+        return this.translateService.stream('forms.error.noSearchMatches', interpolateParams);
       default:
-        return this.translateService.get(
-          'forms.error.generic',
-          interpolateParams,
-        );
+        return this.translateService.stream('forms.error.generic', interpolateParams);
     }
   }
 
   public hide(): void {
-    this.fieldIsHidden = FormFieldUtils.isHidden(
-      this.schema?.options,
-      this.group,
-    );
+    this.fieldIsHidden = FormFieldUtils.isHidden(this.schema?.options, this.group);
     this.changeDetectorRef.markForCheck();
   }
 
   private isReadonly(): void {
-    this.fieldIsReadonly = FormFieldUtils.isReadOnly(
-      this.schema?.options,
-      this.group.value,
-      this.readonly,
-    );
+    this.fieldIsReadonly = FormFieldUtils.isReadOnly(this.schema?.options, this.group.value, this.readonly);
     this.changeDetectorRef.markForCheck();
   }
 
   private isRequired(): void {
-    const isRequired =
-      FormFieldUtils.isRequired(
-        this.fieldIsReadonly,
-        this.schema,
-        this.group.value,
-      ) ?? false;
+    const isRequired = FormFieldUtils.isRequired(this.fieldIsReadonly, this.schema, this.group.value) ?? false;
     if (this.fieldIsRequired != isRequired) {
       this.fieldIsRequired = isRequired;
       setTimeout(() => {
         this.group
           ?.get(this.fieldAttribute)
-          ?.setValidators(
-            Lab900FormBuilderService.addValidators(
-              this.schema,
-              this.group.value,
-            ),
-          );
+          ?.setValidators(Lab900FormBuilderService.addValidators(this.schema, this.group.value));
         this.changeDetectorRef.markForCheck();
       });
     }
@@ -272,13 +209,11 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
       .filter((c) => c.dependOn)
       .map((c) => new FieldConditions(this, c))
       .forEach((conditions: FieldConditions) => {
-        const subs = conditions.start(
-          (dependOn: string, value: any, firstRun: boolean) => {
-            if (this.onConditionalChange) {
-              this.onConditionalChange(dependOn, value, firstRun);
-            }
-          },
-        );
+        const subs = conditions.start((dependOn: string, value: any, firstRun: boolean) => {
+          if (this.onConditionalChange) {
+            this.onConditionalChange(dependOn, value, firstRun);
+          }
+        });
         if (subs?.length) {
           this.subscriptions.concat(subs);
         }

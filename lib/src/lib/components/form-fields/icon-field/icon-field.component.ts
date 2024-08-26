@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldIcon } from './icon-field.model';
 import { IconComponent } from '@lab900/ui';
@@ -9,8 +9,9 @@ import { IconComponent } from '@lab900/ui';
   styleUrls: ['./icon-field.component.scss'],
   standalone: true,
   imports: [IconComponent],
+  host: { class: 'lab900-form-field' },
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconFieldComponent extends FormComponent<FormFieldIcon> {
-  @HostBinding('class')
-  public classList = 'lab900-form-field';
+  protected readonly icon = computed(() => this._options()?.icon);
 }

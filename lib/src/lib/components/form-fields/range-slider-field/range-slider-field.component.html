@@ -1,21 +1,21 @@
 @if (!fieldIsHidden) {
   <div [formGroup]="group" class="lab900-range-slider-field" id="lab900-range-slider-field-{{ fieldAttribute }}">
-    @if (schema.title) {
-      <span class="lab900-form-field-label" translate>{{ schema.title }}</span>
+    @if (label()) {
+      <span class="lab900-form-field-label">{{ label() | translate }}</span>
     }
     <lab900-mat-range-slider-field
       [formControlName]="fieldAttribute"
-      [fromLabel]="options?.fromLabel || 'From'"
-      [toLabel]="options?.toLabel || 'To'"
-      [min]="options?.min"
-      [max]="options?.max"
-      [steps]="options?.steps"
-      [format]="options?.format"
+      [fromLabel]="fromLabel()"
+      [toLabel]="toLabel()"
+      [min]="min()"
+      [max]="max()"
+      [steps]="steps()"
+      [format]="format()"
       [required]="fieldIsRequired"
     />
-    @if (group.controls[fieldAttribute].touched && !valid && !fieldIsReadonly) {
+    @if (touched && !valid && !fieldIsReadonly) {
       <div class="radio-buttons-field__error">
-        <mat-error>{{ getErrorMessage() | async }}</mat-error>
+        <mat-error>{{ errorMessage() }}</mat-error>
       </div>
     }
   </div>

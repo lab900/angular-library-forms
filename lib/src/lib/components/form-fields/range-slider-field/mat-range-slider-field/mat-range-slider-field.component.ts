@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewEncapsulation } from '@angular/core';
+import { Component, input, Input, ViewEncapsulation } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BaseControlValueAccessorDirective } from '../../../../models/forms/BaseControlValueAccessor';
 import { MatSliderModule } from '@angular/material/slider';
@@ -20,38 +20,21 @@ import { MatInputModule } from '@angular/material/input';
   standalone: true,
   imports: [MatSliderModule, MatFormFieldModule, MatInputModule],
 })
-export class MatRangeSliderFieldComponent extends BaseControlValueAccessorDirective<
-  number[]
-> {
+export class MatRangeSliderFieldComponent extends BaseControlValueAccessorDirective<number[]> {
   private latestUnencodedValues: number[];
 
   @Input()
   public formControlName: string;
 
-  @Input()
-  public min = 0;
-
-  @Input()
-  public fromLabel = 'From';
-
-  @Input()
-  public toLabel = 'To';
-
-  @Input()
-  public steps?: number;
-
-  @Input()
-  public max = 100;
-
-  @Input()
-  public format = 'DEFAULT';
-
-  public constructor(private el: ElementRef) {
-    super();
-  }
+  public readonly min = input<number>(0);
+  public readonly fromLabel = input<string>('From');
+  public readonly toLabel = input<string>('To');
+  public readonly steps = input<number | undefined>(undefined);
+  public readonly max = input<number>(100);
+  public readonly format = input<string>('DEFAULT');
 
   public writeValue(value: any): void {
-    this.value = value ? value : [this.min, this.max];
+    this.value = value ? value : [this.min(), this.max()];
     this.latestUnencodedValues = this.value;
   }
 
@@ -63,24 +46,18 @@ export class MatRangeSliderFieldComponent extends BaseControlValueAccessorDirect
     }
   }
 
-  public updateFromValue(event: InputEvent): void {
+  public updateFromValue(event: Event): void {
     const newValue = this.parseValue((event.target as any).value);
-    this.updateSliderInstanceValues(
-      0,
-      newValue >= this.min ? newValue : this.min,
-    );
+    this.updateSliderInstanceValues(0, newValue >= this.min() ? newValue : this.min());
   }
 
-  public updateToValue(event: InputEvent): void {
+  public updateToValue(event: Event): void {
     const newValue = this.parseValue((event.target as any).value);
-    this.updateSliderInstanceValues(
-      1,
-      newValue <= this.max ? newValue : this.max,
-    );
+    this.updateSliderInstanceValues(1, newValue <= this.max() ? newValue : this.max());
   }
 
   public parseValue(value: string): number {
-    switch (this.format) {
+    switch (this.format()) {
       case 'K-M':
         value = `${value}`.toLowerCase().replace('k', '000');
         value = value.replace('m', '000000');
@@ -90,7 +67,7 @@ export class MatRangeSliderFieldComponent extends BaseControlValueAccessorDirect
   }
 
   public formatValue(value: number): string {
-    switch (this.format) {
+    switch (this.format()) {
       case 'K-M':
         if (Math.abs(value) > 999999) {
           return Math.sign(value) * (Math.abs(value) / 1000000) + ' m';

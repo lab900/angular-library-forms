@@ -2,7 +2,6 @@ import { Component, HostBinding, inject } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldInput } from './input-field.model';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AsyncPipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
@@ -23,7 +22,6 @@ import { IconComponent } from '@lab900/ui';
     AutofocusDirective,
     NgxMaskDirective,
     IconComponent,
-    AsyncPipe,
   ],
 })
 export class InputFieldComponent extends FormComponent<FormFieldInput> {
