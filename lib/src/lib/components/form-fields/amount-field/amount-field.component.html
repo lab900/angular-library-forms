@@ -5,8 +5,8 @@
     [class.spanFix]="options?.suffix || options?.prefix"
     id="lab900-input-field-{{ fieldAttribute }}"
   >
-    @if (schema.title) {
-      <mat-label>{{ schema.title | translate }}</mat-label>
+    @if (label()) {
+      <mat-label>{{ label() | translate }}</mat-label>
     }
     <input
       matInput
@@ -16,7 +16,7 @@
       [formControlName]="fieldAttribute"
       [required]="fieldIsRequired"
       [readonly]="fieldIsReadonly"
-      [ngClass]="{ readonly: fieldIsReadonly }"
+      [class.readonly]="fieldIsReadonly"
       lab900InputAutofocus
       lab900AmountInput
       [autofocus]="options?.autofocus"
@@ -24,10 +24,10 @@
       [maxDecimals]="maxDecimals"
       [minDecimals]="minDecimals"
     />
-    @if (schema?.icon?.position === "left") {
+    @if (schema?.icon?.position === 'left') {
       <lab900-icon [icon]="schema.icon" matPrefix class="input-field__icon-left"></lab900-icon>
     }
-    @if (schema?.icon?.position === "right") {
+    @if (schema?.icon?.position === 'right') {
       <lab900-icon [icon]="schema.icon" matSuffix></lab900-icon>
     }
     @if (suffix) {

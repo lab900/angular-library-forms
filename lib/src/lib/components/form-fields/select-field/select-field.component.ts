@@ -84,18 +84,20 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
     return clearOptions?.enabled;
   });
 
-  public readOnlyDisplay = computed(() => {
+  public readonly readOnlyDisplay = computed(() => {
+    // if no value is set, display a dash
     if (!this.hasValue()) {
       return '-';
     }
+    // if a custom display function is set, use that
     const readonlyDisplay = this._options()?.readonlyDisplay;
     if (readonlyDisplay) {
       return this.translateService.instant(readonlyDisplay(this.fieldValue()));
     }
+    // otherwise wait until the options are loaded and display the selected options labels
     if (this.loading()) {
       return this.translateService.instant('form.field.loading');
     }
-
     const selectedOptions = this.getOptionsMatchingTheValue();
     if (selectedOptions) {
       return selectedOptions.map((o) => this.translateService.instant(o.label)).join(', ');

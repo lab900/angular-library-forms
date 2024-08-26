@@ -132,6 +132,7 @@ export class FormFieldSelectAdvancedExampleComponent {
                 enabled: true,
               },
               selectAll: { enabled: true },
+              readonly: true,
               readonlyDisplay: (books: Book[]) =>
                 books
                   .map((book) => book.title)

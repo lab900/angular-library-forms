@@ -1,7 +1,11 @@
 @if (!fieldIsHidden) {
-  <mat-form-field [formGroup]="group" class="lab900-autocomplete-multi-field" id="lab900-autocomplete-multi-field-{{ fieldAttribute }}">
-    @if (schema.title) {
-      <mat-label translate>{{ schema.title }}</mat-label>
+  <mat-form-field
+    [formGroup]="group"
+    class="lab900-autocomplete-multi-field"
+    id="lab900-autocomplete-multi-field-{{ fieldAttribute }}"
+  >
+    @if (label()) {
+      <mat-label translate>{{ label() }}</mat-label>
     }
     @if (hint && !fieldIsReadonly && !(schema.options.hint.hideHintOnValidValue && input.value)) {
       <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
