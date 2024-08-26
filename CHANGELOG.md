@@ -1,5 +1,9 @@
 # Changelog
 
+## 18.1.0
+
+- More signals to solve change detection issues.
+
 ## 18.0.4
 
 - Fix masking issues
