@@ -106,12 +106,6 @@
     @if (readonlyLabel(); as label) {
       <span class="lab900-readonly-field__label">{{ label | translate }}</span>
     }
-    @if (!loading() || !hasValue()) {
-      <div [innerHTML]="readOnlyDisplay()"></div>
-    } @else if (loading() && hasValue()) {
-      <div>
-        {{ 'form.field.loading' | translate }}
-      </div>
-    }
+    <div [innerHTML]="readOnlyDisplay()"></div>
   </div>
 }

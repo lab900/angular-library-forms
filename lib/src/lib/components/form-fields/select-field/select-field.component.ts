@@ -84,22 +84,19 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
     return clearOptions?.enabled;
   });
 
-  private readonly selectedOptions = computed<ValueLabel<T>[] | null>(() => {
-    const selectOptions = this.selectOptions();
-    const value = this.fieldValue() as T;
-    if (selectOptions.length && this.hasValue()) {
-      return coerceArray(value).map((v) => selectOptions.find((opt) => this.compareFn()(opt.value, v)));
-    }
-    return null;
-  });
-
   public readOnlyDisplay = computed(() => {
+    if (!this.hasValue()) {
+      return '-';
+    }
     const readonlyDisplay = this._options()?.readonlyDisplay;
     if (readonlyDisplay) {
       return this.translateService.instant(readonlyDisplay(this.fieldValue()));
     }
+    if (this.loading()) {
+      return this.translateService.instant('form.field.loading');
+    }
 
-    const selectedOptions = this.selectedOptions();
+    const selectedOptions = this.getOptionsMatchingTheValue();
     if (selectedOptions) {
       return selectedOptions.map((o) => this.translateService.instant(o.label)).join(', ');
     } else {
@@ -108,7 +105,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
   });
 
   private readonly _select = viewChild(MatSelect);
-  public get select(): MatSelect {
+  public get select(): MatSelect | undefined {
     return this._select();
   }
 
@@ -129,9 +126,6 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
 
   public constructor() {
     super();
-    effect(() => {
-      console.log('fieldValue', this.fieldValue());
-    });
     effect(() => {
       const select = this._select();
       if (select && select?.multiple) {
@@ -372,7 +366,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
       this.fetchedOnFocus.set(true);
       // fix for the select not opening when the options are fetched on focus
       setTimeout(() => {
-        if ((this.select as any)._focused && !(this.select as any)._panelOpen) {
+        if ((this.select as any)?._focused && !(this.select as any)?._panelOpen) {
           this.select.open();
         }
       });

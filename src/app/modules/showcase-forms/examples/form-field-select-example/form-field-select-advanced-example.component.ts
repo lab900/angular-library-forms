@@ -79,6 +79,7 @@ export class FormFieldSelectAdvancedExampleComponent {
             title: 'Search a book',
             editType: EditType.Select,
             options: {
+              readonly: true,
               compareWith: compare,
               selectOptions: (filter, fieldControl, schema) =>
                 this.getSelectOptions({
@@ -205,7 +206,7 @@ export class FormFieldSelectAdvancedExampleComponent {
         books2: tolkienBook,
         books3: [tolkienBook, tolkienBook2],
       });
-    }, 100);
+    }, 500);
   }
 
   public getSelectOptions({
