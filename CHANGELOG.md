@@ -1,5 +1,9 @@
 # Changelog
 
+## 18.0.5
+
+- Fix select reopening with fetch on focus option
+
 ## 18.0.4
 
 - Fix masking issues

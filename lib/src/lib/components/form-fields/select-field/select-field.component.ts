@@ -1,41 +1,11 @@
-import {
-  Component,
-  HostBinding,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, HostBinding, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import {
-  BehaviorSubject,
-  isObservable,
-  Observable,
-  of,
-  ReplaySubject,
-  Subject,
-  Subscription,
-} from 'rxjs';
-import {
-  catchError,
-  distinctUntilChanged,
-  filter,
-  map,
-  shareReplay,
-  switchMap,
-  take,
-  tap,
-} from 'rxjs/operators';
-import {
-  FormFieldSelect,
-  FormFieldSelectOptionsFilter,
-  FormFieldSelectOptionsFn,
-} from './field-select.model';
+import { BehaviorSubject, isObservable, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { catchError, distinctUntilChanged, filter, map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
+import { FormFieldSelect, FormFieldSelectOptionsFilter, FormFieldSelectOptionsFn } from './field-select.model';
 import { IFieldConditions } from '../../../models/IFieldConditions';
 import { ValueLabel } from '../../../models/form-field-base';
-import {
-  MatPseudoCheckbox,
-  MatPseudoCheckboxState,
-} from '@angular/material/core';
+import { MatPseudoCheckbox, MatPseudoCheckboxState } from '@angular/material/core';
 import { coerceArray } from '@angular/cdk/coercion';
 import { isDifferent } from '@lab900/ui';
 import { debounceTimeAfterFirst } from '../../../utils/helpers';
@@ -82,10 +52,7 @@ import { MatOption } from '@angular/material/autocomplete';
     MatIcon,
   ],
 })
-export class SelectFieldComponent<T>
-  extends FormComponent<FormFieldSelect<T>>
-  implements OnInit, OnDestroy
-{
+export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> implements OnInit, OnDestroy {
   public readonly selectOptions$$ = new BehaviorSubject<ValueLabel<T>[]>([]);
 
   public set selectOptions(value: ValueLabel<T>[]) {
@@ -99,9 +66,7 @@ export class SelectFieldComponent<T>
   private _select: MatSelect;
 
   private selectAllSub?: Subscription;
-  public readonly selectAllState$ = new BehaviorSubject<MatPseudoCheckboxState>(
-    'unchecked',
-  );
+  public readonly selectAllState$ = new BehaviorSubject<MatPseudoCheckboxState>('unchecked');
 
   @ViewChild('select')
   public set select(select: MatSelect) {
@@ -110,8 +75,7 @@ export class SelectFieldComponent<T>
       this.selectAllSub?.unsubscribe();
       if (select?.multiple) {
         this.selectAllSub = select.selectionChange.subscribe((selection) => {
-          const allSelected =
-            this.selectOptions?.length === selection?.value?.length;
+          const allSelected = this.selectOptions?.length === selection?.value?.length;
           this.selectAllState$.next(allSelected ? 'checked' : 'unchecked');
         });
       }
@@ -134,18 +98,13 @@ export class SelectFieldComponent<T>
     condition: IFieldConditions;
     value: string;
   }>();
-  private readonly optionsFn$ = new ReplaySubject<
-    FormFieldSelectOptionsFn<T>
-  >();
-  public readonly optionsFilter$ =
-    new BehaviorSubject<FormFieldSelectOptionsFilter | null>(null);
+  private readonly optionsFn$ = new ReplaySubject<FormFieldSelectOptionsFn<T>>();
+  public readonly optionsFilter$ = new BehaviorSubject<FormFieldSelectOptionsFilter | null>(null);
 
-  public readonly searchQuery$: Observable<string> = this.optionsFilter$
-    .asObservable()
-    .pipe(
-      map((filter) => filter?.searchQuery ?? ''),
-      shareReplay(1),
-    );
+  public readonly searchQuery$: Observable<string> = this.optionsFilter$.asObservable().pipe(
+    map((filter) => filter?.searchQuery ?? ''),
+    shareReplay(1),
+  );
 
   public readonly loading$ = new BehaviorSubject<boolean>(false);
   private readonly fetchedOnFocus$$ = new BehaviorSubject<boolean>(false);
@@ -179,10 +138,7 @@ export class SelectFieldComponent<T>
 
   public ngOnInit(): void {
     // load all options from the start
-    if (
-      typeof this.options?.selectOptions !== 'function' ||
-      !this.options?.fetchOptionsOnFocus
-    ) {
+    if (typeof this.options?.selectOptions !== 'function' || !this.options?.fetchOptionsOnFocus) {
       this.selectOptionsListener();
     }
 
@@ -205,9 +161,7 @@ export class SelectFieldComponent<T>
             debounceTimeAfterFirst(this.options?.search?.debounceTime ?? 300),
             distinctUntilChanged((x: any, y: any) => !isDifferent(x, y)),
             tap(() => this.loading$.next(true)),
-            switchMap((optionsFilter) =>
-              this.handleGetOptions(optionsFn, optionsFilter),
-            ),
+            switchMap((optionsFilter) => this.handleGetOptions(optionsFn, optionsFilter)),
           ),
         ),
       ),
@@ -217,7 +171,6 @@ export class SelectFieldComponent<T>
 
   public onFocus(): void {
     if (this.options?.fetchOptionsOnFocus && !this.fetchedOnFocus$$.value) {
-      this.fetchedOnFocus$$.next(true);
       this.selectOptionsListener();
     }
   }
@@ -226,11 +179,7 @@ export class SelectFieldComponent<T>
    * Reset the search and make sure that the current value is in the select options when the select closes
    */
   public onOpenedChange(open: boolean): void {
-    if (
-      !open &&
-      this.fieldControl?.value &&
-      this.optionsFilter$.value?.searchQuery?.length
-    ) {
+    if (!open && this.fieldControl?.value && this.optionsFilter$.value?.searchQuery?.length) {
       if (!this.valueInOptions()) {
         this.selectOptions = this.addValueToOptions();
       }
@@ -245,24 +194,16 @@ export class SelectFieldComponent<T>
     return !!this.getOptionsMatchingTheValue(options)?.length;
   }
 
-  public getOptionsMatchingTheValue(
-    options = this.selectOptions,
-  ): ValueLabel<T>[] {
+  public getOptionsMatchingTheValue(options = this.selectOptions): ValueLabel<T>[] {
     const value = coerceArray(this.fieldControl.value);
     const compare = this.options?.compareWith || this.defaultCompare;
     return options?.filter((o) => value.some((v) => compare(o.value, v)));
   }
 
-  public onConditionalChange(
-    dependOn: string,
-    value: string,
-    firstRun: boolean,
-  ): void {
+  public onConditionalChange(dependOn: string, value: string, firstRun: boolean): void {
     setTimeout(() => {
       const condition = this.schema.conditions.find((c) =>
-        (Array.isArray(c.dependOn) ? c.dependOn : [c.dependOn]).includes(
-          dependOn,
-        ),
+        (Array.isArray(c.dependOn) ? c.dependOn : [c.dependOn]).includes(dependOn),
       );
       if (condition?.conditionalOptions) {
         if (!firstRun || !value) {
@@ -305,9 +246,7 @@ export class SelectFieldComponent<T>
   // does not work with multi select > use readonlyDisplay in that case
   public getReadOnlyDisplay(): string {
     if (this.options?.readonlyDisplay) {
-      return this.translateService.instant(
-        this.options.readonlyDisplay(this.fieldControl.value) || '-',
-      );
+      return this.translateService.instant(this.options.readonlyDisplay(this.fieldControl.value) || '-');
     }
 
     if (this.selectedOption) {
@@ -389,11 +328,7 @@ export class SelectFieldComponent<T>
     return values$.pipe(
       catchError(() => of([])),
       tap((options: ValueLabel<T>[]) => {
-        if (
-          options?.length === 1 &&
-          !this.fieldControl.value &&
-          this.schema.options?.autoselectOnlyOption
-        ) {
+        if (options?.length === 1 && !this.fieldControl.value && this.schema.options?.autoselectOnlyOption) {
           this.fieldControl.setValue(options[0].value);
         }
       }),
@@ -430,25 +365,21 @@ export class SelectFieldComponent<T>
      * This gives issues if the value is not an object
      * Not to be mistaken with the first addValueToOptions in this method, this is still needed in some cases
      */
-    if (
-      this.fieldControl?.value &&
-      !this.optionsFilter$.value?.searchQuery?.length
-    ) {
+    if (this.fieldControl?.value && !this.optionsFilter$.value?.searchQuery?.length) {
       newOptionsSet = this.addValueToOptions(newOptionsSet);
     }
     this.selectOptions = this.removeDuplicateOptions(newOptionsSet);
     if (this.conditionalItemToSelectWhenExists) {
       const value = coerceArray(this.conditionalItemToSelectWhenExists);
-      const inOptions = this.selectOptions.some((o) =>
-        value.some((v) => compare(o.value, v)),
-      );
+      const inOptions = this.selectOptions.some((o) => value.some((v) => compare(o.value, v)));
       if (inOptions) {
         this.fieldControl.setValue(this.conditionalItemToSelectWhenExists);
       }
     }
 
     this.loading$.next(false);
-    if (this.options?.fetchOptionsOnFocus) {
+    if (this.options?.fetchOptionsOnFocus && !this.fetchedOnFocus$$.value) {
+      this.fetchedOnFocus$$.next(true);
       // fix for the select not opening when the options are fetched on focus
       setTimeout(() => {
         if ((this.select as any)._focused && !(this.select as any)._panelOpen) {
@@ -463,10 +394,7 @@ export class SelectFieldComponent<T>
    */
   private addValueToOptions(options = this.selectOptions): ValueLabel<T>[] {
     let label: string;
-    if (
-      typeof this.options?.selectOptions === 'function' &&
-      !this.options?.displaySelectedOptionFn
-    ) {
+    if (typeof this.options?.selectOptions === 'function' && !this.options?.displaySelectedOptionFn) {
       label = "ERROR: Can't display";
       console.error(
         `Please define a displaySelectedOptionFn to display your currently selected option for the field with attribute ${this.fieldAttribute} since it is not included in the current options`,
@@ -489,10 +417,7 @@ export class SelectFieldComponent<T>
   private removeDuplicateOptions(items: ValueLabel<T>[]): ValueLabel<T>[] {
     if (items?.length) {
       const compare = this.options?.compareWith || this.defaultCompare;
-      return items.filter(
-        (item, idx, arr) =>
-          arr.findIndex(({ value }) => compare(item.value, value)) === idx,
-      );
+      return items.filter((item, idx, arr) => arr.findIndex(({ value }) => compare(item.value, value)) === idx);
     }
     return [...new Set(items)];
   }
@@ -507,18 +432,8 @@ export class SelectFieldComponent<T>
       );
     }
 
-    this.addSubscription(
-      this.conditionalOptionsChange,
-      ({ condition, value }) => {
-        this.updateOptionsFn((f) =>
-          condition?.conditionalOptions(
-            value,
-            this.fieldControl,
-            f,
-            this.schema,
-          ),
-        );
-      },
-    );
+    this.addSubscription(this.conditionalOptionsChange, ({ condition, value }) => {
+      this.updateOptionsFn((f) => condition?.conditionalOptions(value, this.fieldControl, f, this.schema));
+    });
   }
 }
