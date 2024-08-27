@@ -1,5 +1,5 @@
-@if (options?.icon) {
+@if (icon(); as icon) {
   <div class="icon-field mat-form-field-wrapper">
-    <lab900-icon [icon]="options.icon" />
+    <lab900-icon [icon]="icon" />
   </div>
 }

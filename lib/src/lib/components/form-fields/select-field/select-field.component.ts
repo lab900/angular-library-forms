@@ -1,7 +1,7 @@
-import { Component, HostBinding, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, OnInit, signal, viewChild } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { BehaviorSubject, isObservable, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { catchError, distinctUntilChanged, filter, map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
+import { isObservable, Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { catchError, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 import { FormFieldSelect, FormFieldSelectOptionsFilter, FormFieldSelectOptionsFn } from './field-select.model';
 import { IFieldConditions } from '../../../models/IFieldConditions';
 import { ValueLabel } from '../../../models/form-field-base';
@@ -10,7 +10,6 @@ import { coerceArray } from '@angular/cdk/coercion';
 import { isDifferent } from '@lab900/ui';
 import { debounceTimeAfterFirst } from '../../../utils/helpers';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AsyncPipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { SelectInfiniteScrollDirective } from './select-field-infinite-scroll.directive';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
@@ -19,6 +18,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { MatOption } from '@angular/material/autocomplete';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'lab900-select-field',
@@ -45,96 +45,99 @@ import { MatOption } from '@angular/material/autocomplete';
     SelectInfiniteScrollDirective,
     NgxMatSelectSearchModule,
     FormsModule,
-    AsyncPipe,
     MatButton,
     MatPseudoCheckbox,
     MatIconButton,
     MatIcon,
   ],
+  host: {
+    class: 'lab900-form-field',
+  },
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> implements OnInit, OnDestroy {
-  public readonly selectOptions$$ = new BehaviorSubject<ValueLabel<T>[]>([]);
+export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> implements OnInit {
+  public readonly selectOptions = signal<ValueLabel<T>[]>([]);
+  public readonly selectAllState = signal<MatPseudoCheckboxState>('unchecked');
+  public readonly loading = signal<boolean>(false);
+  private readonly fetchedOnFocus = signal<boolean>(false);
+  private readonly fieldValue = signal<unknown>(undefined);
 
-  public set selectOptions(value: ValueLabel<T>[]) {
-    this.selectOptions$$.next(value);
-  }
-
-  public get selectOptions(): ValueLabel<T>[] {
-    return this.selectOptions$$.value;
-  }
-
-  private _select: MatSelect;
-
-  private selectAllSub?: Subscription;
-  public readonly selectAllState$ = new BehaviorSubject<MatPseudoCheckboxState>('unchecked');
-
-  @ViewChild('select')
-  public set select(select: MatSelect) {
-    if (select) {
-      this._select = select;
-      this.selectAllSub?.unsubscribe();
-      if (select?.multiple) {
-        this.selectAllSub = select.selectionChange.subscribe((selection) => {
-          const allSelected = this.selectOptions?.length === selection?.value?.length;
-          this.selectAllState$.next(allSelected ? 'checked' : 'unchecked');
-        });
-      }
+  public readonly multiple = computed(() => !!this._options()?.multiple);
+  public readonly panelWidth = computed(() => this._options()?.panelWidth ?? 'auto');
+  public readonly customerTriggerFn = computed(() => this._options()?.customTriggerFn);
+  public readonly compareFn = computed(() => this._options()?.compareWith || ((o1: T, o2: T): boolean => o1 === o2));
+  public readonly searchOptions = computed(() => this._options()?.search);
+  public readonly infiniteScrollOptions = computed(() => this._options()?.infiniteScroll);
+  public readonly selectAllOptions = computed(() => this._options()?.selectAll);
+  public readonly clearOptions = computed(() => this._options()?.clearFieldButton);
+  public readonly hasValue = computed(() => {
+    const value = this.fieldValue();
+    return !!value && (Array.isArray(value) ? value.length : true);
+  });
+  public readonly showClearButton = computed(() => {
+    const clearOptions = this.clearOptions();
+    if (!this.hasValue()) {
+      return false;
+    } else if (typeof clearOptions?.enabled === 'function') {
+      return clearOptions.enabled(this.group.value);
     }
+    return clearOptions?.enabled;
+  });
+
+  public readonly readOnlyDisplay = computed(() => {
+    // if no value is set, display a dash
+    if (!this.hasValue()) {
+      return '-';
+    }
+    // if a custom display function is set, use that
+    const readonlyDisplay = this._options()?.readonlyDisplay;
+    if (readonlyDisplay) {
+      return this.translateService.instant(readonlyDisplay(this.fieldValue()));
+    }
+    // otherwise wait until the options are loaded and display the selected options labels
+    if (this.loading()) {
+      return this.translateService.instant('form.field.loading');
+    }
+    const selectedOptions = this.getOptionsMatchingTheValue();
+    if (selectedOptions) {
+      return selectedOptions.map((o) => this.translateService.instant(o.label)).join(', ');
+    } else {
+      return '-';
+    }
+  });
+
+  private readonly _select = viewChild(MatSelect);
+  public get select(): MatSelect | undefined {
+    return this._select();
   }
 
-  public get select(): MatSelect {
-    return this._select;
-  }
-
-  @HostBinding('class')
-  public classList = 'lab900-form-field';
   /*
    * When conditional options are used for this select, keep the previously selected item
    * and select it again when the new valuelist is loaded
    */
-  private conditionalItemToSelectWhenExists: T;
+  private readonly conditionalItemToSelectWhenExists = signal<T | undefined>(undefined);
 
-  private conditionalOptionsChange = new Subject<{
+  private readonly conditionalOptionsChange = new Subject<{
     condition: IFieldConditions;
     value: string;
   }>();
   private readonly optionsFn$ = new ReplaySubject<FormFieldSelectOptionsFn<T>>();
-  public readonly optionsFilter$ = new BehaviorSubject<FormFieldSelectOptionsFilter | null>(null);
+  public readonly optionsFilter = signal<FormFieldSelectOptionsFilter | null>(null);
+  public readonly optionsFilter$ = toObservable(this.optionsFilter);
+  public readonly searchQuery = computed(() => this.optionsFilter()?.searchQuery ?? '');
 
-  public readonly searchQuery$: Observable<string> = this.optionsFilter$.asObservable().pipe(
-    map((filter) => filter?.searchQuery ?? ''),
-    shareReplay(1),
-  );
-
-  public readonly loading$ = new BehaviorSubject<boolean>(false);
-  private readonly fetchedOnFocus$$ = new BehaviorSubject<boolean>(false);
-
-  public get selectedOption(): ValueLabel<T> {
-    if (this.selectOptions && this.fieldControl.value) {
-      return this.selectOptions.find((opt) =>
-        this.options?.compareWith
-          ? this.options?.compareWith(opt.value, this.fieldControl.value)
-          : this.defaultCompare(opt.value, this.fieldControl.value),
-      );
-    }
-    return null;
+  public constructor() {
+    super();
+    effect(() => {
+      const select = this._select();
+      if (select && select?.multiple) {
+        select.selectionChange.subscribe((selection) => {
+          const allSelected = this.selectOptions()?.length === selection?.value?.length;
+          this.selectAllState.set(allSelected ? 'checked' : 'unchecked');
+        });
+      }
+    });
   }
-
-  public ngOnDestroy(): void {
-    super.ngOnDestroy();
-    this.selectAllSub?.unsubscribe();
-  }
-
-  public showClearButton = (value: T | T[]): boolean => {
-    if (!value || (Array.isArray(value) && !value.length)) {
-      return false;
-    } else if (typeof this.options?.clearFieldButton?.enabled === 'function') {
-      return this.options.clearFieldButton.enabled(this.group.value);
-    }
-    return this.options?.clearFieldButton?.enabled;
-  };
-
-  public defaultCompare = (o1: T, o2: T): boolean => o1 === o2;
 
   public ngOnInit(): void {
     // load all options from the start
@@ -144,11 +147,13 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
 
     // add the current value to the options without waiting for the options to be fetched
     if (this.fieldControl.value) {
-      this.selectOptions = this.addValueToOptions();
+      this.fieldValue.set(this.fieldControl.value);
+      this.selectOptions.set(this.addValueToOptions());
     }
     this.addSubscription(this.fieldControl.valueChanges, (value) => {
+      this.fieldValue.set(value);
       if (value && !this.valueInOptions()) {
-        this.selectOptions = this.addValueToOptions();
+        this.selectOptions.set(this.addValueToOptions());
       }
     });
 
@@ -158,9 +163,9 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
         switchMap((optionsFn) =>
           this.optionsFilter$.pipe(
             filter((filter) => !!filter),
-            debounceTimeAfterFirst(this.options?.search?.debounceTime ?? 300),
+            debounceTimeAfterFirst(this.searchOptions()?.debounceTime ?? 300),
             distinctUntilChanged((x: any, y: any) => !isDifferent(x, y)),
-            tap(() => this.loading$.next(true)),
+            tap(() => this.loading.set(true)),
             switchMap((optionsFilter) => this.handleGetOptions(optionsFn, optionsFilter)),
           ),
         ),
@@ -170,7 +175,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
   }
 
   public onFocus(): void {
-    if (this.options?.fetchOptionsOnFocus && !this.fetchedOnFocus$$.value) {
+    if (this.options?.fetchOptionsOnFocus && !this.fetchedOnFocus()) {
       this.selectOptionsListener();
     }
   }
@@ -179,9 +184,9 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
    * Reset the search and make sure that the current value is in the select options when the select closes
    */
   public onOpenedChange(open: boolean): void {
-    if (!open && this.fieldControl?.value && this.optionsFilter$.value?.searchQuery?.length) {
+    if (!open && this.fieldControl?.value && this.searchQuery()?.length) {
       if (!this.valueInOptions()) {
-        this.selectOptions = this.addValueToOptions();
+        this.selectOptions.set(this.addValueToOptions());
       }
       this.onSearch('');
     }
@@ -190,13 +195,13 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
   /**
    * Check if the existing form control value is in the available select options
    */
-  public valueInOptions(options = this.selectOptions): boolean {
+  public valueInOptions(options = this.selectOptions()): boolean {
     return !!this.getOptionsMatchingTheValue(options)?.length;
   }
 
-  public getOptionsMatchingTheValue(options = this.selectOptions): ValueLabel<T>[] {
+  public getOptionsMatchingTheValue(options = this.selectOptions()): ValueLabel<T>[] {
     const value = coerceArray(this.fieldControl.value);
-    const compare = this.options?.compareWith || this.defaultCompare;
+    const compare = this.compareFn();
     return options?.filter((o) => value.some((v) => compare(o.value, v)));
   }
 
@@ -208,7 +213,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
       if (condition?.conditionalOptions) {
         if (!firstRun || !value) {
           if (this.fieldControl?.value) {
-            this.conditionalItemToSelectWhenExists = this.fieldControl?.value;
+            this.conditionalItemToSelectWhenExists.set(this.fieldControl?.value);
           }
           this.fieldControl.reset();
         }
@@ -221,45 +226,34 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
   }
 
   public onScroll(): void {
-    if (this.options?.infiniteScroll?.enabled && !this.loading$.value) {
-      const currentFilter = this.optionsFilter$.value;
-      this.optionsFilter$.next({
+    if (this.infiniteScrollOptions()?.enabled && !this.loading()) {
+      this.optionsFilter.update((currentFilter) => ({
         ...currentFilter,
         getAll: false,
         page: currentFilter.page + 1,
-      });
+      }));
     }
   }
 
   public onSearch(searchQuery: string): void {
-    if (this.options?.search?.enabled) {
-      this.optionsFilter$.next({ searchQuery, page: 0 });
+    if (this.searchOptions()?.enabled) {
+      this.optionsFilter.set({ searchQuery, page: 0 });
     }
   }
 
   private updateOptionsFn(optionsFn: FormFieldSelectOptionsFn<T>): void {
-    this.optionsFilter$.next({ page: 0, searchQuery: '' });
+    this.optionsFilter.set({ page: 0, searchQuery: '' });
     this.optionsFn$.next(optionsFn);
   }
 
   // if no readonlyDisplay is defined, show the single selected value
   // does not work with multi select > use readonlyDisplay in that case
-  public getReadOnlyDisplay(): string {
-    if (this.options?.readonlyDisplay) {
-      return this.translateService.instant(this.options.readonlyDisplay(this.fieldControl.value) || '-');
-    }
-
-    if (this.selectedOption) {
-      return this.translateService.instant(this.selectedOption.label);
-    } else {
-      return '-';
-    }
-  }
 
   public handleClearFieldButtonClick($event: Event): void {
     $event.stopPropagation();
-    if (this.options?.clearFieldButton?.click) {
-      this.options.clearFieldButton.click(this.fieldControl, $event);
+    const clearClickFn = this.clearOptions()?.click;
+    if (clearClickFn) {
+      clearClickFn(this.fieldControl, $event);
     } else {
       this.fieldControl.setValue(null);
       this.fieldControl.markAsTouched();
@@ -268,40 +262,34 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
   }
 
   public onSearchEnter($event: Event): void {
-    if (this.loading$.value) {
+    if (this.loading()) {
       $event.preventDefault();
       $event.stopPropagation();
     }
   }
 
   public handleToggleAllSelection(): void {
-    if (this.schema.options.infiniteScroll?.enabled) {
-      this.optionsFilter$.next({
-        ...this.optionsFilter$.value,
+    if (this.infiniteScrollOptions()?.enabled) {
+      this.optionsFilter.update((current) => ({
+        ...current,
         getAll: true,
-      });
-      this.loading$
-        .asObservable()
-        .pipe(
-          filter((loading) => !loading),
-          take(1),
-        )
-        .subscribe(() => {
-          setTimeout(() => {
-            this.toggleAllSelection();
-          }, 0);
-        });
+      }));
+      if (!this.loading()) {
+        setTimeout(() => {
+          this.toggleAllSelection();
+        }, 0);
+      }
     } else {
       this.toggleAllSelection();
     }
   }
 
   public handleAddNew(searchQuery: string): void {
-    this.options?.search?.addNewFn(searchQuery, this);
+    this.searchOptions()?.addNewFn(searchQuery, this);
   }
 
   private toggleAllSelection(): void {
-    if (this.selectAllState$.value === 'unchecked') {
+    if (this.selectAllState() === 'unchecked') {
       this.select.options.forEach((item: MatOption) => {
         if (!item.disabled) item.select();
       });
@@ -341,58 +329,57 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
    * @private
    */
   private afterGetOptionsSuccess(options: ValueLabel<T>[]): void {
-    const compare = this.options?.compareWith || this.defaultCompare;
+    const compare = this.compareFn();
 
-    let newOptionsSet = this.selectOptions ?? [];
-    if (this.optionsFilter$.value?.page > 0) {
-      newOptionsSet = newOptionsSet.concat(options);
-    } else {
-      newOptionsSet = options;
-      if (
-        !this.optionsFilter$.value?.searchQuery?.length &&
-        this.valueInOptions() &&
-        !this.valueInOptions(newOptionsSet)
-      ) {
-        newOptionsSet = newOptionsSet.concat(this.getOptionsMatchingTheValue());
+    this.selectOptions.update((newOptionsSet = []) => {
+      if (this.optionsFilter()?.page > 0) {
+        newOptionsSet = newOptionsSet.concat(options);
+      } else {
+        newOptionsSet = options;
+        if (!this.searchQuery()?.length && this.valueInOptions() && !this.valueInOptions(newOptionsSet)) {
+          newOptionsSet = newOptionsSet.concat(this.getOptionsMatchingTheValue());
+        }
+        newOptionsSet = this.removeDuplicateOptions(newOptionsSet);
       }
-    }
 
-    /**
-     * with infinite scroll & searching the form control value(s) might not always be present in the options
-     * this will cause the select to appear empty while it has values.
-     * to salve this we add the form values to the options
-     *
-     * This gives issues if the value is not an object
-     * Not to be mistaken with the first addValueToOptions in this method, this is still needed in some cases
-     */
-    if (this.fieldControl?.value && !this.optionsFilter$.value?.searchQuery?.length) {
-      newOptionsSet = this.addValueToOptions(newOptionsSet);
-    }
-    this.selectOptions = this.removeDuplicateOptions(newOptionsSet);
-    if (this.conditionalItemToSelectWhenExists) {
-      const value = coerceArray(this.conditionalItemToSelectWhenExists);
-      const inOptions = this.selectOptions.some((o) => value.some((v) => compare(o.value, v)));
+      /**
+       * with infinite scroll & searching the form control value(s) might not always be present in the options
+       * this will cause the select to appear empty while it has values.
+       * to salve this we add the form values to the options
+       *
+       * This gives issues if the value is not an object
+       * Not to be mistaken with the first addValueToOptions in this method, this is still needed in some cases
+       */
+      if (this.fieldControl?.value && !this.searchQuery()?.length) {
+        return this.addValueToOptions(newOptionsSet);
+      }
+      return [...newOptionsSet];
+    });
+
+    if (this.conditionalItemToSelectWhenExists()) {
+      const value = coerceArray(this.conditionalItemToSelectWhenExists());
+      const inOptions = this.selectOptions().some((o) => value.some((v) => compare(o.value, v)));
       if (inOptions) {
-        this.fieldControl.setValue(this.conditionalItemToSelectWhenExists);
+        this.fieldControl.setValue(this.conditionalItemToSelectWhenExists());
       }
     }
 
-    this.loading$.next(false);
-    if (this.options?.fetchOptionsOnFocus && !this.fetchedOnFocus$$.value) {
-      this.fetchedOnFocus$$.next(true);
+    if (this.options?.fetchOptionsOnFocus && !this.fetchedOnFocus()) {
+      this.fetchedOnFocus.set(true);
       // fix for the select not opening when the options are fetched on focus
       setTimeout(() => {
-        if ((this.select as any)._focused && !(this.select as any)._panelOpen) {
+        if ((this.select as any)?._focused && !(this.select as any)?._panelOpen) {
           this.select.open();
         }
       });
     }
+    this.loading.set(false);
   }
 
   /**
    * Add the current form control value to the select options
    */
-  private addValueToOptions(options = this.selectOptions): ValueLabel<T>[] {
+  private addValueToOptions(options = this.selectOptions()): ValueLabel<T>[] {
     let label: string;
     if (typeof this.options?.selectOptions === 'function' && !this.options?.displaySelectedOptionFn) {
       label = "ERROR: Can't display";
@@ -400,7 +387,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
         `Please define a displaySelectedOptionFn to display your currently selected option for the field with attribute ${this.fieldAttribute} since it is not included in the current options`,
       );
     }
-    const compare = this.options?.compareWith || this.defaultCompare;
+    const compare = this.compareFn();
     const missingOptions = coerceArray(this.fieldControl.value)
       .filter((value) => !options?.some((o) => compare(o.value, value)))
       .map((v: T) => ({
@@ -416,7 +403,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
 
   private removeDuplicateOptions(items: ValueLabel<T>[]): ValueLabel<T>[] {
     if (items?.length) {
-      const compare = this.options?.compareWith || this.defaultCompare;
+      const compare = this.compareFn();
       return items.filter((item, idx, arr) => arr.findIndex(({ value }) => compare(item.value, value)) === idx);
     }
     return [...new Set(items)];

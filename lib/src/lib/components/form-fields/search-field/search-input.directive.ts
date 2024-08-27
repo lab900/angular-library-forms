@@ -1,21 +1,7 @@
-import {
-  Directive,
-  ElementRef,
-  forwardRef,
-  HostListener,
-  Input,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
+import { Directive, ElementRef, forwardRef, HostListener, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BehaviorSubject, of, ReplaySubject } from 'rxjs';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  filter,
-  switchMap,
-  tap,
-} from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 import { FormFieldSearchOptions } from './field-search.model';
 
 @Directive({
@@ -30,9 +16,7 @@ import { FormFieldSearchOptions } from './field-search.model';
   ],
   standalone: true,
 })
-export class SearchInputDirective<T>
-  implements ControlValueAccessor, OnChanges
-{
+export class SearchInputDirective<T> implements ControlValueAccessor, OnChanges {
   private readonly searchQuery$ = new ReplaySubject<string>();
   public readonly searching$ = new BehaviorSubject<boolean>(false);
   public readonly noResult$ = new BehaviorSubject<boolean>(false);
@@ -51,15 +35,10 @@ export class SearchInputDirective<T>
         .pipe(
           distinctUntilChanged(),
           tap(() => this.noResult$.next(false)),
-          filter(
-            (searchQuery) =>
-              !this.value || searchQuery !== this.getCurrentValueLabel(),
-          ),
+          filter((searchQuery) => !this.value || searchQuery !== this.getCurrentValueLabel()),
           tap(() => this.searching$.next(true)),
           debounceTime(this.options?.debounceTime ?? 500),
-          switchMap((searchQuery) =>
-            searchQuery?.length ? this.options.searchFn(searchQuery) : of(null),
-          ),
+          switchMap((searchQuery) => (searchQuery?.length ? this.options.searchFn(searchQuery) : of(null))),
         )
         .subscribe((result) => {
           this.searching$.next(false);
@@ -126,10 +105,7 @@ export class SearchInputDirective<T>
   }
 
   private canUpdate(): boolean {
-    return (
-      !this.elementRef.nativeElement?.readOnly &&
-      !this.elementRef.nativeElement?.disabled
-    );
+    return !this.elementRef.nativeElement?.readOnly && !this.elementRef.nativeElement?.disabled;
   }
 
   private updateValue(value: T): void {

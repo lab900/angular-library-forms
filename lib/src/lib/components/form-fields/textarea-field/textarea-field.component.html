@@ -18,7 +18,7 @@
       <mat-hint align="end"> {{ input.value?.length || 0 }}/{{ options?.maxLength }} </mat-hint>
     }
     @if (!valid && !fieldIsReadonly) {
-      <mat-error><span [innerHTML]="getErrorMessage() | async"></span></mat-error>
+      <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
     }
   </mat-form-field>
 }

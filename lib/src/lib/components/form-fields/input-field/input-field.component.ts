@@ -1,8 +1,7 @@
-import { Component, HostBinding, inject } from '@angular/core';
+import { Component, computed, HostBinding, inject } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldInput } from './input-field.model';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AsyncPipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
@@ -23,18 +22,21 @@ import { IconComponent } from '@lab900/ui';
     AutofocusDirective,
     NgxMaskDirective,
     IconComponent,
-    AsyncPipe,
   ],
 })
 export class InputFieldComponent extends FormComponent<FormFieldInput> {
   protected readonly defaultSpecialCharacters = inject(NgxMaskService).specialCharacters;
+  public readonly icon = computed(() => this._schema()?.icon);
+  public readonly fieldMask = computed(() => this._options()?.fieldMask);
+  public readonly type = computed(() => this._options()?.type ?? 'text');
+  public readonly showLengthIndicator = computed(
+    () =>
+      !!this._options()?.maxLength &&
+      (!!this.setting?.formField?.showLengthIndicator || !!this._options()?.showLengthIndicator),
+  );
 
   @HostBinding('class')
   public classList = `lab900-form-field`;
-
-  public get showLengthIndicator(): boolean {
-    return !!this.setting?.formField?.showLengthIndicator || !!this.options?.showLengthIndicator;
-  }
 
   public get suffix(): string {
     if (typeof this.options?.suffix === 'function') {

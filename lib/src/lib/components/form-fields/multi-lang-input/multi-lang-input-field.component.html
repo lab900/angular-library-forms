@@ -1,9 +1,7 @@
 @if (!fieldIsHidden) {
   <div
     [formGroup]="group"
-    class="lab900-multi-lang-field lab900-multi-lang-field--{{
-      setting?.formField?.appearance || 'standard'
-    }}"
+    class="lab900-multi-lang-field lab900-multi-lang-field--{{ setting?.formField?.appearance || 'standard' }}"
     id="lab900-multi-lang-field-{{ fieldAttribute }}"
     style="padding-bottom: 1.34375em"
   >
@@ -13,7 +11,7 @@
       [availableLanguages]="availableLanguages()"
       [required]="fieldIsRequired"
       [readonly]="fieldIsReadonly"
-      [label]="_label()"
+      [label]="label()"
       [buttonColor]="_options()?.buttonColor"
       [translateLabel]="_options()?.translateLabel"
       [stopTranslateLabel]="_options()?.stopTranslateLabel"
@@ -21,7 +19,7 @@
     />
     @if (!valid && touched && !fieldIsReadonly) {
       <div>
-        <mat-error>{{ getErrorMessage() | async }}</mat-error>
+        <mat-error>{{ errorMessage() }}</mat-error>
       </div>
     }
   </div>

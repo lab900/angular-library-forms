@@ -1,9 +1,8 @@
-import { Component, HostBinding } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldRadioButtons } from './radio-buttons-field.model';
 import { MatError, MatLabel } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AsyncPipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 
@@ -11,17 +10,13 @@ import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
   selector: 'lab900-radio-buttons-field',
   templateUrl: './radio-buttons-field.component.html',
   standalone: true,
-  imports: [
-    MatLabel,
-    ReactiveFormsModule,
-    TranslateModule,
-    MatRadioGroup,
-    MatRadioButton,
-    MatError,
-    AsyncPipe,
-  ],
+  imports: [MatLabel, ReactiveFormsModule, TranslateModule, MatRadioGroup, MatRadioButton, MatError],
+  host: {
+    class: 'lab900-form-field',
+  },
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RadioButtonsFieldComponent extends FormComponent<FormFieldRadioButtons> {
-  @HostBinding('class')
-  public classList = 'lab900-form-field';
+  protected readonly radioOptions = computed(() => this._options()?.radioOptions);
+  protected readonly color = computed(() => this._options()?.color ?? 'primary');
 }

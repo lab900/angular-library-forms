@@ -1,11 +1,7 @@
 import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldButtonToggle } from './button-toggle-field.model';
-import {
-  MatButtonToggle,
-  MatButtonToggleChange,
-  MatButtonToggleGroup,
-} from '@angular/material/button-toggle';
+import { MatButtonToggle, MatButtonToggleChange, MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 import { MatError, MatLabel } from '@angular/material/form-field';
@@ -42,9 +38,8 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
     setTimeout(() => {
       if (this.group?.controls) {
         this.currentValue = this.group.controls[this.fieldAttribute].value;
-        this.addSubscription(
-          this.group.controls[this.fieldAttribute].valueChanges,
-          (value: any) => setTimeout(() => (this.currentValue = value)),
+        this.addSubscription(this.group.controls[this.fieldAttribute].valueChanges, (value: any) =>
+          setTimeout(() => (this.currentValue = value)),
         );
       }
     });
@@ -52,13 +47,9 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
 
   // This calculates the readonly label. If the readonlyDisplay() function is set, this is used.
   // Otherwise the button label is displayed
-  public get label(): string {
-    const option = this.options.buttonOptions.find(
-      (o) => o.value === this.currentValue,
-    );
-    return this.options?.readonlyDisplay
-      ? this.options?.readonlyDisplay(this.group.value)
-      : option?.label;
+  public get readonlyButtonLabel(): string {
+    const option = this.options.buttonOptions.find((o) => o.value === this.currentValue);
+    return this.options?.readonlyDisplay ? this.options?.readonlyDisplay(this.group.value) : option?.label;
   }
 
   // If the deselect option is set and the previous value of the toggle is the same as the current value the toggle will be deselected

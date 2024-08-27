@@ -1,10 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  HostBinding,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostBinding, ViewChild } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { BehaviorSubject, isObservable, Observable, of } from 'rxjs';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
@@ -64,7 +58,6 @@ export class AutocompleteMultipleFieldComponent<T>
   }
 
   public ngAfterViewInit(): void {
-    super.ngAfterViewInit();
     this.initFilteredOptionsListener();
   }
 

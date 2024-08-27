@@ -1,18 +1,9 @@
 @if (visible() && _schema()) {
-  <div
-    [hidden]="isHidden(schema)"
-    class="lab900-form-row {{ _options()?.customClass }}"
-  >
-    @if ((fieldIsReadonly && _options()?.readonlyLabel) || _label()) {
-      <span
-        class="lab900-form-field-label lab900-form-row-label {{
-          _options()?.customTitleClass
-        }}"
-        >{{
-          (!fieldIsReadonly ? _label() : _options()?.readonlyLabel || _label())
-            | translate
-        }}</span
-      >
+  <div [hidden]="isHidden(schema)" class="lab900-form-row {{ _options()?.customClass }}">
+    @if ((fieldIsReadonly && _options()?.readonlyLabel) || label()) {
+      <span class="lab900-form-field-label lab900-form-row-label {{ _options()?.customTitleClass }}">{{
+        (!fieldIsReadonly ? label() : _options()?.readonlyLabel || label()) | translate
+      }}</span>
     }
     <div class="form-row" [class.mobile-cols]="_options()?.mobileCols">
       @for (field of nestedFields(); track field) {
@@ -31,11 +22,9 @@
           />
           @if (infoTooltip(field); as tip) {
             <div class="form-col__info">
-              <mat-icon
-                [matTooltipClass]="tip.class"
-                [matTooltip]="tip.text | translate"
-                >{{ tip.icon || 'info' }}</mat-icon
-              >
+              <mat-icon [matTooltipClass]="tip.class" [matTooltip]="tip.text | translate">{{
+                tip.icon || 'info'
+              }}</mat-icon>
             </div>
           }
         </div>

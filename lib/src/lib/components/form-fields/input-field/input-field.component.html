@@ -5,13 +5,13 @@
     [class.spanFix]="options?.suffix || options?.prefix"
     id="lab900-input-field-{{ fieldAttribute }}"
   >
-    @if (schema.title) {
-      <mat-label>{{ schema.title | translate }}</mat-label>
+    @if (label()) {
+      <mat-label>{{ label() | translate }}</mat-label>
     }
-    @if (options?.type === 'number') {
+    @if (type() === 'number') {
       <input
         matInput
-        [type]="options?.type || 'text'"
+        [type]="'number'"
         placeholder="{{ placeholder | translate }}"
         [formControlName]="fieldAttribute"
         [required]="fieldIsRequired"
@@ -21,45 +21,41 @@
         [autofocus]="options?.autofocus"
         [style]="options?.style || ''"
       />
-    }
-    @if (options?.type !== 'number') {
+    } @else {
       <input
         matInput
-        [type]="options?.type || 'text'"
+        [type]="type()"
         placeholder="{{ placeholder | translate }}"
         [formControlName]="fieldAttribute"
         [required]="fieldIsRequired"
         [readonly]="fieldIsReadonly"
         [class.readonly]="fieldIsReadonly"
-        [mask]="options?.fieldMask?.mask"
-        [prefix]="(options?.fieldMask?.prefix ?? setting?.fieldMask?.prefix) || ''"
-        [suffix]="(options?.fieldMask?.suffix ?? setting?.fieldMask?.suffix) || ''"
-        [placeHolderCharacter]="
-          options?.fieldMask?.placeHolderCharacter ?? setting?.fieldMask?.placeHolderCharacter ?? ''
-        "
+        [mask]="fieldMask()?.mask"
+        [prefix]="(fieldMask()?.prefix ?? setting?.fieldMask?.prefix) || ''"
+        [suffix]="(fieldMask()?.suffix ?? setting?.fieldMask?.suffix) || ''"
+        [placeHolderCharacter]="fieldMask()?.placeHolderCharacter ?? setting?.fieldMask?.placeHolderCharacter ?? ''"
         [dropSpecialCharacters]="
-          options?.fieldMask?.dropSpecialCharacters ?? setting?.fieldMask?.dropSpecialCharacters ?? true
+          fieldMask()?.dropSpecialCharacters ?? setting?.fieldMask?.dropSpecialCharacters ?? true
         "
-        [allowNegativeNumbers]="options?.fieldMask?.allowNegativeNumbers ?? setting?.fieldMask?.allowNegativeNumbers"
-        [showMaskTyped]="options?.fieldMask?.showMaskTyped ?? setting?.fieldMask?.showMaskTyped"
-        [decimalMarker]="options?.fieldMask?.decimalMarker ?? setting?.fieldMask?.decimalMarker"
-        [thousandSeparator]="options?.fieldMask?.thousandSeparator ?? setting?.fieldMask?.thousandSeparator"
-        [patterns]="options?.fieldMask?.patterns ?? setting?.fieldMask?.patterns"
-        [showTemplate]="options?.fieldMask?.showTemplate ?? setting?.fieldMask?.showTemplate"
-        [shownMaskExpression]="options?.fieldMask?.shownMaskExpression ?? setting?.fieldMask?.shownMaskExpression"
+        [allowNegativeNumbers]="fieldMask()?.allowNegativeNumbers ?? setting?.fieldMask?.allowNegativeNumbers"
+        [showMaskTyped]="fieldMask()?.showMaskTyped ?? setting?.fieldMask?.showMaskTyped"
+        [decimalMarker]="fieldMask()?.decimalMarker ?? setting?.fieldMask?.decimalMarker"
+        [thousandSeparator]="fieldMask()?.thousandSeparator ?? setting?.fieldMask?.thousandSeparator"
+        [patterns]="fieldMask()?.patterns ?? setting?.fieldMask?.patterns"
+        [showTemplate]="fieldMask()?.showTemplate ?? setting?.fieldMask?.showTemplate"
+        [shownMaskExpression]="fieldMask()?.shownMaskExpression ?? setting?.fieldMask?.shownMaskExpression"
         [specialCharacters]="
-          options?.fieldMask?.specialCharacters ?? setting?.fieldMask?.specialCharacters ?? defaultSpecialCharacters
+          fieldMask()?.specialCharacters ?? setting?.fieldMask?.specialCharacters ?? defaultSpecialCharacters
         "
         lab900InputAutofocus
         [autofocus]="options?.autofocus"
         [style]="options?.style || ''"
       />
     }
-    @if (schema?.icon?.position === 'left') {
-      <lab900-icon [icon]="schema.icon" matTextPrefix />
-    }
-    @if (schema?.icon?.position === 'right') {
-      <lab900-icon [icon]="schema.icon" matTextSuffix />
+    @if (icon()?.position === 'left') {
+      <lab900-icon [icon]="icon()" matTextPrefix />
+    } @else if (icon()?.position === 'right') {
+      <lab900-icon [icon]="icon()" matTextSuffix />
     }
     @if (suffix) {
       <span class="lab900-input-field--suffix" matTextSuffix>{{ suffix | translate }}</span>
@@ -72,11 +68,11 @@
         <span [innerHTML]="hint | translate: hintValueTranslateData"></span>
       </mat-hint>
     }
-    @if (options?.maxLength && showLengthIndicator && !fieldIsReadonly) {
+    @if (showLengthIndicator() && !fieldIsReadonly) {
       <mat-hint align="end">{{ fieldControl.value?.length || 0 }}/{{ options?.maxLength }}</mat-hint>
     }
     @if (!valid && !fieldIsReadonly) {
-      <mat-error><span [innerHTML]="getErrorMessage() | async"></span></mat-error>
+      <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
     }
   </mat-form-field>
 }
