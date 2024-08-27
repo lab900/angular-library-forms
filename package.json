@@ -15,6 +15,7 @@
     "predeploy:showcase": "npm run build:forms:prod",
     "deploy:showcase": "ng deploy",
     "test": "ng test",
+    "test:silent": "ng test --browsers=ChromeHeadless --watch=false",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "pretty:check": "prettier -c \"{src,lib}/**/**.{ts,js}\"",

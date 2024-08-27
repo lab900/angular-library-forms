@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, effect, OnInit, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, OnInit, signal, viewChild } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { isObservable, Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { catchError, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
 import { FormFieldSelect, FormFieldSelectOptionsFilter, FormFieldSelectOptionsFn } from './field-select.model';
 import { IFieldConditions } from '../../../models/IFieldConditions';
 import { ValueLabel } from '../../../models/form-field-base';
@@ -18,7 +18,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { MatOption } from '@angular/material/autocomplete';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'lab900-select-field',
@@ -57,7 +57,6 @@ import { toObservable } from '@angular/core/rxjs-interop';
 })
 export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> implements OnInit {
   public readonly selectOptions = signal<ValueLabel<T>[]>([]);
-  public readonly selectAllState = signal<MatPseudoCheckboxState>('unchecked');
   public readonly loading = signal<boolean>(false);
   private readonly fetchedOnFocus = signal<boolean>(false);
   private readonly fieldValue = signal<unknown>(undefined);
@@ -125,19 +124,16 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
   public readonly optionsFilter = signal<FormFieldSelectOptionsFilter | null>(null);
   public readonly optionsFilter$ = toObservable(this.optionsFilter);
   public readonly searchQuery = computed(() => this.optionsFilter()?.searchQuery ?? '');
-
-  public constructor() {
-    super();
-    effect(() => {
-      const select = this._select();
-      if (select && select?.multiple) {
-        select.selectionChange.subscribe((selection) => {
-          const allSelected = this.selectOptions()?.length === selection?.value?.length;
-          this.selectAllState.set(allSelected ? 'checked' : 'unchecked');
-        });
-      }
-    });
-  }
+  public readonly selectAllState = toSignal<MatPseudoCheckboxState>(
+    toObservable(this._select).pipe(
+      filter((select) => !!select?.multiple),
+      switchMap((select) => select.selectionChange),
+      map((selection) => {
+        const allSelected = selection.source?.options?.length === selection?.value?.length;
+        return allSelected ? 'checked' : 'unchecked';
+      }),
+    ),
+  );
 
   public ngOnInit(): void {
     // load all options from the start
@@ -258,13 +254,6 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
       this.fieldControl.setValue(null);
       this.fieldControl.markAsTouched();
       this.fieldControl.markAsDirty();
-    }
-  }
-
-  public onSearchEnter($event: Event): void {
-    if (this.loading()) {
-      $event.preventDefault();
-      $event.stopPropagation();
     }
   }
 
@@ -410,8 +399,8 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
   }
 
   private selectOptionsListener(): void {
-    if (this.options?.selectOptions) {
-      const { selectOptions } = this.options;
+    const selectOptions = this._options()?.selectOptions;
+    if (selectOptions) {
       this.updateOptionsFn(
         typeof selectOptions === 'function'
           ? (f) => selectOptions(f, this.fieldControl, this.schema)
