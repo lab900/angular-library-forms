@@ -178,10 +178,18 @@ describe('SelectFieldComponent', () => {
       expect(selectAll).toBeTruthy();
     });
 
+    it('should set selectAllState correctly', () => {
+      expect(component.selectAllState()).toEqual('unchecked');
+      component.fieldControl.setValue([1, 2]);
+      fixture.detectChanges();
+      expect(component.selectAllState()).toEqual('checked');
+    });
+
     it('should handle toggle all selection correctly', () => {
       const spy = jest.spyOn(component, 'handleToggleAllSelection');
       selectAll.nativeElement.click();
       expect(spy).toHaveBeenCalled();
+      expect(component.selectAllState()).toEqual('checked');
     });
   });
 });
