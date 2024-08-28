@@ -1,17 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SelectFieldComponent } from './select-field.component';
-import { MatSelectModule } from '@angular/material/select';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
-import { Lab900FormBuilderService } from '../../../services/form-builder.service';
-import { LAB900_FORM_MODULE_SETTINGS } from '../../../models/Lab900FormModuleSettings';
+import { FormControl, FormGroup } from '@angular/forms';
 import { EditType, FormFieldSelect } from '@lab900/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { MatSelectHarness } from '@angular/material/select/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
+import { TESTING_PROVIDERS } from '../../../testing/testing.providers';
 
 const basicSelectSchema: FormFieldSelect<any> = {
   attribute: 'test',
@@ -26,8 +22,7 @@ describe('SelectFieldComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [Lab900FormBuilderService, { provide: LAB900_FORM_MODULE_SETTINGS, useValue: {} }],
-      imports: [MatSelectModule, ReactiveFormsModule, TranslateModule.forRoot(), BrowserAnimationsModule],
+      providers: TESTING_PROVIDERS,
     }).compileComponents();
 
     fixture = TestBed.createComponent(SelectFieldComponent);
@@ -43,7 +38,7 @@ describe('SelectFieldComponent', () => {
       ...basicSelectSchema,
       options: { fetchOptionsOnFocus: true, selectOptions: [] },
     });
-    const spy = spyOn(component as any, 'selectOptionsListener');
+    const spy = jest.spyOn(component as any, 'selectOptionsListener');
     component.onFocus();
     expect(spy).toHaveBeenCalled();
   });
@@ -61,7 +56,7 @@ describe('SelectFieldComponent', () => {
     });
     component.fieldControl.setValue(3);
     fixture.detectChanges();
-    expect(component.selectOptions()).toContain({ value: 3, label: undefined });
+    expect(component.selectOptions()).toContainEqual({ value: 3, label: undefined });
   });
 
   it('should remove duplicate options', () => {
@@ -111,7 +106,7 @@ describe('SelectFieldComponent', () => {
   });
 
   describe('Select with clear button', () => {
-    beforeEach(async () => {
+    beforeEach(() => {
       fixture.componentRef.setInput('schema', {
         ...basicSelectSchema,
         options: {
@@ -154,6 +149,7 @@ describe('SelectFieldComponent', () => {
   describe('Multi selects', () => {
     let matSelect: MatSelectHarness;
     let selectAll: DebugElement;
+
     beforeEach(async () => {
       fixture.componentRef.setInput('schema', {
         ...basicSelectSchema,
@@ -174,16 +170,16 @@ describe('SelectFieldComponent', () => {
       selectAll = fixture.debugElement.query(By.css('.mat-mdc-option.select-all'));
     });
 
-    it('should create a MatSelect with multiple true', async () => {
-      expect(await matSelect.isMultiple()).toBe(true);
+    it('should create a MatSelect with multiple true', () => {
+      matSelect.isMultiple().then((isMultiple) => expect(isMultiple).toBe(true));
     });
 
-    it('should create a select all option', async () => {
+    it('should create a select all option', () => {
       expect(selectAll).toBeTruthy();
     });
 
-    it('should handle toggle all selection correctly', async () => {
-      const spy = spyOn(component, 'handleToggleAllSelection');
+    it('should handle toggle all selection correctly', () => {
+      const spy = jest.spyOn(component, 'handleToggleAllSelection');
       selectAll.nativeElement.click();
       expect(spy).toHaveBeenCalled();
     });

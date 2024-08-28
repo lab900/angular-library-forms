@@ -127,45 +127,14 @@
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular-builders/jest:run",
           "options": {
-            "main": "src/test.ts",
             "polyfills": [
               "zone.js",
               "zone.js/testing"
             ],
             "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets",
-              "src/guides",
-              {
-                "glob": "**/*-example.component.*",
-                "input": "src/app/modules/showcase-forms/examples",
-                "output": "/examples"
-              }
-            ],
-            "styles": [
-              "src/styles.scss",
-              "node_modules/prismjs/themes/prism-okaidia.css",
-              "node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css",
-              "node_modules/prismjs/plugins/line-highlight/prism-line-highlight.css"
-            ],
-            "scripts": [
-              "node_modules/marked/marked.min.js",
-              "node_modules/prismjs/prism.js",
-              "node_modules/prismjs/components/prism-scss.min.js",
-              "node_modules/prismjs/components/prism-typescript.min.js",
-              "node_modules/prismjs/plugins/line-numbers/prism-line-numbers.js",
-              "node_modules/prismjs/plugins/line-highlight/prism-line-highlight.js"
-            ],
-            "stylePreprocessorOptions": {
-              "includePaths": [
-                "node_modules",
-                "src/assets/styles"
-              ]
-            }
+            "inlineStyleLanguage": ["scss"]
           }
         },
         "lint": {
@@ -175,18 +144,6 @@
               "src/**/*.ts",
               "src/**/*.html"
             ]
-          }
-        },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "lab900-forms:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "lab900-forms:serve:production"
-            }
           }
         },
         "deploy": {
@@ -223,14 +180,6 @@
             "production": {
               "tsConfig": "lib/tsconfig.lib.prod.json"
             }
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "lib/src/test.ts",
-            "tsConfig": "lib/tsconfig.spec.json",
-            "karmaConfig": "lib/karma.conf.js"
           }
         },
         "lint": {

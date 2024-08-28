@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, UntypedFormArray } from '@angular/forms';
+import { UntypedFormArray } from '@angular/forms';
 import { Lab900Form } from './form-container.component';
-import { Lab900FormBuilderService } from '../../services/form-builder.service';
-import { LAB900_FORM_MODULE_SETTINGS } from '../../models/Lab900FormModuleSettings';
 import { EditType } from '../../models/editType';
+import { TESTING_PROVIDERS } from '../../testing/testing.providers';
 
 describe('Lab900Form', () => {
   let component: Lab900Form<any>;
@@ -12,9 +11,8 @@ describe('Lab900Form', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      providers: [Lab900FormBuilderService, { provide: LAB900_FORM_MODULE_SETTINGS, useValue: {} }],
-    });
+      providers: TESTING_PROVIDERS,
+    }).compileComponents();
 
     fixture = TestBed.createComponent(Lab900Form);
     component = fixture.componentInstance;
@@ -63,21 +61,23 @@ describe('Lab900Form', () => {
 
   it('should not emit valueChanges events when emitEvent is false', () => {
     fixture.componentRef.setInput('schema', simpleInputSchema);
-    const spy = jasmine.createSpy('valueChangesSpy');
-    component.form.valueChanges.subscribe(spy);
+    const mockSub = jest.fn();
+    const sub = component.form.valueChanges.subscribe(mockSub);
     component.patchValues({ name: 'John Doe' }, false);
-    expect(spy).not.toHaveBeenCalled();
+    expect(mockSub).not.toHaveBeenCalled();
     component.setValues({ name: 'Jane Doe' }, false);
-    expect(spy).not.toHaveBeenCalled();
+    expect(mockSub).not.toHaveBeenCalled();
+    sub.unsubscribe();
   });
 
   it('should emit valueChanges events when emitEvent is true', () => {
     fixture.componentRef.setInput('schema', simpleInputSchema);
-    const spy = jasmine.createSpy('valueChangesSpy');
-    component.form.valueChanges.subscribe(spy);
+    const mockSub = jest.fn();
+    const sub = component.form.valueChanges.subscribe(mockSub);
     component.patchValues({ name: 'John Doe' });
-    expect(spy).toHaveBeenCalledWith({ name: 'John Doe' });
+    expect(mockSub).toHaveBeenCalledWith({ name: 'John Doe' });
     component.setValues({ name: 'Jane Doe' });
-    expect(spy).toHaveBeenCalledWith({ name: 'Jane Doe' });
+    expect(mockSub).toHaveBeenCalledWith({ name: 'Jane Doe' });
+    sub.unsubscribe();
   });
 });
