@@ -1,14 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { InputFieldComponent } from './input-field.component';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { TranslateModule } from '@ngx-translate/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { EditType, FormFieldInput } from '@lab900/forms';
-import { Lab900FormBuilderService } from '../../../services/form-builder.service';
-import { LAB900_FORM_MODULE_SETTINGS } from '../../../models/Lab900FormModuleSettings';
-import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TESTING_PROVIDERS } from '../../../testing/testing.providers';
+import { provideNgxMask } from 'ngx-mask';
 
 const iso6346Pattern = new RegExp('[a-zA-Z]{4}-[0-9]{6}\\/[0-9]');
 const iso6346Mask = 'SSSS-000000/0';
@@ -23,15 +18,7 @@ describe('InputFieldComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [Lab900FormBuilderService, { provide: LAB900_FORM_MODULE_SETTINGS, useValue: {} }, provideNgxMask()],
-      imports: [
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        TranslateModule.forRoot(),
-        NgxMaskDirective,
-        BrowserAnimationsModule,
-      ],
+      providers: [...TESTING_PROVIDERS, provideNgxMask()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(InputFieldComponent);
@@ -56,11 +43,11 @@ describe('InputFieldComponent', () => {
 
       component.fieldControl.setValue('ABCD-123456/7');
       fixture.detectChanges();
-      expect(component.fieldControl.valid).toBeTrue();
+      expect(component.fieldControl.valid).toBeTruthy();
 
       component.fieldControl.setValue('ABC1234567');
       fixture.detectChanges();
-      expect(component.fieldControl.valid).toBeFalse();
+      expect(component.fieldControl.valid).toBeFalsy();
     });
   });
 });
