@@ -21,12 +21,12 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   protected readonly translateService = inject(TranslateService);
   protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
-  protected readonly _fieldAttribute = input<string | undefined>(undefined, { alias: 'fieldAttribute' });
+  public readonly _fieldAttribute = input<string | undefined>(undefined, { alias: 'fieldAttribute' });
   public get fieldAttribute(): string {
     return this._fieldAttribute();
   }
 
-  protected _group = input.required<UntypedFormGroup>({ alias: 'group' });
+  public _group = input.required<UntypedFormGroup>({ alias: 'group' });
   public get group(): UntypedFormGroup {
     return this._group();
   }
