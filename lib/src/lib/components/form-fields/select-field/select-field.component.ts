@@ -100,7 +100,9 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
     }
     const selectedOptions = this.getOptionsMatchingTheValue();
     if (selectedOptions) {
-      return selectedOptions.map((o) => this.translateService.instant(o.label)).join(', ');
+      return selectedOptions
+        .map((o) => (o.label ? this.translateService.instant(o.label) : 'missing label'))
+        .join(', ');
     } else {
       return '-';
     }

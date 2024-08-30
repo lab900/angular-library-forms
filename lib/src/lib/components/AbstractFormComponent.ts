@@ -10,6 +10,7 @@ import { ValueLabel } from '../models/form-field-base';
 import { Lab900FormBuilderService } from '../services/form-builder.service';
 import { LAB900_FORM_MODULE_SETTINGS, Lab900FormModuleSettings } from '../models/Lab900FormModuleSettings';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs/operators';
 
 @Directive()
 export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
@@ -20,12 +21,25 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   protected readonly translateService = inject(TranslateService);
   protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
-  @Input()
-  public fieldAttribute?: string;
+  protected readonly _fieldAttribute = input<string | undefined>(undefined, { alias: 'fieldAttribute' });
+  public get fieldAttribute(): string {
+    return this._fieldAttribute();
+  }
 
-  public _group = input.required<UntypedFormGroup>({ alias: 'group' });
+  protected _group = input.required<UntypedFormGroup>({ alias: 'group' });
   public get group(): UntypedFormGroup {
     return this._group();
+  }
+
+  protected readonly _fieldControl = computed(() => {
+    if (this._group() && this._fieldAttribute()) {
+      return this._group().get(this._fieldAttribute());
+    }
+    return;
+  });
+
+  public get fieldControl(): AbstractControl | undefined {
+    return this._fieldControl();
   }
 
   public readonly _schema = input.required<S>({ alias: 'schema' });
@@ -36,9 +50,14 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   );
 
   public readonly errorMessage = toSignal<string>(
-    toObservable(this._group).pipe(
+    toObservable(this._fieldControl).pipe(
+      filter((field) => !!field),
+      switchMap((field) => field.statusChanges),
       switchMap(() => {
         const field = this.fieldControl;
+        if (!field) {
+          return EMPTY;
+        }
         let errors: ValidationErrors = field.errors;
         let message = this.translateService.stream('forms.error.generic');
         if (field instanceof UntypedFormGroup && field.controls) {
@@ -88,10 +107,6 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   public fieldIsHidden!: boolean;
   public fieldIsRequired!: boolean;
 
-  public get fieldControl(): AbstractControl {
-    return this.group.get(this.fieldAttribute);
-  }
-
   public get valid(): boolean {
     return this.fieldControl?.valid;
   }
@@ -120,12 +135,13 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     effect(() => {
       const group = this._group();
       const options = this._options();
-      if (group) {
+      const fieldControl = this._fieldControl();
+      if (group && fieldControl) {
         this.setFieldProperties();
         group.valueChanges.subscribe(() => {
           this.setFieldProperties();
           if (options?.onChangeFn) {
-            options.onChangeFn(group.value, this.fieldControl);
+            options.onChangeFn(group.value, fieldControl);
           }
         });
       }
@@ -189,10 +205,8 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     const isRequired = FormFieldUtils.isRequired(this.fieldIsReadonly, this.schema, this.group.value) ?? false;
     if (this.fieldIsRequired != isRequired) {
       this.fieldIsRequired = isRequired;
+      this.fieldControl?.setValidators(Lab900FormBuilderService.addValidators(this.schema, this.group.value));
       setTimeout(() => {
-        this.group
-          ?.get(this.fieldAttribute)
-          ?.setValidators(Lab900FormBuilderService.addValidators(this.schema, this.group.value));
         this.changeDetectorRef.markForCheck();
       });
     }
