@@ -1,5 +1,9 @@
 # Changelog
 
+## 18.1.1/18.1.2
+
+- fixes for displaying error messages
+
 ## 18.1.0
 
 - More signals to solve change detection issues.
