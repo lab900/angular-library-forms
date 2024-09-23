@@ -4,6 +4,5 @@
   "lib": {
     "entryFile": "src/public-api.ts"
   },
-  "assets": ["./scss/*.scss", "./_theming.scss", "./assets/i18n.ts"],
-  "allowedNonPeerDependencies": ["lab900", "@kolkov/angular-editor"]
+  "assets": ["./scss/*.scss", "./_theming.scss", "./assets/i18n.ts"]
 }

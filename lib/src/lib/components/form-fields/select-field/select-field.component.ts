@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, effect, OnInit, signal, viewChild } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { isObservable, Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { catchError, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, switchMap, take, tap } from 'rxjs/operators';
 import { FormFieldSelect, FormFieldSelectOptionsFilter, FormFieldSelectOptionsFn } from './field-select.model';
 import { IFieldConditions } from '../../../models/IFieldConditions';
 import { ValueLabel } from '../../../models/form-field-base';
@@ -59,6 +59,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
   public readonly selectOptions = signal<ValueLabel<T>[]>([]);
   public readonly selectAllState = signal<MatPseudoCheckboxState>('unchecked');
   public readonly loading = signal<boolean>(false);
+  protected readonly loading$ = toObservable(this.loading);
   private readonly fetchedOnFocus = signal<boolean>(false);
   private readonly fieldValue = signal<unknown>(undefined);
 
@@ -130,15 +131,21 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
 
   public constructor() {
     super();
-    effect(() => {
-      const select = this._select();
-      if (select && select?.multiple) {
-        select.selectionChange.subscribe((selection) => {
-          const allSelected = this.selectOptions()?.length === selection?.value?.length;
+    effect(
+      () => {
+        const select = this._select();
+        if (select && select?.multiple) {
+          const allSelected = this.selectOptions()?.length === coerceArray(this.fieldValue())?.length;
           this.selectAllState.set(allSelected ? 'checked' : 'unchecked');
-        });
-      }
-    });
+
+          select.selectionChange.subscribe((selection) => {
+            const allSelected = this.selectOptions()?.length === selection?.value?.length;
+            this.selectAllState.set(allSelected ? 'checked' : 'unchecked');
+          });
+        }
+      },
+      { allowSignalWrites: true },
+    );
   }
 
   public ngOnInit(): void {
@@ -276,11 +283,14 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
         ...current,
         getAll: true,
       }));
-      if (!this.loading()) {
-        setTimeout(() => {
+      this.loading$
+        .pipe(
+          filter((loading) => !loading),
+          take(1),
+        )
+        .subscribe(() => {
           this.toggleAllSelection();
-        }, 0);
-      }
+        });
     } else {
       this.toggleAllSelection();
     }

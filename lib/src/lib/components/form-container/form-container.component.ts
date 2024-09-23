@@ -1,17 +1,5 @@
-import {
-  Component,
-  computed,
-  effect,
-  inject,
-  input,
-  model,
-  untracked,
-} from '@angular/core';
-import {
-  ReactiveFormsModule,
-  UntypedFormArray,
-  UntypedFormGroup,
-} from '@angular/forms';
+import { Component, computed, effect, inject, input, model, untracked } from '@angular/core';
+import { ReactiveFormsModule, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { DEFAULT_REPEATER_MIN_ROWS } from '../form-fields/repeater-field/repeater-field.component';
 import { Lab900FormConfig } from '../../models/Lab900FormConfig';
 import { Lab900FormBuilderService } from '../../services/form-builder.service';
@@ -40,9 +28,7 @@ export class Lab900Form<T> {
   /**
    * You can add a object of other form groups which could be used in the conditional fields
    */
-  public readonly externalForms = input<
-    Record<string, UntypedFormGroup> | undefined
-  >();
+  public readonly externalForms = input<Record<string, UntypedFormGroup> | undefined>();
 
   /**
    * Don't trigger the valueChanges event when the data is set
@@ -91,34 +77,23 @@ export class Lab900Form<T> {
       const control = untracked(this.controls)[key];
       if (control) {
         if (control instanceof UntypedFormArray) {
-          const fieldSchema = untracked(this.fields).find(
-            (field: Lab900FormField) => field.attribute === key,
-          );
+          const fieldSchema = untracked(this.fields).find((field: Lab900FormField) => field.attribute === key);
           if (fieldSchema?.editType === EditType.Repeater) {
             const nbOfControlRows = control.controls?.length ?? 0;
             const nbOfDataRows = data[key]?.length ?? 0;
             if (nbOfControlRows < nbOfDataRows) {
               for (let i = nbOfControlRows; i < nbOfDataRows; i++) {
-                control.push(
-                  this.fb.createFormGroup(
-                    fieldSchema?.nestedFields,
-                    null,
-                    data[key][i],
-                  ),
-                );
+                control.push(this.fb.createFormGroup(fieldSchema?.nestedFields, null, data[key][i]));
               }
             } else if (nbOfControlRows > nbOfDataRows) {
               for (let i = nbOfControlRows; i > nbOfDataRows; i--) {
                 control.removeAt(i - 1);
               }
               // re-add empty controls if there are now less than minRows
-              const minRows =
-                fieldSchema?.options?.minRows ?? DEFAULT_REPEATER_MIN_ROWS;
+              const minRows = fieldSchema?.options?.minRows ?? DEFAULT_REPEATER_MIN_ROWS;
               if (control.controls.length < minRows) {
                 for (let i = control.controls.length; i < minRows; i++) {
-                  control.push(
-                    this.fb.createFormGroup(fieldSchema?.nestedFields),
-                  );
+                  control.push(this.fb.createFormGroup(fieldSchema?.nestedFields));
                 }
               }
             }
@@ -136,9 +111,7 @@ export class Lab900Form<T> {
       const control = untracked(this.controls)[key];
       if (control) {
         if (control instanceof UntypedFormArray) {
-          const fieldSchema = untracked(this.fields).find(
-            (field: Lab900FormField) => field.attribute === key,
-          );
+          const fieldSchema = untracked(this.fields).find((field: Lab900FormField) => field.attribute === key);
           if (fieldSchema?.editType === EditType.Repeater) {
             this.fb.createFormArray(data, fieldSchema, control);
           }

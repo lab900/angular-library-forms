@@ -88,7 +88,14 @@
       }
     </mat-select>
     @if (showClearButton()) {
-      <button matSuffix mat-icon-button type="button" aria-label="Clear" (click)="handleClearFieldButtonClick($event)">
+      <button
+        class="select-clear-button"
+        matSuffix
+        mat-icon-button
+        type="button"
+        aria-label="Clear"
+        (click)="handleClearFieldButtonClick($event)"
+      >
         <mat-icon>close</mat-icon>
       </button>
     }

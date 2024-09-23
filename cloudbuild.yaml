@@ -9,6 +9,10 @@ steps:
     args: ['ci']
   - name: 'node'
     entrypoint: 'npm'
+    id: Test Library
+    args: ['run', 'test:silent']
+  - name: 'node'
+    entrypoint: 'npm'
     id: Build Library
     args: ['run', 'build:forms:prod']
   - name: 'node'
@@ -18,6 +22,10 @@ steps:
     args:
       - -c
       - |
+        if [ "$$CI_COMMIT_REF_NAME" != "main" ]; then
+          echo "Skipping NPM publish on PR or non-main branch";
+          exit 0;
+        fi
         npm config set -- '//registry.npmjs.org/:_authToken' "$$NPM_TOKEN"
         cd dist/@lab900/forms
         npm publish --ignore-scripts
