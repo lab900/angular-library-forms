@@ -28,7 +28,7 @@ export class Lab900Form<T> {
   /**
    * You can add a object of other form groups which could be used in the conditional fields
    */
-  public readonly externalForms = input<Record<string, UntypedFormGroup> | undefined>();
+  public readonly externalForms = input<Record<string, UntypedFormGroup> | undefined>(undefined);
 
   /**
    * Don't trigger the valueChanges event when the data is set
