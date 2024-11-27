@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { InputFieldComponent } from './input-field.component';
 import { FormControl, FormGroup } from '@angular/forms';
-import { EditType, FormFieldInput } from '@lab900/forms';
 import { TESTING_PROVIDERS } from '../../../testing/testing.providers';
 import { provideNgxMask } from 'ngx-mask';
+import { EditType } from '../../../models/editType';
+import { FormFieldInput } from './input-field.model';
+import { InputFieldComponent } from './input-field.component';
 
 const iso6346Pattern = new RegExp('[a-zA-Z]{4}-[0-9]{6}\\/[0-9]');
 const iso6346Mask = 'SSSS-000000/0';

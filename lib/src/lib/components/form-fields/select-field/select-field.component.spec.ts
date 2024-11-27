@@ -1,13 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SelectFieldComponent } from './select-field.component';
 import { FormControl, FormGroup } from '@angular/forms';
-import { EditType, FormFieldSelect } from '@lab900/forms';
+import { FormFieldSelect } from './field-select.model';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { MatSelectHarness } from '@angular/material/select/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { TESTING_PROVIDERS } from '../../../testing/testing.providers';
+import { EditType } from '../../../models/editType';
 
 const basicSelectSchema: FormFieldSelect<any> = {
   attribute: 'test',
