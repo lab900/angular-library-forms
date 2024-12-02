@@ -27,6 +27,7 @@ export interface FormFieldButtonOptions extends FormFieldBaseOptions {
   suffixIcon?: string;
   svgIcon?: boolean;
   containerClass?: string;
+  buttonId?: string;
 }
 
 export interface FormFieldButton<T extends string | number = string>
