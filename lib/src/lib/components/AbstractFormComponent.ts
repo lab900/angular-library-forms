@@ -48,7 +48,8 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   public readonly readonlyLabel = computed<string | undefined>(
     () => this._schema().options?.readonlyLabel ?? this.label(),
   );
-  public get elementId(): string {
+
+  public readonly elementId = computed<string>(() => {
     const customId = this._options()?.customId;
     const fieldAttribute = this.fieldAttribute;
     if (customId) {
@@ -57,7 +58,8 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
       return `${fieldAttribute}`;
     }
     return '';
-  }
+  });
+
   public readonly errorMessage = toSignal<string>(
     toObservable(this._fieldControl).pipe(
       filter((field) => !!field),

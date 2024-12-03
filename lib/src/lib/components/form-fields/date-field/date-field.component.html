@@ -1,5 +1,5 @@
 @if (!fieldIsHidden) {
-  <mat-form-field [formGroup]="group" class="lab900-date-field" id="lab900-date-field-{{ elementId }}">
+  <mat-form-field [formGroup]="group" class="lab900-date-field" id="lab900-date-field-{{ this.elementId() }}">
     @if (schema.title) {
       <mat-label translate>{{ schema.title }}</mat-label>
     }

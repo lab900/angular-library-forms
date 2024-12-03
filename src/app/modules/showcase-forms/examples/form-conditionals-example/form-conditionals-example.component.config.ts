@@ -6,13 +6,14 @@ export const formConditionalsData = {
 };
 
 export const formConditionalsExample: Lab900FormConfig = {
+  formId: 'exampleFormId',
   fields: [
     {
       attribute: 'role',
       editType: EditType.Select,
       title: 'Role',
       options: {
-        customId: 'customId-Role',
+        customId: 'customIdRole',
         colspan: 6,
         selectOptions: [
           { label: '', value: null },

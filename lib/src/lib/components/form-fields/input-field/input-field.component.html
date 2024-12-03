@@ -3,7 +3,7 @@
     [formGroup]="group"
     class="lab900-input-field {{ options?.align || 'left' }}"
     [class.spanFix]="options?.suffix || options?.prefix"
-    id="lab900-input-field-{{ elementId }}"
+    id="lab900-input-field-{{ this.elementId() }}"
   >
     @if (label()) {
       <mat-label>{{ label() | translate }}</mat-label>

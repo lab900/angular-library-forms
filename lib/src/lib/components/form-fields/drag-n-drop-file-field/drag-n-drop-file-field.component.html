@@ -2,7 +2,7 @@
   @if (schema.title) {
     <span class="lab900-form-field-label" translate>{{ schema.title }}</span>
   }
-  <div class="upload-file" [class.upload-file--compact]="options.compact" id="upload-file-{{elementId}}">
+  <div class="upload-file" [class.upload-file--compact]="options.compact" id="upload-file-{{this.elementId()}}">
     <div
       lab900DropFile
       class="upload-file__container"
