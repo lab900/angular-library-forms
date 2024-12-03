@@ -12,7 +12,7 @@ import { TranslateModule } from '@ngx-translate/core';
   selector: 'lab900-button-field',
   templateUrl: './button-field.component.html',
   standalone: true,
-  imports: [MatTooltip, MatLabel, ReactiveFormsModule, TranslateModule, Lab900ButtonComponent, MatFormField]
+  imports: [MatTooltip, MatLabel, ReactiveFormsModule, TranslateModule, Lab900ButtonComponent]
 })
 export class ButtonFieldComponent extends FormComponent<FormFieldButton> {
   @HostBinding('class')

@@ -50,10 +50,10 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   );
 
   public readonly elementId = computed<string>(() => {
-    const customId = this._options()?.customId;
+    const elementId = this._options()?.elementId;
     const fieldAttribute = this.fieldAttribute;
-    if (customId) {
-      return `${customId}`;
+    if (elementId) {
+      return `${elementId}`;
     } else if (fieldAttribute) {
       return `${fieldAttribute}`;
     }
