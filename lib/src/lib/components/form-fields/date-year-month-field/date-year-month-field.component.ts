@@ -11,7 +11,6 @@ import {
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AsyncPipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
 
@@ -38,7 +37,6 @@ import { MatInputModule } from '@angular/material/input';
   imports: [
     ReactiveFormsModule,
     TranslateModule,
-    AsyncPipe,
     MatDatepickerModule,
     MatFormFieldModule,
     MatInputModule,

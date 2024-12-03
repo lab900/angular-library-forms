@@ -3,7 +3,6 @@ import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldMultiLang } from './multi-lang-input-field.model';
 import { MultiLangFieldControlComponent } from './multi-lang-field-control/multi-lang-field-control.component';
 import { MatError } from '@angular/material/form-field';
-import { AsyncPipe } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -13,7 +12,6 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [
     MultiLangFieldControlComponent,
     MatError,
-    AsyncPipe,
     ReactiveFormsModule,
   ],
 })
