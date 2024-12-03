@@ -4,7 +4,6 @@ import { ReactiveFormsModule, UntypedFormArray } from '@angular/forms';
 import { Lab900FormBuilderService } from '../../../services/form-builder.service';
 import { MatError, matFormFieldAnimations } from '@angular/material/form-field';
 import { FormFieldRepeater } from './repeater-field.model';
-import { AsyncPipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -27,7 +26,6 @@ export const DEFAULT_REPEATER_MIN_ROWS = 1;
     FormFieldDirective,
     MatMiniFabButton,
     MatError,
-    AsyncPipe,
     MatButton,
   ],
 })

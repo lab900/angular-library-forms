@@ -49,6 +49,17 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     () => this._schema().options?.readonlyLabel ?? this.label(),
   );
 
+  public readonly elementId = computed<string>(() => {
+    const elementId = this._options()?.elementId;
+    const fieldAttribute = this.fieldAttribute;
+    if (elementId) {
+      return `${elementId}`;
+    } else if (fieldAttribute) {
+      return `${fieldAttribute}`;
+    }
+    return `random-${Math.random().toString(36)}`;
+  });
+
   public readonly errorMessage = toSignal<string>(
     toObservable(this._fieldControl).pipe(
       filter((field) => !!field),

@@ -52,4 +52,5 @@ export interface FormFieldBaseOptions {
   infoTooltip?:
     | { text: string; icon?: string; class?: string }
     | ((data?: any) => { text: string; icon?: string; class?: string } | null);
+  elementId?: string; // Overrides the attribute name for the element ID if set; otherwise, defaults to the attribute name.
 }

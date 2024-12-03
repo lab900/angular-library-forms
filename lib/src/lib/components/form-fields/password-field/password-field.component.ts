@@ -2,7 +2,7 @@ import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldPassword } from './password-field.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { AsyncPipe, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { TranslateModule } from '@ngx-translate/core';
@@ -22,7 +22,6 @@ import { IconComponent } from '@lab900/ui';
     NgClass,
     AutofocusDirective,
     IconComponent,
-    AsyncPipe,
   ],
 })
 export class PasswordFieldComponent extends FormComponent<FormFieldPassword> {

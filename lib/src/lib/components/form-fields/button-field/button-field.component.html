@@ -2,7 +2,7 @@
   <div
     [formGroup]="group"
     class="lab900-button-field button-field mat-form-field-wrapper"
-    id="lab900-button-field-{{ fieldAttribute }}"
+    id="lab900-button-field-{{elementId()}}"
   >
     @if (label(); as label) {
       <div class="lab900-button-field__label">
@@ -22,6 +22,7 @@
       [suffixIcon]="options.suffixIcon"
       [svgIcon]="options.svgIcon"
       [containerClass]="options.containerClass"
+      [buttonId]="options.buttonId"
     />
   </div>
 }

@@ -3,7 +3,7 @@
     [formGroup]="group"
     class="lab900-select-field"
     [class.has-value]="hasValue()"
-    id="lab900-select-field-{{ fieldAttribute }}"
+    id="lab900-select-field-{{ elementId() }}"
   >
     @if (label(); as label) {
       <mat-label>

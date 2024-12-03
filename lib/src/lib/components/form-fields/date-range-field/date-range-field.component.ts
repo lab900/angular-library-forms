@@ -7,7 +7,6 @@ import {
   MatDateRangeInput,
 } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { AsyncPipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
 
@@ -22,7 +21,6 @@ import { MatInputModule } from '@angular/material/input';
     ReactiveFormsModule,
     TranslateModule,
     MatDatepickerModule,
-    AsyncPipe,
   ],
 })
 export class DateRangeFieldComponent extends FormComponent<FormFieldDateRange> {

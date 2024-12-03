@@ -2,7 +2,7 @@
   <div
     [formGroup]="group"
     class="lab900-repeater-field repeater-field"
-    id="lab900-repeater-field-{{ fieldAttribute }}"
+    id="lab900-repeater-field-{{ elementId() }}"
     [class.fixed-list]="fixedList"
   >
     <div [formArrayName]="fieldAttribute">

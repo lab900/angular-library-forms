@@ -3,7 +3,6 @@ import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldButtonToggle } from './button-toggle-field.model';
 import { MatButtonToggle, MatButtonToggleChange, MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AsyncPipe } from '@angular/common';
 import { MatError, MatLabel } from '@angular/material/form-field';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -22,7 +21,6 @@ import { IconComponent } from '@lab900/ui';
     MatTooltip,
     IconComponent,
     MatError,
-    AsyncPipe,
   ],
 })
 export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonToggle> {

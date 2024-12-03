@@ -1,5 +1,9 @@
 # Changelog
 
+## 18.2.0
+
+- Adding possibility for the usage of custom Id's to form: columns, rows, fields and buttons.
+
 ## 18.1.1/18.1.2
 
 - fixes for displaying error messages
