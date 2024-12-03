@@ -1,5 +1,4 @@
 import { EditType, Lab900FormConfig } from '@lab900/forms';
-import { ValueLabel } from '@lab900/forms';
 
 export const formConditionalsData = {
   country: 'BEL',
@@ -13,7 +12,7 @@ export const formConditionalsExample: Lab900FormConfig = {
       editType: EditType.Select,
       title: 'Role',
       options: {
-        customId: 'customIdRole',
+        elementId: 'customIdRole',
         colspan: 6,
         selectOptions: [
           { label: '', value: null },
@@ -26,7 +25,7 @@ export const formConditionalsExample: Lab900FormConfig = {
       attribute: '',
       editType: EditType.Row,
       options: {
-        customId: 'rowCustomId',
+        elementId: 'rowCustomId',
       },
       nestedFields: [
         {
@@ -34,7 +33,7 @@ export const formConditionalsExample: Lab900FormConfig = {
           editType: EditType.Select,
           title: 'Country',
           options: {
-            customId: 'countryCustomId',
+            elementId: 'countryCustomId',
             colspan: 6,
           },
           conditions: [
@@ -62,10 +61,7 @@ export const formConditionalsExample: Lab900FormConfig = {
           conditions: [
             {
               dependOn: ['country', 'role'],
-              conditionalOptions: (value: {
-                country: string;
-                role: string;
-              }) => {
+              conditionalOptions: (value: { country: string; role: string }) => {
                 switch (value?.country) {
                   case 'BEL':
                     return [

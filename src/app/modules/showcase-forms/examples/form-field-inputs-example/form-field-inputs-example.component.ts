@@ -26,7 +26,7 @@ export class FormFieldInputsExampleComponent {
               readonly: true,
               readonlyContainerClass: 'readonlyInputCustomContainerClass',
               defaultValue: 'MANUAL',
-              customId: 'ExampleOfCustomId',
+              elementId: 'ExampleOfCustomId',
             },
           },
         ],
