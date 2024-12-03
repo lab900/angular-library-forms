@@ -11,7 +11,7 @@
           class="form-col"
           [class.hidden]="isHidden(field)"
           [style.width]="(100 * (_options()?.colspan || 12)) / 12 + '%'"
-          id="form-col-{{this.elementId()}}-{{_options()?.customId}}"
+          id="form-col-{{this.elementId()}}-{{_options()?.elementId}}"
         >
           <ng-container
             lab900FormField
