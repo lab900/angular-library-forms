@@ -12,6 +12,7 @@ export const formConditionalsExample: Lab900FormConfig = {
       editType: EditType.Select,
       title: 'Role',
       options: {
+        customId: 'customId-Role',
         colspan: 6,
         selectOptions: [
           { label: '', value: null },
@@ -23,12 +24,16 @@ export const formConditionalsExample: Lab900FormConfig = {
     {
       attribute: '',
       editType: EditType.Row,
+      options: {
+        customId: 'rowCustomId',
+      },
       nestedFields: [
         {
           attribute: 'country',
           editType: EditType.Select,
           title: 'Country',
           options: {
+            customId: 'countryCustomId',
             colspan: 6,
           },
           conditions: [

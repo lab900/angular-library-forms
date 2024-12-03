@@ -16,6 +16,7 @@ export class FormConditionalValidationExampleComponent {
         editType: EditType.Checkbox,
         title: 'Mark as required',
         options: {
+          customId: 'markAsRequiredCustomId',
           colspan: 6,
           disabledIndeterminate: true,
         },

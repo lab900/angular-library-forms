@@ -1,5 +1,5 @@
 @if (!fieldIsHidden) {
-  <div [formGroup]="group" class="lab900-radio-buttons-field" id="lab900-radio-buttons-field-{{ fieldAttribute }}">
+  <div [formGroup]="group" class="lab900-radio-buttons-field" id="lab900-radio-buttons-field-{{ elementId }}">
     @if (label(); as label) {
       <div class="lab900-radio-buttons-field__label">
         <mat-label>{{ label | translate }}</mat-label>

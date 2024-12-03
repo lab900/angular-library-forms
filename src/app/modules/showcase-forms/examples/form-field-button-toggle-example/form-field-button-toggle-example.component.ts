@@ -44,6 +44,7 @@ export class FormFieldButtonToggleExampleComponent {
             editType: EditType.ButtonToggle,
             options: {
               required: true,
+              customId: 'buttonGroupAttribute2-customId',
               buttonOptions: [
                 {
                   value: 'edit',

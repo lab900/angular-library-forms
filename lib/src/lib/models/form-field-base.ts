@@ -52,4 +52,5 @@ export interface FormFieldBaseOptions {
   infoTooltip?:
     | { text: string; icon?: string; class?: string }
     | ((data?: any) => { text: string; icon?: string; class?: string } | null);
+  customId?: string;
 }

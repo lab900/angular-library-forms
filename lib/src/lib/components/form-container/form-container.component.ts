@@ -47,6 +47,7 @@ export class Lab900Form<T> {
   });
   public readonly controls = computed(() => this._form().controls);
   public readonly readonly = computed(() => this.schema()?.readonly);
+  public readonly customId = computed(() => this.schema()?.customId);
 
   public get form(): UntypedFormGroup {
     return this._form();

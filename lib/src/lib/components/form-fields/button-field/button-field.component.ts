@@ -3,7 +3,7 @@ import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldButton } from './button-field.model';
 import { Lab900ButtonComponent } from '@lab900/ui';
 import { MatTooltip } from '@angular/material/tooltip';
-import { MatLabel } from '@angular/material/form-field';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -12,7 +12,7 @@ import { TranslateModule } from '@ngx-translate/core';
   selector: 'lab900-button-field',
   templateUrl: './button-field.component.html',
   standalone: true,
-  imports: [MatTooltip, MatLabel, ReactiveFormsModule, TranslateModule, Lab900ButtonComponent],
+  imports: [MatTooltip, MatLabel, ReactiveFormsModule, TranslateModule, Lab900ButtonComponent, MatFormField]
 })
 export class ButtonFieldComponent extends FormComponent<FormFieldButton> {
   @HostBinding('class')

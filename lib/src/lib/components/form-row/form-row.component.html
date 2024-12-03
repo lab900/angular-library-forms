@@ -1,16 +1,17 @@
 @if (visible() && _schema()) {
-  <div [hidden]="isHidden(schema)" class="lab900-form-row {{ _options()?.customClass }}">
+  <div [hidden]="isHidden(schema)" class="lab900-form-row {{ _options()?.customClass }}" id="lab900-form-row-{{elementId}}">
     @if ((fieldIsReadonly && _options()?.readonlyLabel) || label()) {
       <span class="lab900-form-field-label lab900-form-row-label {{ _options()?.customTitleClass }}">{{
         (!fieldIsReadonly ? label() : _options()?.readonlyLabel || label()) | translate
       }}</span>
     }
-    <div class="form-row" [class.mobile-cols]="_options()?.mobileCols">
+    <div class="form-row" [class.mobile-cols]="_options()?.mobileCols" id="form-col-{{elementId}}">
       @for (field of nestedFields(); track field) {
         <div
           class="form-col"
           [class.hidden]="isHidden(field)"
           [style.width]="(100 * (field.options?.colspan || 12)) / 12 + '%'"
+          id="form-col-{{elementId}}-{{field.options?.customId}}"
         >
           <ng-container
             lab900FormField

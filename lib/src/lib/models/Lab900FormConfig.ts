@@ -8,4 +8,5 @@ export interface Lab900FormConfig<
   title?: string;
   fields: Lab900FormField<R, T, DATE>[];
   readonly?: boolean;
+  customId?: string;
 }

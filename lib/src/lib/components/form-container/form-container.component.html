@@ -3,6 +3,7 @@
     [formGroup]="_form()"
     class="lab900-form"
     [autocomplete]="setting?.disableBrowserAutocomplete ? 'off' : 'on'"
+    id="lab900-form-{{customId()}}"
   >
     <div class="lab900-form__inner">
       @for (field of fields(); track field) {
