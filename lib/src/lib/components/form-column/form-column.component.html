@@ -1,5 +1,5 @@
 @if (visible() && _schema()) {
-  <div [hidden]="isHidden(schema)" class="lab900-form-column {{ _options()?.customClass }}"  id="lab900-form-column-{{this.elementId()}}">
+  <div [hidden]="isHidden(schema)" class="lab900-form-column {{ _options()?.customClass }}"  id="lab900-form-column-{{elementId()}}">
     @if ((fieldIsReadonly && _options()?.readonlyLabel) || label()) {
       <span class="lab900-form-field-label lab900-form-column-label {{ _options()?.customTitleClass }}">{{
         (!fieldIsReadonly ? label() : _options()?.readonlyLabel || label()) | translate
