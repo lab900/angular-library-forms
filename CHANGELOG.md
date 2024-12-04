@@ -1,5 +1,9 @@
 # Changelog
 
+## 18.2.1
+
+- Fix broken colspan for form rows
+
 ## 18.2.0
 
 - Adding possibility for the usage of custom Id's to form: columns, rows, fields and buttons.

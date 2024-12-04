@@ -10,7 +10,7 @@
         <div
           class="form-col"
           [class.hidden]="isHidden(field)"
-          [style.width]="(100 * (_options()?.colspan || 12)) / 12 + '%'"
+          [style.width]="(100 * (field.options?.colspan || 12)) / 12 + '%'"
           id="form-col-{{ elementId() }}-{{ _options()?.elementId }}"
         >
           <ng-container
