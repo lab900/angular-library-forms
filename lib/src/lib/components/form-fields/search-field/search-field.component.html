@@ -40,7 +40,7 @@
     }
     @if (!!inputRef.value && (searchRef?.noResult$ | async) === true) {
       <mat-hint>
-        {{ options?.notFoundLabel ?? 'forms.search-field.notFoundLabel' | translate: { value: inputRef.value } }}
+        {{ options?.notFoundLabel ?? "forms.search-field.notFoundLabel" | translate: { value: inputRef.value } }}
       </mat-hint>
     }
     @if (!valid && !fieldIsReadonly) {

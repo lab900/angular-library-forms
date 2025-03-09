@@ -11,15 +11,9 @@ import { Lab900Form } from '../form-container/form-container.component';
 import { MatButton } from '@angular/material/button';
 
 @Component({
-    selector: 'lab900-form-dialog',
-    templateUrl: './form-dialog.component.html',
-    imports: [
-        MatDialogContent,
-        Lab900Form,
-        MatDialogActions,
-        MatButton,
-        MatDialogClose,
-    ]
+  selector: 'lab900-form-dialog',
+  templateUrl: './form-dialog.component.html',
+  imports: [MatDialogContent, Lab900Form, MatDialogActions, MatButton, MatDialogClose],
 })
 export class FormDialogComponent<T> {
   @ViewChild(Lab900Form)

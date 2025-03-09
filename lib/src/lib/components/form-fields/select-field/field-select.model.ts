@@ -1,9 +1,5 @@
 import { EditType } from '../../../models/editType';
-import {
-  FormFieldBase,
-  FormFieldBaseOptions,
-  ValueLabel,
-} from '../../../models/form-field-base';
+import { FormFieldBase, FormFieldBaseOptions, ValueLabel } from '../../../models/form-field-base';
 import { Observable } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
 import { SelectFieldComponent } from './select-field.component';
@@ -23,10 +19,7 @@ export type FormFieldSelectOptionsFn<T> = (
 
 export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
   multiple?: boolean;
-  selectOptions?:
-    | FormFieldSelectOptionsFn<T>
-    | ValueLabel<T>[]
-    | Observable<ValueLabel<T>[]>;
+  selectOptions?: FormFieldSelectOptionsFn<T> | ValueLabel<T>[] | Observable<ValueLabel<T>[]>;
   compareWith?: (o1: T, o2: T) => boolean;
   /**
    *

@@ -23,9 +23,7 @@
           />
           @if (infoTooltip(field); as tip) {
             <div class="form-col__info">
-              <mat-icon [matTooltipClass]="tip.class" [matTooltip]="tip.text | translate">{{
-                tip.icon || 'info'
-              }}</mat-icon>
+              <mat-icon [matTooltipClass]="tip.class" [matTooltip]="tip.text | translate">{{ tip.icon || "info" }}</mat-icon>
             </div>
           }
         </div>

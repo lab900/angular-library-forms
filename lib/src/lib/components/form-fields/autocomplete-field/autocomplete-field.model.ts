@@ -1,8 +1,4 @@
-import {
-  FormFieldBase,
-  FormFieldBaseOptions,
-  ValueLabel,
-} from '../../../models/form-field-base';
+import { FormFieldBase, FormFieldBaseOptions, ValueLabel } from '../../../models/form-field-base';
 import { Observable } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
 import { EditType } from '../../../models/editType';

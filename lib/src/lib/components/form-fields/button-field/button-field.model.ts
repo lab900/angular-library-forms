@@ -1,7 +1,4 @@
-import {
-  FormFieldBase,
-  FormFieldBaseOptions,
-} from '../../../models/form-field-base';
+import { FormFieldBase, FormFieldBaseOptions } from '../../../models/form-field-base';
 import { ThemePalette } from '@angular/material/core';
 import { EditType } from '../../../models/editType';
 import { Lab900FormField } from '../../../models/lab900-form-field.type';
@@ -13,11 +10,7 @@ export interface FormFieldButtonOptions extends FormFieldBaseOptions {
   type: Lab900ButtonType;
   color?: ThemePalette;
   disabled?: boolean;
-  onClick?: (
-    formGroup: UntypedFormGroup,
-    currentScheme: Lab900FormField,
-    event: Event,
-  ) => any;
+  onClick?: (formGroup: UntypedFormGroup, currentScheme: Lab900FormField, event: Event) => any;
   label?: string;
   tooltip?: {
     text: string;
@@ -30,7 +23,6 @@ export interface FormFieldButtonOptions extends FormFieldBaseOptions {
   buttonId?: string;
 }
 
-export interface FormFieldButton<T extends string | number = string>
-  extends FormFieldBase<T, FormFieldButtonOptions> {
+export interface FormFieldButton<T extends string | number = string> extends FormFieldBase<T, FormFieldButtonOptions> {
   editType: EditType.Button;
 }

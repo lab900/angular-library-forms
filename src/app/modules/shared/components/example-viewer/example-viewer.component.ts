@@ -1,11 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  Input,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,19 +15,19 @@ export interface ExampleFile {
 }
 
 @Component({
-    selector: 'lab900-example-viewer',
-    templateUrl: './example-viewer.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        MatCardModule,
-        TranslateModule,
-        MatButtonModule,
-        MatTabsModule,
-        MarkdownModule,
-        LowerCasePipe,
-        MatIconModule,
-        MatTooltipModule,
-    ]
+  selector: 'lab900-example-viewer',
+  templateUrl: './example-viewer.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    MatCardModule,
+    TranslateModule,
+    MatButtonModule,
+    MatTabsModule,
+    MarkdownModule,
+    LowerCasePipe,
+    MatIconModule,
+    MatTooltipModule,
+  ],
 })
 export class ExampleViewerComponent implements AfterViewInit {
   @Input()
@@ -63,10 +56,6 @@ export class ExampleViewerComponent implements AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
-    this.exampleName =
-      this.exampleComponent?.nativeElement?.children?.[0]?.localName.replace(
-        'lab900-',
-        '',
-      );
+    this.exampleName = this.exampleComponent?.nativeElement?.children?.[0]?.localName.replace('lab900-', '');
   }
 }

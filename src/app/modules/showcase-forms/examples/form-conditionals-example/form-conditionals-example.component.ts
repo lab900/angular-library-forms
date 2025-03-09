@@ -4,12 +4,12 @@ import { formConditionalsData, formConditionalsExample } from './form-conditiona
 import { MatButton } from '@angular/material/button';
 
 @Component({
-    selector: 'lab900-form-conditionals-example',
-    template: `
+  selector: 'lab900-form-conditionals-example',
+  template: `
     <lab900-form #lab900FormContainer [schema]="formFields" [data]="formData" />
     <button mat-stroked-button (click)="submitForm()">Submit Form</button>
   `,
-    imports: [Lab900Form, MatButton]
+  imports: [Lab900Form, MatButton],
 })
 export class FormConditionalsExampleComponent {
   public formFields: Lab900FormConfig = formConditionalsExample;

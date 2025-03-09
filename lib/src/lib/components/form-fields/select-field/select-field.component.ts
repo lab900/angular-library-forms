@@ -21,10 +21,10 @@ import { MatOption } from '@angular/material/autocomplete';
 import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
-    selector: 'lab900-select-field',
-    templateUrl: './select-field.component.html',
-    styles: [
-        `
+  selector: 'lab900-select-field',
+  templateUrl: './select-field.component.html',
+  styles: [
+    `
       .no-entries-found {
         display: flex;
         align-items: center;
@@ -35,24 +35,24 @@ import { toObservable } from '@angular/core/rxjs-interop';
         margin-left: 10px;
       }
     `,
-    ],
-    imports: [
-        MatFormFieldModule,
-        MatSelectModule,
-        ReactiveFormsModule,
-        TranslateModule,
-        SelectInfiniteScrollDirective,
-        NgxMatSelectSearchModule,
-        FormsModule,
-        MatButton,
-        MatPseudoCheckbox,
-        MatIconButton,
-        MatIcon,
-    ],
-    host: {
-        class: 'lab900-form-field',
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+  ],
+  imports: [
+    MatFormFieldModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    SelectInfiniteScrollDirective,
+    NgxMatSelectSearchModule,
+    FormsModule,
+    MatButton,
+    MatPseudoCheckbox,
+    MatIconButton,
+    MatIcon,
+  ],
+  host: {
+    class: 'lab900-form-field',
+  },
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> implements OnInit {
   public readonly selectOptions = signal<ValueLabel<T>[]>([]);

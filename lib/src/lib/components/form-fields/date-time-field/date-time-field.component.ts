@@ -14,16 +14,16 @@ import { MatButton } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-    selector: 'lab900-date-time-field',
-    templateUrl: './date-time-field.component.html',
-    imports: [
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        NgxMatDatetimePickerModule,
-        TranslateModule,
-        MatButton,
-    ]
+  selector: 'lab900-date-time-field',
+  templateUrl: './date-time-field.component.html',
+  imports: [
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    NgxMatDatetimePickerModule,
+    TranslateModule,
+    MatButton,
+  ],
 })
 export class DateTimeFieldComponent extends FormComponent<FormFieldDateTimePicker> {
   @HostBinding('class')
@@ -59,8 +59,7 @@ export class DateTimeFieldComponent extends FormComponent<FormFieldDateTimePicke
     /**
      * Prefill the datepicker with the current date if no date is selected
      */
-    const model = (datePicker as any)?._componentRef?.instance
-      ?._model as NgxMatSingleDateSelectionModel<any>;
+    const model = (datePicker as any)?._componentRef?.instance?._model as NgxMatSingleDateSelectionModel<any>;
     if (model && model.selection == null) {
       model.add(this.adapter.today());
     }

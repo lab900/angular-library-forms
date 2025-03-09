@@ -7,13 +7,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 
 @Component({
-    selector: 'lab900-radio-buttons-field',
-    templateUrl: './radio-buttons-field.component.html',
-    imports: [MatLabel, ReactiveFormsModule, TranslateModule, MatRadioGroup, MatRadioButton, MatError],
-    host: {
-        class: 'lab900-form-field',
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'lab900-radio-buttons-field',
+  templateUrl: './radio-buttons-field.component.html',
+  imports: [MatLabel, ReactiveFormsModule, TranslateModule, MatRadioGroup, MatRadioButton, MatError],
+  host: {
+    class: 'lab900-form-field',
+  },
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RadioButtonsFieldComponent extends FormComponent<FormFieldRadioButtons> {
   protected readonly radioOptions = computed(() => this._options()?.radioOptions);

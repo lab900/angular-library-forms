@@ -19,22 +19,15 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-    selector: 'lab900-multi-lang-field-control',
-    templateUrl: './multi-lang-field-control.component.html',
-    styleUrls: ['./multi-lang-field-control.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        LanguagePickerComponent,
-        MatFormFieldModule,
-        MatInputModule,
-        TranslateModule,
-        FormsModule,
-    ]
+  selector: 'lab900-multi-lang-field-control',
+  templateUrl: './multi-lang-field-control.component.html',
+  styleUrls: ['./multi-lang-field-control.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LanguagePickerComponent, MatFormFieldModule, MatInputModule, TranslateModule, FormsModule],
 })
 export class MultiLangFieldControlComponent implements ControlValueAccessor {
   private readonly cdr = inject(ChangeDetectorRef);
-  public readonly appearance =
-    inject(LAB900_FORM_MODULE_SETTINGS)?.formField?.appearance ?? 'standard';
+  public readonly appearance = inject(LAB900_FORM_MODULE_SETTINGS)?.formField?.appearance ?? 'standard';
 
   public readonly availableLanguages = input.required<ValueLabel[]>();
   public readonly label = input.required<string>();
@@ -94,9 +87,7 @@ export class MultiLangFieldControlComponent implements ControlValueAccessor {
     this.value = value ?? {};
     const valuesArray = Object.values(this.value);
     const hasValues = !!valuesArray.some((v) => !!v);
-    this.toggleTranslate(
-      hasValues && !valuesArray.every((v) => v === valuesArray[0]),
-    );
+    this.toggleTranslate(hasValues && !valuesArray.every((v) => v === valuesArray[0]));
     this.cdr.markForCheck();
   }
 
@@ -125,9 +116,7 @@ export class MultiLangFieldControlComponent implements ControlValueAccessor {
 
   public resetDefaultLanguage(): void {
     const defaultLang =
-      this.availableLanguages().find(
-        (l) => l.value === this.defaultLanguage(),
-      ) ?? this.availableLanguages()[0];
+      this.availableLanguages().find((l) => l.value === this.defaultLanguage()) ?? this.availableLanguages()[0];
     this.activeLanguage.set(defaultLang);
   }
 

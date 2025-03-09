@@ -9,17 +9,11 @@ import { ExampleViewerComponent } from '../example-viewer/example-viewer.compone
 import MarkdownPageComponent from '../markdown-page/markdown-page.component';
 
 @Component({
-    selector: 'lab900-showcase-page',
-    templateUrl: './showcase-page.component.html',
-    styleUrls: ['./showcase-page.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        CommonModule,
-        MatTabsModule,
-        MarkdownPageComponent,
-        ExampleViewerComponent,
-        Lab900PageHeaderComponent,
-    ]
+  selector: 'lab900-showcase-page',
+  templateUrl: './showcase-page.component.html',
+  styleUrls: ['./showcase-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommonModule, MatTabsModule, MarkdownPageComponent, ExampleViewerComponent, Lab900PageHeaderComponent],
 })
 export class ShowcasePageComponent extends SubscriptionBasedDirective {
   private readonly guideNav: PageHeaderNavItem = {
@@ -51,9 +45,7 @@ export class ShowcasePageComponent extends SubscriptionBasedDirective {
           queryParams: { tab: this.data?.docFile ? 'guide' : 'examples' },
         });
       }
-      this.navItems = !this.data?.docFile
-        ? [this.exampleNav]
-        : [this.guideNav, this.exampleNav];
+      this.navItems = !this.data?.docFile ? [this.exampleNav] : [this.guideNav, this.exampleNav];
     });
   }
 }

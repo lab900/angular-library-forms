@@ -6,20 +6,18 @@
     <div
       lab900DropFile
       class="upload-file__container"
-      [class.upload-file__container--compact]="
-        options.compact && !!files?.length
-      "
+      [class.upload-file__container--compact]="options.compact && !!files?.length"
       (fileDropped)="handleFileList($event)"
       (click)="fileField.click()"
     >
       <div class="instructions">
         <mat-icon class="instructions__upload-icon">upload_file</mat-icon>
         <span class="instructions__DD-text text-ellipsis">
-          {{ options.dropFilesText || 'Drop Files' | translate }}
+          {{ options.dropFilesText || "Drop Files" | translate }}
         </span>
         <div class="instructions__or-text-container">
           <hr />
-          <span class="text-ellipsis">{{ 'OR' | translate }}</span>
+          <span class="text-ellipsis">{{ "OR" | translate }}</span>
           <hr />
         </div>
         <button
@@ -28,16 +26,10 @@
           class="instructions__upload-button text-ellipsis"
           mat-flat-button
         >
-          {{ options.dropFilesButton || 'Upload Files' | translate }}
+          {{ options.dropFilesButton || "Upload Files" | translate }}
         </button>
       </div>
-      <input
-        #fileField
-        (change)="handleInput($event.target)"
-        hidden
-        type="file"
-        [multiple]="options.maxFiles > 1"
-      />
+      <input #fileField (change)="handleInput($event.target)" hidden type="file" [multiple]="options.maxFiles > 1" />
     </div>
 
     @if (!!files?.length) {
@@ -45,7 +37,7 @@
         class="file-list"
         [ngClass]="{
           'file-list--compact': options.compact,
-          'file-list--full': !options.compact
+          'file-list--full': !options.compact,
         }"
       >
         @for (file of files; track file) {
@@ -55,11 +47,7 @@
               <div class="text-ellipsis">{{ file.name }}</div>
               {{ formatBytes(file.size) }}
             </div>
-            <button
-              mat-icon-button
-              class="file__icon"
-              (click)="deleteFile(file)"
-            >
+            <button mat-icon-button class="file__icon" (click)="deleteFile(file)">
               <mat-icon>delete</mat-icon>
             </button>
           </div>

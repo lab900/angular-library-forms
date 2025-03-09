@@ -1,10 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  HostBinding,
-  inject,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, HostBinding, inject, ViewChild } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormDialogDirective } from '../../../directives/form-dialog.directive';
 import { Lab900File } from '../../../models/Lab900File';
@@ -23,21 +17,12 @@ import { AuthImageDirective } from '../../../directives/auth-image.directive';
 import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-    selector: 'lab900-file-preview-field',
-    templateUrl: './file-preview-field.component.html',
-    styleUrls: ['./file-preview-field.component.scss'],
-    imports: [
-        TranslateModule,
-        MatButton,
-        MatCard,
-        MatIcon,
-        AuthImageDirective,
-        MatTooltip,
-    ]
+  selector: 'lab900-file-preview-field',
+  templateUrl: './file-preview-field.component.html',
+  styleUrls: ['./file-preview-field.component.scss'],
+  imports: [TranslateModule, MatButton, MatCard, MatIcon, AuthImageDirective, MatTooltip],
 })
-export class FilePreviewFieldComponent<
-  T,
-> extends FormComponent<FormFieldFilePreview> {
+export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePreview> {
   private readonly dialog = inject(MatDialog);
   @HostBinding('class')
   public classList = 'lab900-form-field';
@@ -102,10 +87,7 @@ export class FilePreviewFieldComponent<
     this.fileFieldComponent.nativeElement.value = null;
   }
 
-  public onMetaDataChanged(
-    data: T,
-    originalData?: Lab900File,
-  ): Promise<boolean> {
+  public onMetaDataChanged(data: T, originalData?: Lab900File): Promise<boolean> {
     return new Promise<boolean>((resolve) => {
       const files = this.files;
       const index = this.getFileIndex(originalData);
@@ -122,9 +104,7 @@ export class FilePreviewFieldComponent<
   private getFileIndex(file: Lab900File): number {
     return this.files.findIndex(
       (listFile: Lab900File) =>
-        listFile.fileName === file.fileName &&
-        listFile.type === file.type &&
-        listFile.size === file.size,
+        listFile.fileName === file.fileName && listFile.type === file.type && listFile.size === file.size,
     );
   }
 

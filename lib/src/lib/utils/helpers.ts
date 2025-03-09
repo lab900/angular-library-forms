@@ -1,10 +1,4 @@
-import {
-  asyncScheduler,
-  concat,
-  connect,
-  MonoTypeOperatorFunction,
-  SchedulerLike,
-} from 'rxjs';
+import { asyncScheduler, concat, connect, MonoTypeOperatorFunction, SchedulerLike } from 'rxjs';
 import { debounceTime, take } from 'rxjs/operators';
 
 export function debounceTimeAfter(
@@ -12,12 +6,7 @@ export function debounceTimeAfter(
   dueTime: number,
   scheduler: SchedulerLike = asyncScheduler,
 ): MonoTypeOperatorFunction<unknown> {
-  return connect((value) =>
-    concat(
-      value.pipe(take(amount)),
-      value.pipe(debounceTime(dueTime, scheduler)),
-    ),
-  );
+  return connect((value) => concat(value.pipe(take(amount)), value.pipe(debounceTime(dueTime, scheduler))));
 }
 
 export function debounceTimeAfterFirst(

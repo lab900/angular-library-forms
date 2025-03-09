@@ -15,22 +15,22 @@ import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-    selector: 'lab900-search-field',
-    templateUrl: './search-field.component.html',
-    imports: [
-        MatFormFieldModule,
-        MatInputModule,
-        ReactiveFormsModule,
-        TranslateModule,
-        NgClass,
-        AutofocusDirective,
-        SearchInputDirective,
-        MatIconButton,
-        MatTooltip,
-        AsyncPipe,
-        MatIcon,
-        MatProgressSpinner,
-    ]
+  selector: 'lab900-search-field',
+  templateUrl: './search-field.component.html',
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    NgClass,
+    AutofocusDirective,
+    SearchInputDirective,
+    MatIconButton,
+    MatTooltip,
+    AsyncPipe,
+    MatIcon,
+    MatProgressSpinner,
+  ],
 })
 export class SearchFieldComponent<T> extends FormComponent<FormFieldSearch<T>> {
   @HostBinding('class')

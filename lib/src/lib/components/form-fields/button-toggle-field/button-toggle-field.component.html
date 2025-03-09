@@ -18,15 +18,15 @@
           (change)="onChange($event)"
           [matTooltip]="value?.tooltip?.text | translate"
           [matTooltipPosition]="value?.tooltip?.position || 'above'"
-          id="mat-button-toggle-{{elementId}}"
+          id="mat-button-toggle-{{ elementId }}"
         >
-          @if (value?.icon?.position === 'left') {
+          @if (value?.icon?.position === "left") {
             <lab900-icon [icon]="value.icon"></lab900-icon>
           }
           @if (value.label) {
             {{ value.label | translate }}
           }
-          @if (!value?.icon?.position || value.icon.position === 'right') {
+          @if (!value?.icon?.position || value.icon.position === "right") {
             <lab900-icon [icon]="value.icon"></lab900-icon>
           }
         </mat-button-toggle>

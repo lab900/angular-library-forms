@@ -41,36 +41,26 @@ export class FormFieldMappingService {
     this.checkboxFieldComponent = lab900FormFieldTypes.CheckboxFieldComponent;
     this.wysiwygFieldComponent = lab900FormFieldTypes.WysiwygFieldComponent;
     this.dateFieldComponent = lab900FormFieldTypes.DateFieldComponent;
-    this.dateYearMonthFieldComponent =
-      lab900FormFieldTypes.DateYearMonthFieldComponent;
+    this.dateYearMonthFieldComponent = lab900FormFieldTypes.DateYearMonthFieldComponent;
     this.fileFieldComponent = lab900FormFieldTypes.FileFieldComponent;
-    this.filePreviewFieldComponent =
-      lab900FormFieldTypes.FilePreviewFieldComponent;
+    this.filePreviewFieldComponent = lab900FormFieldTypes.FilePreviewFieldComponent;
     this.selectFieldComponent = lab900FormFieldTypes.SelectFieldComponent;
     this.textareaFieldComponent = lab900FormFieldTypes.TextareaFieldComponent;
     this.repeaterFieldComponent = lab900FormFieldTypes.RepeaterFieldComponent;
-    this.radioButtonsFieldComponent =
-      lab900FormFieldTypes.RadioButtonsFieldComponent;
+    this.radioButtonsFieldComponent = lab900FormFieldTypes.RadioButtonsFieldComponent;
     this.formRowComponent = lab900FormFieldTypes.FormRowComponent;
     this.formColumnComponent = lab900FormFieldTypes.FormColumnComponent;
-    this.rangeSliderFieldComponent =
-      lab900FormFieldTypes.RangeSliderFieldComponent;
-    this.autocompleteFieldComponent =
-      lab900FormFieldTypes.AutocompleteFieldComponent;
-    this.autocompleteMultipleFieldComponent =
-      lab900FormFieldTypes.AutocompleteMultipleFieldComponent;
+    this.rangeSliderFieldComponent = lab900FormFieldTypes.RangeSliderFieldComponent;
+    this.autocompleteFieldComponent = lab900FormFieldTypes.AutocompleteFieldComponent;
+    this.autocompleteMultipleFieldComponent = lab900FormFieldTypes.AutocompleteMultipleFieldComponent;
     this.iconFieldComponent = lab900FormFieldTypes.IconFieldComponent;
-    this.buttonToggleFieldComponent =
-      lab900FormFieldTypes.ButtonToggleFieldComponent;
+    this.buttonToggleFieldComponent = lab900FormFieldTypes.ButtonToggleFieldComponent;
     this.buttonFieldComponent = lab900FormFieldTypes.ButtonFieldComponent;
-    this.slideToggleFieldComponent =
-      lab900FormFieldTypes.SlideToggleFieldComponent;
+    this.slideToggleFieldComponent = lab900FormFieldTypes.SlideToggleFieldComponent;
     this.dateRangeFieldComponent = lab900FormFieldTypes.DateRangeFieldComponent;
     this.dateTimeFieldComponent = lab900FormFieldTypes.DateTimeFieldComponent;
-    this.multiLangInputFieldComponent =
-      lab900FormFieldTypes.MultiLangInputFieldComponent;
-    this.dragNDropFileFieldComponent =
-      lab900FormFieldTypes.DragNDropFileFieldComponent;
+    this.multiLangInputFieldComponent = lab900FormFieldTypes.MultiLangInputFieldComponent;
+    this.dragNDropFileFieldComponent = lab900FormFieldTypes.DragNDropFileFieldComponent;
     this.unknownFieldComponent = lab900FormFieldTypes.UnknownFieldComponent;
     this.amountFieldComponent = lab900FormFieldTypes.AmountFieldComponent;
     this.searchFieldComponent = lab900FormFieldTypes.SearchFieldComponent;

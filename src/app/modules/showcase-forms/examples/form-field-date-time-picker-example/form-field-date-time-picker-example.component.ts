@@ -2,16 +2,16 @@ import { Component } from '@angular/core';
 import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 
 @Component({
-    selector: 'lab900-form-field-date-time-picker-example',
-    template: '<lab900-form [schema]="formSchema" />',
-    styles: [
-        `
+  selector: 'lab900-form-field-date-time-picker-example',
+  template: '<lab900-form [schema]="formSchema" />',
+  styles: [
+    `
       ::ng-deep .mat-calendar-body-cell.weekend {
         background-color: red;
       }
     `,
-    ],
-    imports: [Lab900Form]
+  ],
+  imports: [Lab900Form],
 })
 export class FormFieldDateTimePickerExampleComponent {
   public data = { test: new Date() };

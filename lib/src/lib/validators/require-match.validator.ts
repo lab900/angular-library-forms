@@ -1,8 +1,4 @@
-import {
-  UntypedFormControl,
-  ValidationErrors,
-  ValidatorFn,
-} from '@angular/forms';
+import { UntypedFormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 /**
  * Validates that a selection from the autocomplete has been made.

@@ -5,18 +5,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatIcon, MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import packageInfo from '../../package.json';
-import {
-  MatDrawer,
-  MatDrawerContainer,
-  MatDrawerContent,
-  MatDrawerMode,
-} from '@angular/material/sidenav';
-import {
-  NavigationEnd,
-  Router,
-  RouterLink,
-  RouterOutlet,
-} from '@angular/router';
+import { MatDrawer, MatDrawerContainer, MatDrawerContent, MatDrawerMode } from '@angular/material/sidenav';
+import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { filter, map, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { SubscriptionBasedDirective } from './modules/shared/directives/subscription-based.directive';
@@ -26,29 +16,26 @@ import { MatIconAnchor, MatIconButton } from '@angular/material/button';
 import { AsyncPipe, NgOptimizedImage } from '@angular/common';
 
 @Component({
-    selector: 'lab900-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    imports: [
-        MatToolbar,
-        MatIcon,
-        MatIconButton,
-        TranslateModule,
-        RouterLink,
-        MatDrawerContainer,
-        Lab900NavListComponent,
-        AsyncPipe,
-        MatDrawer,
-        RouterOutlet,
-        MatIconAnchor,
-        MatDrawerContent,
-        NgOptimizedImage,
-    ]
+  selector: 'lab900-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  imports: [
+    MatToolbar,
+    MatIcon,
+    MatIconButton,
+    TranslateModule,
+    RouterLink,
+    MatDrawerContainer,
+    Lab900NavListComponent,
+    AsyncPipe,
+    MatDrawer,
+    RouterOutlet,
+    MatIconAnchor,
+    MatDrawerContent,
+    NgOptimizedImage,
+  ],
 })
-export class AppComponent
-  extends SubscriptionBasedDirective
-  implements OnInit, OnDestroy
-{
+export class AppComponent extends SubscriptionBasedDirective implements OnInit, OnDestroy {
   private unsub = new Subject<void>();
   public readonly languages = ['en', 'nl'];
   public readonly gitUrl = packageInfo.repository;
@@ -73,15 +60,11 @@ export class AppComponent
 
     this.matIconRegistry.addSvgIcon(
       'github',
-      this.domSanitizer.bypassSecurityTrustResourceUrl(
-        'assets/images/github-logo.svg',
-      ),
+      this.domSanitizer.bypassSecurityTrustResourceUrl('assets/images/github-logo.svg'),
     );
     this.matIconRegistry.addSvgIcon(
       'lab900',
-      this.domSanitizer.bypassSecurityTrustResourceUrl(
-        'assets/images/logo-duo-dark.svg',
-      ),
+      this.domSanitizer.bypassSecurityTrustResourceUrl('assets/images/logo-duo-dark.svg'),
     );
 
     this.sideNavMode$ = this.breakpointObserver
@@ -92,12 +75,7 @@ export class AppComponent
       this.router.events.pipe(
         takeUntil(this.unsub),
         withLatestFrom(this.sideNavMode$),
-        filter(
-          ([e, sideNavMode]) =>
-            e instanceof NavigationEnd &&
-            sideNavMode === 'over' &&
-            this.drawer.opened,
-        ),
+        filter(([e, sideNavMode]) => e instanceof NavigationEnd && sideNavMode === 'over' && this.drawer.opened),
       ),
       () => {
         this.drawer.close();

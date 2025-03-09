@@ -7,13 +7,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-    selector: 'lab900-checkbox-field',
-    templateUrl: './checkbox-field.component.html',
-    styleUrls: ['./checkbox-field.component.css'],
-    animations: [matFormFieldAnimations.transitionMessages],
-    imports: [MatCheckbox, ReactiveFormsModule, TranslateModule, MatHint, MatError],
-    host: { class: 'lab900-form-field' },
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'lab900-checkbox-field',
+  templateUrl: './checkbox-field.component.html',
+  styleUrls: ['./checkbox-field.component.css'],
+  animations: [matFormFieldAnimations.transitionMessages],
+  imports: [MatCheckbox, ReactiveFormsModule, TranslateModule, MatHint, MatError],
+  host: { class: 'lab900-form-field' },
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckboxFieldComponent extends FormComponent<CheckboxFieldModel> {
   protected readonly indeterminate = computed(

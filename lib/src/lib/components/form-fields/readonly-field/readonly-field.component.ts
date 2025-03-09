@@ -4,9 +4,9 @@ import { FormComponent } from '../../AbstractFormComponent';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-    selector: 'lab900-readonly',
-    templateUrl: './readonly-field.component.html',
-    imports: [TranslateModule]
+  selector: 'lab900-readonly',
+  templateUrl: './readonly-field.component.html',
+  imports: [TranslateModule],
 })
 export class ReadonlyFieldComponent extends FormComponent implements OnDestroy {
   @HostBinding('class')
@@ -19,18 +19,15 @@ export class ReadonlyFieldComponent extends FormComponent implements OnDestroy {
     setTimeout(() => {
       if (this.group?.controls && this.fieldAttribute) {
         this.setValue(this.group.controls[this.fieldAttribute].value);
-        this.addSubscription(
-          this.group.controls[this.fieldAttribute].valueChanges,
-          (value: any) => setTimeout(() => this.setValue(value)),
+        this.addSubscription(this.group.controls[this.fieldAttribute].valueChanges, (value: any) =>
+          setTimeout(() => this.setValue(value)),
         );
       }
     });
   }
 
   private setValue(value: any): void {
-    this.value = this.options?.readonlyDisplay
-      ? this.options?.readonlyDisplay(this.group.value)
-      : value;
+    this.value = this.options?.readonlyDisplay ? this.options?.readonlyDisplay(this.group.value) : value;
   }
 
   public getReadonlyContainerClass(): string {

@@ -19,14 +19,9 @@ function validateResources(): ValidatorFn {
 }
 
 @Component({
-    selector: 'lab900-form-field-repeater-example',
-    template: ` <lab900-form
-    [schema]="formSchema"
-    (click)="logValue(form)"
-    [data]="data"
-    #form
-  />`,
-    imports: [Lab900Form]
+  selector: 'lab900-form-field-repeater-example',
+  template: ` <lab900-form [schema]="formSchema" (click)="logValue(form)" [data]="data" #form />`,
+  imports: [Lab900Form],
 })
 export class FormFieldRepeaterExampleComponent {
   @ViewChild(Lab900Form)

@@ -9,13 +9,7 @@
     <div class="range-slider__input range-slider__input--from">
       <mat-form-field>
         <mat-label translate>{{ fromLabel() }}</mat-label>
-        <input
-          matInput
-          [value]="formatValue(value[0])"
-          [min]="min()"
-          [max]="max()"
-          (change)="updateFromValue($event)"
-        />
+        <input matInput [value]="formatValue(value[0])" [min]="min()" [max]="max()" (change)="updateFromValue($event)" />
       </mat-form-field>
     </div>
 

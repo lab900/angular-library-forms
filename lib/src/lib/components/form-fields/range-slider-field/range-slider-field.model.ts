@@ -1,8 +1,5 @@
 import { EditType } from '../../../models/editType';
-import {
-  FormFieldBase,
-  FormFieldBaseOptions,
-} from '../../../models/form-field-base';
+import { FormFieldBase, FormFieldBaseOptions } from '../../../models/form-field-base';
 
 export interface FormFieldRangeSliderOptions extends FormFieldBaseOptions {
   fromLabel?: string;

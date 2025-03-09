@@ -17,10 +17,7 @@ import {
   getThousandSeparator,
 } from './amount.helpers';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import {
-  LAB900_FORM_MODULE_SETTINGS,
-  Lab900FormModuleSettings,
-} from '../../../models/Lab900FormModuleSettings';
+import { LAB900_FORM_MODULE_SETTINGS, Lab900FormModuleSettings } from '../../../models/Lab900FormModuleSettings';
 
 @Directive({
   selector: 'input[lab900AmountInput]',
@@ -98,14 +95,11 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
       const max = this.getMaxDecimals();
       const sIndex = v.indexOf('.');
       if (sIndex >= 0) {
-        validateValue =
-          v.substr(0, sIndex) + (max === 0 ? '' : v.substr(sIndex, max + 1));
+        validateValue = v.substr(0, sIndex) + (max === 0 ? '' : v.substr(sIndex, max + 1));
         target.value = validateValue;
       }
     }
-    this.onChange(
-      !validateValue?.length || isNaN(+validateValue) ? null : +validateValue,
-    );
+    this.onChange(!validateValue?.length || isNaN(+validateValue) ? null : +validateValue);
   }
 
   @HostListener('paste', ['$event'])
@@ -114,9 +108,7 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
       event.preventDefault();
       const pastedInput: string = event.clipboardData.getData('text/plain');
       if (pastedInput?.length) {
-        const newValue = amountToNumber(
-          this.getUnformattedValue(pastedInput),
-        ) as any;
+        const newValue = amountToNumber(this.getUnformattedValue(pastedInput)) as any;
         this.elementRef.nativeElement.value = newValue;
         this.onChange(newValue);
         this.onTouched();
@@ -130,9 +122,7 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
       this.focused = true;
       this.elementRef.nativeElement.type = 'number';
       this.elementRef.nativeElement.setAttribute('step', '0.01');
-      this.elementRef.nativeElement.value = amountToNumber(
-        this.getUnformattedValue(value),
-      ) as any;
+      this.elementRef.nativeElement.value = amountToNumber(this.getUnformattedValue(value)) as any;
     }
   }
 
@@ -149,16 +139,12 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
   private formatValue(value: number): void {
     const v = amountToNumber(String(value)) ?? null;
     this.elementRef.nativeElement.value =
-      v != null
-        ? formatAmountWithoutRounding(v, this.formatter, this.getMaxDecimals())
-        : '';
+      v != null ? formatAmountWithoutRounding(v, this.formatter, this.getMaxDecimals()) : '';
   }
 
   private getUnformattedValue(value: string): string {
     if (value) {
-      return (
-        value.replace(new RegExp('\\' + this.thousandSeparator, 'g'), '') ?? ''
-      );
+      return value.replace(new RegExp('\\' + this.thousandSeparator, 'g'), '') ?? '';
     }
     return '';
   }
@@ -179,9 +165,6 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
   }
 
   private canUpdate(): boolean {
-    return (
-      !this.elementRef.nativeElement?.readOnly &&
-      !this.elementRef.nativeElement?.disabled
-    );
+    return !this.elementRef.nativeElement?.readOnly && !this.elementRef.nativeElement?.disabled;
   }
 }

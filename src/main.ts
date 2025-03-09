@@ -28,8 +28,7 @@ bootstrapApplication(AppComponent, {
     provideRouter([
       {
         path: '',
-        loadChildren: () =>
-          import('./app/modules/showcase-forms/showcase-forms.routes'),
+        loadChildren: () => import('./app/modules/showcase-forms/showcase-forms.routes'),
       },
     ]),
     provideNgxMask(),

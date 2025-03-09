@@ -5,11 +5,11 @@ import { SubscriptionBasedDirective } from '../../directives/subscription-based.
 import { MarkdownModule } from 'ngx-markdown';
 
 @Component({
-    selector: 'lab900-markdown-page',
-    templateUrl: './markdown-page.component.html',
-    styleUrls: ['./markdown-page.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MarkdownModule]
+  selector: 'lab900-markdown-page',
+  templateUrl: './markdown-page.component.html',
+  styleUrls: ['./markdown-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MarkdownModule],
 })
 export default class MarkdownPageComponent extends SubscriptionBasedDirective {
   @Input()

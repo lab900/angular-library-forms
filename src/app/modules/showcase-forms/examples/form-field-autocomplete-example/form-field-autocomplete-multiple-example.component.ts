@@ -1,24 +1,18 @@
 import { Component } from '@angular/core';
-import {
-  EditType,
-  Lab900Form,
-  Lab900FormConfig,
-  ValueLabel,
-} from '@lab900/forms';
+import { EditType, Lab900Form, Lab900FormConfig, ValueLabel } from '@lab900/forms';
 import { of } from 'rxjs';
 import { JsonPipe } from '@angular/common';
 
 @Component({
-    selector: 'lab900-form-field-autocomplete-multiple-example',
-    template: '<lab900-form #form [schema]="formSchema"/><pre>{{form?.value | json }}</pre>',
-    imports: [Lab900Form, JsonPipe]
+  selector: 'lab900-form-field-autocomplete-multiple-example',
+  template: '<lab900-form #form [schema]="formSchema"/><pre>{{form?.value | json }}</pre>',
+  imports: [Lab900Form, JsonPipe],
 })
 export class FormFieldAutocompleteMultipleExampleComponent {
-  public options: ValueLabel[] = [
-    { name: 'Mary' },
-    { name: 'Shelley' },
-    { name: 'Igor' },
-  ].map((value) => ({ value, label: value.name }));
+  public options: ValueLabel[] = [{ name: 'Mary' }, { name: 'Shelley' }, { name: 'Igor' }].map((value) => ({
+    value,
+    label: value.name,
+  }));
 
   public formSchema: Lab900FormConfig = {
     fields: [
@@ -36,8 +30,6 @@ export class FormFieldAutocompleteMultipleExampleComponent {
 
   private filter(value: string): ValueLabel[] {
     const filterValue = value.toLowerCase();
-    return this.options.filter((option: ValueLabel) =>
-      option.label.toLowerCase().includes(filterValue),
-    );
+    return this.options.filter((option: ValueLabel) => option.label.toLowerCase().includes(filterValue));
   }
 }

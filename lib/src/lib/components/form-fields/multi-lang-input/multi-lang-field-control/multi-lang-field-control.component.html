@@ -1,13 +1,9 @@
 @if (availableLanguages()?.length && activeLanguage()) {
   <div
     id="lab900-multi-lang-input-{{ control?.name }}"
-    class="lab900-multi-lang-input-wrapper lab900-multi-lang-input-wrapper--{{
-      appearance
-    }}"
+    class="lab900-multi-lang-input-wrapper lab900-multi-lang-input-wrapper--{{ appearance }}"
   >
-    <div
-      class="lab900-multi-lang-input lab900-multi-lang-input--{{ appearance }}"
-    >
+    <div class="lab900-multi-lang-input lab900-multi-lang-input--{{ appearance }}">
       <div>
         <lab900-language-picker
           [buttonColor]="buttonColor()"
@@ -54,10 +50,7 @@
         <div>
           @for (lang of availableLanguages(); track lang) {
             @if (lang.value === activeLanguage().value) {
-              <mat-form-field
-                class="lab900-input-field"
-                id="lab900-input-field-{{ control?.name }}-{{ lang.value }}"
-              >
+              <mat-form-field class="lab900-input-field" id="lab900-input-field-{{ control?.name }}-{{ lang.value }}">
                 @if (label()) {
                   <mat-label>{{ label() | translate }}</mat-label>
                 }

@@ -5,11 +5,11 @@ import { tap } from 'rxjs/operators';
 import { JsonPipe } from '@angular/common';
 
 @Component({
-    selector: 'lab900-form-field-select-example',
-    template: `<lab900-form #f [schema]="formSchema" />
+  selector: 'lab900-form-field-select-example',
+  template: `<lab900-form #f [schema]="formSchema" />
     <hr style="margin-top: 30px" />
     {{ f.value | json }}`,
-    imports: [Lab900Form, JsonPipe]
+  imports: [Lab900Form, JsonPipe],
 })
 export class FormFieldSearchExampleComponent {
   public readonly formSchema: Lab900FormConfig = {
@@ -20,8 +20,7 @@ export class FormFieldSearchExampleComponent {
         editType: EditType.Search,
         options: {
           labelFormatter: (option) => option?.name,
-          searchFn: (searchQuery: string) =>
-            of({ name: searchQuery, id: 1 }).pipe(tap(console.log)),
+          searchFn: (searchQuery: string) => of({ name: searchQuery, id: 1 }).pipe(tap(console.log)),
           style: 'text-transform: uppercase',
         },
       },

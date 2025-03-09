@@ -9,18 +9,18 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { IconComponent } from '@lab900/ui';
 
 @Component({
-    selector: 'lab900-button-toggle-field',
-    templateUrl: './button-toggle-field.component.html',
-    imports: [
-        ReactiveFormsModule,
-        MatLabel,
-        TranslateModule,
-        MatButtonToggleGroup,
-        MatButtonToggle,
-        MatTooltip,
-        IconComponent,
-        MatError,
-    ]
+  selector: 'lab900-button-toggle-field',
+  templateUrl: './button-toggle-field.component.html',
+  imports: [
+    ReactiveFormsModule,
+    MatLabel,
+    TranslateModule,
+    MatButtonToggleGroup,
+    MatButtonToggle,
+    MatTooltip,
+    IconComponent,
+    MatError,
+  ],
 })
 export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonToggle> {
   @HostBinding('class')

@@ -1,17 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ViewChild } from '@angular/core';
-import {
-  EditType,
-  Lab900File,
-  Lab900Form,
-  Lab900FormConfig,
-} from '@lab900/forms';
+import { EditType, Lab900File, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { MatButton } from '@angular/material/button';
 
 @Component({
-    selector: 'lab900-form-field-file-upload-example',
-    template: '<lab900-form [schema]="formSchema" [data]="formData"/><button mat-raised-button color="primary" (click)="validate()">Submit</button>',
-    imports: [Lab900Form, MatButton]
+  selector: 'lab900-form-field-file-upload-example',
+  template:
+    '<lab900-form [schema]="formSchema" [data]="formData"/><button mat-raised-button color="primary" (click)="validate()">Submit</button>',
+  imports: [Lab900Form, MatButton],
 })
 export class FormFieldFileUploadExampleComponent {
   @ViewChild(Lab900Form)
@@ -36,8 +32,7 @@ export class FormFieldFileUploadExampleComponent {
               },
             ],
           },
-          httpCallback: (image: Lab900File) =>
-            this.http.get(image?.imageSrc, { responseType: 'blob' }),
+          httpCallback: (image: Lab900File) => this.http.get(image?.imageSrc, { responseType: 'blob' }),
           showOverlay: (data: any) => {
             return data.delicate;
           },

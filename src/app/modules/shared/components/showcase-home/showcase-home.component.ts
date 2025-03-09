@@ -10,17 +10,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-    selector: 'lab900-showcase-home',
-    templateUrl: './showcase-home.component.html',
-    styleUrls: ['./showcase-home.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        MatIconModule,
-        TranslateModule,
-        RouterLink,
-        MatButtonModule,
-        AsyncPipe,
-    ]
+  selector: 'lab900-showcase-home',
+  templateUrl: './showcase-home.component.html',
+  styleUrls: ['./showcase-home.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatIconModule, TranslateModule, RouterLink, MatButtonModule, AsyncPipe],
 })
 export default class ShowcaseHomeComponent {
   public data$: Observable<{

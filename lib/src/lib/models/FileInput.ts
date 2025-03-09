@@ -5,9 +5,7 @@ export class FileInput {
     private _files: File[] | null,
     private delimiter: string = ', ',
   ) {
-    this._fileNames = (this._files || [])
-      .map((f: File) => f.name)
-      .join(delimiter);
+    this._fileNames = (this._files || []).map((f: File) => f.name).join(delimiter);
   }
 
   public get files(): File[] {

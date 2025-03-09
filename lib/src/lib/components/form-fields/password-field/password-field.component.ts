@@ -10,18 +10,18 @@ import { AutofocusDirective } from '../../../directives/auto-focus.directive';
 import { IconComponent } from '@lab900/ui';
 
 @Component({
-    selector: 'lab900-password-field',
-    templateUrl: './password-field.component.html',
-    styleUrls: ['./password-field.component.scss'],
-    imports: [
-        MatFormFieldModule,
-        MatInputModule,
-        ReactiveFormsModule,
-        TranslateModule,
-        NgClass,
-        AutofocusDirective,
-        IconComponent,
-    ]
+  selector: 'lab900-password-field',
+  templateUrl: './password-field.component.html',
+  styleUrls: ['./password-field.component.scss'],
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    NgClass,
+    AutofocusDirective,
+    IconComponent,
+  ],
 })
 export class PasswordFieldComponent extends FormComponent<FormFieldPassword> {
   @HostBinding('class')

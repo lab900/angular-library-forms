@@ -4,9 +4,10 @@ import { Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 
 @Component({
-    selector: 'lab900-form-field-inputs-example',
-    template: '<lab900-form [schema]="formSchema"/><button mat-raised-button color="primary" (click)="validate()">Submit</button>',
-    imports: [Lab900Form, MatButton]
+  selector: 'lab900-form-field-inputs-example',
+  template:
+    '<lab900-form [schema]="formSchema"/><button mat-raised-button color="primary" (click)="validate()">Submit</button>',
+  imports: [Lab900Form, MatButton],
 })
 export class FormFieldInputsExampleComponent {
   @ViewChild(Lab900Form)
@@ -92,11 +93,7 @@ export class FormFieldInputsExampleComponent {
             passwordHiddenIcon: { name: 'visibility' },
           },
         },
-        validators: [
-          Validators.pattern(
-            /^(?=\D*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z]).{12,}$/,
-          ),
-        ],
+        validators: [Validators.pattern(/^(?=\D*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z]).{12,}$/)],
         errorMessages: {
           pattern: 'Does not match pattern',
         },

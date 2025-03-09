@@ -1,9 +1,8 @@
 @if (data && currentTab && navItems?.length) {
   <div class="showcase-page row">
     @if (navItems.length === 1) {
-      <h1>{{data.title}}</h1> 
-    }
-    @else {
+      <h1>{{ data.title }}</h1>
+    } @else {
       <lab900-page-header [pageTitle]="data.title" [navItems]="navItems" [tabPanel]="tabNavPanel" />
     }
     <mat-tab-nav-panel #tabNavPanel>

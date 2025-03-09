@@ -6,13 +6,9 @@ import { MatError } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
-    selector: 'lab900-multi-lang-input-field',
-    templateUrl: './multi-lang-input-field.component.html',
-    imports: [
-        MultiLangFieldControlComponent,
-        MatError,
-        ReactiveFormsModule,
-    ]
+  selector: 'lab900-multi-lang-input-field',
+  templateUrl: './multi-lang-input-field.component.html',
+  imports: [MultiLangFieldControlComponent, MatError, ReactiveFormsModule],
 })
 export class MultiLangInputFieldComponent extends FormComponent<FormFieldMultiLang> {
   @HostBinding('class')

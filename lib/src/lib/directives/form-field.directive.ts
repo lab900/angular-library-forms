@@ -1,13 +1,4 @@
-import {
-  ComponentRef,
-  computed,
-  Directive,
-  effect,
-  inject,
-  input,
-  signal,
-  ViewContainerRef,
-} from '@angular/core';
+import { ComponentRef, computed, Directive, effect, inject, input, signal, ViewContainerRef } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { FormComponent } from '../components/AbstractFormComponent';
 import { ReadonlyFieldComponent } from '../components/form-fields/readonly-field/readonly-field.component';
@@ -29,9 +20,7 @@ export class FormFieldDirective {
   public readonly language = input<string | undefined>(undefined);
   public readonly availableLanguages = input<ValueLabel[]>([]);
   public readonly readonly = input<boolean>(false);
-  public readonly externalForms = input<
-    Record<string, UntypedFormGroup> | undefined
-  >(undefined);
+  public readonly externalForms = input<Record<string, UntypedFormGroup> | undefined>(undefined);
   public readonly componentType = computed(() => {
     this.validateType();
     return this.readonly() &&
@@ -47,9 +36,7 @@ export class FormFieldDirective {
       ? ReadonlyFieldComponent
       : this.formFieldMappingService.mapToComponent(this.schema());
   });
-  public readonly component = signal<ComponentRef<FormComponent> | undefined>(
-    undefined,
-  );
+  public readonly component = signal<ComponentRef<FormComponent> | undefined>(undefined);
 
   public constructor() {
     effect(
@@ -67,10 +54,7 @@ export class FormFieldDirective {
       if (schema?.attribute?.includes('.')) {
         const attributeMap = schema?.attribute.split('.');
         component.setInput('fieldAttribute', attributeMap.pop());
-        component.setInput(
-          'group',
-          this.group().get(attributeMap.join('.')) as UntypedFormGroup,
-        );
+        component.setInput('group', this.group().get(attributeMap.join('.')) as UntypedFormGroup);
       } else {
         component.setInput('fieldAttribute', schema.attribute);
         component.setInput('group', this.group());

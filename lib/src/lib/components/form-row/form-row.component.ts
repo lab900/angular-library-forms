@@ -11,11 +11,11 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-    selector: 'lab900-form-row',
-    templateUrl: './form-row.component.html',
-    styleUrls: ['./form-row.component.scss'],
-    animations: [matFormFieldAnimations.transitionMessages],
-    imports: [FormFieldDirective, MatIcon, MatTooltip, TranslateModule]
+  selector: 'lab900-form-row',
+  templateUrl: './form-row.component.html',
+  styleUrls: ['./form-row.component.scss'],
+  animations: [matFormFieldAnimations.transitionMessages],
+  imports: [FormFieldDirective, MatIcon, MatTooltip, TranslateModule],
 })
 export class FormRowComponent extends FormComponent<FormRow> {
   @HostBinding('class')
@@ -33,25 +33,15 @@ export class FormRowComponent extends FormComponent<FormRow> {
 
   public rowIsReadonly(field: Lab900FormField): boolean {
     return field.options?.readonly != null
-      ? FormFieldUtils.isReadOnly(
-          field.options,
-          this.group.value,
-          this.readonly,
-        )
-      : FormFieldUtils.isReadOnly(
-          this.options,
-          this.group.value,
-          this.readonly,
-        );
+      ? FormFieldUtils.isReadOnly(field.options, this.group.value, this.readonly)
+      : FormFieldUtils.isReadOnly(this.options, this.group.value, this.readonly);
   }
 
   public isHidden(field: Lab900FormField): boolean {
     return FormFieldUtils.isHidden(field.options, this.group);
   }
 
-  public infoTooltip(
-    field: Lab900FormField,
-  ): { text: string; icon?: string; class?: string } | null {
+  public infoTooltip(field: Lab900FormField): { text: string; icon?: string; class?: string } | null {
     return FormFieldUtils.infoTooltip(field.options, this.group);
   }
 }

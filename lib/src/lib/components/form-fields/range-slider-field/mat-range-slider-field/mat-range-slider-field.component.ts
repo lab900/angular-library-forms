@@ -6,18 +6,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-    selector: 'lab900-mat-range-slider-field',
-    templateUrl: './mat-range-slider-field.component.html',
-    styleUrls: ['./mat-range-slider-field.component.scss'],
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: MatRangeSliderFieldComponent,
-            multi: true,
-        },
-    ],
-    encapsulation: ViewEncapsulation.None,
-    imports: [MatSliderModule, MatFormFieldModule, MatInputModule]
+  selector: 'lab900-mat-range-slider-field',
+  templateUrl: './mat-range-slider-field.component.html',
+  styleUrls: ['./mat-range-slider-field.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: MatRangeSliderFieldComponent,
+      multi: true,
+    },
+  ],
+  encapsulation: ViewEncapsulation.None,
+  imports: [MatSliderModule, MatFormFieldModule, MatInputModule],
 })
 export class MatRangeSliderFieldComponent extends BaseControlValueAccessorDirective<number[]> {
   private latestUnencodedValues: number[];

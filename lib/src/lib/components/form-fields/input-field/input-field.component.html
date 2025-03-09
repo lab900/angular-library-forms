@@ -8,7 +8,7 @@
     @if (label()) {
       <mat-label>{{ label() | translate }}</mat-label>
     }
-    @if (type() === 'number') {
+    @if (type() === "number") {
       <input
         matInput
         [type]="'number'"
@@ -34,9 +34,7 @@
         [prefix]="(fieldMask()?.prefix ?? setting?.fieldMask?.prefix) || ''"
         [suffix]="(fieldMask()?.suffix ?? setting?.fieldMask?.suffix) || ''"
         [placeHolderCharacter]="fieldMask()?.placeHolderCharacter ?? setting?.fieldMask?.placeHolderCharacter ?? ''"
-        [dropSpecialCharacters]="
-          fieldMask()?.dropSpecialCharacters ?? setting?.fieldMask?.dropSpecialCharacters ?? true
-        "
+        [dropSpecialCharacters]="fieldMask()?.dropSpecialCharacters ?? setting?.fieldMask?.dropSpecialCharacters ?? true"
         [allowNegativeNumbers]="fieldMask()?.allowNegativeNumbers ?? setting?.fieldMask?.allowNegativeNumbers"
         [showMaskTyped]="fieldMask()?.showMaskTyped ?? setting?.fieldMask?.showMaskTyped"
         [decimalMarker]="fieldMask()?.decimalMarker ?? setting?.fieldMask?.decimalMarker"
@@ -44,17 +42,15 @@
         [patterns]="fieldMask()?.patterns ?? setting?.fieldMask?.patterns"
         [showTemplate]="fieldMask()?.showTemplate ?? setting?.fieldMask?.showTemplate"
         [shownMaskExpression]="fieldMask()?.shownMaskExpression ?? setting?.fieldMask?.shownMaskExpression"
-        [specialCharacters]="
-          fieldMask()?.specialCharacters ?? setting?.fieldMask?.specialCharacters ?? defaultSpecialCharacters
-        "
+        [specialCharacters]="fieldMask()?.specialCharacters ?? setting?.fieldMask?.specialCharacters ?? defaultSpecialCharacters"
         lab900InputAutofocus
         [autofocus]="options?.autofocus"
         [style]="options?.style || ''"
       />
     }
-    @if (icon()?.position === 'left') {
+    @if (icon()?.position === "left") {
       <lab900-icon [icon]="icon()" matTextPrefix />
-    } @else if (icon()?.position === 'right') {
+    } @else if (icon()?.position === "right") {
       <lab900-icon [icon]="icon()" matTextSuffix />
     }
     @if (suffix) {

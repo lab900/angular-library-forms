@@ -10,18 +10,18 @@ import { NgxMaskDirective, NgxMaskService } from 'ngx-mask';
 import { IconComponent } from '@lab900/ui';
 
 @Component({
-    selector: 'lab900-input-field',
-    templateUrl: './input-field.component.html',
-    styleUrls: ['./input-field.component.scss'],
-    imports: [
-        MatFormFieldModule,
-        MatInputModule,
-        ReactiveFormsModule,
-        TranslateModule,
-        AutofocusDirective,
-        NgxMaskDirective,
-        IconComponent,
-    ]
+  selector: 'lab900-input-field',
+  templateUrl: './input-field.component.html',
+  styleUrls: ['./input-field.component.scss'],
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    AutofocusDirective,
+    NgxMaskDirective,
+    IconComponent,
+  ],
 })
 export class InputFieldComponent extends FormComponent<FormFieldInput> {
   protected readonly defaultSpecialCharacters = inject(NgxMaskService).specialCharacters;
