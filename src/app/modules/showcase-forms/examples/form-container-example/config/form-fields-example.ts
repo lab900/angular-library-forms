@@ -1,5 +1,4 @@
 import { Lab900FormConfig, EditType } from '@lab900/forms';
-import { ValueLabel } from '@lab900/forms';
 
 export const formFieldsExample: Lab900FormConfig = {
   fields: [

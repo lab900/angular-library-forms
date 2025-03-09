@@ -2,10 +2,6 @@ import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogContent } from '@angular/material/dialog';
 import { Lab900File } from '../../models/Lab900File';
 
-interface DialogData {
-  image: Lab900File;
-}
-
 @Component({
   selector: 'lab900-image-preview-modal',
   template: ` <mat-dialog-content>

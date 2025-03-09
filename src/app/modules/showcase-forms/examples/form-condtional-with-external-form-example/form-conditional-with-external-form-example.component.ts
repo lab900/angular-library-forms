@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { EditType, Lab900Form, Lab900FormConfig, ValueLabel } from '@lab900/forms';
+import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 
 @Component({
   selector: 'lab900-form-conditional-with-external-form-example',

@@ -21,11 +21,13 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   protected readonly translateService = inject(TranslateService);
   protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   public readonly _fieldAttribute = input<string | undefined>(undefined, { alias: 'fieldAttribute' });
   public get fieldAttribute(): string {
     return this._fieldAttribute();
   }
 
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   public _group = input.required<UntypedFormGroup>({ alias: 'group' });
   public get group(): UntypedFormGroup {
     return this._group();
@@ -42,6 +44,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     return this._fieldControl();
   }
 
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   public readonly _schema = input.required<S>({ alias: 'schema' });
   public readonly _options = computed<S['options']>(() => this._schema().options);
   public readonly label = computed<string | undefined>(() => this._schema().title);
