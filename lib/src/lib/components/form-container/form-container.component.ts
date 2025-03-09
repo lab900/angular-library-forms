@@ -10,11 +10,10 @@ import { LAB900_FORM_MODULE_SETTINGS } from '../../models/Lab900FormModuleSettin
 import { FormFieldDirective } from '../../directives/form-field.directive';
 
 @Component({
-  selector: 'lab900-form',
-  templateUrl: './form-container.component.html',
-  styleUrls: ['./form-container.component.scss'],
-  standalone: true,
-  imports: [FormFieldDirective, ReactiveFormsModule],
+    selector: 'lab900-form',
+    templateUrl: './form-container.component.html',
+    styleUrls: ['./form-container.component.scss'],
+    imports: [FormFieldDirective, ReactiveFormsModule]
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 export class Lab900Form<T> {

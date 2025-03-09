@@ -19,22 +19,21 @@ import { MatChipGrid, MatChipInput, MatChipRow } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
-  selector: 'lab900-autocomplete-multiple-field',
-  templateUrl: './autocomplete-multiple-field.component.html',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    TranslateModule,
-    MatIcon,
-    MatChipGrid,
-    MatChipRow,
-    MatAutocompleteTrigger,
-    MatChipInput,
-    MatAutocomplete,
-    MatOption,
-    AsyncPipe,
-  ],
+    selector: 'lab900-autocomplete-multiple-field',
+    templateUrl: './autocomplete-multiple-field.component.html',
+    imports: [
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        TranslateModule,
+        MatIcon,
+        MatChipGrid,
+        MatChipRow,
+        MatAutocompleteTrigger,
+        MatChipInput,
+        MatAutocomplete,
+        MatOption,
+        AsyncPipe,
+    ]
 })
 export class AutocompleteMultipleFieldComponent<T>
   extends FormComponent<FormFieldAutocompleteMulti<T, string>>

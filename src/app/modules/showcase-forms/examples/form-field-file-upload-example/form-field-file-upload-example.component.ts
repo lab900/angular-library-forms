@@ -9,11 +9,9 @@ import {
 import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'lab900-form-field-file-upload-example',
-  template:
-    '<lab900-form [schema]="formSchema" [data]="formData"/><button mat-raised-button color="primary" (click)="validate()">Submit</button>',
-  standalone: true,
-  imports: [Lab900Form, MatButton],
+    selector: 'lab900-form-field-file-upload-example',
+    template: '<lab900-form [schema]="formSchema" [data]="formData"/><button mat-raised-button color="primary" (click)="validate()">Submit</button>',
+    imports: [Lab900Form, MatButton]
 })
 export class FormFieldFileUploadExampleComponent {
   @ViewChild(Lab900Form)

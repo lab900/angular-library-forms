@@ -19,18 +19,17 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'lab900-multi-lang-field-control',
-  templateUrl: './multi-lang-field-control.component.html',
-  styleUrls: ['./multi-lang-field-control.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [
-    LanguagePickerComponent,
-    MatFormFieldModule,
-    MatInputModule,
-    TranslateModule,
-    FormsModule,
-  ],
+    selector: 'lab900-multi-lang-field-control',
+    templateUrl: './multi-lang-field-control.component.html',
+    styleUrls: ['./multi-lang-field-control.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        LanguagePickerComponent,
+        MatFormFieldModule,
+        MatInputModule,
+        TranslateModule,
+        FormsModule,
+    ]
 })
 export class MultiLangFieldControlComponent implements ControlValueAccessor {
   private readonly cdr = inject(ChangeDetectorRef);

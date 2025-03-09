@@ -15,32 +15,31 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'lab900-date-year-month-field',
-  templateUrl: './date-year-month-field.component.html',
-  standalone: true,
-  providers: [
-    {
-      provide: MAT_DATE_FORMATS,
-      useValue: {
-        parse: {
-          dateInput: 'MM/YYYY',
+    selector: 'lab900-date-year-month-field',
+    templateUrl: './date-year-month-field.component.html',
+    providers: [
+        {
+            provide: MAT_DATE_FORMATS,
+            useValue: {
+                parse: {
+                    dateInput: 'MM/YYYY',
+                },
+                display: {
+                    dateInput: 'MM/YYYY',
+                    monthYearLabel: 'MMM YYYY',
+                    dateA11yLabel: 'LL',
+                    monthYearA11yLabel: 'MMMM YYYY',
+                },
+            },
         },
-        display: {
-          dateInput: 'MM/YYYY',
-          monthYearLabel: 'MMM YYYY',
-          dateA11yLabel: 'LL',
-          monthYearA11yLabel: 'MMMM YYYY',
-        },
-      },
-    },
-  ],
-  imports: [
-    ReactiveFormsModule,
-    TranslateModule,
-    MatDatepickerModule,
-    MatFormFieldModule,
-    MatInputModule,
-  ],
+    ],
+    imports: [
+        ReactiveFormsModule,
+        TranslateModule,
+        MatDatepickerModule,
+        MatFormFieldModule,
+        MatInputModule,
+    ]
 })
 export class DateYearMonthFieldComponent extends FormComponent<FormFieldDateYearMonthPicker> {
   @HostBinding('class')

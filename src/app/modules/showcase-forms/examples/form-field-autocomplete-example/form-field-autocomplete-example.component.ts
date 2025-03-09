@@ -9,12 +9,10 @@ import { of } from 'rxjs';
 import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'lab900-form-field-autocomplete-example',
-  styleUrls: ['./form-field-autocomplete-example.component.scss'],
-  template:
-    '<lab900-form [schema]="formSchema"/><button mat-raised-button color="primary" (click)="validate()">Submit</button>',
-  standalone: true,
-  imports: [Lab900Form, MatButton],
+    selector: 'lab900-form-field-autocomplete-example',
+    styleUrls: ['./form-field-autocomplete-example.component.scss'],
+    template: '<lab900-form [schema]="formSchema"/><button mat-raised-button color="primary" (click)="validate()">Submit</button>',
+    imports: [Lab900Form, MatButton]
 })
 export class FormFieldAutocompleteExampleComponent {
   @ViewChild(Lab900Form)

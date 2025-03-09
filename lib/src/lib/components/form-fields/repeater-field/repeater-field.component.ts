@@ -13,21 +13,20 @@ import { MatButton, MatMiniFabButton } from '@angular/material/button';
 export const DEFAULT_REPEATER_MIN_ROWS = 1;
 
 @Component({
-  selector: 'lab900-repeater-field',
-  templateUrl: './repeater-field.component.html',
-  styleUrls: ['./repeater-field.component.scss'],
-  animations: [matFormFieldAnimations.transitionMessages],
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatIcon,
-    TranslateModule,
-    MatTooltip,
-    FormFieldDirective,
-    MatMiniFabButton,
-    MatError,
-    MatButton,
-  ],
+    selector: 'lab900-repeater-field',
+    templateUrl: './repeater-field.component.html',
+    styleUrls: ['./repeater-field.component.scss'],
+    animations: [matFormFieldAnimations.transitionMessages],
+    imports: [
+        ReactiveFormsModule,
+        MatIcon,
+        TranslateModule,
+        MatTooltip,
+        FormFieldDirective,
+        MatMiniFabButton,
+        MatError,
+        MatButton,
+    ]
 })
 export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
   private readonly fb: Lab900FormBuilderService = inject(

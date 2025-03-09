@@ -23,18 +23,17 @@ import { AuthImageDirective } from '../../../directives/auth-image.directive';
 import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'lab900-file-preview-field',
-  templateUrl: './file-preview-field.component.html',
-  styleUrls: ['./file-preview-field.component.scss'],
-  standalone: true,
-  imports: [
-    TranslateModule,
-    MatButton,
-    MatCard,
-    MatIcon,
-    AuthImageDirective,
-    MatTooltip,
-  ],
+    selector: 'lab900-file-preview-field',
+    templateUrl: './file-preview-field.component.html',
+    styleUrls: ['./file-preview-field.component.scss'],
+    imports: [
+        TranslateModule,
+        MatButton,
+        MatCard,
+        MatIcon,
+        AuthImageDirective,
+        MatTooltip,
+    ]
 })
 export class FilePreviewFieldComponent<
   T,

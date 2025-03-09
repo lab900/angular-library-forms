@@ -26,25 +26,24 @@ import { MatIconAnchor, MatIconButton } from '@angular/material/button';
 import { AsyncPipe, NgOptimizedImage } from '@angular/common';
 
 @Component({
-  selector: 'lab900-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  standalone: true,
-  imports: [
-    MatToolbar,
-    MatIcon,
-    MatIconButton,
-    TranslateModule,
-    RouterLink,
-    MatDrawerContainer,
-    Lab900NavListComponent,
-    AsyncPipe,
-    MatDrawer,
-    RouterOutlet,
-    MatIconAnchor,
-    MatDrawerContent,
-    NgOptimizedImage,
-  ],
+    selector: 'lab900-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    imports: [
+        MatToolbar,
+        MatIcon,
+        MatIconButton,
+        TranslateModule,
+        RouterLink,
+        MatDrawerContainer,
+        Lab900NavListComponent,
+        AsyncPipe,
+        MatDrawer,
+        RouterOutlet,
+        MatIconAnchor,
+        MatDrawerContent,
+        NgOptimizedImage,
+    ]
 })
 export class AppComponent
   extends SubscriptionBasedDirective

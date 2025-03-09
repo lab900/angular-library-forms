@@ -8,8 +8,8 @@ import {
 import { JsonPipe } from '@angular/common';
 
 @Component({
-  selector: 'lab900-form-field-amount-example',
-  template: ` <div>
+    selector: 'lab900-form-field-amount-example',
+    template: ` <div>
     <h3>Form field:</h3>
     <lab900-form
       #f
@@ -24,8 +24,7 @@ import { JsonPipe } from '@angular/common';
     </p>
     <p>Will result in: {{ 204500.456 | amount }}</p>
   </div>`,
-  standalone: true,
-  imports: [Lab900Form, JsonPipe, AmountPipe],
+    imports: [Lab900Form, JsonPipe, AmountPipe]
 })
 export class FormFieldAmountExampleComponent {
   public readonly snippet = '{{ 204500.456 | amount }}';

@@ -29,11 +29,10 @@ const tolkienBook2: Book = {
 const compare = (a: Book, b: Book): boolean => a?.key && b?.key && a.key === b.key;
 
 @Component({
-  selector: 'lab900-form-field-select-advanced-example',
-  template: ` <lab900-form [schema]="formSchema" [data]="data()" />
+    selector: 'lab900-form-field-select-advanced-example',
+    template: ` <lab900-form [schema]="formSchema" [data]="data()" />
     <button (click)="logFormValue()">Log form data</button>`,
-  standalone: true,
-  imports: [Lab900Form],
+    imports: [Lab900Form]
 })
 export class FormFieldSelectAdvancedExampleComponent {
   private readonly MAX_ITEMS_FOR_SELECT_ALL = 157;

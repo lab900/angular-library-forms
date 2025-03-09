@@ -10,18 +10,17 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
 
 @Component({
-  selector: 'lab900-drag-n-drop-file-field',
-  templateUrl: './drag-n-drop-file-field.component.html',
-  styleUrls: ['./drag-n-drop-file-field.component.scss'],
-  standalone: true,
-  imports: [
-    NgClass,
-    FileDropDirective,
-    MatIcon,
-    TranslateModule,
-    MatButton,
-    MatIconButton,
-  ],
+    selector: 'lab900-drag-n-drop-file-field',
+    templateUrl: './drag-n-drop-file-field.component.html',
+    styleUrls: ['./drag-n-drop-file-field.component.scss'],
+    imports: [
+        NgClass,
+        FileDropDirective,
+        MatIcon,
+        TranslateModule,
+        MatButton,
+        MatIconButton,
+    ]
 })
 export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDropFilePreview> {
   @HostBinding('class')

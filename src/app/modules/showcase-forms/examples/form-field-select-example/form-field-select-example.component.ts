@@ -9,16 +9,15 @@ import {
 } from '@lab900/forms';
 
 @Component({
-  selector: 'lab900-form-field-select-example',
-  template: `<lab900-form [schema]="formSchema" />
+    selector: 'lab900-form-field-select-example',
+    template: `<lab900-form [schema]="formSchema" />
     <lab900-select-field
       [schema]="selectSchema"
       fieldAttribute="example-select"
       [group]="formGroup"
     />
     <button (click)="clearSelect()">clear All</button>`,
-  standalone: true,
-  imports: [Lab900Form, SelectFieldComponent],
+    imports: [Lab900Form, SelectFieldComponent]
 })
 export class FormFieldSelectExampleComponent {
   public readonly formGroup = new UntypedFormGroup({});

@@ -9,10 +9,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatLabel } from '@angular/material/form-field';
 
 @Component({
-  selector: 'lab900-button-field',
-  templateUrl: './button-field.component.html',
-  standalone: true,
-  imports: [MatTooltip, ReactiveFormsModule, TranslateModule, Lab900ButtonComponent, MatLabel]
+    selector: 'lab900-button-field',
+    templateUrl: './button-field.component.html',
+    imports: [MatTooltip, ReactiveFormsModule, TranslateModule, Lab900ButtonComponent, MatLabel]
 })
 export class ButtonFieldComponent extends FormComponent<FormFieldButton> {
   @HostBinding('class')

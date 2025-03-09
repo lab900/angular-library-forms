@@ -5,12 +5,11 @@ import { tap } from 'rxjs/operators';
 import { JsonPipe } from '@angular/common';
 
 @Component({
-  selector: 'lab900-form-field-select-example',
-  template: `<lab900-form #f [schema]="formSchema" />
+    selector: 'lab900-form-field-select-example',
+    template: `<lab900-form #f [schema]="formSchema" />
     <hr style="margin-top: 30px" />
     {{ f.value | json }}`,
-  standalone: true,
-  imports: [Lab900Form, JsonPipe],
+    imports: [Lab900Form, JsonPipe]
 })
 export class FormFieldSearchExampleComponent {
   public readonly formSchema: Lab900FormConfig = {

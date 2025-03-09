@@ -4,11 +4,9 @@ import { Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'lab900-form-field-inputs-example',
-  template:
-    '<lab900-form [schema]="formSchema"/><button mat-raised-button color="primary" (click)="validate()">Submit</button>',
-  standalone: true,
-  imports: [Lab900Form, MatButton],
+    selector: 'lab900-form-field-inputs-example',
+    template: '<lab900-form [schema]="formSchema"/><button mat-raised-button color="primary" (click)="validate()">Submit</button>',
+    imports: [Lab900Form, MatButton]
 })
 export class FormFieldInputsExampleComponent {
   @ViewChild(Lab900Form)

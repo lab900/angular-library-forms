@@ -7,8 +7,8 @@ import {
 } from '@lab900/forms';
 
 @Component({
-  selector: 'lab900-form-conditional-with-external-form-example',
-  template: `
+    selector: 'lab900-form-conditional-with-external-form-example',
+    template: `
     <h2>Form 1</h2>
     <lab900-form #form1 [schema]="schema" />
     <h2>Form 2</h2>
@@ -18,8 +18,7 @@ import {
       [externalForms]="{ form1: form1.form }"
     />
   `,
-  standalone: true,
-  imports: [Lab900Form],
+    imports: [Lab900Form]
 })
 export class FormConditionalWithExternalFormExampleComponent {
   public schema: Lab900FormConfig = {

@@ -10,19 +10,18 @@ import { AmountInputDirective } from './amount-input.directive';
 import { IconComponent } from '@lab900/ui';
 
 @Component({
-  selector: 'lab900-amount-field',
-  templateUrl: './amount-field.component.html',
-  styleUrls: ['./amount-field.component.scss'],
-  standalone: true,
-  imports: [
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    TranslateModule,
-    AutofocusDirective,
-    AmountInputDirective,
-    IconComponent,
-  ],
+    selector: 'lab900-amount-field',
+    templateUrl: './amount-field.component.html',
+    styleUrls: ['./amount-field.component.scss'],
+    imports: [
+        MatFormFieldModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        TranslateModule,
+        AutofocusDirective,
+        AmountInputDirective,
+        IconComponent,
+    ]
 })
 export class AmountFieldComponent extends FormComponent<FormFieldAmount> {
   @HostBinding('class')

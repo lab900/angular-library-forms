@@ -9,11 +9,9 @@ import { of } from 'rxjs';
 import { JsonPipe } from '@angular/common';
 
 @Component({
-  selector: 'lab900-form-field-autocomplete-multiple-example',
-  template:
-    '<lab900-form #form [schema]="formSchema"/><pre>{{form?.value | json }}</pre>',
-  standalone: true,
-  imports: [Lab900Form, JsonPipe],
+    selector: 'lab900-form-field-autocomplete-multiple-example',
+    template: '<lab900-form #form [schema]="formSchema"/><pre>{{form?.value | json }}</pre>',
+    imports: [Lab900Form, JsonPipe]
 })
 export class FormFieldAutocompleteMultipleExampleComponent {
   public options: ValueLabel[] = [

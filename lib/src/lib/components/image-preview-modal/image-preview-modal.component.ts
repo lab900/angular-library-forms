@@ -7,8 +7,8 @@ interface DialogData {
 }
 
 @Component({
-  selector: 'lab900-image-preview-modal',
-  template: ` <mat-dialog-content>
+    selector: 'lab900-image-preview-modal',
+    template: ` <mat-dialog-content>
     <img
       style="width: 100%"
       class="image"
@@ -16,8 +16,7 @@ interface DialogData {
       [alt]="image.fileName"
     />
   </mat-dialog-content>`,
-  standalone: true,
-  imports: [MatDialogContent],
+    imports: [MatDialogContent]
 })
 export class ImagePreviewModalComponent {
   public readonly image: Lab900File = inject(MAT_DIALOG_DATA).image;

@@ -9,18 +9,17 @@ import { ExampleViewerComponent } from '../example-viewer/example-viewer.compone
 import MarkdownPageComponent from '../markdown-page/markdown-page.component';
 
 @Component({
-  selector: 'lab900-showcase-page',
-  templateUrl: './showcase-page.component.html',
-  styleUrls: ['./showcase-page.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatTabsModule,
-    MarkdownPageComponent,
-    ExampleViewerComponent,
-    Lab900PageHeaderComponent,
-  ],
+    selector: 'lab900-showcase-page',
+    templateUrl: './showcase-page.component.html',
+    styleUrls: ['./showcase-page.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        MatTabsModule,
+        MarkdownPageComponent,
+        ExampleViewerComponent,
+        Lab900PageHeaderComponent,
+    ]
 })
 export class ShowcasePageComponent extends SubscriptionBasedDirective {
   private readonly guideNav: PageHeaderNavItem = {

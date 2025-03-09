@@ -9,8 +9,8 @@ import { WysiwgFieldModel } from './wysiwg-field.model';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'lab900-wysiwyg-field',
-  template: `
+    selector: 'lab900-wysiwyg-field',
+    template: `
     <div [formGroup]="group" class="lab900-wysiwyg-field">
       <angular-editor
         [formControlName]="fieldAttribute"
@@ -18,10 +18,9 @@ import { ReactiveFormsModule } from '@angular/forms';
       />
     </div>
   `,
-  styleUrls: ['./wysiwyg-field.component.scss'],
-  animations: [matFormFieldAnimations.transitionMessages],
-  standalone: true,
-  imports: [AngularEditorModule, ReactiveFormsModule],
+    styleUrls: ['./wysiwyg-field.component.scss'],
+    animations: [matFormFieldAnimations.transitionMessages],
+    imports: [AngularEditorModule, ReactiveFormsModule]
 })
 export class WysiwygFieldComponent
   extends FormComponent<WysiwgFieldModel>

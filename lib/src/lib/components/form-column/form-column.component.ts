@@ -11,12 +11,11 @@ import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'lab900-form-column',
-  templateUrl: './form-column.component.html',
-  styleUrls: ['./form-column.component.scss'],
-  animations: [matFormFieldAnimations.transitionMessages],
-  standalone: true,
-  imports: [TranslateModule, FormFieldDirective, MatIcon, MatTooltip],
+    selector: 'lab900-form-column',
+    templateUrl: './form-column.component.html',
+    styleUrls: ['./form-column.component.scss'],
+    animations: [matFormFieldAnimations.transitionMessages],
+    imports: [TranslateModule, FormFieldDirective, MatIcon, MatTooltip]
 })
 export class FormColumnComponent extends FormComponent<FormColumn> {
   @HostBinding('class')

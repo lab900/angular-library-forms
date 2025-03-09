@@ -14,17 +14,16 @@ import { MatButton } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'lab900-date-time-field',
-  templateUrl: './date-time-field.component.html',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    NgxMatDatetimePickerModule,
-    TranslateModule,
-    MatButton,
-  ],
+    selector: 'lab900-date-time-field',
+    templateUrl: './date-time-field.component.html',
+    imports: [
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        NgxMatDatetimePickerModule,
+        TranslateModule,
+        MatButton,
+    ]
 })
 export class DateTimeFieldComponent extends FormComponent<FormFieldDateTimePicker> {
   @HostBinding('class')

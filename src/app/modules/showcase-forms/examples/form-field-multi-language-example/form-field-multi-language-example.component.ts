@@ -14,9 +14,9 @@ const languages: ValueLabel[] = [
 ];
 
 @Component({
-  selector: 'lab900-form-field-multi-language-example',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
+    selector: 'lab900-form-field-multi-language-example',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `
     @if (formSchema() && languages()) {
       <lab900-form
         language="nl"
@@ -27,8 +27,7 @@ const languages: ValueLabel[] = [
       />
     }
   `,
-  standalone: true,
-  imports: [Lab900Form],
+    imports: [Lab900Form]
 })
 export class FormFieldMultiLanguageExampleComponent {
   protected readonly languages = signal<ValueLabel[]>(languages);

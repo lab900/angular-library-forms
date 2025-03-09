@@ -11,12 +11,11 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-  selector: 'lab900-form-row',
-  templateUrl: './form-row.component.html',
-  styleUrls: ['./form-row.component.scss'],
-  animations: [matFormFieldAnimations.transitionMessages],
-  standalone: true,
-  imports: [FormFieldDirective, MatIcon, MatTooltip, TranslateModule],
+    selector: 'lab900-form-row',
+    templateUrl: './form-row.component.html',
+    styleUrls: ['./form-row.component.scss'],
+    animations: [matFormFieldAnimations.transitionMessages],
+    imports: [FormFieldDirective, MatIcon, MatTooltip, TranslateModule]
 })
 export class FormRowComponent extends FormComponent<FormRow> {
   @HostBinding('class')

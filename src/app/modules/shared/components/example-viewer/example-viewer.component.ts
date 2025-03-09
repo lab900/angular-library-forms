@@ -22,20 +22,19 @@ export interface ExampleFile {
 }
 
 @Component({
-  selector: 'lab900-example-viewer',
-  templateUrl: './example-viewer.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [
-    MatCardModule,
-    TranslateModule,
-    MatButtonModule,
-    MatTabsModule,
-    MarkdownModule,
-    LowerCasePipe,
-    MatIconModule,
-    MatTooltipModule,
-  ],
+    selector: 'lab900-example-viewer',
+    templateUrl: './example-viewer.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        MatCardModule,
+        TranslateModule,
+        MatButtonModule,
+        MatTabsModule,
+        MarkdownModule,
+        LowerCasePipe,
+        MatIconModule,
+        MatTooltipModule,
+    ]
 })
 export class ExampleViewerComponent implements AfterViewInit {
   @Input()

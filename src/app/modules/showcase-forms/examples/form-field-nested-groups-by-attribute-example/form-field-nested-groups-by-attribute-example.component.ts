@@ -3,13 +3,12 @@ import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { JsonPipe } from '@angular/common';
 
 @Component({
-  selector: 'lab900-form-field-nested-groups-by-attribute-example',
-  template: `
+    selector: 'lab900-form-field-nested-groups-by-attribute-example',
+    template: `
     <lab900-form #form [schema]="formSchema" />
     <pre>{{ form?.value | json }}</pre>
   `,
-  standalone: true,
-  imports: [Lab900Form, JsonPipe],
+    imports: [Lab900Form, JsonPipe]
 })
 export class FormFieldNestedGroupsByAttributeExampleComponent {
   public formSchema: Lab900FormConfig = {

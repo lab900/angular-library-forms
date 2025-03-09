@@ -8,17 +8,16 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'lab900-date-field',
-  templateUrl: './date-field.component.html',
-  standalone: true,
-  imports: [
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatDatepickerModule,
-    TranslateModule,
-    MatDatepickerModule,
-  ],
+    selector: 'lab900-date-field',
+    templateUrl: './date-field.component.html',
+    imports: [
+        MatFormFieldModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        MatDatepickerModule,
+        TranslateModule,
+        MatDatepickerModule,
+    ]
 })
 export class DateFieldComponent extends FormComponent<FormFieldDatePicker> {
   @HostBinding('class')

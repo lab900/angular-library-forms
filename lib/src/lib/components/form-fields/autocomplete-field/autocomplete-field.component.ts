@@ -13,20 +13,19 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
-  selector: 'lab900-autocomplete-field',
-  templateUrl: './autocomplete-field.component.html',
-  standalone: true,
-  imports: [
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatAutocompleteTrigger,
-    TranslateModule,
-    AsyncPipe,
-    MatAutocomplete,
-    MatIcon,
-    MatOption,
-  ],
+    selector: 'lab900-autocomplete-field',
+    templateUrl: './autocomplete-field.component.html',
+    imports: [
+        MatFormFieldModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        MatAutocompleteTrigger,
+        TranslateModule,
+        AsyncPipe,
+        MatAutocomplete,
+        MatIcon,
+        MatOption,
+    ]
 })
 export class AutocompleteFieldComponent<T> extends FormComponent<FormFieldAutocomplete<T>> implements AfterViewInit {
   @HostBinding('class')
