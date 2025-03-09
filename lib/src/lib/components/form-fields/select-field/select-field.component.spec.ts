@@ -167,7 +167,9 @@ describe('SelectFieldComponent', () => {
       } satisfies FormFieldSelect<any>);
       fixture.detectChanges();
       matSelect = await loader.getHarness(MatSelectHarness);
+      fixture.detectChanges();
       await matSelect.open();
+      fixture.detectChanges();
       selectAll = fixture.debugElement.query(By.css('.mat-mdc-option.select-all'));
     });
 
