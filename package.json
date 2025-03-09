@@ -24,7 +24,6 @@
     "clean": "rm -rf node_modules/ && npm install"
   },
   "dependencies": {
-    "@angular-material-components/datetime-picker": "16.0.1",
     "@angular/animations": "^18.1.1",
     "@angular/cdk": "^18.1.1",
     "@angular/common": "^18.1.1",
