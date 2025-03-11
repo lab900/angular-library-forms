@@ -1,7 +1,7 @@
 @if (!fieldIsHidden) {
   <div [formGroup]="group" class="lab900-range-slider-field" id="lab900-range-slider-field-{{ elementId() }}">
-    @if (label()) {
-      <span class="lab900-form-field-label">{{ label() | translate }}</span>
+    @if (label(); as label) {
+      <span class="lab900-form-field-label">{{ label | translate }}</span>
     }
     <lab900-mat-range-slider-field
       [formControlName]="fieldAttribute"
@@ -11,8 +11,7 @@
       [max]="max()"
       [steps]="steps()"
       [format]="format()"
-      [required]="fieldIsRequired"
-    />
+      [required]="fieldIsRequired" />
     @if (touched && !valid && !fieldIsReadonly) {
       <div class="radio-buttons-field__error">
         <mat-error>{{ errorMessage() }}</mat-error>

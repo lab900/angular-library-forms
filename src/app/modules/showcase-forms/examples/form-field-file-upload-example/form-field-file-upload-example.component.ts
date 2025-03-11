@@ -1,23 +1,17 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ViewChild } from '@angular/core';
-import {
-  EditType,
-  Lab900File,
-  Lab900Form,
-  Lab900FormConfig,
-} from '@lab900/forms';
+import { Component, inject, viewChild } from '@angular/core';
+import { EditType, Lab900File, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'lab900-form-field-file-upload-example',
   template:
     '<lab900-form [schema]="formSchema" [data]="formData"/><button mat-raised-button color="primary" (click)="validate()">Submit</button>',
-  standalone: true,
   imports: [Lab900Form, MatButton],
 })
 export class FormFieldFileUploadExampleComponent {
-  @ViewChild(Lab900Form)
-  public formContainer: Lab900Form<any>;
+  public readonly form = viewChild<Lab900Form<any>>(Lab900Form);
+  private readonly http = inject(HttpClient);
 
   public formSchema: Lab900FormConfig = {
     fields: [
@@ -38,8 +32,7 @@ export class FormFieldFileUploadExampleComponent {
               },
             ],
           },
-          httpCallback: (image: Lab900File) =>
-            this.http.get(image?.imageSrc, { responseType: 'blob' }),
+          httpCallback: (image: Lab900File) => this.http.get(image.imageSrc!, { responseType: 'arraybuffer' }),
           showOverlay: (data: any) => {
             return data.delicate;
           },
@@ -63,9 +56,7 @@ export class FormFieldFileUploadExampleComponent {
     ],
   };
 
-  public constructor(private http: HttpClient) {}
-
   public validate(): void {
-    console.log(this.formContainer.form.controls.files.value);
+    console.log(this.form()?.form.controls.files.value);
   }
 }

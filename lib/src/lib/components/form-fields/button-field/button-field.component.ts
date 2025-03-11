@@ -5,14 +5,13 @@ import { Lab900ButtonComponent } from '@lab900/ui';
 import { MatTooltip } from '@angular/material/tooltip';
 
 import { ReactiveFormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatLabel } from '@angular/material/form-field';
 
 @Component({
   selector: 'lab900-button-field',
   templateUrl: './button-field.component.html',
-  standalone: true,
-  imports: [MatTooltip, ReactiveFormsModule, TranslateModule, Lab900ButtonComponent, MatLabel]
+  imports: [MatTooltip, ReactiveFormsModule, TranslatePipe, Lab900ButtonComponent, MatLabel],
 })
 export class ButtonFieldComponent extends FormComponent<FormFieldButton> {
   @HostBinding('class')
@@ -26,6 +25,6 @@ export class ButtonFieldComponent extends FormComponent<FormFieldButton> {
 
   public handleClick(event: Event): void {
     event.stopPropagation();
-    this.options?.onClick(this.group, this.schema, event);
+    this.options?.onClick?.(this.group, this.schema, event);
   }
 }

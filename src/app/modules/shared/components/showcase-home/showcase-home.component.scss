@@ -1,4 +1,4 @@
-@import 'green.palette';
+@use 'green.palette' as *;
 
 .showcase-home__header {
   background: $palette-lab900green-100;

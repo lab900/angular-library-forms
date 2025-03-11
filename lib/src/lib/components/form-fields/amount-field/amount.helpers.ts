@@ -24,23 +24,17 @@ export function amountToNumber(value: string): number | null {
   return null;
 }
 
-export function getAmountFormatter(
-  locale: string,
-  options?: AmountOptions,
-): Intl.NumberFormat {
+export function getAmountFormatter(locale: string, options?: AmountOptions): Intl.NumberFormat {
   return new Intl.NumberFormat(locale, {
     maximumFractionDigits: options?.maxDecimals,
     minimumFractionDigits: options?.minDecimals,
   });
 }
 
-export function formatAmountWithoutRounding(
-  value: number,
-  formatter: Intl.NumberFormat,
-  max = 0,
-): string {
-  const re = new RegExp('^-?\\d+(?:.\\d{0,' + (max || -1) + '})?');
-  return formatter.format(+value.toString().match(re)[0]);
+export function formatAmountWithoutRounding(value: number, formatter: Intl.NumberFormat, max = 0): string {
+  const re = new RegExp('^-?\\d+(?:\\.\\d{0,' + (max || -1) + '})?');
+  const match = value.toString().match(re);
+  return match ? formatter.format(+match[0]) : '';
 }
 
 export function getDecimalSeparator(locale: string): string {

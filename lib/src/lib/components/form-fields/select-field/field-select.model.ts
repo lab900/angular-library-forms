@@ -1,9 +1,5 @@
 import { EditType } from '../../../models/editType';
-import {
-  FormFieldBase,
-  FormFieldBaseOptions,
-  ValueLabel,
-} from '../../../models/form-field-base';
+import { FormFieldBase, FormFieldBaseOptions, ValueLabel } from '../../../models/form-field-base';
 import { Observable } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
 import { SelectFieldComponent } from './select-field.component';
@@ -18,22 +14,19 @@ export interface FormFieldSelectOptionsFilter {
 export type FormFieldSelectOptionsFn<T> = (
   filter?: FormFieldSelectOptionsFilter,
   fieldControl?: AbstractControl,
-  schema?: FormFieldSelect<T>,
+  schema?: FormFieldSelect<T>
 ) => ValueLabel<T>[] | Observable<ValueLabel<T>[]>;
 
 export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
   multiple?: boolean;
-  selectOptions?:
-    | FormFieldSelectOptionsFn<T>
-    | ValueLabel<T>[]
-    | Observable<ValueLabel<T>[]>;
+  selectOptions?: FormFieldSelectOptionsFn<T> | ValueLabel<T>[] | Observable<ValueLabel<T>[]>;
   compareWith?: (o1: T, o2: T) => boolean;
   /**
    *
    * @deprecated Labels are set in the selectOptions ValueLabels
    */
   displayOptionFn?: (option: ValueLabel<T>) => string;
-  customTriggerFn?: (value: T) => string;
+  customTriggerFn?: (value: T | undefined) => string;
   autoselectOnlyOption?: boolean;
   /**
    * The function to display the current value of the select if this item is not present in the select options.

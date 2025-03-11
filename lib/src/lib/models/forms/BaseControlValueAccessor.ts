@@ -2,11 +2,9 @@ import { Directive, Input } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 
 @Directive()
-export class BaseControlValueAccessorDirective<T>
-  implements ControlValueAccessor
-{
-  public value: T;
-  protected disabledStore: boolean;
+export class BaseControlValueAccessorDirective<T> implements ControlValueAccessor {
+  public value?: T;
+  protected disabledStore?: boolean;
 
   /**
    * Call when value has changed programmatically
@@ -38,7 +36,7 @@ export class BaseControlValueAccessorDirective<T>
 
   @Input()
   public get disabled(): boolean {
-    return this.disabledStore;
+    return !!this.disabledStore;
   }
 
   public set disabled(newValue: boolean) {

@@ -1,21 +1,12 @@
 import { Component } from '@angular/core';
-import {
-  AmountPipe,
-  EditType,
-  Lab900Form,
-  Lab900FormConfig,
-} from '@lab900/forms';
+import { AmountPipe, EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'lab900-form-field-amount-example',
   template: ` <div>
     <h3>Form field:</h3>
-    <lab900-form
-      #f
-      [schema]="formSchema"
-      [data]="{ amount: 204500.456, amountWithoutDecimals: 67777 }"
-    />
+    <lab900-form #f [schema]="formSchema" [data]="{ amount: 204500.456, amountWithoutDecimals: 67777 }" />
     <code>Form control value: {{ f?.form?.value | json }}</code>
     <h3 style="margin-top: 2em">Pipe:</h3>
     <p>
@@ -24,7 +15,6 @@ import { JsonPipe } from '@angular/common';
     </p>
     <p>Will result in: {{ 204500.456 | amount }}</p>
   </div>`,
-  standalone: true,
   imports: [Lab900Form, JsonPipe, AmountPipe],
 })
 export class FormFieldAmountExampleComponent {

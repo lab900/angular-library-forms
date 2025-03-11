@@ -1,9 +1,5 @@
 import { EditType } from '../../../models/editType';
-import {
-  FormFieldBase,
-  FormFieldBaseOptions,
-  Icon,
-} from '../../../models/form-field-base';
+import { FormFieldBase, FormFieldBaseOptions, Icon } from '../../../models/form-field-base';
 
 export interface FormFieldPasswordOptions extends FormFieldBaseOptions {
   autofocus?: boolean;

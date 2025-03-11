@@ -1,12 +1,11 @@
 import { MatFormFieldDefaultOptions } from '@angular/material/form-field';
-import { InjectionToken } from '@angular/core';
-import { IConfig } from 'ngx-mask';
+import { InjectionToken, Type } from '@angular/core';
+import { NgxMaskConfig } from 'ngx-mask/lib/ngx-mask.config';
+import { FormComponent } from '../components/AbstractFormComponent';
 
-export const LAB900_FORM_MODULE_SETTINGS =
-  new InjectionToken<Lab900FormModuleSettings>('lab900FormModuleSetting');
+export const LAB900_FORM_MODULE_SETTINGS = new InjectionToken<Lab900FormModuleSettings>('lab900FormModuleSetting');
 
-export const LAB900_FORM_FIELD_TYPES =
-  new InjectionToken<Lab900FormModuleSettings>('lab900FormFieldTypes');
+export const LAB900_FORM_FIELD_TYPES = new InjectionToken<Record<string, Type<FormComponent>>>('lab900FormFieldTypes');
 
 export interface Lab900FormFieldOptions extends MatFormFieldDefaultOptions {
   showLengthIndicator?: boolean;
@@ -20,7 +19,7 @@ export interface Lab900AmountFieldOptions {
 
 export interface Lab900FormModuleSettings {
   formField?: Lab900FormFieldOptions;
-  fieldMask?: Partial<IConfig>;
+  fieldMask?: Partial<NgxMaskConfig>;
   amountField?: Lab900AmountFieldOptions;
   disableBrowserAutocomplete?: boolean;
 }

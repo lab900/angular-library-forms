@@ -1,10 +1,6 @@
-import { Component, HostBinding, OnInit } from '@angular/core';
-import { matFormFieldAnimations } from '@angular/material/form-field';
+import { Component, computed, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import {
-  AngularEditorConfig,
-  AngularEditorModule,
-} from '@kolkov/angular-editor';
+import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
 import { WysiwgFieldModel } from './wysiwg-field.model';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -12,31 +8,21 @@ import { ReactiveFormsModule } from '@angular/forms';
   selector: 'lab900-wysiwyg-field',
   template: `
     <div [formGroup]="group" class="lab900-wysiwyg-field">
-      <angular-editor
-        [formControlName]="fieldAttribute"
-        [config]="editorConfig"
-      />
+      <angular-editor [formControlName]="fieldAttribute" [config]="editorConfig()" />
     </div>
   `,
   styleUrls: ['./wysiwyg-field.component.scss'],
-  animations: [matFormFieldAnimations.transitionMessages],
-  standalone: true,
-  imports: [AngularEditorModule, ReactiveFormsModule],
+  imports: [ReactiveFormsModule, AngularEditorModule],
 })
-export class WysiwygFieldComponent
-  extends FormComponent<WysiwgFieldModel>
-  implements OnInit
-{
+export class WysiwygFieldComponent extends FormComponent<WysiwgFieldModel> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
-  public editorConfig: AngularEditorConfig;
-
-  public ngOnInit(): void {
-    this.editorConfig = {
+  protected readonly editorConfig = computed<AngularEditorConfig>(() => {
+    return {
       editable: true,
       sanitize: false,
-      ...(this.schema?.options?.editorConfig ?? {}),
+      ...(this._options()?.editorConfig ?? {}),
     };
-  }
+  });
 }

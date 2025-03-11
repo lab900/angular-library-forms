@@ -4,13 +4,12 @@ import { FormFieldRangeSlider } from './range-slider-field.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatRangeSliderFieldComponent } from './mat-range-slider-field/mat-range-slider-field.component';
 import { MatError } from '@angular/material/form-field';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'lab900-range-slider-field',
   templateUrl: './range-slider-field.component.html',
-  standalone: true,
-  imports: [ReactiveFormsModule, MatRangeSliderFieldComponent, MatError, TranslateModule],
+  imports: [ReactiveFormsModule, MatRangeSliderFieldComponent, MatError, TranslatePipe],
   host: {
     class: 'lab900-form-field',
   },

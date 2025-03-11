@@ -1,10 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import {
-  EditType,
-  Lab900Form,
-  Lab900FormConfig,
-  ValueLabel,
-} from '@lab900/forms';
+import { Component, viewChild } from '@angular/core';
+import { EditType, Lab900Form, Lab900FormConfig, ValueLabel } from '@lab900/forms';
 import { of } from 'rxjs';
 import { MatButton } from '@angular/material/button';
 
@@ -13,18 +8,12 @@ import { MatButton } from '@angular/material/button';
   styleUrls: ['./form-field-autocomplete-example.component.scss'],
   template:
     '<lab900-form [schema]="formSchema"/><button mat-raised-button color="primary" (click)="validate()">Submit</button>',
-  standalone: true,
   imports: [Lab900Form, MatButton],
 })
 export class FormFieldAutocompleteExampleComponent {
-  @ViewChild(Lab900Form)
-  public formContainer: Lab900Form<any>;
+  public readonly form = viewChild<Lab900Form<any>>(Lab900Form);
 
-  public options: ValueLabel[] = [
-    { name: 'Mary' },
-    { name: 'Shelley' },
-    { name: 'Igor' },
-  ].map((value) => {
+  public options: ValueLabel[] = [{ name: 'Mary' }, { name: 'Shelley' }, { name: 'Igor' }].map(value => {
     const image =
       'https://firebasestorage.googleapis.com/v0/b/lab900-website-production.appspot.com/o/public%2Fproject-images%2Fyou%2Fyou-mockup.svg?alt=media';
     const label = `<div class="user-option"><img width="20" height="20" src="${image}"> ${value.name}</div>`;
@@ -60,12 +49,10 @@ export class FormFieldAutocompleteExampleComponent {
 
   private filter(value: string): ValueLabel[] {
     const filterValue = value.toLowerCase();
-    return this.options.filter((option: ValueLabel) =>
-      option.label.toLowerCase().includes(filterValue),
-    );
+    return this.options.filter((option: ValueLabel) => option.label.toLowerCase().includes(filterValue));
   }
 
   public validate(): void {
-    console.log(this.formContainer.valid);
+    console.log(this.form()?.valid);
   }
 }

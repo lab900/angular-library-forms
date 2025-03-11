@@ -1,22 +1,12 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Lab900NavListComponent, NavItemGroup } from '@lab900/ui';
 import { showcaseFormsNavItems } from './modules/showcase-forms/showcase-forms.nav-items';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatIcon, MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import packageInfo from '../../package.json';
-import {
-  MatDrawer,
-  MatDrawerContainer,
-  MatDrawerContent,
-  MatDrawerMode,
-} from '@angular/material/sidenav';
-import {
-  NavigationEnd,
-  Router,
-  RouterLink,
-  RouterOutlet,
-} from '@angular/router';
+import { MatDrawer, MatDrawerContainer, MatDrawerContent, MatDrawerMode } from '@angular/material/sidenav';
+import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { filter, map, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { SubscriptionBasedDirective } from './modules/shared/directives/subscription-based.directive';
@@ -29,12 +19,11 @@ import { AsyncPipe, NgOptimizedImage } from '@angular/common';
   selector: 'lab900-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  standalone: true,
   imports: [
     MatToolbar,
     MatIcon,
     MatIconButton,
-    TranslateModule,
+    TranslatePipe,
     RouterLink,
     MatDrawerContainer,
     Lab900NavListComponent,
@@ -46,10 +35,7 @@ import { AsyncPipe, NgOptimizedImage } from '@angular/common';
     NgOptimizedImage,
   ],
 })
-export class AppComponent
-  extends SubscriptionBasedDirective
-  implements OnInit, OnDestroy
-{
+export class AppComponent extends SubscriptionBasedDirective implements OnInit, OnDestroy {
   private unsub = new Subject<void>();
   public readonly languages = ['en', 'nl'];
   public readonly gitUrl = packageInfo.repository;
@@ -58,14 +44,14 @@ export class AppComponent
   public readonly sideNavMode$: Observable<MatDrawerMode>;
 
   @ViewChild('drawer')
-  private drawer: MatDrawer;
+  private drawer?: MatDrawer;
 
   public constructor(
     private translateService: TranslateService,
     private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer,
     private router: Router,
-    private breakpointObserver: BreakpointObserver,
+    private breakpointObserver: BreakpointObserver
   ) {
     super();
 
@@ -74,15 +60,11 @@ export class AppComponent
 
     this.matIconRegistry.addSvgIcon(
       'github',
-      this.domSanitizer.bypassSecurityTrustResourceUrl(
-        'assets/images/github-logo.svg',
-      ),
+      this.domSanitizer.bypassSecurityTrustResourceUrl('assets/images/github-logo.svg')
     );
     this.matIconRegistry.addSvgIcon(
       'lab900',
-      this.domSanitizer.bypassSecurityTrustResourceUrl(
-        'assets/images/logo-duo-dark.svg',
-      ),
+      this.domSanitizer.bypassSecurityTrustResourceUrl('assets/images/logo-duo-dark.svg')
     );
 
     this.sideNavMode$ = this.breakpointObserver
@@ -93,16 +75,11 @@ export class AppComponent
       this.router.events.pipe(
         takeUntil(this.unsub),
         withLatestFrom(this.sideNavMode$),
-        filter(
-          ([e, sideNavMode]) =>
-            e instanceof NavigationEnd &&
-            sideNavMode === 'over' &&
-            this.drawer.opened,
-        ),
+        filter(([e, sideNavMode]) => e instanceof NavigationEnd && sideNavMode === 'over' && !!this.drawer?.opened)
       ),
       () => {
-        this.drawer.close();
-      },
+        this.drawer?.close();
+      }
     );
   }
 

@@ -1,8 +1,5 @@
 import { EditType } from '../../../models/editType';
-import {
-  FormFieldBase,
-  FormFieldBaseOptions,
-} from '../../../models/form-field-base';
+import { FormFieldBase, FormFieldBaseOptions } from '../../../models/form-field-base';
 import { Lab900FormConfig } from '../../../models/Lab900FormConfig';
 import { Lab900File } from '../../../models/Lab900File';
 import { Observable } from 'rxjs';
@@ -11,7 +8,7 @@ export interface FormFieldFilePreviewOptions extends FormFieldBaseOptions {
   fileUploadButtonText?: string;
   canEditFileMetaData?: boolean;
   fileMetaDataConfig?: Lab900FormConfig;
-  httpCallback?: (image: Lab900File) => Observable<Blob>;
+  httpCallback?: (image: Lab900File) => Observable<Blob | ArrayBuffer>;
   showOverlay: boolean | ((data?: any) => boolean);
   multiple?: boolean;
   accept?: string;

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { formFieldsExample } from './config/form-fields-example';
 import { formDataExample } from './config/form-data-example';
@@ -9,7 +9,6 @@ import { formDataExample } from './config/form-data-example';
     <lab900-form #lab900FormContainer [schema]="formFields" [data]="formData" />
     <button (click)="toggleReadOnly()">Toggle edit</button>
   `,
-  standalone: true,
   imports: [Lab900Form],
 })
 export class FormContainerReadonlyExampleComponent {
@@ -18,9 +17,6 @@ export class FormContainerReadonlyExampleComponent {
     readonly: true,
   };
   public formData = formDataExample;
-
-  @ViewChild('lab900FormContainer')
-  private formContainer: Lab900Form<any>;
 
   public toggleReadOnly(): void {
     this.formFields.readonly = !this.formFields.readonly;

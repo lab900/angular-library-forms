@@ -1,20 +1,22 @@
 @if (data && currentTab && navItems?.length) {
   <div class="showcase-page row">
     @if (navItems.length === 1) {
-      <h1>{{data.title}}</h1> 
-    }
-    @else {
+      <h1>{{ data.title }}</h1>
+    } @else {
       <lab900-page-header [pageTitle]="data.title" [navItems]="navItems" [tabPanel]="tabNavPanel" />
     }
     <mat-tab-nav-panel #tabNavPanel>
       @switch (currentTab) {
-        @case ("guide") {
+        @case ('guide') {
           <lab900-markdown-page [filePath]="data?.docFile" />
         }
-        @case ("examples") {
+        @case ('examples') {
           @for (example of data.examples; track example) {
             <div style="padding: 30px 0 0">
-              <lab900-example-viewer [extensions]="example.extensions" [fileDir]="example?.fileFolder" [exampleTitle]="example.title">
+              <lab900-example-viewer
+                [extensions]="example.extensions"
+                [fileDir]="example?.fileFolder"
+                [exampleTitle]="example.title">
                 <ng-container [ngComponentOutlet]="example.component"></ng-container>
               </lab900-example-viewer>
             </div>

@@ -1,12 +1,8 @@
 import { EditType } from '../../../models/editType';
-import {
-  FormFieldBase,
-  FormFieldBaseOptions,
-} from '../../../models/form-field-base';
+import { FormFieldBase, FormFieldBaseOptions } from '../../../models/form-field-base';
 import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
 
-export interface FormFieldDatePickerOptions<T = Date>
-  extends FormFieldBaseOptions {
+export interface FormFieldDatePickerOptions<T = Date> extends FormFieldBaseOptions {
   startView?: 'month' | 'year' | 'multi-year';
   maxDate?: T;
   minDate?: T;
@@ -20,9 +16,7 @@ export interface FormFieldDatePickerOptions<T = Date>
   dateClass?: MatCalendarCellClassFunction<T>;
 }
 
-export interface FormFieldDatePicker<
-  T extends string | number = string,
-  D = Date,
-> extends FormFieldBase<T, FormFieldDatePickerOptions<D>> {
+export interface FormFieldDatePicker<T extends string | number = string, D = Date>
+  extends FormFieldBase<T, FormFieldDatePickerOptions<D>> {
   editType: EditType.Date;
 }

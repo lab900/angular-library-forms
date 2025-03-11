@@ -8,7 +8,6 @@ import { JsonPipe } from '@angular/common';
     <lab900-form #form [schema]="formSchema" />
     <pre>{{ form?.value | json }}</pre>
   `,
-  standalone: true,
   imports: [Lab900Form, JsonPipe],
 })
 export class FormFieldNestedGroupsByAttributeExampleComponent {
@@ -91,10 +90,8 @@ export class FormFieldNestedGroupsByAttributeExampleComponent {
             conditions: [
               {
                 dependOn: 'parentAttr.disable',
-                conditionalOptions: (value) => {
-                  return value
-                    ? [{ value: 'true', label: 'is true' }]
-                    : [{ value: 'false', label: 'is false' }];
+                conditionalOptions: value => {
+                  return value ? [{ value: 'true', label: 'is true' }] : [{ value: 'false', label: 'is false' }];
                 },
               },
             ],

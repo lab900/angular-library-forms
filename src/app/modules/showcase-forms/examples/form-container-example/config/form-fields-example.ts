@@ -1,5 +1,4 @@
-import { Lab900FormConfig, EditType } from '@lab900/forms';
-import { ValueLabel } from '@lab900/forms';
+import { EditType, Lab900FormConfig } from '@lab900/forms';
 
 export const formFieldsExample: Lab900FormConfig = {
   fields: [
@@ -77,7 +76,7 @@ export const formFieldsExample: Lab900FormConfig = {
                   },
                 ],
               },
-              conditions: [{ showIfEquals: (n) => !!n, dependOn: 'number' }],
+              conditions: [{ showIfEquals: (n: any) => !!n, dependOn: 'number' }],
             },
           ],
         },

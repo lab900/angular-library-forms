@@ -1,5 +1,13 @@
 # Changelog
 
+## 19.0.0
+
+- Angular 19 update
+
+### Breaking changes
+
+Since `@angular-material-components/datetime-picker` has not been updated the last major version it is replaced by `@ngxmc/datetime-picker`.
+
 ## 18.2.1
 
 - Fix broken colspan for form rows
@@ -25,12 +33,14 @@
 - Fix masking issues
 
 ## 18.0.3
+
 - Fix issues with MultiLang inputs
 
 ## 18.0.0
 
 - Angular 18 update
-- 
+-
+
 ## 17.0.4
 
 - Fix masking issues

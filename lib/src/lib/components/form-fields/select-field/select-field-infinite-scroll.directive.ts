@@ -1,13 +1,4 @@
-import {
-  AfterViewInit,
-  Directive,
-  EventEmitter,
-  Input,
-  NgZone,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { AfterViewInit, Directive, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatSelect } from '@angular/material/select';
 import { debounceTime, takeUntil, tap } from 'rxjs/operators';
 import { fromEvent, Subject } from 'rxjs';
@@ -22,9 +13,7 @@ const SELECT_ITEM_HEIGHT_EM = 3;
   selector: 'mat-select[lab900InfiniteScroll]',
   standalone: true,
 })
-export class SelectInfiniteScrollDirective
-  implements OnInit, OnDestroy, AfterViewInit
-{
+export class SelectInfiniteScrollDirective implements OnInit, OnDestroy, AfterViewInit {
   @Input() public threshold = '15%';
   @Input() public debounceTime = 150;
   @Input() public complete!: boolean;
@@ -39,7 +28,7 @@ export class SelectInfiniteScrollDirective
 
   public constructor(
     private matSelect: MatSelect,
-    private ngZone: NgZone,
+    private ngZone: NgZone
   ) {}
 
   public ngOnInit(): void {
@@ -47,15 +36,13 @@ export class SelectInfiniteScrollDirective
   }
 
   public ngAfterViewInit(): void {
-    this.matSelect.openedChange
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((opened) => {
-        if (opened) {
-          this.panel = this.matSelect.panel.nativeElement;
-          this.singleOptionHeight = this.getSelectItemHeightPx();
-          this.registerScrollListener();
-        }
-      });
+    this.matSelect.openedChange.pipe(takeUntil(this.destroyed$)).subscribe(opened => {
+      if (opened) {
+        this.panel = this.matSelect.panel.nativeElement;
+        this.singleOptionHeight = this.getSelectItemHeightPx();
+        this.registerScrollListener();
+      }
+    });
   }
 
   public ngOnDestroy(): void {
@@ -78,9 +65,9 @@ export class SelectInfiniteScrollDirective
       .pipe(
         takeUntil(this.destroyed$),
         debounceTime(this.debounceTime),
-        tap((event) => {
+        tap(event => {
           this.handleScrollEvent(event);
-        }),
+        })
       )
       .subscribe();
   }
@@ -91,10 +78,8 @@ export class SelectInfiniteScrollDirective
         return;
       }
       const countOfRenderedOptions = this.matSelect.options.length;
-      const infiniteScrollDistance =
-        this.singleOptionHeight * countOfRenderedOptions;
-      const threshold =
-        this.thrPc !== 0 ? infiniteScrollDistance * this.thrPc : this.thrPx;
+      const infiniteScrollDistance = this.singleOptionHeight * countOfRenderedOptions;
+      const threshold = this.thrPc !== 0 ? infiniteScrollDistance * this.thrPc : this.thrPx;
 
       const scrolledDistance = this.panel.clientHeight + event.target.scrollTop;
 
@@ -105,8 +90,6 @@ export class SelectInfiniteScrollDirective
   }
 
   private getSelectItemHeightPx(): number {
-    return (
-      parseFloat(getComputedStyle(this.panel).fontSize) * SELECT_ITEM_HEIGHT_EM
-    );
+    return parseFloat(getComputedStyle(this.panel).fontSize) * SELECT_ITEM_HEIGHT_EM;
   }
 }

@@ -7,7 +7,6 @@ import { IconComponent } from '@lab900/ui';
   selector: 'lab900-icon-field',
   templateUrl: './icon-field.component.html',
   styleUrls: ['./icon-field.component.scss'],
-  standalone: true,
   imports: [IconComponent],
   host: { class: 'lab900-form-field' },
   changeDetection: ChangeDetectionStrategy.OnPush,

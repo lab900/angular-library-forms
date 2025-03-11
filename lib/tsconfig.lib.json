@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "../../out-tsc/lib",
     "declarationMap": true,
+    "sourceMap": true,
     "declaration": true,
     "inlineSources": true,
     "lib": ["dom", "es2022"]

@@ -1,4 +1,4 @@
-@import 'green.palette';
+@use 'green.palette' as *;
 
 .page {
   background: #fff;

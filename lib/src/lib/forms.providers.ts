@@ -38,7 +38,7 @@ import { SearchFieldComponent } from './components/form-fields/search-field/sear
 import { FormFieldMappingService } from './services/form-field-mapping.service';
 
 export function provideLab900Forms(
-  settings: Lab900FormModuleSettings = defaultFormModuleSettings,
+  settings: Lab900FormModuleSettings = defaultFormModuleSettings
 ): EnvironmentProviders {
   const formSetting: Lab900FormModuleSettings = {
     formField: {

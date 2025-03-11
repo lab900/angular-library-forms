@@ -1,23 +1,12 @@
 import { Component } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import {
-  EditType,
-  Lab900Form,
-  Lab900FormConfig,
-  SelectFieldComponent,
-  ValueLabel,
-} from '@lab900/forms';
+import { EditType, Lab900Form, Lab900FormConfig, SelectFieldComponent } from '@lab900/forms';
 
 @Component({
   selector: 'lab900-form-field-select-example',
   template: `<lab900-form [schema]="formSchema" />
-    <lab900-select-field
-      [schema]="selectSchema"
-      fieldAttribute="example-select"
-      [group]="formGroup"
-    />
+    <lab900-select-field [schema]="selectSchema" fieldAttribute="example-select" [group]="formGroup" />
     <button (click)="clearSelect()">clear All</button>`,
-  standalone: true,
   imports: [Lab900Form, SelectFieldComponent],
 })
 export class FormFieldSelectExampleComponent {
@@ -120,7 +109,7 @@ export class FormFieldSelectExampleComponent {
               ],
               clearFieldButton: {
                 enabled: true,
-                click: (fieldControl) => {
+                click: fieldControl => {
                   fieldControl.setValue('none');
                   fieldControl.markAsTouched();
                   fieldControl.markAsDirty();
@@ -191,6 +180,6 @@ export class FormFieldSelectExampleComponent {
   }
 
   public clearSelect(): void {
-    this.formGroup.get('example-select').setValue(null);
+    this.formGroup.get('example-select')?.setValue(null);
   }
 }

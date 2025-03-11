@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostBinding, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostBinding, viewChild } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { BehaviorSubject, isObservable, Observable, of } from 'rxjs';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
@@ -13,7 +13,7 @@ import { ValueLabel } from '../../../models/form-field-base';
 import { FormFieldAutocompleteMulti } from './autocomplete-multiple-field.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatChipGrid, MatChipInput, MatChipRow } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -21,11 +21,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 @Component({
   selector: 'lab900-autocomplete-multiple-field',
   templateUrl: './autocomplete-multiple-field.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,
-    TranslateModule,
+    TranslatePipe,
     MatIcon,
     MatChipGrid,
     MatChipRow,
@@ -43,18 +42,15 @@ export class AutocompleteMultipleFieldComponent<T>
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
-  @ViewChild('input')
-  private input: ElementRef<HTMLInputElement>;
-  @ViewChild('auto')
-  private matAutocomplete: MatAutocomplete;
+  private readonly input = viewChild<ElementRef<HTMLInputElement>>('input');
 
-  public filteredOptions: Observable<ValueLabel<T>[]>;
+  public filteredOptions?: Observable<ValueLabel<T>[]>;
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 
   public inputChange: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   public get selectedOptions(): T[] {
-    return this.group.controls[this.fieldAttribute]?.value ?? [];
+    return this._fieldControl()?.value ?? [];
   }
 
   public ngAfterViewInit(): void {
@@ -66,13 +62,15 @@ export class AutocompleteMultipleFieldComponent<T>
   }
 
   private initFilteredOptionsListener(): void {
-    this.filteredOptions = this.inputChange.pipe(
-      debounceTime(this.options.debounceTime ?? 300),
-      switchMap((input: string) => {
-        const res = this.options.autocompleteOptions(input, this.fieldControl);
-        return isObservable(res) ? res : of(res);
-      }),
-    );
+    if (this.options?.autocompleteOptions && this.fieldControl) {
+      this.filteredOptions = this.inputChange.pipe(
+        debounceTime(this.options?.debounceTime ?? 300),
+        switchMap((input: string) => {
+          const res = this.options!.autocompleteOptions!(input, this.fieldControl!);
+          return isObservable(res) ? res : of(res);
+        })
+      );
+    }
   }
 
   public remove(index: number): void {
@@ -80,7 +78,10 @@ export class AutocompleteMultipleFieldComponent<T>
       const value = this.selectedOptions;
       value.splice(index, 1);
       this.updateControlValue(value);
-      this.input.nativeElement.value = '';
+      const nativeElm = this.input()?.nativeElement;
+      if (nativeElm) {
+        nativeElm.value = '';
+      }
     }
   }
 
@@ -88,14 +89,17 @@ export class AutocompleteMultipleFieldComponent<T>
     const value = this.selectedOptions;
     value.push(event.option.value);
     this.updateControlValue(value);
-    this.input.nativeElement.value = '';
+    const nativeElm = this.input()?.nativeElement;
+    if (nativeElm) {
+      nativeElm.value = '';
+    }
     this.group.markAsDirty();
   }
 
   private updateControlValue(val: T[]): void {
-    this.group.controls[this.fieldAttribute].setValue(val);
-    this.group.controls[this.fieldAttribute].updateValueAndValidity();
-    this.group.controls[this.fieldAttribute].markAsDirty();
-    this.group.controls[this.fieldAttribute].markAsTouched();
+    this._fieldControl()?.setValue(val);
+    this._fieldControl()?.updateValueAndValidity();
+    this._fieldControl()?.markAsDirty();
+    this._fieldControl()?.markAsTouched();
   }
 }

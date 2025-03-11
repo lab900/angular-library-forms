@@ -38,14 +38,12 @@ import { FormConditionalValidationExampleComponent } from './examples/form-condt
 export default [
   {
     path: '',
-    loadComponent: () =>
-      import('../shared/components/showcase-home/showcase-home.component'),
+    loadComponent: () => import('../shared/components/showcase-home/showcase-home.component'),
     data: { config: showcaseFormsConfig, nav: showcaseFormsNavItems },
   },
   {
     path: 'getting-started',
-    loadComponent: () =>
-      import('../shared/components/markdown-page/markdown-page.component'),
+    loadComponent: () => import('../shared/components/markdown-page/markdown-page.component'),
     data: { filePath: 'guides/getting-started.md' },
   },
   new ShowcaseRoute(
@@ -53,63 +51,33 @@ export default [
     'Dynamic forms',
     [
       new ShowcaseExample(FormContainerExampleComponent, 'Form Container'),
-      new ShowcaseExample(
-        FormContainerReadonlyExampleComponent,
-        'Form Container Readonly',
-        'form-container-example',
-      ),
+      new ShowcaseExample(FormContainerReadonlyExampleComponent, 'Form Container Readonly', 'form-container-example'),
     ],
-    'guides/creating-forms.md',
+    'guides/creating-forms.md'
   ),
   new ShowcaseRoute('conditional-forms', 'Conditional forms', [
-    new ShowcaseExample(
-      FormConditionalsExampleComponent,
-      'Conditional Form Container',
-      null,
-      ['TS', 'config.ts']
-    ),
-    new ShowcaseExample(
-      FormConditionalValidationExampleComponent,
-      'Conditional validation',
-    ),
-    new ShowcaseExample(
-      FormConditionalWithExternalFormExampleComponent,
-      'Conditionals across multiple forms',
-    ),
+    new ShowcaseExample(FormConditionalsExampleComponent, 'Conditional Form Container', undefined, ['TS', 'config.ts']),
+    new ShowcaseExample(FormConditionalValidationExampleComponent, 'Conditional validation'),
+    new ShowcaseExample(FormConditionalWithExternalFormExampleComponent, 'Conditionals across multiple forms'),
   ]),
   new ShowcaseRoute('form-field-autocomplete', 'Form Fields: Autocomplete', [
     new ShowcaseExample(FormFieldAutocompleteExampleComponent, 'Autocomplete'),
     new ShowcaseExample(
       FormFieldAutocompleteMultipleExampleComponent,
       'Autocomplete Multiple',
-      'form-field-autocomplete-example',
+      'form-field-autocomplete-example'
     ),
   ]),
   new ShowcaseRoute('form-field-repeater', 'Form Fields: Repeater', [
-    new ShowcaseExample(
-      FormFieldRepeaterAdvancedExampleComponent,
-      'Repeater (nested)',
-    ),
+    new ShowcaseExample(FormFieldRepeaterAdvancedExampleComponent, 'Repeater (nested)'),
     new ShowcaseExample(FormFieldRepeaterExampleComponent, 'Repeater'),
-    new ShowcaseExample(
-      FormFieldRepeaterFixedExampleComponent,
-      'Repeater fixed',
-    ),
+    new ShowcaseExample(FormFieldRepeaterFixedExampleComponent, 'Repeater fixed'),
   ]),
   new ShowcaseRoute('form-field-datepicker', 'Form Fields: Datepicker', [
     new ShowcaseExample(FormFieldDatePickerExampleComponent, 'Date picker'),
-    new ShowcaseExample(
-      FormFieldDateYearMonthPickerExampleComponent,
-      'Date Year Month picker',
-    ),
-    new ShowcaseExample(
-      FormFieldDateRangePickerExampleComponent,
-      'Date range picker',
-    ),
-    new ShowcaseExample(
-      FormFieldDateTimePickerExampleComponent,
-      'Date time picker',
-    ),
+    new ShowcaseExample(FormFieldDateYearMonthPickerExampleComponent, 'Date Year Month picker'),
+    new ShowcaseExample(FormFieldDateRangePickerExampleComponent, 'Date range picker'),
+    new ShowcaseExample(FormFieldDateTimePickerExampleComponent, 'Date time picker'),
   ]),
   new ShowcaseRoute('form-field-input', 'Form Fields: Input & Textarea', [
     new ShowcaseExample(FormFieldInputsExampleComponent, 'Input'),
@@ -132,50 +100,24 @@ export default [
   ]),
   new ShowcaseRoute('form-field-select', 'Form Fields: Select', [
     new ShowcaseExample(FormFieldSelectExampleComponent, 'Selects'),
-    new ShowcaseExample(
-      FormFieldSelectAdvancedExampleComponent,
-      'Advanced selects',
-      'form-field-select-example',
-    ),
+    new ShowcaseExample(FormFieldSelectAdvancedExampleComponent, 'Advanced selects', 'form-field-select-example'),
   ]),
   new ShowcaseRoute('form-field-file-upload', 'Form Fields: File upload', [
     new ShowcaseExample(FormFieldFileUploadExampleComponent, 'Upload'),
   ]),
-  new ShowcaseRoute(
-    'form-field-drag-n-drop-file-upload',
-    'Form Fields: File Drag And Drop',
-    [
-      new ShowcaseExample(
-        FormFieldDragNDropFileExampleComponent,
-        'Drag And Drop',
-      ),
-      new ShowcaseExample(
-        FormFieldDragNDropFileExampleFullWidthComponent,
-        'Drag And Drop Full Width',
-      ),
-    ],
-  ),
+  new ShowcaseRoute('form-field-drag-n-drop-file-upload', 'Form Fields: File Drag And Drop', [
+    new ShowcaseExample(FormFieldDragNDropFileExampleComponent, 'Drag And Drop'),
+    new ShowcaseExample(FormFieldDragNDropFileExampleFullWidthComponent, 'Drag And Drop Full Width'),
+  ]),
   new ShowcaseRoute('form-field-multi-lang', 'Form Fields: Multi language', [
-    new ShowcaseExample(
-      FormFieldMultiLanguageExampleComponent,
-      'Multi language',
-    ),
+    new ShowcaseExample(FormFieldMultiLanguageExampleComponent, 'Multi language'),
   ]),
   new ShowcaseRoute('form-field-nested-groups', 'Form Fields: Nested groups', [
-    new ShowcaseExample(
-      FormFieldNestedGroupsExampleComponent,
-      'Nested groups with a row',
-    ),
-    new ShowcaseExample(
-      FormFieldNestedGroupsByAttributeExampleComponent,
-      'Nested groups by attributes',
-    ),
+    new ShowcaseExample(FormFieldNestedGroupsExampleComponent, 'Nested groups with a row'),
+    new ShowcaseExample(FormFieldNestedGroupsByAttributeExampleComponent, 'Nested groups by attributes'),
   ]),
   new ShowcaseRoute('form-field-amount', 'Form Fields: Amount', [
-    new ShowcaseExample(
-      FormFieldAmountExampleComponent,
-      'Formatted amount field',
-    ),
+    new ShowcaseExample(FormFieldAmountExampleComponent, 'Formatted amount field'),
   ]),
   new ShowcaseRoute('form-field-search', 'Form Fields: Search', [
     new ShowcaseExample(FormFieldSearchExampleComponent, 'Search field'),

@@ -8,7 +8,6 @@ import { JsonPipe } from '@angular/common';
     <p>Unknown schema:</p>
     <pre>{{ schema | json }}</pre>
   </div>`,
-  standalone: true,
   imports: [JsonPipe],
 })
 export class UnknownFieldComponent extends FormComponent {

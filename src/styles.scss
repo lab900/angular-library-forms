@@ -4,15 +4,16 @@
 @use '@lab900/ui/theming' as ui;
 @use '../dist/@lab900/forms/theming' as forms;
 
-@import 'green.palette';
-@import 'grey.palette';
+@use 'green.palette' as *;
+@use 'grey.palette' as *;
 
 // Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 @include mat.typography-hierarchy(mat.m2-define-typography-config());
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss

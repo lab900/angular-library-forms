@@ -1,26 +1,22 @@
 import {
+  computed,
   Directive,
   ElementRef,
   forwardRef,
   HostListener,
-  Inject,
-  Input,
+  inject,
+  input,
   LOCALE_ID,
-  OnChanges,
-  SimpleChanges,
+  signal,
 } from '@angular/core';
 import {
   amountToNumber,
   formatAmountWithoutRounding,
   getAmountFormatter,
-  getDecimalSeparator,
   getThousandSeparator,
 } from './amount.helpers';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import {
-  LAB900_FORM_MODULE_SETTINGS,
-  Lab900FormModuleSettings,
-} from '../../../models/Lab900FormModuleSettings';
+import { LAB900_FORM_MODULE_SETTINGS } from '../../../models/Lab900FormModuleSettings';
 
 @Directive({
   selector: 'input[lab900AmountInput]',
@@ -33,41 +29,28 @@ import {
   ],
   standalone: true,
 })
-export class AmountInputDirective implements OnChanges, ControlValueAccessor {
-  public focused = false;
+export class AmountInputDirective implements ControlValueAccessor {
+  private readonly appLocale = inject(LOCALE_ID);
+  private readonly settings = inject(LAB900_FORM_MODULE_SETTINGS, { optional: true });
+  private readonly locale = this.settings?.amountField?.locale ?? this.appLocale;
 
-  @Input()
-  public maxDecimals?: number;
+  public readonly maxDecimals = input<number | undefined>(this.settings?.amountField?.maxDecimals, {});
+  public readonly minDecimals = input<number | undefined>(this.settings?.amountField?.minDecimals, {});
+  public readonly focused = signal(false);
 
-  @Input()
-  public minDecimals?: number;
+  private readonly thousandSeparator: string = getThousandSeparator(this.locale);
 
-  private readonly locale: string;
-  private readonly decimalSeparator: string;
-  private readonly thousandSeparator: string;
+  private readonly formatter = computed<Intl.NumberFormat>(() =>
+    getAmountFormatter(this.locale, {
+      maxDecimals: this.maxDecimals(),
+      minDecimals: this.minDecimals(),
+    })
+  );
 
-  private formatter: Intl.NumberFormat;
-
-  public constructor(
-    @Inject(LOCALE_ID) appLocale: string,
-    @Inject(LAB900_FORM_MODULE_SETTINGS)
-    public setting: Lab900FormModuleSettings,
-    private elementRef: ElementRef<HTMLInputElement>,
-  ) {
-    this.locale = setting?.amountField?.locale ?? appLocale;
-    this.decimalSeparator = getDecimalSeparator(this.locale);
-    this.thousandSeparator = getThousandSeparator(this.locale);
-    this.formatter = this.getFormatter();
-  }
-
-  public ngOnChanges(changes: SimpleChanges): void {
-    if (changes?.maxDecimals || changes?.minDecimals) {
-      this.formatter = this.getFormatter();
-    }
-  }
+  public constructor(private elementRef: ElementRef<HTMLInputElement>) {}
 
   public writeValue(value: number): void {
-    if (!isNaN(value) && !this.focused) {
+    if (!isNaN(value) && !this.focused()) {
       this.formatValue(value);
     } else {
       this.elementRef.nativeElement.value = value as any;
@@ -75,11 +58,11 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-  public onChange = (_: number): void => {};
+  public onChange = (_: number | null): void => {};
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   public onTouched = (): void => {};
 
-  public registerOnChange(fn: (_: number) => void): void {
+  public registerOnChange(fn: (_: number | null) => void): void {
     this.onChange = fn;
   }
 
@@ -95,28 +78,23 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
   public onInput(v: string, target: HTMLInputElement): void {
     let validateValue = v;
     if (validateValue?.length) {
-      const max = this.getMaxDecimals();
+      const max = this.maxDecimals();
       const sIndex = v.indexOf('.');
       if (sIndex >= 0) {
-        validateValue =
-          v.substr(0, sIndex) + (max === 0 ? '' : v.substr(sIndex, max + 1));
+        validateValue = v.slice(0, sIndex) + (typeof max === 'undefined' || max === 0 ? '' : v.slice(sIndex, max + 1));
         target.value = validateValue;
       }
     }
-    this.onChange(
-      !validateValue?.length || isNaN(+validateValue) ? null : +validateValue,
-    );
+    this.onChange(!validateValue?.length || isNaN(+validateValue) ? null : +validateValue);
   }
 
   @HostListener('paste', ['$event'])
   public onPaste(event: ClipboardEvent): void {
-    if (this.canUpdate()) {
+    if (this.canUpdate() && event.clipboardData) {
       event.preventDefault();
       const pastedInput: string = event.clipboardData.getData('text/plain');
       if (pastedInput?.length) {
-        const newValue = amountToNumber(
-          this.getUnformattedValue(pastedInput),
-        ) as any;
+        const newValue = amountToNumber(this.getUnformattedValue(pastedInput)) as any;
         this.elementRef.nativeElement.value = newValue;
         this.onChange(newValue);
         this.onTouched();
@@ -126,20 +104,18 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
 
   @HostListener('focus', ['$event.target.value'])
   public onFocus(value: string): void {
-    if (!this.focused && this.canUpdate()) {
-      this.focused = true;
+    if (!this.focused() && this.canUpdate()) {
+      this.focused.set(true);
       this.elementRef.nativeElement.type = 'number';
       this.elementRef.nativeElement.setAttribute('step', '0.01');
-      this.elementRef.nativeElement.value = amountToNumber(
-        this.getUnformattedValue(value),
-      ) as any;
+      this.elementRef.nativeElement.value = amountToNumber(this.getUnformattedValue(value)) as any;
     }
   }
 
   @HostListener('blur', ['$event.target.valueAsNumber'])
   public onBlur(value: number): void {
-    if (this.focused && this.canUpdate()) {
-      this.focused = false;
+    if (this.focused() && this.canUpdate()) {
+      this.focused.set(false);
       this.elementRef.nativeElement.type = 'string';
       this.formatValue(value);
       this.onTouched();
@@ -149,39 +125,17 @@ export class AmountInputDirective implements OnChanges, ControlValueAccessor {
   private formatValue(value: number): void {
     const v = amountToNumber(String(value)) ?? null;
     this.elementRef.nativeElement.value =
-      v != null
-        ? formatAmountWithoutRounding(v, this.formatter, this.getMaxDecimals())
-        : '';
+      v != null ? formatAmountWithoutRounding(v, this.formatter(), this.maxDecimals()) : '';
   }
 
   private getUnformattedValue(value: string): string {
     if (value) {
-      return (
-        value.replace(new RegExp('\\' + this.thousandSeparator, 'g'), '') ?? ''
-      );
+      return value.replace(new RegExp('\\' + this.thousandSeparator, 'g'), '') ?? '';
     }
     return '';
   }
 
-  private getFormatter(): Intl.NumberFormat {
-    return getAmountFormatter(this.locale, {
-      maxDecimals: this.getMaxDecimals(),
-      minDecimals: this.getMinDecimals(),
-    });
-  }
-
-  private getMaxDecimals(): number {
-    return this.maxDecimals ?? this.setting?.amountField?.maxDecimals;
-  }
-
-  private getMinDecimals(): number {
-    return this.minDecimals ?? this.setting?.amountField?.minDecimals;
-  }
-
   private canUpdate(): boolean {
-    return (
-      !this.elementRef.nativeElement?.readOnly &&
-      !this.elementRef.nativeElement?.disabled
-    );
+    return !this.elementRef.nativeElement?.readOnly && !this.elementRef.nativeElement?.disabled;
   }
 }

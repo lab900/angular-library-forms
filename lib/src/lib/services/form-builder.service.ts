@@ -20,6 +20,9 @@ export class Lab900FormBuilderService {
 
   public static addValidators(field: Lab900FormField, data: any): ValidatorFn[] {
     const validators: ValidatorFn[] = field?.validators ?? [];
+    if (!field.options) {
+      return [];
+    }
     if (
       !validators.includes(Validators.required) &&
       FormFieldUtils.isRequired(FormFieldUtils.isReadOnly(field.options, data), field, data)
@@ -49,17 +52,17 @@ export class Lab900FormBuilderService {
 
   public createFormGroup<T = any>(fields: Lab900FormField[], group?: UntypedFormGroup, data?: T): UntypedFormGroup {
     let formGroup = group ? group : this.fb.group({});
-    fields.forEach((field) => {
+    fields.forEach(field => {
       if (field.attribute) {
-        if (field.editType === EditType.Row || field.editType === EditType.Column) {
-          const nestedGroup = this.createFormGroup(field.nestedFields, null, data?.[field.attribute]);
+        if ((field.editType === EditType.Row || field.editType === EditType.Column) && field.nestedFields) {
+          const nestedGroup = this.createFormGroup(field.nestedFields, undefined, data?.[field.attribute as keyof T]);
           nestedGroup.setValidators(Lab900FormBuilderService.addValidators(field, data));
           formGroup.addControl(field.attribute, nestedGroup);
         } else {
           const fieldGroup = this.setFieldGroup(field.attribute, formGroup);
           this.createFormField(field, fieldGroup, data);
         }
-      } else if (field.editType === EditType.Row || field.editType === EditType.Column) {
+      } else if ((field.editType === EditType.Row || field.editType === EditType.Column) && field.nestedFields) {
         formGroup = this.createFormGroup(field.nestedFields, formGroup, data);
       }
     });
@@ -69,25 +72,28 @@ export class Lab900FormBuilderService {
   public createFormArray<T = any>(
     formData: T,
     field: FormFieldRepeater,
-    formArray: UntypedFormArray = this.fb.array([]),
+    formArray: UntypedFormArray = this.fb.array([])
   ): UntypedFormArray {
     formArray.clear();
-    const data: any[] = this.getFieldValue(field.attribute, formData);
+    const data: any[] = this.getFieldValue(field.attribute!, formData);
     if (Array.isArray(data) && data?.length) {
-      data.forEach((nestedData) => {
-        formArray.push(this.createFormGroup(field.nestedFields, undefined, nestedData));
+      data.forEach(nestedData => {
+        formArray.push(this.createFormGroup(field.nestedFields!, undefined, nestedData));
       });
     }
     const minRows = field.options?.minRows;
     if (minRows && formArray?.length < minRows) {
       for (let i = 0; i <= minRows - formArray?.length; i++) {
-        formArray.push(this.createFormGroup(field.nestedFields, undefined));
+        formArray.push(this.createFormGroup(field.nestedFields!, undefined));
       }
     }
     return formArray;
   }
 
   private createFormField(field: Lab900FormField, fieldGroup: UntypedFormGroup, formData: any): void {
+    if (!field.attribute) {
+      return;
+    }
     const attributeMap = field.attribute.split('.');
     const attribute = attributeMap[attributeMap.length - 1];
     let data = this.getFieldValue(field.attribute, formData);
@@ -105,7 +111,7 @@ export class Lab900FormBuilderService {
         this.fb.group({
           [startKey]: data?.[startKey],
           [endKey]: data?.[endKey],
-        }),
+        })
       );
     } else {
       if (data == null && field.options?.defaultValue !== null && typeof field.options?.defaultValue !== 'undefined') {
@@ -147,6 +153,6 @@ export class Lab900FormBuilderService {
       }
       return value;
     }
-    return data?.[attribute] ?? null;
+    return data?.[attribute as keyof T] ?? null;
   }
 }

@@ -11,18 +11,19 @@
       [formControlName]="fieldAttribute"
       [required]="fieldIsRequired"
       [readonly]="fieldIsReadonly"
-      [max]="maxDate"
-      [min]="minDate"
-      [matDatepickerFilter]="options?.dateFilter"
-    />
-    <mat-datepicker-toggle [disabled]="fieldIsReadonly || fieldControl.disabled" matSuffix [for]="picker"></mat-datepicker-toggle>
+      [max]="maxDate()"
+      [min]="minDate()"
+      [matDatepickerFilter]="options?.dateFilter" />
+    <mat-datepicker-toggle
+      [disabled]="fieldIsReadonly || fieldControl?.disabled"
+      matSuffix
+      [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker
       [dateClass]="options?.dateClass"
-      [disabled]="fieldIsReadonly || fieldControl.disabled"
+      [disabled]="fieldIsReadonly || fieldControl?.disabled"
       #picker
-      [startView]="startView"
-    ></mat-datepicker>
-    @if (hint && !fieldIsReadonly && !(schema.options.hint.hideHintOnValidValue && input.value)) {
+      [startView]="startView()"></mat-datepicker>
+    @if (hint && !fieldIsReadonly && !(options?.hint?.hideHintOnValidValue && input.value)) {
       <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
     }
     @if (!valid && !fieldIsReadonly) {

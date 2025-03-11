@@ -22,7 +22,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   public readonly _fieldAttribute = input<string | undefined>(undefined, { alias: 'fieldAttribute' });
-  public get fieldAttribute(): string {
+  public get fieldAttribute(): string | undefined {
     return this._fieldAttribute();
   }
 
@@ -32,10 +32,12 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   }
 
   protected readonly _fieldControl = computed(() => {
-    if (this._group() && this._fieldAttribute()) {
-      return this._group().get(this._fieldAttribute());
+    const attr = this._fieldAttribute();
+    const group = this._group();
+    if (group && attr) {
+      return group.get(attr) ?? undefined;
     }
-    return;
+    return undefined;
   });
 
   public get fieldControl(): AbstractControl | undefined {
@@ -46,7 +48,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   public readonly _options = computed<S['options']>(() => this._schema().options);
   public readonly label = computed<string | undefined>(() => this._schema().title);
   public readonly readonlyLabel = computed<string | undefined>(
-    () => this._schema().options?.readonlyLabel ?? this.label(),
+    () => this._schema().options?.readonlyLabel ?? this.label()
   );
 
   public readonly elementId = computed<string>(() => {
@@ -62,20 +64,20 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
 
   public readonly errorMessage = toSignal<string>(
     toObservable(this._fieldControl).pipe(
-      filter((field) => !!field),
-      switchMap((field) => field.statusChanges),
+      filter(field => !!field),
+      switchMap(field => field.statusChanges),
       switchMap(() => {
         const field = this.fieldControl;
         if (!field) {
           return EMPTY;
         }
-        let errors: ValidationErrors = field.errors;
+        let errors: ValidationErrors | null = field.errors;
         let message = this.translateService.stream('forms.error.generic');
         if (field instanceof UntypedFormGroup && field.controls) {
           errors = field.errors ?? {};
           for (const controlsKey in field.controls) {
             if ('controlsKey' in field.controls) {
-              errors = { ...errors, ...field.get(controlsKey).errors };
+              errors = { ...errors, ...(field.get(controlsKey)?.errors ?? {}) };
             }
           }
         }
@@ -94,8 +96,8 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
           }
         });
         return message;
-      }),
-    ),
+      })
+    )
   );
 
   public get options(): S['options'] {
@@ -119,55 +121,49 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   public fieldIsRequired!: boolean;
 
   public get valid(): boolean {
-    return this.fieldControl?.valid;
+    return !!this.fieldControl?.valid;
   }
 
   public get touched(): boolean {
-    return this.fieldControl?.touched;
+    return !!this.fieldControl?.touched;
   }
 
-  public get hint(): string {
+  public get hint(): string | undefined {
     return this.options?.hint?.value;
   }
 
-  public get hintValueTranslateData(): object {
+  public get hintValueTranslateData(): object | undefined {
     return this.options?.hint?.valueTranslateData;
   }
 
   public get placeholder(): string {
     if (typeof this.options?.placeholder === 'function') {
-      return this.options.placeholder(this.group.value);
+      return this.options.placeholder(this.group.value) ?? '';
     }
-    return this.options?.placeholder;
+    return this.options?.placeholder ?? '';
   }
 
   public constructor() {
     super();
-    effect(
-      () => {
-        const group = this._group();
-        const options = this._options();
-        const fieldControl = this._fieldControl();
-        if (group && fieldControl) {
+    effect(() => {
+      const group = this._group();
+      const options = this._options();
+      const fieldControl = this._fieldControl();
+      if (group && fieldControl) {
+        this.setFieldProperties();
+        group.valueChanges.subscribe(() => {
           this.setFieldProperties();
-          group.valueChanges.subscribe(() => {
-            this.setFieldProperties();
-            if (options?.onChangeFn) {
-              options.onChangeFn(group.value, fieldControl);
-            }
-          });
-        }
-      },
-      { allowSignalWrites: true },
-    );
-    effect(
-      () => {
-        if (this._schema().conditions?.length) {
-          this.createConditions();
-        }
-      },
-      { allowSignalWrites: true },
-    );
+          if (options?.onChangeFn) {
+            options.onChangeFn(group.value, fieldControl);
+          }
+        });
+      }
+    });
+    effect(() => {
+      if (this._schema().conditions?.length) {
+        this.createConditions();
+      }
+    });
   }
 
   public onConditionalChange(
@@ -176,12 +172,15 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     value: any,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    firstRun?: boolean,
+    firstRun?: boolean
   ): void {
     // Override in child component
   }
 
-  private getDefaultErrorMessage(key: string, interpolateParams: object = this.schema.options): Observable<string> {
+  private getDefaultErrorMessage(
+    key: string,
+    interpolateParams: object | undefined = this.options
+  ): Observable<string> {
     switch (key) {
       case 'required':
         return this.translateService.stream('forms.error.required');
@@ -209,13 +208,17 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   }
 
   public hide(): void {
-    this.fieldIsHidden = FormFieldUtils.isHidden(this.schema?.options, this.group);
-    this.changeDetectorRef.markForCheck();
+    if (this.schema?.options) {
+      this.fieldIsHidden = FormFieldUtils.isHidden(this.schema.options, this.group);
+      this.changeDetectorRef.markForCheck();
+    }
   }
 
   private isReadonly(): void {
-    this.fieldIsReadonly = FormFieldUtils.isReadOnly(this.schema?.options, this.group.value, this.readonly);
-    this.changeDetectorRef.markForCheck();
+    if (this.schema?.options) {
+      this.fieldIsReadonly = FormFieldUtils.isReadOnly(this.schema.options, this.group.value, this.readonly);
+      this.changeDetectorRef.markForCheck();
+    }
   }
 
   private isRequired(): void {
@@ -236,11 +239,11 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   }
 
   private createConditions(): void {
-    this.schema.conditions
-      .filter((c) => c.dependOn)
-      .map((c) => new FieldConditions(this, c))
+    (this.schema?.conditions ?? [])
+      .filter(c => c.dependOn)
+      .map(c => new FieldConditions(this, c))
       .forEach((conditions: FieldConditions) => {
-        const subs = conditions.start((dependOn: string, value: any, firstRun: boolean) => {
+        const subs = conditions.start((dependOn: string, value: any, firstRun: boolean | undefined) => {
           if (this.onConditionalChange) {
             this.onConditionalChange(dependOn, value, firstRun);
           }

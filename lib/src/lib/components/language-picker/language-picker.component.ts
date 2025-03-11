@@ -1,15 +1,10 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  model,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 import { ValueLabel } from '../../models/form-field-base';
 import { MatButton } from '@angular/material/button';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 
@@ -18,16 +13,7 @@ import { MatIcon } from '@angular/material/icon';
   templateUrl: './language-picker.component.html',
   styleUrls: ['./language-picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [
-    MatButton,
-    MatMenuTrigger,
-    MatMenu,
-    MatMenuItem,
-    TranslateModule,
-    MatTooltip,
-    MatIcon,
-  ],
+  imports: [MatButton, MatMenuTrigger, MatMenu, MatMenuItem, TranslatePipe, MatTooltip, MatIcon],
 })
 export class LanguagePickerComponent {
   public readonly translating = model<boolean>(false);

@@ -1,18 +1,19 @@
 {
   "name": "@lab900/forms",
-  "version": "18.2.1",
+  "version": "19.0.0",
   "author": "Lab900 <info@lab900.com> (https://lab900.com)",
   "license": "MIT",
   "peerDependencies": {
-    "@angular/common": ">=18.0.0",
-    "@angular/core": ">=18.0.0",
-    "@angular/material": ">=18.0.0",
-    "@ngx-translate/core": ">=15.0.0",
-    "@angular/forms": ">=18.0.0",
-    "@lab900/ui": ">=18.0.0",
+    "@angular/common": ">=19.0.0",
+    "@angular/core": ">=19.0.0",
+    "@angular/material": ">=19.0.0",
+    "@ngx-translate/core": ">=16.0.4",
+    "@angular/forms": ">=19.0.0",
+    "@lab900/ui": ">=19.0.0",
     "@kolkov/angular-editor": "^3.0.0-beta.0",
-    "ngx-mask": "^17.1.8",
-    "ngx-mat-select-search": "^7.0.4"
+    "ngx-mask": "^19.0.6",
+    "ngx-mat-select-search": "^8.0.0",
+    "@ngxmc/datetime-picker": "~19.2.2"
   },
   "repository": {
     "type": "git",

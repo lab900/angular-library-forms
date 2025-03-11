@@ -1,8 +1,4 @@
-import {
-  FormFieldBase,
-  FormFieldBaseOptions,
-  ValueLabel,
-} from '../../../models/form-field-base';
+import { FormFieldBase, FormFieldBaseOptions, ValueLabel } from '../../../models/form-field-base';
 import { Observable } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
 import { EditType } from '../../../models/editType';
@@ -17,7 +13,7 @@ export interface FormFieldAutocompleteOptions<T> extends FormFieldBaseOptions {
   disabledOptionFn?: (option: T) => boolean;
   autocompleteOptions?: (
     searchTerm: string,
-    currentControl: AbstractControl,
+    currentControl: AbstractControl
   ) => ValueLabel<T>[] | Observable<ValueLabel<T>[]>;
   debounceTime?: number;
   requireMatch?: boolean;

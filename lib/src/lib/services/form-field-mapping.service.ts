@@ -1,4 +1,4 @@
-import { Inject, Injectable, Type } from '@angular/core';
+import { inject, Injectable, Type } from '@angular/core';
 import { Lab900FormField } from '../models/lab900-form-field.type';
 import { FormComponent } from '../components/AbstractFormComponent';
 import { EditType } from '../models/editType';
@@ -6,75 +6,35 @@ import { LAB900_FORM_FIELD_TYPES } from '../models/Lab900FormModuleSettings';
 
 @Injectable()
 export class FormFieldMappingService {
-  private readonly inputFieldComponent: Type<FormComponent>;
-  private readonly passwordFieldComponent: Type<FormComponent>;
-  private readonly checkboxFieldComponent: Type<FormComponent>;
-  private readonly wysiwygFieldComponent: Type<FormComponent>;
-  private readonly dateFieldComponent: Type<FormComponent>;
-  private readonly dateYearMonthFieldComponent: Type<FormComponent>;
-  private readonly fileFieldComponent: Type<FormComponent>;
-  private readonly filePreviewFieldComponent: Type<FormComponent>;
-  private readonly selectFieldComponent: Type<FormComponent>;
-  private readonly textareaFieldComponent: Type<FormComponent>;
-  private readonly repeaterFieldComponent: Type<FormComponent>;
-  private readonly radioButtonsFieldComponent: Type<FormComponent>;
-  private readonly formRowComponent: Type<FormComponent>;
-  private readonly formColumnComponent: Type<FormComponent>;
-  private readonly rangeSliderFieldComponent: Type<FormComponent>;
-  private readonly autocompleteFieldComponent: Type<FormComponent>;
-  private readonly autocompleteMultipleFieldComponent: Type<FormComponent>;
-  private readonly iconFieldComponent: Type<FormComponent>;
-  private readonly buttonToggleFieldComponent: Type<FormComponent>;
-  private readonly buttonFieldComponent: Type<FormComponent>;
-  private readonly slideToggleFieldComponent: Type<FormComponent>;
-  private readonly dateRangeFieldComponent: Type<FormComponent>;
-  private readonly dateTimeFieldComponent: Type<FormComponent>;
-  private readonly multiLangInputFieldComponent: Type<FormComponent>;
-  private readonly dragNDropFileFieldComponent: Type<FormComponent>;
-  private readonly unknownFieldComponent: Type<FormComponent>;
-  private readonly amountFieldComponent: Type<FormComponent>;
-  private readonly searchFieldComponent: Type<FormComponent>;
-
-  public constructor(@Inject(LAB900_FORM_FIELD_TYPES) lab900FormFieldTypes) {
-    this.inputFieldComponent = lab900FormFieldTypes.InputFieldComponent;
-    this.passwordFieldComponent = lab900FormFieldTypes.PasswordFieldComponent;
-    this.checkboxFieldComponent = lab900FormFieldTypes.CheckboxFieldComponent;
-    this.wysiwygFieldComponent = lab900FormFieldTypes.WysiwygFieldComponent;
-    this.dateFieldComponent = lab900FormFieldTypes.DateFieldComponent;
-    this.dateYearMonthFieldComponent =
-      lab900FormFieldTypes.DateYearMonthFieldComponent;
-    this.fileFieldComponent = lab900FormFieldTypes.FileFieldComponent;
-    this.filePreviewFieldComponent =
-      lab900FormFieldTypes.FilePreviewFieldComponent;
-    this.selectFieldComponent = lab900FormFieldTypes.SelectFieldComponent;
-    this.textareaFieldComponent = lab900FormFieldTypes.TextareaFieldComponent;
-    this.repeaterFieldComponent = lab900FormFieldTypes.RepeaterFieldComponent;
-    this.radioButtonsFieldComponent =
-      lab900FormFieldTypes.RadioButtonsFieldComponent;
-    this.formRowComponent = lab900FormFieldTypes.FormRowComponent;
-    this.formColumnComponent = lab900FormFieldTypes.FormColumnComponent;
-    this.rangeSliderFieldComponent =
-      lab900FormFieldTypes.RangeSliderFieldComponent;
-    this.autocompleteFieldComponent =
-      lab900FormFieldTypes.AutocompleteFieldComponent;
-    this.autocompleteMultipleFieldComponent =
-      lab900FormFieldTypes.AutocompleteMultipleFieldComponent;
-    this.iconFieldComponent = lab900FormFieldTypes.IconFieldComponent;
-    this.buttonToggleFieldComponent =
-      lab900FormFieldTypes.ButtonToggleFieldComponent;
-    this.buttonFieldComponent = lab900FormFieldTypes.ButtonFieldComponent;
-    this.slideToggleFieldComponent =
-      lab900FormFieldTypes.SlideToggleFieldComponent;
-    this.dateRangeFieldComponent = lab900FormFieldTypes.DateRangeFieldComponent;
-    this.dateTimeFieldComponent = lab900FormFieldTypes.DateTimeFieldComponent;
-    this.multiLangInputFieldComponent =
-      lab900FormFieldTypes.MultiLangInputFieldComponent;
-    this.dragNDropFileFieldComponent =
-      lab900FormFieldTypes.DragNDropFileFieldComponent;
-    this.unknownFieldComponent = lab900FormFieldTypes.UnknownFieldComponent;
-    this.amountFieldComponent = lab900FormFieldTypes.AmountFieldComponent;
-    this.searchFieldComponent = lab900FormFieldTypes.SearchFieldComponent;
-  }
+  private readonly lab900FormFieldTypes = inject(LAB900_FORM_FIELD_TYPES);
+  private readonly inputFieldComponent = this.lab900FormFieldTypes.InputFieldComponent;
+  private readonly passwordFieldComponent = this.lab900FormFieldTypes.PasswordFieldComponent;
+  private readonly checkboxFieldComponent = this.lab900FormFieldTypes.CheckboxFieldComponent;
+  private readonly wysiwygFieldComponent = this.lab900FormFieldTypes.WysiwygFieldComponent;
+  private readonly dateFieldComponent = this.lab900FormFieldTypes.DateFieldComponent;
+  private readonly dateYearMonthFieldComponent = this.lab900FormFieldTypes.DateYearMonthFieldComponent;
+  private readonly fileFieldComponent = this.lab900FormFieldTypes.FileFieldComponent;
+  private readonly filePreviewFieldComponent = this.lab900FormFieldTypes.FilePreviewFieldComponent;
+  private readonly selectFieldComponent = this.lab900FormFieldTypes.SelectFieldComponent;
+  private readonly textareaFieldComponent = this.lab900FormFieldTypes.TextareaFieldComponent;
+  private readonly repeaterFieldComponent = this.lab900FormFieldTypes.RepeaterFieldComponent;
+  private readonly radioButtonsFieldComponent = this.lab900FormFieldTypes.RadioButtonsFieldComponent;
+  private readonly formRowComponent = this.lab900FormFieldTypes.FormRowComponent;
+  private readonly formColumnComponent = this.lab900FormFieldTypes.FormColumnComponent;
+  private readonly rangeSliderFieldComponent = this.lab900FormFieldTypes.RangeSliderFieldComponent;
+  private readonly autocompleteFieldComponent = this.lab900FormFieldTypes.AutocompleteFieldComponent;
+  private readonly autocompleteMultipleFieldComponent = this.lab900FormFieldTypes.AutocompleteMultipleFieldComponent;
+  private readonly iconFieldComponent = this.lab900FormFieldTypes.IconFieldComponent;
+  private readonly buttonToggleFieldComponent = this.lab900FormFieldTypes.ButtonToggleFieldComponent;
+  private readonly buttonFieldComponent = this.lab900FormFieldTypes.ButtonFieldComponent;
+  private readonly slideToggleFieldComponent = this.lab900FormFieldTypes.SlideToggleFieldComponent;
+  private readonly dateRangeFieldComponent = this.lab900FormFieldTypes.DateRangeFieldComponent;
+  private readonly dateTimeFieldComponent = this.lab900FormFieldTypes.DateTimeFieldComponent;
+  private readonly multiLangInputFieldComponent = this.lab900FormFieldTypes.MultiLangInputFieldComponent;
+  private readonly dragNDropFileFieldComponent = this.lab900FormFieldTypes.DragNDropFileFieldComponent;
+  private readonly unknownFieldComponent = this.lab900FormFieldTypes.UnknownFieldComponent;
+  private readonly amountFieldComponent = this.lab900FormFieldTypes.AmountFieldComponent;
+  private readonly searchFieldComponent = this.lab900FormFieldTypes.SearchFieldComponent;
 
   public mapToComponent = (field: Lab900FormField): Type<FormComponent> => {
     switch (field.editType) {

@@ -6,13 +6,12 @@
       [formControlName]="fieldAttribute"
       [indeterminate]="indeterminate()"
       [required]="fieldIsRequired"
-      [disabled]="fieldIsReadonly"
-    >
-      {{ label() | translate }}
+      [disabled]="fieldIsReadonly">
+      {{ label()! | translate }}
     </mat-checkbox>
     @if (!fieldIsReadonly) {
       <div class="subscript-wrapper" [@transitionMessages]="valid ? 'void' : 'enter'">
-        @if (hint && !(schema.options.hint.hideHintOnValidValue && checkbox.value)) {
+        @if (hint && !(options?.hint?.hideHintOnValidValue && checkbox.value)) {
           <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
         }
         @if (!valid) {

@@ -1,11 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import {
-  EditType,
-  Lab900Form,
-  Lab900FormConfig,
-  multiLanguageValidator,
-  ValueLabel,
-} from '@lab900/forms';
+import { EditType, Lab900Form, Lab900FormConfig, multiLanguageValidator, ValueLabel } from '@lab900/forms';
 
 const languages: ValueLabel[] = [
   { value: 'nl', label: 'NLD' },
@@ -23,21 +17,15 @@ const languages: ValueLabel[] = [
         [availableLanguages]="languages()"
         [schema]="formSchema()"
         [data]="data()"
-        [emitEventOnDataChange]="false"
-      />
+        [emitEventOnDataChange]="false" />
     }
   `,
-  standalone: true,
   imports: [Lab900Form],
 })
 export class FormFieldMultiLanguageExampleComponent {
   protected readonly languages = signal<ValueLabel[]>(languages);
-  protected readonly formSchema = signal<Lab900FormConfig | undefined>(
-    undefined,
-  );
-  protected readonly data = signal<
-    Record<string, { en?: string; nl?: string; fr?: string }> | undefined
-  >(undefined);
+  protected readonly formSchema = signal<Lab900FormConfig | undefined>(undefined);
+  protected readonly data = signal<Record<string, { en?: string; nl?: string; fr?: string }> | undefined>(undefined);
 
   public constructor() {
     setTimeout(() => {

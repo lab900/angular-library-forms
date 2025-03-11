@@ -1,4 +1,5 @@
 import { EditType, Lab900FormConfig } from '@lab900/forms';
+import { ValueLabel } from '../../../../../../lib/src/lib/models/form-field-base';
 
 export const formConditionalsData = {
   country: 'BEL',
@@ -61,7 +62,7 @@ export const formConditionalsExample: Lab900FormConfig = {
           conditions: [
             {
               dependOn: ['country', 'role'],
-              conditionalOptions: (value: { country: string; role: string }) => {
+              conditionalOptions: (value: { country: string; role: string }): ValueLabel[] => {
                 switch (value?.country) {
                   case 'BEL':
                     return [
@@ -74,6 +75,7 @@ export const formConditionalsExample: Lab900FormConfig = {
                   case 'GER':
                     return [{ label: 'German', value: 'DE' }];
                 }
+                return [];
               },
               disableIfEquals: (value: { country: string; role: string }) =>
                 value?.country === 'BEL' && value?.role === 'administrator',
@@ -90,7 +92,7 @@ export const formConditionalsExample: Lab900FormConfig = {
           conditions: [
             {
               dependOn: 'language',
-              conditionalOptions: (language: string) => {
+              conditionalOptions: (language: string): ValueLabel[] => {
                 switch (language) {
                   case 'NL':
                     return [{ label: 'Belgian Fries', value: 'fries' }];
@@ -98,6 +100,7 @@ export const formConditionalsExample: Lab900FormConfig = {
                   case 'GER':
                     return [{ label: 'Bon Cuisine', value: 'bon' }];
                 }
+                return [];
               },
             },
           ],

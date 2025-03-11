@@ -5,7 +5,7 @@ import { take } from 'rxjs/operators';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
 import { AutofocusDirective } from '../../../directives/auto-focus.directive';
 import { SearchInputDirective } from './search-input.directive';
@@ -17,12 +17,11 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 @Component({
   selector: 'lab900-search-field',
   templateUrl: './search-field.component.html',
-  standalone: true,
   imports: [
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    TranslateModule,
+    TranslatePipe,
     NgClass,
     AutofocusDirective,
     SearchInputDirective,
@@ -38,14 +37,16 @@ export class SearchFieldComponent<T> extends FormComponent<FormFieldSearch<T>> {
   public classList = `lab900-form-field`;
 
   public handleAddNew(searchQuery: string): void {
-    this.options
-      ?.addNewFn(searchQuery)
-      .pipe(take(1))
-      .subscribe((v) => this.fieldControl.setValue(v));
+    const addNewFn = this._options()?.addNewFn;
+    if (addNewFn) {
+      addNewFn(searchQuery)
+        .pipe(take(1))
+        .subscribe(v => this.fieldControl?.setValue(v));
+    }
   }
 
   public clear(inputRef: HTMLInputElement): void {
-    this.fieldControl.setValue(null);
+    this.fieldControl?.setValue(null);
     inputRef.value = '';
   }
 }

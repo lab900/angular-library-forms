@@ -1,12 +1,5 @@
-import {
-  Component,
-  ElementRef,
-  HostBinding,
-  inject,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, HostBinding, inject, viewChild } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { FormDialogDirective } from '../../../directives/form-dialog.directive';
 import { Lab900File } from '../../../models/Lab900File';
 import { FormDialogComponent } from '../../form-dialog/form-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,7 +7,7 @@ import { ImagePreviewModalComponent } from '../../image-preview-modal/image-prev
 import { fetchImageBase64 } from '../../../utils/image.utils';
 import { FormFieldFilePreview } from './file-preview-field.model';
 import { take } from 'rxjs/operators';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { MatButton } from '@angular/material/button';
 import { MatCard } from '@angular/material/card';
@@ -26,28 +19,14 @@ import { MatTooltip } from '@angular/material/tooltip';
   selector: 'lab900-file-preview-field',
   templateUrl: './file-preview-field.component.html',
   styleUrls: ['./file-preview-field.component.scss'],
-  standalone: true,
-  imports: [
-    TranslateModule,
-    MatButton,
-    MatCard,
-    MatIcon,
-    AuthImageDirective,
-    MatTooltip,
-  ],
+  imports: [TranslatePipe, MatButton, MatCard, MatIcon, AuthImageDirective, MatTooltip],
 })
-export class FilePreviewFieldComponent<
-  T,
-> extends FormComponent<FormFieldFilePreview> {
+export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePreview> {
   private readonly dialog = inject(MatDialog);
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
-  @ViewChild('fileField')
-  private fileFieldComponent: ElementRef;
-
-  @ViewChild('FormDialogDirective')
-  private lab900FormDialog: FormDialogDirective<T>;
+  private readonly fileFieldComponent = viewChild<ElementRef>('fileField');
 
   public get files(): Lab900File[] {
     return (this.fieldControl?.value as Lab900File[]) ?? [];
@@ -57,8 +36,8 @@ export class FilePreviewFieldComponent<
     const fileList: FileList | null = (event.target as HTMLInputElement).files;
     const fileArray: File[] = [];
     if (fileList) {
-      for (let i = 0; i < fileList.length; i++) {
-        fileArray.push(fileList[i]);
+      for (const file of fileList) {
+        fileArray.push(file);
       }
     }
 
@@ -66,7 +45,7 @@ export class FilePreviewFieldComponent<
   }
 
   public filesAdded(fileArray: File[]): void {
-    fileArray.forEach((file) => {
+    fileArray.forEach(file => {
       if (file.type.includes('image')) {
         this.readImageData(file);
       } else {
@@ -100,32 +79,34 @@ export class FilePreviewFieldComponent<
     const files: Lab900File[] = this.files;
     files.splice(this.getFileIndex(file), 1);
     this.setFieldControlValue(files);
-    this.fileFieldComponent.nativeElement.value = null;
+    const nativeElm = this.fileFieldComponent()?.nativeElement;
+    if (nativeElm) {
+      nativeElm.value = null;
+    }
   }
 
-  public onMetaDataChanged(
-    data: T,
-    originalData?: Lab900File,
-  ): Promise<boolean> {
-    return new Promise<boolean>((resolve) => {
-      const files = this.files;
-      const index = this.getFileIndex(originalData);
-      if (index === -1) {
-        console.error(`Couldn't find file in list`);
+  public onMetaDataChanged(data: T, originalData?: Lab900File): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      if (originalData) {
+        const files = this.files;
+        const index = this.getFileIndex(originalData);
+        if (index === -1) {
+          console.error(`Couldn't find file in list`);
+          reject();
+        }
+        Object.assign(originalData, data);
+        files[index] = originalData;
+        this.setFieldControlValue(files);
+        resolve(true);
       }
-      Object.assign(originalData, data);
-      files[index] = originalData;
-      this.setFieldControlValue(files);
-      resolve(true);
+      reject();
     });
   }
 
   private getFileIndex(file: Lab900File): number {
     return this.files.findIndex(
       (listFile: Lab900File) =>
-        listFile.fileName === file.fileName &&
-        listFile.type === file.type &&
-        listFile.size === file.size,
+        listFile.fileName === file.fileName && listFile.type === file.type && listFile.size === file.size
     );
   }
 
@@ -155,7 +136,7 @@ export class FilePreviewFieldComponent<
         },
       });
     } else if (this.options?.httpCallback) {
-      fetchImageBase64(this.options.httpCallback, file, (result) => {
+      fetchImageBase64(this.options.httpCallback, file, result => {
         file.imageBase64 = result as string;
         this.dialog.open(ImagePreviewModalComponent, {
           data: {
@@ -177,8 +158,8 @@ export class FilePreviewFieldComponent<
   }
 
   private setFieldControlValue(files: Lab900File[]): void {
-    this.fieldControl.setValue(files);
-    this.fieldControl.markAsDirty();
-    this.fieldControl.markAsTouched();
+    this.fieldControl?.setValue(files);
+    this.fieldControl?.markAsDirty();
+    this.fieldControl?.markAsTouched();
   }
 }

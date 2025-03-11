@@ -8,7 +8,6 @@ import { JsonPipe } from '@angular/common';
     <lab900-form #form [schema]="formSchema" />
     <pre>{{ form?.value | json }}</pre>
   `,
-  standalone: true,
   imports: [Lab900Form, JsonPipe],
 })
 export class FormFieldNestedGroupsExampleComponent {

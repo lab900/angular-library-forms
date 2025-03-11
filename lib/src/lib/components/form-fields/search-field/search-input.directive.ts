@@ -35,12 +35,12 @@ export class SearchInputDirective<T> implements ControlValueAccessor, OnChanges 
         .pipe(
           distinctUntilChanged(),
           tap(() => this.noResult$.next(false)),
-          filter((searchQuery) => !this.value || searchQuery !== this.getCurrentValueLabel()),
+          filter(searchQuery => !this.value || searchQuery !== this.getCurrentValueLabel()),
           tap(() => this.searching$.next(true)),
           debounceTime(this.options?.debounceTime ?? 500),
-          switchMap((searchQuery) => (searchQuery?.length ? this.options.searchFn(searchQuery) : of(null))),
+          switchMap(searchQuery => (searchQuery?.length ? this.options.searchFn(searchQuery) : of(null)))
         )
-        .subscribe((result) => {
+        .subscribe(result => {
           this.searching$.next(false);
           if (result) {
             this.updateValue(result);
@@ -108,10 +108,10 @@ export class SearchInputDirective<T> implements ControlValueAccessor, OnChanges 
     return !this.elementRef.nativeElement?.readOnly && !this.elementRef.nativeElement?.disabled;
   }
 
-  private updateValue(value: T): void {
+  private updateValue(value: T | null): void {
     if (value) {
       this.value = value;
-      this.elementRef.nativeElement.value = this.getCurrentValueLabel();
+      this.elementRef.nativeElement.value = this.getCurrentValueLabel() ?? '';
       this.noResult$.next(false);
     } else {
       this.value = null;
@@ -119,7 +119,7 @@ export class SearchInputDirective<T> implements ControlValueAccessor, OnChanges 
     }
   }
 
-  private getCurrentValueLabel(): string {
+  private getCurrentValueLabel(): string | null | undefined {
     return this.value && this.options.labelFormatter(this.value);
   }
 }

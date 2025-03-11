@@ -3,8 +3,7 @@
     [formGroup]="_form()"
     class="lab900-form"
     [autocomplete]="setting?.disableBrowserAutocomplete ? 'off' : 'on'"
-    id="lab900-form-{{formId()}}"
-  >
+    id="lab900-form-{{ formId() }}">
     <div class="lab900-form__inner">
       @for (field of fields(); track field) {
         <ng-container
@@ -14,8 +13,7 @@
           [language]="language()"
           [availableLanguages]="availableLanguages()"
           [externalForms]="externalForms()"
-          [readonly]="readonly()"
-        />
+          [readonly]="readonly()" />
       }
     </div>
   </form>

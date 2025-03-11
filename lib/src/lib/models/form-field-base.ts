@@ -20,7 +20,7 @@ export interface FormFieldBase<
   attribute?: T;
   title?: string;
   validators?: ValidatorFn[];
-  errorMessages?: { [key: string]: string };
+  errorMessages?: Record<string, string>;
   conditions?: IFieldConditions[];
   options?: O;
   nestedFields?: Lab900FormField[];

@@ -6,7 +6,6 @@ export * from './lib/forms.providers';
 export * from './lib/models/Lab900FormConfig';
 export * from './lib/models/lab900-form-field.type';
 export * from './lib/models/form-field-base';
-export * from './lib/models/FileInput';
 export * from './lib/models/editType';
 export * from './lib/models/IFieldConditions';
 export * from './lib/models/Lab900File';

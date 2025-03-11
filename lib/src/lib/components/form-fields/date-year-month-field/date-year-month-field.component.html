@@ -1,7 +1,7 @@
 @if (!fieldIsHidden) {
   <mat-form-field [formGroup]="group" class="lab900-date-field" id="lab900-date-field-{{ elementId() }}">
-    @if (schema.title) {
-      <mat-label translate>{{ schema.title }}</mat-label>
+    @if (label(); as label) {
+      <mat-label translate>{{ label }}</mat-label>
     }
     <input
       #input
@@ -11,17 +11,18 @@
       [formControlName]="fieldAttribute"
       [required]="fieldIsRequired"
       [readonly]="fieldIsReadonly"
-      [max]="maxDate"
-      [min]="minDate"
-    />
-    <mat-datepicker-toggle [disabled]="fieldIsReadonly || fieldControl.disabled" matSuffix [for]="picker"></mat-datepicker-toggle>
+      [max]="maxDate()"
+      [min]="minDate()" />
+    <mat-datepicker-toggle
+      [disabled]="fieldIsReadonly || fieldControl?.disabled"
+      matSuffix
+      [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker
-      [disabled]="fieldIsReadonly || fieldControl.disabled"
+      [disabled]="fieldIsReadonly || fieldControl?.disabled"
       #picker
-      [startView]="startView"
-      (monthSelected)="monthSelectedHandler($event, picker)"
-    ></mat-datepicker>
-    @if (hint && !fieldIsReadonly && !(schema.options.hint.hideHintOnValidValue && input.value)) {
+      [startView]="startView()"
+      (monthSelected)="monthSelectedHandler($event, picker)"></mat-datepicker>
+    @if (hint && !fieldIsReadonly && !(options?.hint?.hideHintOnValidValue && input.value)) {
       <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
     }
     @if (!valid && !fieldIsReadonly) {

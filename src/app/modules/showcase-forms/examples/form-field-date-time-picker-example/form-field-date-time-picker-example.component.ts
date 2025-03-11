@@ -11,7 +11,6 @@ import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
       }
     `,
   ],
-  standalone: true,
   imports: [Lab900Form],
 })
 export class FormFieldDateTimePickerExampleComponent {

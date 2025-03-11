@@ -1,13 +1,4 @@
-import {
-  ComponentRef,
-  computed,
-  Directive,
-  effect,
-  inject,
-  input,
-  signal,
-  ViewContainerRef,
-} from '@angular/core';
+import { ComponentRef, computed, Directive, effect, inject, input, signal, ViewContainerRef } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { FormComponent } from '../components/AbstractFormComponent';
 import { ReadonlyFieldComponent } from '../components/form-fields/readonly-field/readonly-field.component';
@@ -29,9 +20,7 @@ export class FormFieldDirective {
   public readonly language = input<string | undefined>(undefined);
   public readonly availableLanguages = input<ValueLabel[]>([]);
   public readonly readonly = input<boolean>(false);
-  public readonly externalForms = input<
-    Record<string, UntypedFormGroup> | undefined
-  >(undefined);
+  public readonly externalForms = input<Record<string, UntypedFormGroup> | undefined>(undefined);
   public readonly componentType = computed(() => {
     this.validateType();
     return this.readonly() &&
@@ -47,31 +36,23 @@ export class FormFieldDirective {
       ? ReadonlyFieldComponent
       : this.formFieldMappingService.mapToComponent(this.schema());
   });
-  public readonly component = signal<ComponentRef<FormComponent> | undefined>(
-    undefined,
-  );
+  public readonly component = signal<ComponentRef<FormComponent> | undefined>(undefined);
 
   public constructor() {
-    effect(
-      () => {
-        const componentType = this.componentType();
-        if (componentType) {
-          this.createComponent();
-        }
-      },
-      { allowSignalWrites: true },
-    );
+    effect(() => {
+      const componentType = this.componentType();
+      if (componentType) {
+        this.createComponent();
+      }
+    });
     effect(() => {
       const schema = this.schema();
       const component = this.component();
-      if (schema?.attribute?.includes('.')) {
+      if (component && schema?.attribute?.includes('.')) {
         const attributeMap = schema?.attribute.split('.');
         component.setInput('fieldAttribute', attributeMap.pop());
-        component.setInput(
-          'group',
-          this.group().get(attributeMap.join('.')) as UntypedFormGroup,
-        );
-      } else {
+        component.setInput('group', this.group().get(attributeMap.join('.')) as UntypedFormGroup);
+      } else if (component) {
         component.setInput('fieldAttribute', schema.attribute);
         component.setInput('group', this.group());
       }
@@ -118,7 +99,7 @@ export class FormFieldDirective {
       const supportedTypes = Object.keys(EditType).join(', ');
       throw new Error(
         `Trying to use an unsupported type (${this.schema().editType}).
-        Supported types: ${supportedTypes}`,
+        Supported types: ${supportedTypes}`
       );
     }
   }

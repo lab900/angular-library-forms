@@ -9,23 +9,22 @@ import { MarkdownModule } from 'ngx-markdown';
   templateUrl: './markdown-page.component.html',
   styleUrls: ['./markdown-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [MarkdownModule],
 })
 export default class MarkdownPageComponent extends SubscriptionBasedDirective {
   @Input()
-  public filePath: string;
+  public filePath?: string;
 
   public constructor(private activatedRoute: ActivatedRoute) {
     super();
     this.addSubscription(
       this.activatedRoute.data.pipe(
-        filter((data: { filePath: string }) => !!data?.filePath),
-        take(1),
+        filter(data => !!data?.filePath),
+        take(1)
       ),
-      (data) => {
+      data => {
         this.filePath = data.filePath;
-      },
+      }
     );
   }
 }

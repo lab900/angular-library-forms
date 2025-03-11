@@ -1,7 +1,4 @@
-import {
-  FormFieldBase,
-  FormFieldBaseOptions,
-} from '../../../models/form-field-base';
+import { FormFieldBase, FormFieldBaseOptions } from '../../../models/form-field-base';
 import { ThemePalette } from '@angular/material/core';
 import { EditType } from '../../../models/editType';
 import { MatSlideToggle } from '@angular/material/slide-toggle';

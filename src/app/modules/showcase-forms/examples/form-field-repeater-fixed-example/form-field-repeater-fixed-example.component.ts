@@ -1,16 +1,13 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, viewChild } from '@angular/core';
 import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 
 @Component({
   selector: 'lab900-form-field-repeater-fixed-example',
-  template:
-    '<lab900-form [schema]="formSchema" [data]="repeaterData" (click)="logValue()" />',
-  standalone: true,
+  template: '<lab900-form [schema]="formSchema" [data]="repeaterData" (click)="logValue()" />',
   imports: [Lab900Form],
 })
 export class FormFieldRepeaterFixedExampleComponent {
-  @ViewChild(Lab900Form)
-  public form: Lab900Form<any>;
+  public readonly form = viewChild<Lab900Form<any>>(Lab900Form);
 
   public repeaterData = {
     repeater: [{ value: 'hello' }],
@@ -39,6 +36,6 @@ export class FormFieldRepeaterFixedExampleComponent {
   };
 
   public logValue(): void {
-    console.log(this.form.value);
+    console.log(this.form()?.value);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Inject, ViewChild } from '@angular/core';
+import { Component, Inject, signal, viewChild } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -13,35 +13,27 @@ import { MatButton } from '@angular/material/button';
 @Component({
   selector: 'lab900-form-dialog',
   templateUrl: './form-dialog.component.html',
-  standalone: true,
-  imports: [
-    MatDialogContent,
-    Lab900Form,
-    MatDialogActions,
-    MatButton,
-    MatDialogClose,
-  ],
+  imports: [MatDialogContent, Lab900Form, MatDialogActions, MatButton, MatDialogClose],
 })
 export class FormDialogComponent<T> {
-  @ViewChild(Lab900Form)
-  public formContainer: Lab900Form<T>;
-  public loading = false;
+  public readonly formContainer = viewChild<Lab900Form<T>>(Lab900Form);
+  public readonly loading = signal(false);
 
   public constructor(
     @Inject(MAT_DIALOG_DATA) public dialogFormData: DialogFormData<T>,
-    private dialogRef: MatDialogRef<FormDialogComponent<T>>,
+    private dialogRef: MatDialogRef<FormDialogComponent<T>>
   ) {}
 
   public submit(item: T): void {
-    this.loading = true;
+    this.loading.set(true);
     this.dialogFormData
       .submit(item, this.dialogFormData.data)
-      .then((result) => {
+      .then(result => {
         if (result) {
           this.dialogRef.close();
         }
       })
-      .catch((error) => console.error(error))
-      .finally(() => (this.loading = false));
+      .catch(error => console.error(error))
+      .finally(() => this.loading.set(false));
   }
 }
