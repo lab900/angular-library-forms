@@ -33,8 +33,8 @@ export class FormFieldRepeaterAdvancedExampleComponent {
               colspan: 12,
               visibleFn: (item: any) => {
                 if (
-                  (item.group.parent.controls as Array<any>).indexOf(item.group) ===
-                  (item.group.parent.controls as Array<any>).length - 1
+                  (item.group.parent.controls as any[]).indexOf(item.group) ===
+                  (item.group.parent.controls as any[]).length - 1
                 ) {
                   return false;
                 }

@@ -1,9 +1,12 @@
 @if (!fieldIsHidden) {
-  <mat-form-field [formGroup]="group" class="lab900-autocomplete-multi-field" id="lab900-autocomplete-multi-field-{{ elementId() }}">
-    @if (label()) {
-      <mat-label translate>{{ label() }}</mat-label>
+  <mat-form-field
+    [formGroup]="group"
+    class="lab900-autocomplete-multi-field"
+    id="lab900-autocomplete-multi-field-{{ elementId() }}">
+    @if (label(); as label) {
+      <mat-label>{{ label | translate }}</mat-label>
     }
-    @if (hint && !fieldIsReadonly && !(schema.options.hint.hideHintOnValidValue && input.value)) {
+    @if (hint && !fieldIsReadonly && !(options?.hint.hideHintOnValidValue && input.value)) {
       <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
     }
     @if (!valid && !fieldIsReadonly) {
@@ -15,7 +18,7 @@
     <mat-chip-grid #chipList [formControlName]="fieldAttribute">
       @for (opt of selectedOptions; track opt; let i = $index) {
         <mat-chip-row [removable]="!fieldIsReadonly" (removed)="remove(i)" [value]="opt">
-          <div [innerHTML]="options.displayInputFn(opt) | translate"></div>
+          <div [innerHTML]="options?.displayInputFn?.(opt) ?? '' | translate"></div>
           @if (!fieldIsReadonly) {
             <mat-icon matChipRemove>cancel</mat-icon>
           }
@@ -23,19 +26,21 @@
       }
       <input
         #input
+        matAutocomplete
         (input)="inputChanged($event)"
         placeholder="{{ placeholder | translate }}"
         [readOnly]="fieldIsReadonly"
         [matAutocomplete]="auto"
         [matChipInputFor]="chipList"
-        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-      />
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" />
     </mat-chip-grid>
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-      @for (option of filteredOptions | async; track option) {
-        <mat-option [value]="option?.value" [disabled]="option?.disabled">
-          {{ option.label | translate }}
-        </mat-option>
+      @if (filteredOptions) {
+        @for (option of filteredOptions | async; track option) {
+          <mat-option [value]="option?.value" [disabled]="option?.disabled">
+            {{ option.label | translate }}
+          </mat-option>
+        }
       }
     </mat-autocomplete>
   </mat-form-field>

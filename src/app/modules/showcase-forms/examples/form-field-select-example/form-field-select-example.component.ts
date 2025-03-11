@@ -109,7 +109,7 @@ export class FormFieldSelectExampleComponent {
               ],
               clearFieldButton: {
                 enabled: true,
-                click: (fieldControl) => {
+                click: fieldControl => {
                   fieldControl.setValue('none');
                   fieldControl.markAsTouched();
                   fieldControl.markAsDirty();
@@ -180,6 +180,6 @@ export class FormFieldSelectExampleComponent {
   }
 
   public clearSelect(): void {
-    this.formGroup.get('example-select').setValue(null);
+    this.formGroup.get('example-select')?.setValue(null);
   }
 }

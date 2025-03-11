@@ -22,6 +22,7 @@ $ npm run start
 ```
 
 ## Developing new features or fixing bugs
+
 1. Create a new branch from `main`
 2. Make your changes
 3. Create & release a [pre-release](#pre-release-version) version (optional).
@@ -29,6 +30,7 @@ $ npm run start
 5. Create & release a new version after merging.
 
 ## Hotfixing older versions
+
 If you need to fix a bug in an older minor or major versions, you can create a branch from the tag of that version.
 Create a patch version of the fix and release it. Don't forget to apply the fix to the `main` branch as well (if needed).
 
@@ -36,10 +38,9 @@ Create a patch version of the fix and release it. Don't forget to apply the fix 
 
 1. Update the [CHANGELOG](/CHANGELOG.md) with the new version
 2. Bump the lib version. See [Versioning](#versioning) for more information
-2. Tag the commit with the version number
-3. Push the tag to the repository
-4. The deployment will be triggered automatically
-
+3. Tag the commit with the version number
+4. Push the tag to the repository
+5. The deployment will be triggered automatically
 
 ```bash
 $ cd lib
@@ -49,9 +50,11 @@ $ git push origin YOUR_VERSION
 ```
 
 ## Versioning
+
 We use [SemVer](http://semver.org/) for versioning.
 
 ### Major version
+
 The major version number of the library is the same as the Angular version it is built on.
 
 ```bash
@@ -59,6 +62,7 @@ $ npm version major # if the current version is 1.0.0, the new version will be 2
 ```
 
 ### Minor version
+
 The minor version number is incremented when new features (eg: new form fields) are added or breaking changes are introduced.
 
 ```bash
@@ -66,6 +70,7 @@ $ npm version minor # if the current version is 1.0.0, the new version will be 1
 ```
 
 ### Patch version
+
 The patch version number is incremented when bug fixes are added.
 
 ```bash
@@ -73,6 +78,7 @@ $ npm version patch # if the current version is 1.0.0, the new version will be 1
 ```
 
 ### Pre-release version
+
 The pre-release version is incremented when new features or fixes are added that are not yet stable
 Eg: we are working on a new feature that is not yet stable, we can release a pre-release version
 

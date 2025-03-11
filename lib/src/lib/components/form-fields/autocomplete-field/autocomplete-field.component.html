@@ -1,5 +1,8 @@
 @if (!fieldIsHidden) {
-  <mat-form-field [formGroup]="group" class="lab900-autocomplete-field" id="lab900-autocomplete-field-{{ elementId() }}">
+  <mat-form-field
+    [formGroup]="group"
+    class="lab900-autocomplete-field"
+    id="lab900-autocomplete-field-{{ elementId() }}">
     @if (schema.title) {
       <mat-label translate>{{ schema.title }}</mat-label>
     }
@@ -12,9 +15,8 @@
       [required]="fieldIsRequired"
       matInput
       placeholder="{{ placeholder | translate }}"
-      type="text"
-    />
-    @if (hint && !fieldIsReadonly && !(schema.options.hint.hideHintOnValidValue && input.value)) {
+      type="text" />
+    @if (hint && !fieldIsReadonly && !(options?.hint?.hideHintOnValidValue && input.value)) {
       <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
     }
     @if (!valid && !fieldIsReadonly) {
@@ -23,11 +25,13 @@
     @if (!fieldIsReadonly) {
       <mat-icon matSuffix>search</mat-icon>
     }
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="options.displayInputFn">
-      @for (option of filteredOptions | async; track option) {
-        <mat-option [value]="option?.value" [disabled]="option?.disabled">
-          <div [innerHTML]="option.label | translate"></div>
-        </mat-option>
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="options?.displayInputFn">
+      @if (filteredOptions) {
+        @for (option of filteredOptions | async; track option) {
+          <mat-option [value]="option?.value" [disabled]="option?.disabled">
+            <div [innerHTML]="option.label | translate"></div>
+          </mat-option>
+        }
       }
     </mat-autocomplete>
   </mat-form-field>

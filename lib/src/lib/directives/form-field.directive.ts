@@ -48,11 +48,11 @@ export class FormFieldDirective {
     effect(() => {
       const schema = this.schema();
       const component = this.component();
-      if (schema?.attribute?.includes('.')) {
+      if (component && schema?.attribute?.includes('.')) {
         const attributeMap = schema?.attribute.split('.');
         component.setInput('fieldAttribute', attributeMap.pop());
         component.setInput('group', this.group().get(attributeMap.join('.')) as UntypedFormGroup);
-      } else {
+      } else if (component) {
         component.setInput('fieldAttribute', schema.attribute);
         component.setInput('group', this.group());
       }
@@ -99,7 +99,7 @@ export class FormFieldDirective {
       const supportedTypes = Object.keys(EditType).join(', ');
       throw new Error(
         `Trying to use an unsupported type (${this.schema().editType}).
-        Supported types: ${supportedTypes}`,
+        Supported types: ${supportedTypes}`
       );
     }
   }

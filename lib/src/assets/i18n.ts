@@ -1,4 +1,4 @@
-export const formsTranslations = {
+export const formsTranslations: Record<string, Record<string, string>> = {
   en: {
     'forms.error.number-required': 'A valid number is required.',
     'forms.error.required': 'This is required.',

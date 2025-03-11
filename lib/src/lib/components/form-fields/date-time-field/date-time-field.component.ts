@@ -1,4 +1,4 @@
-import { Component, HostBinding, inject } from '@angular/core';
+import { Component, computed, HostBinding, inject } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldDateTimePicker } from './date-time-field.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -40,29 +40,29 @@ export class DateTimeFieldComponent extends FormComponent<FormFieldDateTimePicke
 
   private readonly adapter = inject(NgxMatDateAdapter);
 
-  public get startView(): 'month' | 'year' | 'multi-year' {
-    return this.schema?.options?.startView ?? 'month';
-  }
+  public readonly startView = computed(() => {
+    return this._options()?.startView ?? 'month';
+  });
 
-  public get maxDate(): Date | null {
-    return this.options?.maxDate;
-  }
+  public readonly maxDate = computed(() => {
+    return this._options()?.maxDate;
+  });
 
-  public get showSeconds(): boolean {
-    return this.options?.showSeconds ?? true;
-  }
+  public readonly minDate = computed(() => {
+    return this._options()?.minDate;
+  });
 
-  public get minDate(): Date | null {
-    return this.schema?.options?.minDate;
-  }
+  public readonly showSeconds = computed(() => {
+    return this._options()?.showSeconds ?? true;
+  });
 
-  public get defaultTime(): [number, number, number] | null {
-    return this.schema?.options?.defaultTime;
-  }
+  public readonly defaultTime = computed(() => {
+    return this._options()?.defaultTime;
+  });
 
-  public get stepMinute(): number | 1 {
-    return this.schema?.options?.stepMinute || 1;
-  }
+  public readonly stepMinute = computed(() => {
+    return this._options()?.stepMinute || 1;
+  });
 
   public pickerOpened(datePicker: NgxMatDatetimepicker<any>): void {
     /**

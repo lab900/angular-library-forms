@@ -1,8 +1,7 @@
 @if (availableLanguages()?.length && activeLanguage()) {
   <div
     id="lab900-multi-lang-input-{{ control?.name }}"
-    class="lab900-multi-lang-input-wrapper lab900-multi-lang-input-wrapper--{{ appearance }}"
-  >
+    class="lab900-multi-lang-input-wrapper lab900-multi-lang-input-wrapper--{{ appearance }}">
     <div class="lab900-multi-lang-input lab900-multi-lang-input--{{ appearance }}">
       <div>
         <lab900-language-picker
@@ -13,8 +12,7 @@
           [translating]="translating()"
           (translatingChange)="toggleTranslate($event)"
           [translateLabel]="translateLabel()"
-          [stopTranslateLabel]="stopTranslateLabel()"
-        />
+          [stopTranslateLabel]="stopTranslateLabel()" />
       </div>
       @if (!translating()) {
         <div>
@@ -31,8 +29,7 @@
                 (ngModelChange)="updateGlobalTranslation($event)"
                 [required]="required()"
                 [readonly]="readonly()"
-                [class.readonly]="readonly()"
-              />
+                [class.readonly]="readonly()" />
             } @else {
               <textarea
                 matInput
@@ -41,15 +38,14 @@
                 (ngModelChange)="updateGlobalTranslation($event)"
                 [required]="required()"
                 [readonly]="readonly()"
-                [class.readonly]="readonly()"
-              ></textarea>
+                [class.readonly]="readonly()"></textarea>
             }
           </mat-form-field>
         </div>
       } @else {
         <div>
           @for (lang of availableLanguages(); track lang) {
-            @if (lang.value === activeLanguage().value) {
+            @if (lang.value === activeLanguage()?.value) {
               <mat-form-field class="lab900-input-field" id="lab900-input-field-{{ control?.name }}-{{ lang.value }}">
                 @if (label()) {
                   <mat-label>{{ label() | translate }}</mat-label>
@@ -59,24 +55,22 @@
                     matInput
                     type="text"
                     (blur)="blur()"
-                    [ngModel]="value && value[lang.value]"
+                    [ngModel]="value && value?.[lang.value]"
                     (ngModelChange)="updateSingleLanguage($event, lang.value)"
                     [required]="required()"
                     [readonly]="readonly()"
                     [class.readonly]="readonly()"
-                    [disabled]="activeLanguage()?.disabled"
-                  />
+                    [disabled]="activeLanguage()?.disabled" />
                 } @else {
                   <textarea
                     matInput
                     (blur)="blur()"
-                    [ngModel]="value && value[lang.value]"
+                    [ngModel]="value && value?.[lang.value]"
                     (ngModelChange)="updateSingleLanguage($event, lang.value)"
                     [required]="required()"
                     [readonly]="readonly()"
                     [class.readonly]="readonly()"
-                    [disabled]="activeLanguage().disabled"
-                  ></textarea>
+                    [disabled]="activeLanguage()?.disabled"></textarea>
                 }
               </mat-form-field>
             }

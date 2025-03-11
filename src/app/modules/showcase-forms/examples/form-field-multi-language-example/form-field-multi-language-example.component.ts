@@ -17,8 +17,7 @@ const languages: ValueLabel[] = [
         [availableLanguages]="languages()"
         [schema]="formSchema()"
         [data]="data()"
-        [emitEventOnDataChange]="false"
-      />
+        [emitEventOnDataChange]="false" />
     }
   `,
   imports: [Lab900Form],

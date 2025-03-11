@@ -38,10 +38,10 @@ export class ShowcasePageComponent extends SubscriptionBasedDirective {
 
   public constructor(
     private activatedRoute: ActivatedRoute,
-    private router: Router,
+    private router: Router
   ) {
     super();
-    this.addSubscription(this.activatedRoute.queryParams, (queryParams) => {
+    this.addSubscription(this.activatedRoute.queryParams, queryParams => {
       this.data = this.activatedRoute.snapshot.data as ShowcaseRouteData;
       if (queryParams?.tab) {
         this.currentTab = queryParams?.tab;

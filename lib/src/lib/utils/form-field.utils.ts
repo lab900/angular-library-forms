@@ -39,7 +39,7 @@ export class FormFieldUtils {
 
   public static infoTooltip(
     fieldOptions: FormFieldBaseOptions,
-    group: UntypedFormGroup,
+    group: UntypedFormGroup
   ): { text: string; icon?: string; class?: string } | null {
     if (typeof fieldOptions?.infoTooltip === 'function') {
       return fieldOptions.infoTooltip(group.value) ?? null;

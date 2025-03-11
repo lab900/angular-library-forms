@@ -1,5 +1,8 @@
 @if (visible() && _schema()) {
-  <div [hidden]="isHidden(schema)" class="lab900-form-row {{ _options()?.customClass }}" id="lab900-form-row-{{ elementId() }}">
+  <div
+    [hidden]="isHidden(schema)"
+    class="lab900-form-row {{ _options()?.customClass }}"
+    id="lab900-form-row-{{ elementId() }}">
     @if ((fieldIsReadonly && _options()?.readonlyLabel) || label()) {
       <span class="lab900-form-field-label lab900-form-row-label {{ _options()?.customTitleClass }}">{{
         (!fieldIsReadonly ? label() : _options()?.readonlyLabel || label()) | translate
@@ -11,19 +14,19 @@
           class="form-col"
           [class.hidden]="isHidden(field)"
           [style.width]="(100 * (field.options?.colspan || 12)) / 12 + '%'"
-          id="form-col-{{ elementId() }}-{{ _options()?.elementId }}"
-        >
+          id="form-col-{{ elementId() }}-{{ _options()?.elementId }}">
           <ng-container
             lab900FormField
             [schema]="field"
             [availableLanguages]="availableLanguages()"
             [language]="language()"
             [group]="fieldAttribute ? group.get(fieldAttribute) : group"
-            [readonly]="rowIsReadonly(field)"
-          />
+            [readonly]="rowIsReadonly(field)" />
           @if (infoTooltip(field); as tip) {
             <div class="form-col__info">
-              <mat-icon [matTooltipClass]="tip.class" [matTooltip]="tip.text | translate">{{ tip.icon || "info" }}</mat-icon>
+              <mat-icon [matTooltipClass]="tip.class" [matTooltip]="tip.text | translate">{{
+                tip.icon || 'info'
+              }}</mat-icon>
             </div>
           }
         </div>

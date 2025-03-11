@@ -2,8 +2,7 @@
   <div
     [formGroup]="group"
     class="lab900-button-toggle-field button-toggle-field mat-form-field-wrapper"
-    id="lab900-button-toggle-field-{{ elementId() }}"
-  >
+    id="lab900-button-toggle-field-{{ elementId() }}">
     @if (label(); as label) {
       <div class="lab900-button-toggle-field__label">
         <mat-label>{{ label | translate }}</mat-label>
@@ -18,15 +17,14 @@
           (change)="onChange($event)"
           [matTooltip]="value?.tooltip?.text | translate"
           [matTooltipPosition]="value?.tooltip?.position || 'above'"
-          id="mat-button-toggle-{{ elementId }}"
-        >
-          @if (value?.icon?.position === "left") {
+          id="mat-button-toggle-{{ elementId }}">
+          @if (value?.icon?.position === 'left') {
             <lab900-icon [icon]="value.icon"></lab900-icon>
           }
           @if (value.label) {
             {{ value.label | translate }}
           }
-          @if (!value?.icon?.position || value.icon.position === "right") {
+          @if (!value?.icon?.position || value.icon.position === 'right') {
             <lab900-icon [icon]="value.icon"></lab900-icon>
           }
         </mat-button-toggle>

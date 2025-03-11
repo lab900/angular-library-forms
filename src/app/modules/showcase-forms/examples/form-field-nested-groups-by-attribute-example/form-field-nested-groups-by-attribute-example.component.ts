@@ -90,7 +90,7 @@ export class FormFieldNestedGroupsByAttributeExampleComponent {
             conditions: [
               {
                 dependOn: 'parentAttr.disable',
-                conditionalOptions: (value) => {
+                conditionalOptions: value => {
                   return value ? [{ value: 'true', label: 'is true' }] : [{ value: 'false', label: 'is false' }];
                 },
               },

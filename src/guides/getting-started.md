@@ -45,11 +45,11 @@ the `provideLab900Forms()` .
 
 ```ts
 FormModuleSettings = {
-    formField: {
-        appearance: 'standard', // default
-        floatLabel: 'auto', // default
-        hideRequiredMarker: false, // default
-    },
+  formField: {
+    appearance: 'standard', // default
+    floatLabel: 'auto', // default
+    hideRequiredMarker: false, // default
+  },
 };
 ```
 
@@ -94,8 +94,7 @@ npm install --save  @ngxmc/datetime-picker
 Add this before providing the `provideLab900Forms`.
 
 ```ts
-provideNativeDateAdapter(),
-provideNgxMatNativeDate()
+provideNativeDateAdapter(), provideNgxMatNativeDate();
 ```
 
 ### Moment dates
@@ -108,9 +107,8 @@ npm install moment @angular/material-moment-adapter --save-dev
 
 Add the imports before importing the `Lab900FormsModule.forRoot()`.
 
-```ts 
-provideMomentDateAdapter(),
-importProvidersFrom(NgxMatMomentModule)
+```ts
+provideMomentDateAdapter(), importProvidersFrom(NgxMatMomentModule);
 ```
 
 ### Luxon dates
@@ -121,8 +119,8 @@ importProvidersFrom(NgxMatMomentModule)
 npm install luxon @angular/material-luxon-adapter --save-dev
 ```
 
-```ts 
-provideLuxonDateAdapter()
+```ts
+provideLuxonDateAdapter();
 ```
 
 More info on date adapters. [Angular Material Date Adapter](https://material.angular.io/components/datepicker/overview#choosing-a-date-implementation-and-date-adapter)

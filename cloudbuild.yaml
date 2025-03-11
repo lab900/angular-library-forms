@@ -29,4 +29,4 @@ availableSecrets:
   secretManager:
     - versionName: projects/18279890124/secrets/npm-access-key/versions/latest
       env: 'NPM_TOKEN'
-timeout: "900s"
+timeout: '900s'

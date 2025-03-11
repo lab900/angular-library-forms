@@ -13,7 +13,7 @@ export interface FormFieldAutocompleteOptions<T> extends FormFieldBaseOptions {
   disabledOptionFn?: (option: T) => boolean;
   autocompleteOptions?: (
     searchTerm: string,
-    currentControl: AbstractControl,
+    currentControl: AbstractControl
   ) => ValueLabel<T>[] | Observable<ValueLabel<T>[]>;
   debounceTime?: number;
   requireMatch?: boolean;

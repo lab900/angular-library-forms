@@ -53,10 +53,10 @@ export default [
       new ShowcaseExample(FormContainerExampleComponent, 'Form Container'),
       new ShowcaseExample(FormContainerReadonlyExampleComponent, 'Form Container Readonly', 'form-container-example'),
     ],
-    'guides/creating-forms.md',
+    'guides/creating-forms.md'
   ),
   new ShowcaseRoute('conditional-forms', 'Conditional forms', [
-    new ShowcaseExample(FormConditionalsExampleComponent, 'Conditional Form Container', null, ['TS', 'config.ts']),
+    new ShowcaseExample(FormConditionalsExampleComponent, 'Conditional Form Container', undefined, ['TS', 'config.ts']),
     new ShowcaseExample(FormConditionalValidationExampleComponent, 'Conditional validation'),
     new ShowcaseExample(FormConditionalWithExternalFormExampleComponent, 'Conditionals across multiple forms'),
   ]),
@@ -65,7 +65,7 @@ export default [
     new ShowcaseExample(
       FormFieldAutocompleteMultipleExampleComponent,
       'Autocomplete Multiple',
-      'form-field-autocomplete-example',
+      'form-field-autocomplete-example'
     ),
   ]),
   new ShowcaseRoute('form-field-repeater', 'Form Fields: Repeater', [

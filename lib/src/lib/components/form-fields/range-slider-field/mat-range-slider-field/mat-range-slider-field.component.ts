@@ -1,4 +1,4 @@
-import { Component, input, Input, ViewEncapsulation } from '@angular/core';
+import { Component, input, ViewEncapsulation } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BaseControlValueAccessorDirective } from '../../../../models/forms/BaseControlValueAccessor';
 import { MatSliderModule } from '@angular/material/slider';
@@ -20,10 +20,7 @@ import { MatInputModule } from '@angular/material/input';
   imports: [MatSliderModule, MatFormFieldModule, MatInputModule],
 })
 export class MatRangeSliderFieldComponent extends BaseControlValueAccessorDirective<number[]> {
-  private latestUnencodedValues: number[];
-
-  @Input()
-  public formControlName: string;
+  private latestUnencodedValues?: number[];
 
   public readonly min = input<number>(0);
   public readonly fromLabel = input<string>('From');
@@ -37,8 +34,8 @@ export class MatRangeSliderFieldComponent extends BaseControlValueAccessorDirect
     this.latestUnencodedValues = this.value;
   }
 
-  public updateSliderInstanceValues(key: number, value: number): void {
-    if (value[key] !== this.latestUnencodedValues[key]) {
+  public updateSliderInstanceValues(key: number, value: any): void {
+    if (this.value && this.latestUnencodedValues && value?.[key] !== this.latestUnencodedValues[key]) {
       this.value[key] = value;
       this.latestUnencodedValues = this.value;
       this.onChange(this.value);

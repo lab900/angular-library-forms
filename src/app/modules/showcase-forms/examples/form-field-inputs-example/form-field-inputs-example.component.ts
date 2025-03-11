@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, viewChild } from '@angular/core';
 import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
@@ -10,8 +10,7 @@ import { MatButton } from '@angular/material/button';
   imports: [Lab900Form, MatButton],
 })
 export class FormFieldInputsExampleComponent {
-  @ViewChild(Lab900Form)
-  public formContainer: Lab900Form<any>;
+  public readonly form = viewChild<Lab900Form<any>>(Lab900Form);
 
   public formSchema: Lab900FormConfig = {
     fields: [
@@ -58,7 +57,7 @@ export class FormFieldInputsExampleComponent {
         editType: EditType.Input,
         icon: { name: 'search', position: 'right' },
         options: {
-          required: (data) => {
+          required: data => {
             return !data?.emailInput;
           },
         },
@@ -181,6 +180,6 @@ export class FormFieldInputsExampleComponent {
   };
 
   public validate(): void {
-    console.log(this.formContainer.value?.maskAndPattern);
+    console.log(this.form()?.value?.maskAndPattern);
   }
 }

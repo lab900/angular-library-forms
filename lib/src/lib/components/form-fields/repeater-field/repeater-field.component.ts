@@ -1,4 +1,4 @@
-import { Component, HostBinding, inject } from '@angular/core';
+import { Component, computed, HostBinding, inject } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { ReactiveFormsModule, UntypedFormArray } from '@angular/forms';
 import { Lab900FormBuilderService } from '../../../services/form-builder.service';
@@ -34,35 +34,42 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
-  public get addLabel(): string {
-    return this.options?.addLabel ?? 'Add new';
+  public readonly addLabel = computed(() => {
+    return this._options()?.addLabel ?? 'Add new';
+  });
+
+  public readonly minRows = computed(() => {
+    return this._options()?.minRows ?? DEFAULT_REPEATER_MIN_ROWS;
+  });
+
+  public readonly maxRows = computed(() => {
+    return this._options()?.maxRows;
+  });
+
+  public readonly fixedList = computed(() => {
+    return !!this._options()?.fixedList;
+  });
+
+  public get repeaterArray(): UntypedFormArray | undefined {
+    return this.fieldAttribute ? (this.group.get(this.fieldAttribute) as UntypedFormArray) : undefined;
   }
 
-  public get minRows(): number {
-    return this.options?.minRows ?? DEFAULT_REPEATER_MIN_ROWS;
-  }
-
-  public get maxRows(): number {
-    return this.options?.maxRows;
-  }
-
-  public get fixedList(): boolean {
-    return this.options?.fixedList;
-  }
-
-  public get repeaterArray(): UntypedFormArray {
-    return this.group.get(this.fieldAttribute) as UntypedFormArray;
-  }
+  public readonly hasMaxRows = computed(() => {
+    const maxRows = this.maxRows();
+    return maxRows != undefined && !!this.repeaterArray && this.repeaterArray?.length >= maxRows;
+  });
 
   public addToArray(): void {
-    const formGroup = this.fb.createFormGroup(this.schema.nestedFields);
-    this.repeaterArray.push(formGroup);
-    this.repeaterArray.markAsDirty();
-    this.repeaterArray.markAsTouched();
+    if (this.repeaterArray && this.schema.nestedFields) {
+      const formGroup = this.fb.createFormGroup(this.schema.nestedFields);
+      this.repeaterArray.push(formGroup);
+      this.repeaterArray.markAsDirty();
+      this.repeaterArray.markAsTouched();
+    }
   }
 
   public removeFromArray(index: number): void {
-    if (this.repeaterArray.length > this.minRows) {
+    if (this.repeaterArray && this.repeaterArray?.length > this.minRows()) {
       this.repeaterArray.removeAt(index);
       this.repeaterArray.markAsDirty();
       this.repeaterArray.markAsTouched();

@@ -7,13 +7,16 @@
     }
     <mat-tab-nav-panel #tabNavPanel>
       @switch (currentTab) {
-        @case ("guide") {
+        @case ('guide') {
           <lab900-markdown-page [filePath]="data?.docFile" />
         }
-        @case ("examples") {
+        @case ('examples') {
           @for (example of data.examples; track example) {
             <div style="padding: 30px 0 0">
-              <lab900-example-viewer [extensions]="example.extensions" [fileDir]="example?.fileFolder" [exampleTitle]="example.title">
+              <lab900-example-viewer
+                [extensions]="example.extensions"
+                [fileDir]="example?.fileFolder"
+                [exampleTitle]="example.title">
                 <ng-container [ngComponentOutlet]="example.component"></ng-container>
               </lab900-example-viewer>
             </div>

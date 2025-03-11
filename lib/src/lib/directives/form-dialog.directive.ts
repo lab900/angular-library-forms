@@ -1,4 +1,4 @@
-import { Directive, HostListener, Input } from '@angular/core';
+import { Directive, HostListener, inject, input } from '@angular/core';
 import { FormDialogComponent } from '../components/form-dialog/form-dialog.component';
 import { Lab900FormConfig } from '../models/Lab900FormConfig';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -8,34 +8,26 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
   standalone: true,
 })
 export class FormDialogDirective<T> {
-  @Input()
-  public schema: Lab900FormConfig;
+  public readonly dialog: MatDialog = inject(MatDialog);
 
-  @Input()
-  public data: T;
+  public readonly schema = input.required<Lab900FormConfig>();
+  public readonly data = input.required<T>();
+  public readonly submitFormHandler = input.required<(data: T, originalData?: T) => Promise<boolean>>();
+  public readonly dialogOptions = input.required<MatDialogConfig>();
+  public readonly disabled = input(false);
 
-  @Input()
-  public submitFormHandler: (data: T, originalData?: T) => Promise<boolean>;
-
-  @Input()
-  public dialogOptions: MatDialogConfig;
-
-  @Input()
-  public disabled = false;
-
-  public constructor(public dialog: MatDialog) {}
-
-  @HostListener('click') public onMouseEnter(): void {
-    if (this.disabled) {
+  @HostListener('click')
+  public onMouseEnter(): void {
+    if (this.disabled()) {
       return;
     }
     this.dialog.open(FormDialogComponent, {
       data: {
-        schema: this.schema,
-        data: this.data,
-        submit: this.submitFormHandler,
+        schema: this.schema(),
+        data: this.data(),
+        submit: this.submitFormHandler(),
       },
-      ...this.dialogOptions,
+      ...this.dialogOptions(),
     });
   }
 }

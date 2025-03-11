@@ -5,6 +5,7 @@ import { FormComponent } from '../components/AbstractFormComponent';
 import { Lab900FormField } from './lab900-form-field.type';
 import { FormFieldSelect } from '../components/form-fields/select-field/field-select.model';
 import { isDifferent } from '@lab900/ui';
+import { ValueLabel } from './form-field-base';
 
 export interface IFieldConditions<T = any> {
   dependOn: string | string[];
@@ -18,13 +19,13 @@ export interface IFieldConditions<T = any> {
   showIfEquals?: ((value: T) => boolean) | T;
   disableIfEquals?: ((value: T) => boolean) | T;
   enabledIfEquals?: ((value: T) => boolean) | T;
-  onChangeFn?: (value: T, currentControl: AbstractControl, currentScheme: Lab900FormField) => any;
+  onChangeFn?: (value: T, currentControl: AbstractControl, currentScheme: Lab900FormField) => void;
   conditionalOptions?: (
     value: T,
     currentControl: AbstractControl,
     options?: { page?: number; searchQuery?: string },
-    schema?: FormFieldSelect<T>,
-  ) => any[] | Observable<any[]>;
+    schema?: FormFieldSelect<T>
+  ) => ValueLabel[] | Observable<ValueLabel[]>;
   skipIfNotExists?: boolean;
   validators?: (value: T) => ValidatorFn[];
 }
@@ -33,7 +34,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
   private readonly fieldControl: AbstractControl;
   private externalForms?: Record<string, UntypedFormGroup>;
 
-  public dependOn: string | string[];
+  public dependOn!: string | string[];
   public distinctUntilChangedCompareFn?: (a: T, b: T) => boolean;
   public externalFormId?: string;
 
@@ -50,25 +51,29 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
   public skipIfNotExists = false;
   public validators?: (value: T) => ValidatorFn[];
 
-  public dependControls: Record<string, AbstractControl>;
-  public prevValue: T;
+  public dependControls?: Record<string, AbstractControl>;
+  public prevValue?: T;
 
-  private readonly group: UntypedFormGroup;
-  private readonly schema: Lab900FormField;
+  private readonly group?: UntypedFormGroup;
+  private readonly schema?: Lab900FormField;
   public constructor(
     private readonly component: FormComponent<any>,
-    fieldConditions?: IFieldConditions,
+    fieldConditions?: IFieldConditions
   ) {
-    this.group = component.group;
-    this.schema = component.schema;
-    this.fieldControl = component.fieldControl;
-    this.externalForms = component?.externalForms;
-    if (fieldConditions) {
-      Object.assign(this, fieldConditions);
-      this.setDependOnControls();
-      if (!this.skipIfNotExists && !Object.keys(this.dependControls)?.length) {
-        throw new Error(`Can't create conditional form field: no control with name ${this.dependOn} found`);
+    if (component.fieldControl) {
+      this.group = component.group;
+      this.schema = component.schema;
+      this.fieldControl = component.fieldControl;
+      this.externalForms = component?.externalForms;
+      if (fieldConditions) {
+        Object.assign(this, fieldConditions);
+        this.setDependOnControls();
+        if (!this.skipIfNotExists && (!this.dependControls || !Object.keys(this.dependControls)?.length)) {
+          throw new Error(`Can't create conditional form field: no control with name ${this.dependOn} found`);
+        }
       }
+    } else {
+      throw new Error(`Can't create conditional form field: fieldControl is undefined`);
     }
   }
 
@@ -80,7 +85,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
     return value !== null && typeof value !== 'undefined';
   }
 
-  public getDependGroup(): UntypedFormGroup {
+  public getDependGroup(): UntypedFormGroup | undefined {
     if (this.externalFormId) {
       this.skipIfNotExists = true;
       if (this.externalForms?.[this.externalFormId]) {
@@ -92,7 +97,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
     return this.group;
   }
 
-  public getDependControl(dependOn: string, group: UntypedFormGroup): AbstractControl {
+  public getDependControl(dependOn: string, group: UntypedFormGroup): AbstractControl | null {
     let dependControl = group.get(dependOn);
     if (!dependControl && group.parent) {
       dependControl = this.getDependControl(dependOn, group.parent as UntypedFormGroup);
@@ -102,14 +107,14 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
 
   public start(callback?: (dependOn: string, value: T, firstRun?: boolean) => void): Subscription[] {
     const subs: Subscription[] = [];
-    if (Object.keys(this.dependControls)?.length) {
+    if (this.dependControls && Object.keys(this.dependControls)?.length) {
       Object.entries(this.dependControls).forEach(([key, control]) => {
         this.runAll(key, this.getDependControlValues(), true, callback);
         if (control != null) {
           subs.push(
             control.valueChanges
               .pipe(debounceTime(100), distinctUntilChanged(this.distinctUntilChangedCompareFn))
-              .subscribe(() => this.runAll(key, this.getDependControlValues(), false, callback)),
+              .subscribe(() => this.runAll(key, this.getDependControlValues(), false, callback))
           );
         }
       });
@@ -121,9 +126,9 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
     dependOn: string,
     value: T,
     firstRun: boolean,
-    callback?: (dependOn: string, value: T, firstRun?: boolean) => void,
+    callback?: (dependOn: string, value: T, firstRun?: boolean) => void
   ): void {
-    if (firstRun || isDifferent(this.prevValue, value)) {
+    if (this.schema && (firstRun || isDifferent(this.prevValue, value))) {
       if (this.onChangeFn && typeof this.onChangeFn === 'function') {
         this.onChangeFn(value, this.fieldControl, this.schema);
       }
@@ -157,59 +162,70 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
   public runVisibilityConditions(value: T): void {
     // Fix ExpressionChangedAfterItHasBeenCheckedError with timeout
     setTimeout(() => {
-      const hide = (isTrue: boolean): any =>
-        (this.schema.options = {
-          ...(this.schema.options ?? {}),
-          hide: isTrue,
-        });
-      this.run('hideIfHasValue', this.hideIfHasValue && FieldConditions.hasValue(value), (isTrue: boolean) =>
-        hide(isTrue),
-      );
-      this.run('showIfHasValue', this.showIfHasValue && FieldConditions.hasValue(value), (isTrue: boolean) =>
-        hide(!isTrue),
-      );
-      this.run('hideIfEquals', FieldConditions.valueIsEqualTo(value, this.hideIfEquals), (isTrue: boolean) =>
-        hide(isTrue),
-      );
-      this.run('showIfEquals', FieldConditions.valueIsEqualTo(value, this.showIfEquals), (isTrue: boolean) =>
-        hide(!isTrue),
-      );
-      // Refresh hide settings
-      this.component.hide();
+      const schema = this.schema;
+      if (schema) {
+        const hide = (isTrue: boolean): any =>
+          (schema.options = {
+            ...(schema.options ?? {}),
+            hide: isTrue,
+          });
+        this.run('hideIfHasValue', !!this.hideIfHasValue && FieldConditions.hasValue(value), (isTrue: boolean) =>
+          hide(isTrue)
+        );
+        this.run('showIfHasValue', !!this.showIfHasValue && FieldConditions.hasValue(value), (isTrue: boolean) =>
+          hide(!isTrue)
+        );
+        this.run('hideIfEquals', FieldConditions.valueIsEqualTo(value, this.hideIfEquals), (isTrue: boolean) =>
+          hide(isTrue)
+        );
+        this.run('showIfEquals', FieldConditions.valueIsEqualTo(value, this.showIfEquals), (isTrue: boolean) =>
+          hide(!isTrue)
+        );
+        // Refresh hide settings
+        this.component.hide();
+      }
     });
   }
 
   public runDisableConditions(value: T): void {
     const enable = (isTrue: boolean): any =>
       setTimeout(() => (isTrue ? this.fieldControl.enable() : this.fieldControl.disable()));
-    this.run('disableIfHasValue', this.disableIfHasValue && FieldConditions.hasValue(value), (isTrue: boolean) =>
-      enable(!isTrue),
+    this.run('disableIfHasValue', !!this.disableIfHasValue && FieldConditions.hasValue(value), (isTrue: boolean) =>
+      enable(!isTrue)
     );
-    this.run('enableIfHasValue', this.enableIfHasValue && FieldConditions.hasValue(value), (isTrue: boolean) =>
-      enable(isTrue),
+    this.run('enableIfHasValue', !!this.enableIfHasValue && FieldConditions.hasValue(value), (isTrue: boolean) =>
+      enable(isTrue)
     );
     this.run('disableIfEquals', FieldConditions.valueIsEqualTo(value, this.disableIfEquals), (isTrue: boolean) =>
-      enable(!isTrue),
+      enable(!isTrue)
     );
     this.run('enabledIfEquals', FieldConditions.valueIsEqualTo(value, this.enabledIfEquals), (isTrue: boolean) =>
-      enable(isTrue),
+      enable(isTrue)
     );
   }
 
   private setDependOnControls(): void {
-    this.dependControls = {};
-    const dependOnArray: string[] = Array.isArray(this.dependOn) ? this.dependOn : [this.dependOn];
-    dependOnArray.forEach((dependOn) => {
-      this.dependControls = {
-        ...this.dependControls,
-        [dependOn]: this.getDependControl(dependOn, this.getDependGroup()),
-      };
-    });
+    if (this.dependOn) {
+      this.dependControls = {};
+      const dependOnArray: string[] = Array.isArray(this.dependOn) ? this.dependOn : [this.dependOn];
+      dependOnArray.forEach(dependOn => {
+        const group = this.getDependGroup();
+        if (group) {
+          const control = this.getDependControl(dependOn, group);
+          if (control) {
+            this.dependControls = {
+              ...(this.dependControls ?? {}),
+              [dependOn]: control,
+            };
+          }
+        }
+      });
+    }
   }
 
   private getDependControlValues(): T {
-    const entries = Object.entries(this.dependControls);
-    if (entries?.length > 1) {
+    const entries = this.dependControls && Object.entries(this.dependControls);
+    if (entries && entries?.length > 1) {
       return entries.reduce((acc, [key, control]) => {
         acc = { ...acc, [key]: control?.value };
         return acc;

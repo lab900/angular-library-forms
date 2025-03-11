@@ -9,9 +9,8 @@
       [formControlName]="fieldAttribute"
       [required]="fieldIsRequired"
       matInput
-      placeholder="{{ placeholder | translate }}"
-    ></textarea>
-    @if (hint && !fieldIsReadonly && !(schema.options.hint.hideHintOnValidValue && input.value)) {
+      placeholder="{{ placeholder | translate }}"></textarea>
+    @if (hint && !fieldIsReadonly && !(options?.hint?.hideHintOnValidValue && input.value)) {
       <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
     }
     @if (options?.maxLength && showLengthIndicator && !fieldIsReadonly) {

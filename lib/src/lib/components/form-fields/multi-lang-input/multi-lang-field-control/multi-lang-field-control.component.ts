@@ -83,15 +83,15 @@ export class MultiLangFieldControlComponent implements ControlValueAccessor {
   public writeValue(value: Record<string, string>): void {
     this.value = value ?? {};
     const valuesArray = Object.values(this.value);
-    const hasValues = !!valuesArray.some((v) => !!v);
-    this.toggleTranslate(hasValues && !valuesArray.every((v) => v === valuesArray[0]));
+    const hasValues = valuesArray.some(v => !!v);
+    this.toggleTranslate(hasValues && !valuesArray.every(v => v === valuesArray[0]));
     this.cdr.markForCheck();
   }
 
   public toggleTranslate(value: boolean): void {
     this.translating.set(value);
-    if (!value) {
-      this.globalTranslation = Object.values(this.value).find((v) => !!v);
+    if (!value && this.value) {
+      this.globalTranslation = Object.values(this.value).find(v => !!v);
       this.updateAllToGlobalTranslation();
       this.resetDefaultLanguage();
     }
@@ -113,7 +113,7 @@ export class MultiLangFieldControlComponent implements ControlValueAccessor {
 
   public resetDefaultLanguage(): void {
     const defaultLang =
-      this.availableLanguages().find((l) => l.value === this.defaultLanguage()) ?? this.availableLanguages()[0];
+      this.availableLanguages().find(l => l.value === this.defaultLanguage()) ?? this.availableLanguages()[0];
     this.activeLanguage.set(defaultLang);
   }
 
@@ -122,7 +122,7 @@ export class MultiLangFieldControlComponent implements ControlValueAccessor {
       (acc, lang) => {
         return { ...acc, [lang.value]: this.globalTranslation };
       },
-      {} as Record<string, string>,
+      {} as Record<string, string>
     );
     this.onChange(this.value);
   }

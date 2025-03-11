@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, computed, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldAmount } from './amount-field.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,31 +27,35 @@ export class AmountFieldComponent extends FormComponent<FormFieldAmount> {
   @HostBinding('class')
   public classList = `lab900-form-field`;
 
-  public get suffix(): string {
-    if (typeof this.options?.suffix === 'function') {
-      return this.options.suffix(this.group.value);
+  public readonly suffix = computed(() => {
+    const opt = this._options();
+    if (typeof opt?.suffix === 'function') {
+      return opt.suffix(this._group()?.value);
     }
-    return this.options?.suffix;
-  }
+    return opt?.suffix;
+  });
 
-  public get prefix(): string {
-    if (typeof this.options?.prefix === 'function') {
-      return this.options.prefix(this.group.value);
+  public readonly prefix = computed(() => {
+    const opt = this._options();
+    if (typeof opt?.prefix === 'function') {
+      return opt.prefix(this._group()?.value);
     }
-    return this.options?.prefix;
-  }
+    return opt?.prefix;
+  });
 
-  public get maxDecimals(): number {
-    if (typeof this.options?.maxDecimals === 'function') {
-      return this.options.maxDecimals(this.group.value);
+  public readonly maxDecimals = computed(() => {
+    const opt = this._options();
+    if (typeof opt?.maxDecimals === 'function') {
+      return opt.maxDecimals(this._group()?.value);
     }
-    return this.options?.maxDecimals;
-  }
+    return opt?.maxDecimals;
+  });
 
-  public get minDecimals(): number {
-    if (typeof this.options?.minDecimals === 'function') {
-      return this.options.minDecimals(this.group.value);
+  public readonly minDecimals = computed(() => {
+    const opt = this._options();
+    if (typeof opt?.minDecimals === 'function') {
+      return opt.minDecimals(this._group()?.value);
     }
-    return this.options?.minDecimals;
-  }
+    return opt?.minDecimals;
+  });
 }

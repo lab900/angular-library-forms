@@ -30,7 +30,7 @@ export class FormConditionalValidationExampleComponent {
         conditions: [
           {
             dependOn: 'markAsRequired',
-            validators: (v) => {
+            validators: v => {
               if (v === true) {
                 return [Validators.required];
               }
@@ -54,7 +54,7 @@ export class FormConditionalValidationExampleComponent {
         conditions: [
           {
             dependOn: 'markAsRequired',
-            validators: (v) => {
+            validators: v => {
               if (v === true) {
                 return [Validators.required];
               }

@@ -40,8 +40,8 @@ export class Lab900Form<T> {
   protected readonly _form = computed(() => {
     return this.fb.createFormGroup<T>(
       this.fields(),
-      null,
-      untracked(this.data), // don't create a new form when data changes
+      undefined,
+      untracked(this.data) // don't create a new form when data changes
     );
   });
   public readonly controls = computed(() => this._form().controls);
@@ -63,24 +63,27 @@ export class Lab900Form<T> {
   public constructor() {
     effect(() => {
       const form = untracked(this._form);
-      if (this.data() && form) {
-        this.patchValues(this.data(), untracked(this.emitEventOnDataChange));
+      const data = this.data();
+      if (data && form) {
+        this.patchValues(data, untracked(this.emitEventOnDataChange));
       }
     });
   }
 
   public patchValues(data: T, emitEvent = true): void {
-    Object.keys(data).forEach((key: string) => {
-      const control = untracked(this.controls)[key];
+    const dataKeys = Object.keys(data as object) as (keyof T)[];
+    dataKeys.forEach(key => {
+      const control = untracked(this.controls)?.[key as string];
       if (control) {
         if (control instanceof UntypedFormArray) {
           const fieldSchema = untracked(this.fields).find((field: Lab900FormField) => field.attribute === key);
-          if (fieldSchema?.editType === EditType.Repeater) {
+          if (fieldSchema?.editType === EditType.Repeater && fieldSchema?.nestedFields) {
+            const nestedArrayData = data[key] as unknown[] | undefined;
             const nbOfControlRows = control.controls?.length ?? 0;
-            const nbOfDataRows = data[key]?.length ?? 0;
+            const nbOfDataRows = nestedArrayData?.length ?? 0;
             if (nbOfControlRows < nbOfDataRows) {
               for (let i = nbOfControlRows; i < nbOfDataRows; i++) {
-                control.push(this.fb.createFormGroup(fieldSchema?.nestedFields, null, data[key][i]));
+                control.push(this.fb.createFormGroup(fieldSchema?.nestedFields, undefined, nestedArrayData?.[i]));
               }
             } else if (nbOfControlRows > nbOfDataRows) {
               for (let i = nbOfControlRows; i > nbOfDataRows; i--) {
@@ -95,7 +98,7 @@ export class Lab900Form<T> {
               }
             }
           }
-          control.patchValue(data[key], { emitEvent });
+          control.patchValue(data[key] as any, { emitEvent });
         } else {
           control.patchValue(data[key], { emitEvent });
         }
@@ -104,8 +107,10 @@ export class Lab900Form<T> {
   }
 
   public setValues(data: T, emitEvent = true): void {
-    Object.keys(data).forEach((key: string) => {
-      const control = untracked(this.controls)[key];
+    const dataKeys = Object.keys(data as object) as (keyof T)[];
+
+    dataKeys.forEach(key => {
+      const control = untracked(this.controls)?.[key as string];
       if (control) {
         if (control instanceof UntypedFormArray) {
           const fieldSchema = untracked(this.fields).find((field: Lab900FormField) => field.attribute === key);

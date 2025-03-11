@@ -33,10 +33,10 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
   public constructor() {
     super();
     setTimeout(() => {
-      if (this.group?.controls) {
-        this.currentValue = this.group.controls[this.fieldAttribute].value;
-        this.addSubscription(this.group.controls[this.fieldAttribute].valueChanges, (value: any) =>
-          setTimeout(() => (this.currentValue = value)),
+      if (this.group?.controls && this.fieldControl) {
+        this.currentValue = this.fieldControl.value;
+        this.addSubscription(this.fieldControl.valueChanges, (value: any) =>
+          setTimeout(() => (this.currentValue = value))
         );
       }
     });
@@ -45,7 +45,7 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
   // This calculates the readonly label. If the readonlyDisplay() function is set, this is used.
   // Otherwise the button label is displayed
   public get readonlyButtonLabel(): string {
-    const option = this.options.buttonOptions.find((o) => o.value === this.currentValue);
+    const option = this.options?.buttonOptions.find(o => o.value === this.currentValue);
     return this.options?.readonlyDisplay ? this.options?.readonlyDisplay(this.group.value) : option?.label;
   }
 
@@ -53,9 +53,9 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
   public onChange($event: MatButtonToggleChange): void {
     if (this.options?.deselectOnClick && this.currentValue === $event.value) {
       setTimeout(() => {
-        this.group.controls[this.fieldAttribute].setValue(null);
-        this.group.controls[this.fieldAttribute].markAsDirty();
-        this.group.controls[this.fieldAttribute].markAsTouched();
+        this._fieldControl()?.setValue(null);
+        this._fieldControl()?.markAsDirty();
+        this._fieldControl()?.markAsTouched();
       });
     }
   }

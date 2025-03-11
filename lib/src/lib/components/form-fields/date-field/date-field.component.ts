@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, computed, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldDatePicker } from './date-field.model';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -27,15 +27,15 @@ export class DateFieldComponent extends FormComponent<FormFieldDatePicker> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
-  public get startView(): 'month' | 'year' | 'multi-year' {
-    return this.schema?.options?.startView ?? 'month';
-  }
+  public readonly startView = computed(() => {
+    return this._options()?.startView ?? 'month';
+  });
 
-  public get maxDate(): Date | null {
-    return this.schema?.options?.maxDate;
-  }
+  public readonly maxDate = computed(() => {
+    return this._options()?.maxDate;
+  });
 
-  public get minDate(): Date | null {
-    return this.schema?.options?.minDate;
-  }
+  public readonly minDate = computed(() => {
+    return this._options()?.minDate;
+  });
 }

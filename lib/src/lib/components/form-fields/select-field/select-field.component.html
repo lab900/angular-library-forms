@@ -1,9 +1,13 @@
 @if (!fieldIsReadonly && !fieldIsHidden) {
-  <mat-form-field [formGroup]="group" class="lab900-select-field" [class.has-value]="hasValue()" id="lab900-select-field-{{ elementId() }}">
+  <mat-form-field
+    [formGroup]="group"
+    class="lab900-select-field"
+    [class.has-value]="hasValue()"
+    id="lab900-select-field-{{ elementId() }}">
     @if (label(); as label) {
       <mat-label>
         @if (loading()) {
-          {{ "form.field.loading" | translate }}
+          {{ 'form.field.loading' | translate }}
         } @else {
           {{ label | translate }}
         }
@@ -24,11 +28,10 @@
       [panelClass]="options?.panelClass"
       (infiniteScroll)="onScroll()"
       (openedChange)="onOpenedChange($event)"
-      (focus)="onFocus()"
-    >
+      (focus)="onFocus()">
       @if (customerTriggerFn(); as customerTriggerFn) {
         <mat-select-trigger>
-          <div [innerHTML]="customerTriggerFn(fieldControl.value)"></div>
+          <div [innerHTML]="customerTriggerFn(fieldControl?.value)"></div>
         </mat-select-trigger>
       }
       @if (searchOptions()?.enabled) {
@@ -40,17 +43,22 @@
             [ngModelOptions]="{ standalone: true }"
             [placeholderLabel]="searchOptions()?.placeholder ?? 'form.field.search' | translate"
             [disableScrollToActiveOnOptionsChanged]="infiniteScrollOptions()?.enabled"
-            [clearSearchInput]="searchOptions()?.clearOnClose ?? false"
-          >
+            [clearSearchInput]="searchOptions()?.clearOnClose ?? false">
             <div class="no-entries-found" ngxMatSelectNoEntriesFound>
               @if (searchQuery().length) {
                 <span>{{
-                  searchOptions()?.notFoundLabel ?? "form.field.no_options_found" | translate: { searchQuery: searchQuery() }
+                  searchOptions()?.notFoundLabel ?? 'form.field.no_options_found'
+                    | translate: { searchQuery: searchQuery() }
                 }}</span>
                 @if (searchOptions()?.addNewFn) {
-                  <button mat-button [color]="searchOptions()?.addNewBtnColor ?? 'primary'" (click)="handleAddNew(searchQuery())">
+                  <button
+                    mat-button
+                    [color]="searchOptions()?.addNewBtnColor ?? 'primary'"
+                    (click)="handleAddNew(searchQuery())">
                     <mat-icon>add</mat-icon>
-                    <span>{{ searchOptions()?.addNewLabel ?? "form.field.add_new" | translate: { searchQuery: searchQuery() } }}</span>
+                    <span>{{
+                      searchOptions()?.addNewLabel ?? 'form.field.add_new' | translate: { searchQuery: searchQuery() }
+                    }}</span>
                   </button>
                 }
               }
@@ -59,10 +67,12 @@
         </mat-option>
       }
       @if (multiple() && selectAllOptions()?.enabled && selectOptions()?.length) {
-        <div class="mat-mdc-option mdc-list-item mat-mdc-option-multiple select-all" (click)="handleToggleAllSelection()">
+        <div
+          class="mat-mdc-option mdc-list-item mat-mdc-option-multiple select-all"
+          (click)="handleToggleAllSelection()">
           <mat-pseudo-checkbox [state]="selectAllState()" [disabled]="selectAllOptions()?.disabled || loading()" />
           <span class="mdc-list-item__primary-text">
-            {{ selectAllOptions()?.label || "forms.select-field.selectAllLabel" | translate }}
+            {{ selectAllOptions()?.label || 'forms.select-field.selectAllLabel' | translate }}
           </span>
         </div>
       }
@@ -79,12 +89,11 @@
         mat-icon-button
         type="button"
         aria-label="Clear"
-        (click)="handleClearFieldButtonClick($event)"
-      >
+        (click)="handleClearFieldButtonClick($event)">
         <mat-icon>close</mat-icon>
       </button>
     }
-    @if (hint && !(schema.options.hint.hideHintOnValidValue && select.value)) {
+    @if (hint && !(options?.hint?.hideHintOnValidValue && select.value)) {
       <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
     }
     @if (!valid) {

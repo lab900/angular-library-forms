@@ -8,7 +8,7 @@ export interface FormFieldFilePreviewOptions extends FormFieldBaseOptions {
   fileUploadButtonText?: string;
   canEditFileMetaData?: boolean;
   fileMetaDataConfig?: Lab900FormConfig;
-  httpCallback?: (image: Lab900File) => Observable<Blob>;
+  httpCallback?: (image: Lab900File) => Observable<Blob | ArrayBuffer>;
   showOverlay: boolean | ((data?: any) => boolean);
   multiple?: boolean;
   accept?: string;

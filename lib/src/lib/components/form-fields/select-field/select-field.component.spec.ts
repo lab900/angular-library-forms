@@ -31,7 +31,7 @@ describe('SelectFieldComponent', () => {
     component = fixture.componentInstance;
 
     fixture.componentRef.setInput('fieldAttribute', basicSelectSchema.attribute);
-    fixture.componentRef.setInput('group', new FormGroup({ [basicSelectSchema.attribute]: new FormControl() }));
+    fixture.componentRef.setInput('group', new FormGroup({ [basicSelectSchema.attribute!]: new FormControl() }));
   });
 
   it('should init selectOptionsListener on focus if fetchOptionsOnFocus is true', () => {
@@ -55,7 +55,7 @@ describe('SelectFieldComponent', () => {
         ],
       },
     });
-    component.fieldControl.setValue(3);
+    component.fieldControl?.setValue(3);
     fixture.detectChanges();
     expect(component.selectOptions()).toContainEqual({ value: 3, label: undefined });
   });
@@ -124,7 +124,7 @@ describe('SelectFieldComponent', () => {
     });
 
     it('should not be created if the select has any empty array as value', () => {
-      component.fieldControl.setValue([]);
+      component.fieldControl?.setValue([]);
       fixture.detectChanges();
 
       const clearButton = fixture.debugElement.query(By.css('.select-clear-button'));
@@ -132,18 +132,18 @@ describe('SelectFieldComponent', () => {
     });
 
     it('should be created if the select has a value', () => {
-      component.fieldControl.setValue('test');
+      component.fieldControl?.setValue('test');
       fixture.detectChanges();
       const clearButton = fixture.debugElement.query(By.css('.select-clear-button'));
       expect(clearButton).toBeTruthy();
     });
 
     it('should clear on the fieldControl on click', () => {
-      component.fieldControl.setValue('test');
+      component.fieldControl?.setValue('test');
       fixture.detectChanges();
       const clearButton = fixture.debugElement.query(By.css('.select-clear-button'));
       clearButton.triggerEventHandler('click', new Event('click'));
-      expect(component.fieldControl.value).toBeNull();
+      expect(component.fieldControl?.value).toBeNull();
     });
   });
 
@@ -174,7 +174,7 @@ describe('SelectFieldComponent', () => {
     });
 
     it('should create a MatSelect with multiple true', () => {
-      matSelect.isMultiple().then((isMultiple) => expect(isMultiple).toBe(true));
+      matSelect.isMultiple().then(isMultiple => expect(isMultiple).toBe(true));
     });
 
     it('should create a select all option', () => {
@@ -183,7 +183,7 @@ describe('SelectFieldComponent', () => {
 
     it('should set selectAllState correctly', () => {
       expect(component.selectAllState()).toEqual('unchecked');
-      component.fieldControl.setValue([1, 2]);
+      component.fieldControl?.setValue([1, 2]);
       fixture.detectChanges();
       expect(component.selectAllState()).toEqual('checked');
     });

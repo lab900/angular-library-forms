@@ -37,14 +37,16 @@ export class SearchFieldComponent<T> extends FormComponent<FormFieldSearch<T>> {
   public classList = `lab900-form-field`;
 
   public handleAddNew(searchQuery: string): void {
-    this.options
-      ?.addNewFn(searchQuery)
-      .pipe(take(1))
-      .subscribe((v) => this.fieldControl.setValue(v));
+    const addNewFn = this._options()?.addNewFn;
+    if (addNewFn) {
+      addNewFn(searchQuery)
+        .pipe(take(1))
+        .subscribe(v => this.fieldControl?.setValue(v));
+    }
   }
 
   public clear(inputRef: HTMLInputElement): void {
-    this.fieldControl.setValue(null);
+    this.fieldControl?.setValue(null);
     inputRef.value = '';
   }
 }

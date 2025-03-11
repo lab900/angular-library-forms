@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, viewChild } from '@angular/core';
 import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { MatButton } from '@angular/material/button';
 
@@ -9,8 +9,7 @@ import { MatButton } from '@angular/material/button';
   imports: [Lab900Form, MatButton],
 })
 export class FormFieldDragNDropFileExampleComponent {
-  @ViewChild(Lab900Form)
-  public formContainer: Lab900Form<any>;
+  public readonly form = viewChild<Lab900Form<any>>(Lab900Form);
 
   public formSchema: Lab900FormConfig = {
     fields: [
@@ -37,7 +36,7 @@ export class FormFieldDragNDropFileExampleComponent {
             conditions: [
               {
                 dependOn: 'checkbox',
-                showIfEquals: (checkbox: boolean) => !!checkbox,
+                showIfEquals: (checkbox: boolean) => checkbox,
               },
             ],
           },
@@ -47,6 +46,6 @@ export class FormFieldDragNDropFileExampleComponent {
   };
 
   public validate(): void {
-    console.log(this.formContainer.form.controls.files.value);
+    console.log(this.form()?.form.controls.files.value);
   }
 }

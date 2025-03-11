@@ -52,4 +52,4 @@ bootstrapApplication(AppComponent, {
       defaultLanguage: 'en',
     }),
   ],
-}).catch((err) => console.error(err));
+}).catch(err => console.error(err));

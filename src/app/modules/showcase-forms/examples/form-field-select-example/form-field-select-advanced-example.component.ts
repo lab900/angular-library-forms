@@ -1,4 +1,4 @@
-import { Component, signal, ViewChild } from '@angular/core';
+import { Component, signal, viewChild } from '@angular/core';
 import {
   EditType,
   FormFieldSelect,
@@ -26,7 +26,7 @@ const tolkienBook2: Book = {
   title: 'Narn i chîn Húrin',
 };
 
-const compare = (a: Book, b: Book): boolean => a?.key && b?.key && a.key === b.key;
+const compare = (a: Book, b: Book): boolean => a?.key != undefined && b?.key != undefined && a.key === b.key;
 
 @Component({
   selector: 'lab900-form-field-select-advanced-example',
@@ -36,9 +36,7 @@ const compare = (a: Book, b: Book): boolean => a?.key && b?.key && a.key === b.k
 })
 export class FormFieldSelectAdvancedExampleComponent {
   private readonly MAX_ITEMS_FOR_SELECT_ALL = 157;
-
-  @ViewChild(Lab900Form)
-  public formContainer?: Lab900Form<Book>;
+  public readonly form = viewChild<Lab900Form<any>>(Lab900Form);
 
   public data = signal<
     | {
@@ -98,7 +96,7 @@ export class FormFieldSelectAdvancedExampleComponent {
                     key: searchQuery,
                   };
                   select.selectOptions.set([{ value: book, label: book.title }]);
-                  select.fieldControl.setValue({
+                  select.fieldControl?.setValue({
                     title: searchQuery,
                     key: searchQuery,
                   });
@@ -134,8 +132,8 @@ export class FormFieldSelectAdvancedExampleComponent {
               readonly: true,
               readonlyDisplay: (books: Book[]) =>
                 books
-                  .map((book) => book.title)
-                  .filter((x) => !!x)
+                  .map(book => book.title)
+                  .filter(x => !!x)
                   .join('<br>'),
               fetchOptionsOnFocus: true,
             },
@@ -172,7 +170,7 @@ export class FormFieldSelectAdvancedExampleComponent {
               selectOptions: (filter, fieldControl, schema) => {
                 return this.getSelectOptions({
                   filter,
-                  author: fieldControl.value,
+                  author: fieldControl?.value,
                   schema,
                 });
               },
@@ -191,7 +189,7 @@ export class FormFieldSelectAdvancedExampleComponent {
               {
                 dependOn: 'author',
                 enableIfHasValue: true,
-                conditionalOptions: (author: string, control, filter) => this.getSelectOptions({ filter, author }),
+                conditionalOptions: (author: string, _, filter) => this.getSelectOptions({ filter, author }),
               },
             ],
           },
@@ -221,26 +219,26 @@ export class FormFieldSelectAdvancedExampleComponent {
     return this.http
       .get<{ docs: any[] }>('https://openlibrary.org/search.json', {
         params: {
-          q: filter?.searchQuery,
+          q: filter?.searchQuery ?? '',
           author: author ?? 'tolkien',
-          limit: filter.getAll ? this.MAX_ITEMS_FOR_SELECT_ALL : '10',
-          offset: filter.getAll ? 0 : String((filter?.page || 0) * 10),
+          limit: filter?.getAll ? this.MAX_ITEMS_FOR_SELECT_ALL : '10',
+          offset: filter?.getAll ? 0 : String((filter?.page || 0) * 10),
         },
       })
       .pipe(
-        map((res) => {
-          if (filter.getAll) {
+        map(res => {
+          if (filter?.getAll && schema?.options) {
             schema.options.infiniteScroll = { enabled: false };
           }
-          return res?.docs?.map((d) => ({
+          return res.docs.map((d: any) => ({
             label: d.title,
             value: d,
           }));
-        }),
+        })
       );
   }
 
   public logFormValue(): void {
-    console.log(this.formContainer.value);
+    console.log(this.form()?.value);
   }
 }

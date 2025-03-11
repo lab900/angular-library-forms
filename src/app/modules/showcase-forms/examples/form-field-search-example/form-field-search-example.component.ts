@@ -8,7 +8,7 @@ import { JsonPipe } from '@angular/common';
   selector: 'lab900-form-field-select-example',
   template: `<lab900-form #f [schema]="formSchema" />
     <hr style="margin-top: 30px" />
-    {{ f.value | json }}`,
+    {{ f?.value | json }}`,
   imports: [Lab900Form, JsonPipe],
 })
 export class FormFieldSearchExampleComponent {
@@ -19,7 +19,7 @@ export class FormFieldSearchExampleComponent {
         title: 'Search with a result',
         editType: EditType.Search,
         options: {
-          labelFormatter: (option) => option?.name,
+          labelFormatter: option => option?.name,
           searchFn: (searchQuery: string) => of({ name: searchQuery, id: 1 }).pipe(tap(console.log)),
           style: 'text-transform: uppercase',
         },
@@ -29,9 +29,9 @@ export class FormFieldSearchExampleComponent {
         editType: EditType.Search,
         title: 'Search without a result',
         options: {
-          labelFormatter: (option) => option?.name,
+          labelFormatter: option => option?.name,
           searchFn: () => of(null),
-          addNewFn: (searchQuery) =>
+          addNewFn: searchQuery =>
             of({
               name: searchQuery,
               id: 2,

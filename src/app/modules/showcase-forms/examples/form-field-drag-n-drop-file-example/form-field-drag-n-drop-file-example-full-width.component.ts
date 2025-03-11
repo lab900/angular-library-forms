@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, viewChild } from '@angular/core';
 import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { MatButton } from '@angular/material/button';
 
@@ -9,8 +9,7 @@ import { MatButton } from '@angular/material/button';
   imports: [Lab900Form, MatButton],
 })
 export class FormFieldDragNDropFileExampleFullWidthComponent {
-  @ViewChild(Lab900Form)
-  public formContainer: Lab900Form<any>;
+  public readonly form = viewChild<Lab900Form<any>>(Lab900Form);
 
   public formSchema: Lab900FormConfig = {
     fields: [
@@ -42,6 +41,6 @@ export class FormFieldDragNDropFileExampleFullWidthComponent {
   };
 
   public validate(): void {
-    console.log(this.formContainer.form.controls.files.value);
+    console.log(this.form()?.form.controls.files.value);
   }
 }

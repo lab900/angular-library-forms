@@ -20,7 +20,7 @@ export class ReadonlyFieldComponent extends FormComponent implements OnDestroy {
       if (this.group?.controls && this.fieldAttribute) {
         this.setValue(this.group.controls[this.fieldAttribute].value);
         this.addSubscription(this.group.controls[this.fieldAttribute].valueChanges, (value: any) =>
-          setTimeout(() => this.setValue(value)),
+          setTimeout(() => this.setValue(value))
         );
       }
     });
@@ -30,7 +30,7 @@ export class ReadonlyFieldComponent extends FormComponent implements OnDestroy {
     this.value = this.options?.readonlyDisplay ? this.options?.readonlyDisplay(this.group.value) : value;
   }
 
-  public getReadonlyContainerClass(): string {
+  public getReadonlyContainerClass(): string | undefined {
     if (typeof this.options?.readonlyContainerClass === 'function') {
       return this.options.readonlyContainerClass(this.group.value);
     }

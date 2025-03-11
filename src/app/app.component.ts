@@ -44,14 +44,14 @@ export class AppComponent extends SubscriptionBasedDirective implements OnInit, 
   public readonly sideNavMode$: Observable<MatDrawerMode>;
 
   @ViewChild('drawer')
-  private drawer: MatDrawer;
+  private drawer?: MatDrawer;
 
   public constructor(
     private translateService: TranslateService,
     private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer,
     private router: Router,
-    private breakpointObserver: BreakpointObserver,
+    private breakpointObserver: BreakpointObserver
   ) {
     super();
 
@@ -60,11 +60,11 @@ export class AppComponent extends SubscriptionBasedDirective implements OnInit, 
 
     this.matIconRegistry.addSvgIcon(
       'github',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('assets/images/github-logo.svg'),
+      this.domSanitizer.bypassSecurityTrustResourceUrl('assets/images/github-logo.svg')
     );
     this.matIconRegistry.addSvgIcon(
       'lab900',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('assets/images/logo-duo-dark.svg'),
+      this.domSanitizer.bypassSecurityTrustResourceUrl('assets/images/logo-duo-dark.svg')
     );
 
     this.sideNavMode$ = this.breakpointObserver
@@ -75,11 +75,11 @@ export class AppComponent extends SubscriptionBasedDirective implements OnInit, 
       this.router.events.pipe(
         takeUntil(this.unsub),
         withLatestFrom(this.sideNavMode$),
-        filter(([e, sideNavMode]) => e instanceof NavigationEnd && sideNavMode === 'over' && this.drawer.opened),
+        filter(([e, sideNavMode]) => e instanceof NavigationEnd && sideNavMode === 'over' && !!this.drawer?.opened)
       ),
       () => {
-        this.drawer.close();
-      },
+        this.drawer?.close();
+      }
     );
   }
 

@@ -1,6 +1,5 @@
-import { Component, ElementRef, HostBinding, inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostBinding, inject, viewChild } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { FormDialogDirective } from '../../../directives/form-dialog.directive';
 import { Lab900File } from '../../../models/Lab900File';
 import { FormDialogComponent } from '../../form-dialog/form-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -27,11 +26,7 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
-  @ViewChild('fileField')
-  private fileFieldComponent: ElementRef;
-
-  @ViewChild('FormDialogDirective')
-  private lab900FormDialog: FormDialogDirective<T>;
+  private readonly fileFieldComponent = viewChild<ElementRef>('fileField');
 
   public get files(): Lab900File[] {
     return (this.fieldControl?.value as Lab900File[]) ?? [];
@@ -41,8 +36,8 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
     const fileList: FileList | null = (event.target as HTMLInputElement).files;
     const fileArray: File[] = [];
     if (fileList) {
-      for (let i = 0; i < fileList.length; i++) {
-        fileArray.push(fileList[i]);
+      for (const file of fileList) {
+        fileArray.push(file);
       }
     }
 
@@ -50,7 +45,7 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
   }
 
   public filesAdded(fileArray: File[]): void {
-    fileArray.forEach((file) => {
+    fileArray.forEach(file => {
       if (file.type.includes('image')) {
         this.readImageData(file);
       } else {
@@ -84,27 +79,34 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
     const files: Lab900File[] = this.files;
     files.splice(this.getFileIndex(file), 1);
     this.setFieldControlValue(files);
-    this.fileFieldComponent.nativeElement.value = null;
+    const nativeElm = this.fileFieldComponent()?.nativeElement;
+    if (nativeElm) {
+      nativeElm.value = null;
+    }
   }
 
   public onMetaDataChanged(data: T, originalData?: Lab900File): Promise<boolean> {
-    return new Promise<boolean>((resolve) => {
-      const files = this.files;
-      const index = this.getFileIndex(originalData);
-      if (index === -1) {
-        console.error(`Couldn't find file in list`);
+    return new Promise<boolean>((resolve, reject) => {
+      if (originalData) {
+        const files = this.files;
+        const index = this.getFileIndex(originalData);
+        if (index === -1) {
+          console.error(`Couldn't find file in list`);
+          reject();
+        }
+        Object.assign(originalData, data);
+        files[index] = originalData;
+        this.setFieldControlValue(files);
+        resolve(true);
       }
-      Object.assign(originalData, data);
-      files[index] = originalData;
-      this.setFieldControlValue(files);
-      resolve(true);
+      reject();
     });
   }
 
   private getFileIndex(file: Lab900File): number {
     return this.files.findIndex(
       (listFile: Lab900File) =>
-        listFile.fileName === file.fileName && listFile.type === file.type && listFile.size === file.size,
+        listFile.fileName === file.fileName && listFile.type === file.type && listFile.size === file.size
     );
   }
 
@@ -134,7 +136,7 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
         },
       });
     } else if (this.options?.httpCallback) {
-      fetchImageBase64(this.options.httpCallback, file, (result) => {
+      fetchImageBase64(this.options.httpCallback, file, result => {
         file.imageBase64 = result as string;
         this.dialog.open(ImagePreviewModalComponent, {
           data: {
@@ -156,8 +158,8 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
   }
 
   private setFieldControlValue(files: Lab900File[]): void {
-    this.fieldControl.setValue(files);
-    this.fieldControl.markAsDirty();
-    this.fieldControl.markAsTouched();
+    this.fieldControl?.setValue(files);
+    this.fieldControl?.markAsDirty();
+    this.fieldControl?.markAsTouched();
   }
 }

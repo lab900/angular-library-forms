@@ -4,15 +4,16 @@
   "author": "Lab900 <info@lab900.com> (https://lab900.com)",
   "license": "MIT",
   "peerDependencies": {
-    "@angular/common": ">=19.2.1",
-    "@angular/core": ">=19.2.1",
-    "@angular/material": ">=19.2.1",
+    "@angular/common": ">=19.0.0",
+    "@angular/core": ">=19.0.0",
+    "@angular/material": ">=19.0.0",
     "@ngx-translate/core": ">=16.0.4",
-    "@angular/forms": ">=19.2.1",
-    "@lab900/ui": ">=19.2.1",
+    "@angular/forms": ">=19.0.0",
+    "@lab900/ui": ">=19.0.0",
     "@kolkov/angular-editor": "^3.0.0-beta.0",
     "ngx-mask": "^19.0.6",
-    "ngx-mat-select-search": "^8.0.0"
+    "ngx-mat-select-search": "^8.0.0",
+    "@ngxmc/datetime-picker": "~19.2.2"
   },
   "repository": {
     "type": "git",

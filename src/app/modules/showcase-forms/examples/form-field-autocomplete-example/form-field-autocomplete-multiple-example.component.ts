@@ -9,7 +9,7 @@ import { JsonPipe } from '@angular/common';
   imports: [Lab900Form, JsonPipe],
 })
 export class FormFieldAutocompleteMultipleExampleComponent {
-  public options: ValueLabel[] = [{ name: 'Mary' }, { name: 'Shelley' }, { name: 'Igor' }].map((value) => ({
+  public options: ValueLabel[] = [{ name: 'Mary' }, { name: 'Shelley' }, { name: 'Igor' }].map(value => ({
     value,
     label: value.name,
   }));

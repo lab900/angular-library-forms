@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, computed, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { FormFieldDateRange } from './date-range-field.model';
@@ -32,15 +32,15 @@ export class DateRangeFieldComponent extends FormComponent<FormFieldDateRange> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
-  public get dateFormGroup(): UntypedFormGroup {
-    return this.group.get(this.fieldAttribute) as UntypedFormGroup;
-  }
+  public readonly dateFormGroup = computed(() => {
+    return this._fieldControl() as UntypedFormGroup | undefined;
+  });
 
-  public get maxDate(): Date | null {
-    return this.options?.maxDate;
-  }
+  public readonly startControl = computed(() => {
+    return this.dateFormGroup()?.get(this._options()?.startKey || 'start');
+  });
 
-  public get minDate(): Date | null {
-    return this.schema?.options?.minDate;
-  }
+  public readonly endControl = computed(() => {
+    return this.dateFormGroup()?.get(this._options()?.endKey || 'end');
+  });
 }

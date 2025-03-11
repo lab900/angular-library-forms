@@ -31,23 +31,25 @@ export class InputFieldComponent extends FormComponent<FormFieldInput> {
   public readonly showLengthIndicator = computed(
     () =>
       !!this._options()?.maxLength &&
-      (!!this.setting?.formField?.showLengthIndicator || !!this._options()?.showLengthIndicator),
+      (!!this.setting?.formField?.showLengthIndicator || !!this._options()?.showLengthIndicator)
   );
 
   @HostBinding('class')
   public classList = `lab900-form-field`;
 
-  public get suffix(): string {
-    if (typeof this.options?.suffix === 'function') {
-      return this.options.suffix(this.group.value);
+  public readonly suffix = computed(() => {
+    const opt = this._options();
+    if (typeof opt?.suffix === 'function') {
+      return opt.suffix(this._group()?.value);
     }
-    return this.options?.suffix;
-  }
+    return opt?.suffix;
+  });
 
-  public get prefix(): string {
-    if (typeof this.options?.prefix === 'function') {
-      return this.options.prefix(this.group.value);
+  public readonly prefix = computed(() => {
+    const opt = this._options();
+    if (typeof opt?.prefix === 'function') {
+      return opt.prefix(this._group()?.value);
     }
-    return this.options?.prefix;
-  }
+    return opt?.prefix;
+  });
 }

@@ -31,9 +31,7 @@
               "base": "dist/angular-library-forms"
             },
             "index": "src/index.html",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
@@ -60,10 +58,7 @@
               "node_modules/prismjs/plugins/line-highlight/prism-line-highlight.js"
             ],
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "node_modules",
-                "src/assets/styles"
-              ]
+              "includePaths": ["node_modules", "src/assets/styles"]
             },
             "extractLicenses": false,
             "sourceMap": true,
@@ -129,10 +124,7 @@
         "test": {
           "builder": "@angular-builders/jest:run",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": ["scss"]
           }
@@ -140,10 +132,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         },
         "deploy": {
@@ -185,10 +174,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "lib/src/**/*.ts",
-              "lib/src/**/*.html"
-            ]
+            "lintFilePatterns": ["lib/src/**/*.ts", "lib/src/**/*.html"]
           }
         }
       }
@@ -196,8 +182,6 @@
   },
   "cli": {
     "analytics": false,
-    "schematicCollections": [
-      "@angular-eslint/schematics"
-    ]
+    "schematicCollections": ["@angular-eslint/schematics"]
   }
 }

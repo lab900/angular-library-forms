@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { formFieldsExample } from './config/form-fields-example';
 import { formDataExample } from './config/form-data-example';
@@ -17,9 +17,6 @@ export class FormContainerReadonlyExampleComponent {
     readonly: true,
   };
   public formData = formDataExample;
-
-  @ViewChild('lab900FormContainer')
-  private formContainer: Lab900Form<any>;
 
   public toggleReadOnly(): void {
     this.formFields.readonly = !this.formFields.readonly;

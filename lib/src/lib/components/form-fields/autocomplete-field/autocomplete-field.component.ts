@@ -32,9 +32,9 @@ export class AutocompleteFieldComponent<T> extends FormComponent<FormFieldAutoco
   public classList = 'lab900-form-field';
 
   @ViewChild('input')
-  public autoCompleteInput: ElementRef;
+  public autoCompleteInput?: ElementRef;
 
-  public filteredOptions: Observable<ValueLabel<T>[]>;
+  public filteredOptions?: Observable<ValueLabel<T>[]>;
 
   public inputChange: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
@@ -47,12 +47,14 @@ export class AutocompleteFieldComponent<T> extends FormComponent<FormFieldAutoco
   }
 
   private initFilteredOptionsListener(): void {
-    this.filteredOptions = this.inputChange.pipe(
-      debounceTime(this.options.debounceTime ?? 300),
-      switchMap((input: string) => {
-        const res = this.options.autocompleteOptions(input, this.fieldControl);
-        return isObservable(res) ? res : of(res);
-      }),
-    );
+    if (this.options?.autocompleteOptions && this.fieldControl) {
+      this.filteredOptions = this.inputChange.pipe(
+        debounceTime(this.options?.debounceTime ?? 300),
+        switchMap((input: string) => {
+          const res = this.options!.autocompleteOptions!(input, this.fieldControl!);
+          return isObservable(res) ? res : of(res);
+        })
+      );
+    }
   }
 }

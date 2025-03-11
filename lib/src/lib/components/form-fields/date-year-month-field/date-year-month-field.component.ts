@@ -1,6 +1,6 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, computed, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { FormFieldDateYearMonthPicker, FormFieldDateYearMonthPickerOptions } from './date-year-month-field.model';
+import { FormFieldDateYearMonthPicker } from './date-year-month-field.model';
 import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -41,21 +41,21 @@ export class DateYearMonthFieldComponent extends FormComponent<FormFieldDateYear
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
-  public get startView(): FormFieldDateYearMonthPickerOptions['startView'] {
-    return this.schema?.options?.startView ?? 'multi-year';
-  }
+  public readonly startView = computed(() => {
+    return this._options()?.startView ?? 'multi-year';
+  });
 
-  public get maxDate(): FormFieldDateYearMonthPickerOptions['maxDate'] {
-    return this.schema?.options?.maxDate;
-  }
+  public readonly maxDate = computed(() => {
+    return this._options()?.maxDate;
+  });
 
-  public get minDate(): FormFieldDateYearMonthPickerOptions['minDate'] {
-    return this.schema?.options?.minDate;
-  }
+  public readonly minDate = computed(() => {
+    return this._options()?.minDate;
+  });
 
   public monthSelectedHandler(chosenMonthDate: Date, picker: MatDatepicker<Date>): void {
     picker.close();
-    this.group.controls[this.fieldAttribute].setValue(chosenMonthDate);
-    this.group.controls[this.fieldAttribute].markAsDirty();
+    this._fieldControl()?.setValue(chosenMonthDate);
+    this._fieldControl()?.markAsDirty();
   }
 }

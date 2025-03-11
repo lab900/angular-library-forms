@@ -28,7 +28,7 @@ export class SelectInfiniteScrollDirective implements OnInit, OnDestroy, AfterVi
 
   public constructor(
     private matSelect: MatSelect,
-    private ngZone: NgZone,
+    private ngZone: NgZone
   ) {}
 
   public ngOnInit(): void {
@@ -36,7 +36,7 @@ export class SelectInfiniteScrollDirective implements OnInit, OnDestroy, AfterVi
   }
 
   public ngAfterViewInit(): void {
-    this.matSelect.openedChange.pipe(takeUntil(this.destroyed$)).subscribe((opened) => {
+    this.matSelect.openedChange.pipe(takeUntil(this.destroyed$)).subscribe(opened => {
       if (opened) {
         this.panel = this.matSelect.panel.nativeElement;
         this.singleOptionHeight = this.getSelectItemHeightPx();
@@ -65,9 +65,9 @@ export class SelectInfiniteScrollDirective implements OnInit, OnDestroy, AfterVi
       .pipe(
         takeUntil(this.destroyed$),
         debounceTime(this.debounceTime),
-        tap((event) => {
+        tap(event => {
           this.handleScrollEvent(event);
-        }),
+        })
       )
       .subscribe();
   }

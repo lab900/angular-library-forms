@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, ViewChild } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 import { Lab900File } from '../../../models/Lab900File';
 import { formatBytes } from '../../../utils/image.utils';
 import { FormComponent } from '../../AbstractFormComponent';
@@ -19,15 +19,15 @@ export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDro
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
-  @ViewChild('fileField')
-  private fileFieldComponent: ElementRef;
-
   public get files(): Lab900File[] {
     return (this.fieldControl?.value as Lab900File[]) ?? [];
   }
 
   public handleInput(target: EventTarget): void {
-    this.handleFileList((target as HTMLInputElement)?.files);
+    const files = (target as HTMLInputElement)?.files;
+    if (files) {
+      this.handleFileList(files);
+    }
   }
 
   public handleFileList(input: FileList): void {
@@ -37,10 +37,11 @@ export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDro
 
   private ingestFiles(files: Lab900File[]): void {
     if (files) {
-      if (files.length > this.options.maxFiles) {
+      const maxFiles = this._options()?.maxFiles;
+      if (maxFiles != undefined && files.length > maxFiles) {
         console.error(
-          `Too many files loaded ${files.length}, max is ${this.options.maxFiles}.
-            Change property maxFiles to fix this.`,
+          `Too many files loaded ${files.length}, max is ${maxFiles}.
+            Change property maxFiles to fix this.`
         );
         return;
       }
@@ -55,9 +56,9 @@ export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDro
   }
 
   private setFieldControlValue(files: Lab900File[]): void {
-    this.fieldControl.setValue(files);
-    this.fieldControl.markAsDirty();
-    this.fieldControl.markAsTouched();
+    this.fieldControl?.setValue(files);
+    this.fieldControl?.markAsDirty();
+    this.fieldControl?.markAsTouched();
   }
 
   public formatBytes(size: number): string {

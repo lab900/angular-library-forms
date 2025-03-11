@@ -3,57 +3,53 @@
     [formGroup]="group"
     class="lab900-repeater-field repeater-field"
     id="lab900-repeater-field-{{ elementId() }}"
-    [class.fixed-list]="fixedList"
-  >
+    [class.fixed-list]="fixedList()">
     <div [formArrayName]="fieldAttribute">
-      @if (schema.title) {
+      @if (label(); as label) {
         <span class="lab900-form-field-label lab900-form-field-label--with-info">
-          {{ schema.title | translate }}
+          {{ label | translate }}
           @if (options?.infoTooltip; as tip) {
             <mat-icon [matTooltip]="tip?.text | translate">
-              {{ tip?.icon || "info" }}
+              {{ tip?.icon || 'info' }}
             </mat-icon>
           }
         </span>
       }
-      @for (control of repeaterArray.controls; track control; let i = $index) {
-        <div class="repeater-row">
-          <div class="repeater-row__fields">
-            @for (field of schema.nestedFields; track field) {
-              <ng-container lab900FormField [schema]="field" [group]="control"></ng-container>
-            }
-          </div>
-          @if (!fixedList && !fieldIsReadonly) {
-            <div class="repeater-row__actions">
-              @if (i + 1 > minRows || options?.removeAll) {
-                <button
-                  type="button"
-                  (click)="removeFromArray(i)"
-                  mat-mini-fab
-                  class="mat-elevation-z0"
-                  [color]="options?.buttonColor || 'accent'"
-                  aria-label="Delete"
-                >
-                  <mat-icon>delete</mat-icon>
-                </button>
+      @if (repeaterArray; as repeater) {
+        @for (control of repeater.controls; track control; let i = $index) {
+          <div class="repeater-row">
+            <div class="repeater-row__fields">
+              @for (field of schema.nestedFields; track field) {
+                <ng-container lab900FormField [schema]="field" [group]="control"></ng-container>
               }
             </div>
-          }
-        </div>
+            @if (!fixedList() && !fieldIsReadonly) {
+              <div class="repeater-row__actions">
+                @if (i + 1 > minRows() || options?.removeAll) {
+                  <button
+                    type="button"
+                    (click)="removeFromArray(i)"
+                    mat-mini-fab
+                    class="mat-elevation-z0"
+                    [color]="options?.buttonColor || 'accent'"
+                    aria-label="Delete">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        }
       }
       @if (touched && !valid && !fieldIsReadonly) {
-        <mat-error class="subscript-wrapper" [@transitionMessages]="valid ? 'void' : 'enter'">{{ errorMessage() }}</mat-error>
+        <mat-error class="subscript-wrapper" [@transitionMessages]="valid ? 'void' : 'enter'">{{
+          errorMessage()
+        }}</mat-error>
       }
       @if (!fixedList && !fieldIsReadonly) {
         <div class="repeater-field__actions">
-          <button
-            mat-button
-            color="primary"
-            [disabled]="!!maxRows && repeaterArray.length >= maxRows"
-            (click)="addToArray()"
-            class="repeater-add"
-          >
-            {{ addLabel | translate }}
+          <button mat-button color="primary" [disabled]="hasMaxRows()" (click)="addToArray()" class="repeater-add">
+            {{ addLabel() | translate }}
           </button>
         </div>
       }

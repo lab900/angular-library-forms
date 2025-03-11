@@ -1,12 +1,12 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { AbstractControl, ValidatorFn } from '@angular/forms';
 
 function validateResources(): ValidatorFn {
-  return (control: AbstractControl): { [key: string]: any } | null => {
+  return (control: AbstractControl): Record<string, any> | null => {
     const resourceUnits: { default: boolean }[] = control?.value || [];
     if (resourceUnits?.length > 1) {
-      const defaults = resourceUnits.filter((ru) => ru.default === true);
+      const defaults = resourceUnits.filter(ru => ru.default);
       if (!defaults.length) {
         return { noDefault: true };
       }
@@ -24,9 +24,6 @@ function validateResources(): ValidatorFn {
   imports: [Lab900Form],
 })
 export class FormFieldRepeaterExampleComponent {
-  @ViewChild(Lab900Form)
-  public form: Lab900Form<any>;
-
   public data: any = {
     repeater: [{ value: 'a' }, { value: 'b' }],
   };

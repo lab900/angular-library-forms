@@ -41,13 +41,13 @@ export class ExampleViewerComponent implements AfterViewInit {
   public fileDir?: string;
 
   @Input()
-  public exampleTitle: string;
+  public exampleTitle!: string;
 
   @Input()
-  public exampleName: string;
+  public exampleName!: string;
 
   @ViewChild('exampleComponent')
-  public exampleComponent: ElementRef;
+  public exampleComponent?: ElementRef;
 
   public showSource = false;
 

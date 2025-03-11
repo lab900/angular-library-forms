@@ -1,45 +1,42 @@
 @if (!fieldIsHidden && !fieldIsReadonly) {
-  @if (schema.title) {
-    <span class="lab900-form-field-label" translate>{{ schema.title }}</span>
+  @if (label(); as label) {
+    <span class="lab900-form-field-label" translate>{{ label }}</span>
   }
-  <div class="upload-file" [class.upload-file--compact]="options.compact" id="upload-file-{{ elementId() }}">
+  <div class="upload-file" [class.upload-file--compact]="!!options?.compact" id="upload-file-{{ elementId() }}">
     <div
       lab900DropFile
       class="upload-file__container"
-      [class.upload-file__container--compact]="options.compact && !!files?.length"
+      [class.upload-file__container--compact]="options?.compact && !!files?.length"
       (fileDropped)="handleFileList($event)"
-      (click)="fileField.click()"
-    >
+      (click)="fileField.click()">
       <div class="instructions">
         <mat-icon class="instructions__upload-icon">upload_file</mat-icon>
         <span class="instructions__DD-text text-ellipsis">
-          {{ options.dropFilesText || "Drop Files" | translate }}
+          {{ options?.dropFilesText || 'Drop Files' | translate }}
         </span>
         <div class="instructions__or-text-container">
           <hr />
-          <span class="text-ellipsis">{{ "OR" | translate }}</span>
+          <span class="text-ellipsis">{{ 'OR' | translate }}</span>
           <hr />
         </div>
         <button
           (click)="fileField.click(); $event.stopPropagation()"
           color="primary"
           class="instructions__upload-button text-ellipsis"
-          mat-flat-button
-        >
-          {{ options.dropFilesButton || "Upload Files" | translate }}
+          mat-flat-button>
+          {{ options?.dropFilesButton || 'Upload Files' | translate }}
         </button>
       </div>
-      <input #fileField (change)="handleInput($event.target)" hidden type="file" [multiple]="options.maxFiles > 1" />
+      <input #fileField (change)="handleInput($event.target)" hidden type="file" [multiple]="options?.maxFiles > 1" />
     </div>
 
     @if (!!files?.length) {
       <div
         class="file-list"
         [ngClass]="{
-          'file-list--compact': options.compact,
-          'file-list--full': !options.compact,
-        }"
-      >
+          'file-list--compact': !!options?.compact,
+          'file-list--full': !options?.compact,
+        }">
         @for (file of files; track file) {
           <div class="file">
             <span class="file__icon"><mat-icon>description</mat-icon></span>
