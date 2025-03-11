@@ -3,7 +3,7 @@ import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldAmount } from './amount-field.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
 import { AutofocusDirective } from '../../../directives/auto-focus.directive';
 import { AmountInputDirective } from './amount-input.directive';
@@ -17,7 +17,7 @@ import { IconComponent } from '@lab900/ui';
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    TranslateModule,
+    TranslatePipe,
     AutofocusDirective,
     AmountInputDirective,
     IconComponent,

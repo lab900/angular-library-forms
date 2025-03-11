@@ -1,11 +1,11 @@
 import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldDateYearMonthPicker, FormFieldDateYearMonthPickerOptions } from './date-year-month-field.model';
-import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
@@ -27,7 +27,15 @@ import { MatInputModule } from '@angular/material/input';
       },
     },
   ],
-  imports: [ReactiveFormsModule, TranslateModule, MatDatepickerModule, MatFormFieldModule, MatInputModule],
+  imports: [
+    ReactiveFormsModule,
+    TranslatePipe,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerInput,
+    MatDatepickerToggle,
+    MatDatepicker,
+  ],
 })
 export class DateYearMonthFieldComponent extends FormComponent<FormFieldDateYearMonthPicker> {
   @HostBinding('class')

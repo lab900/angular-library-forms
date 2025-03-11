@@ -13,7 +13,7 @@ import { ValueLabel } from '../../../models/form-field-base';
 import { FormFieldAutocompleteMulti } from './autocomplete-multiple-field.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatChipGrid, MatChipInput, MatChipRow } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -24,7 +24,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,
-    TranslateModule,
+    TranslatePipe,
     MatIcon,
     MatChipGrid,
     MatChipRow,

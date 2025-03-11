@@ -6,14 +6,14 @@ import { FormFieldDragNDropFilePreview } from './drag-n-drop-file-field.model';
 import { NgClass } from '@angular/common';
 import { FileDropDirective } from '../../../directives/file-drop.directive';
 import { MatIcon } from '@angular/material/icon';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
 
 @Component({
   selector: 'lab900-drag-n-drop-file-field',
   templateUrl: './drag-n-drop-file-field.component.html',
   styleUrls: ['./drag-n-drop-file-field.component.scss'],
-  imports: [NgClass, FileDropDirective, MatIcon, TranslateModule, MatButton, MatIconButton],
+  imports: [NgClass, FileDropDirective, MatIcon, TranslatePipe, MatButton, MatIconButton],
 })
 export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDropFilePreview> {
   @HostBinding('class')

@@ -10,7 +10,7 @@ import { coerceArray } from '@angular/cdk/coercion';
 import { isDifferent } from '@lab900/ui';
 import { debounceTimeAfterFirst } from '../../../utils/helpers';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { SelectInfiniteScrollDirective } from './select-field-infinite-scroll.directive';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { MatButton, MatIconButton } from '@angular/material/button';
@@ -40,7 +40,7 @@ import { toObservable } from '@angular/core/rxjs-interop';
     MatFormFieldModule,
     MatSelectModule,
     ReactiveFormsModule,
-    TranslateModule,
+    TranslatePipe,
     SelectInfiniteScrollDirective,
     NgxMatSelectSearchModule,
     FormsModule,
@@ -130,21 +130,18 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
 
   public constructor() {
     super();
-    effect(
-      () => {
-        const select = this._select();
-        if (select && select?.multiple) {
-          const allSelected = this.selectOptions()?.length === coerceArray(this.fieldValue())?.length;
-          this.selectAllState.set(allSelected ? 'checked' : 'unchecked');
+    effect(() => {
+      const select = this._select();
+      if (select && select?.multiple) {
+        const allSelected = this.selectOptions()?.length === coerceArray(this.fieldValue())?.length;
+        this.selectAllState.set(allSelected ? 'checked' : 'unchecked');
 
-          select.selectionChange.subscribe((selection) => {
-            const allSelected = this.selectOptions()?.length === selection?.value?.length;
-            this.selectAllState.set(allSelected ? 'checked' : 'unchecked');
-          });
-        }
-      },
-      { allowSignalWrites: true },
-    );
+        select.selectionChange.subscribe((selection) => {
+          const allSelected = this.selectOptions()?.length === selection?.value?.length;
+          this.selectAllState.set(allSelected ? 'checked' : 'unchecked');
+        });
+      }
+    });
   }
 
   public ngOnInit(): void {

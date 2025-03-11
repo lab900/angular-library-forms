@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgClass } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { AutofocusDirective } from '../../../directives/auto-focus.directive';
 import { IconComponent } from '@lab900/ui';
 
@@ -17,7 +17,7 @@ import { IconComponent } from '@lab900/ui';
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    TranslateModule,
+    TranslatePipe,
     NgClass,
     AutofocusDirective,
     IconComponent,

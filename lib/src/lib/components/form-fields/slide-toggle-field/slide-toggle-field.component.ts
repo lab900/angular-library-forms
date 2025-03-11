@@ -4,7 +4,7 @@ import { FormFieldSlideToggle } from './slide-toggle-field.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatError, MatLabel } from '@angular/material/form-field';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'lab900-slide-toggle-field',
@@ -18,7 +18,7 @@ import { TranslateModule } from '@ngx-translate/core';
       }
     `,
   ],
-  imports: [ReactiveFormsModule, MatLabel, MatSlideToggle, TranslateModule, MatError],
+  imports: [ReactiveFormsModule, MatLabel, MatSlideToggle, TranslatePipe, MatError],
 })
 export class SlideToggleFieldComponent extends FormComponent<FormFieldSlideToggle> {
   @HostBinding('class')

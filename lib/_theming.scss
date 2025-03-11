@@ -1,5 +1,4 @@
 @use './scss/form-field-theme' as form-field;
-@use './scss/datetime-picker-fix';
 
 @mixin lab900-forms($config-or-theme) {
   @include form-field.lab900-form-field($config-or-theme);

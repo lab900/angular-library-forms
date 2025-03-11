@@ -1,12 +1,12 @@
 import { Component, HostBinding, OnDestroy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'lab900-readonly',
   templateUrl: './readonly-field.component.html',
-  imports: [TranslateModule],
+  imports: [TranslatePipe],
 })
 export class ReadonlyFieldComponent extends FormComponent implements OnDestroy {
   @HostBinding('class')

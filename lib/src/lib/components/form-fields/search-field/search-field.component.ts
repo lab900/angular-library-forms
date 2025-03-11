@@ -5,7 +5,7 @@ import { take } from 'rxjs/operators';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
 import { AutofocusDirective } from '../../../directives/auto-focus.directive';
 import { SearchInputDirective } from './search-input.directive';
@@ -21,7 +21,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    TranslateModule,
+    TranslatePipe,
     NgClass,
     AutofocusDirective,
     SearchInputDirective,

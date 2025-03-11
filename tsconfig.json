@@ -13,9 +13,6 @@
     "importHelpers": true,
     "target": "ES2022",
     "lib": ["ES2022", "dom"],
-    "paths": {
-      "@lab900/forms": ["lib/src/public-api.ts"],
-    },
     "useDefineForClassFields": false
   },
   "angularCompilerOptions": {

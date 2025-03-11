@@ -18,14 +18,14 @@ Add the `provideLab900Forms` app config.
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {provideLab900Forms} from '@lab900/forms';
 import {provideNgxMask} from 'ngx-mask';
-import {NgxMatNativeDateAdapter} from '@angular-material-components/datetime-picker';
+import { provideNgxMatNativeDate } from '@ngxmc/datetime-picker';
 
 bootstrapApplication(AppComponent, {
     providers: [
         ...
         provideNgxMask(), // needed for the input masks
         provideNativeDateAdapter(), // optional for the date pickers (see below)
-        importProvidersFrom(NgxMatNativeDateModule), // optional for the date time pickers (see below)
+        provideNgxMatNativeDate(), // optional for the date time pickers (see below)
         provideLab900Forms({
             formField: {
                 appearance: 'fill',
@@ -86,24 +86,7 @@ The lab900-forms mixin expects a [Material theme of config](https://material.ang
 The date-time picker will require the following package to be installed.
 
 ```bash
-npm i @angular-material-components/datetime-picker --save-dev
-```
-
-**[The date-time picker](https://www.npmjs.com/package/@angular-material-components/datetime-picker) seems to be abandoned and is not updated to Angular 17. If you have a good replacement let me know**
-
-To fix the npm i dependency issue, you can add the following to your package.json.
-
-```json
-"overrides": {
-    "@angular-material-components/datetime-picker": {
-      "@angular/platform-browser": ">=17.0.0",
-      "@angular/common": ">=17.0.0",
-      "@angular/core": ">=17.0.0",
-      "@angular/forms": ">=17.0.0",
-      "@angular/material": ">=17.0.0",
-      "@angular/cdk": ">=17.0.0"
-    }
-}
+npm install --save  @ngxmc/datetime-picker
 ```
 
 ### Native dates
@@ -112,7 +95,7 @@ Add this before providing the `provideLab900Forms`.
 
 ```ts
 provideNativeDateAdapter(),
-importProvidersFrom(NgxMatNativeDateModule)
+provideNgxMatNativeDate()
 ```
 
 ### Moment dates
@@ -120,7 +103,7 @@ importProvidersFrom(NgxMatNativeDateModule)
 Install the following packages.
 
 ```bash
-npm install moment @angular/material-moment-adapter @angular-material-components/moment-adapter@16.2.7 --save-dev
+npm install moment @angular/material-moment-adapter --save-dev
 ```
 
 Add the imports before importing the `Lab900FormsModule.forRoot()`.

@@ -61,15 +61,12 @@ export class Lab900Form<T> {
   }
 
   public constructor() {
-    effect(
-      () => {
-        const form = untracked(this._form);
-        if (this.data() && form) {
-          this.patchValues(this.data(), untracked(this.emitEventOnDataChange));
-        }
-      },
-      { allowSignalWrites: true },
-    );
+    effect(() => {
+      const form = untracked(this._form);
+      if (this.data() && form) {
+        this.patchValues(this.data(), untracked(this.emitEventOnDataChange));
+      }
+    });
   }
 
   public patchValues(data: T, emitEvent = true): void {

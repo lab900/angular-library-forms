@@ -4,8 +4,8 @@
 @use '@lab900/ui/theming' as ui;
 @use '../dist/@lab900/forms/theming' as forms;
 
-@import 'green.palette';
-@import 'grey.palette';
+@use 'green.palette' as *;
+@use 'grey.palette' as *;
 
 // Plus imports for other components in your app.
 

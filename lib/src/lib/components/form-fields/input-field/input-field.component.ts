@@ -3,7 +3,7 @@ import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldInput } from './input-field.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
 import { AutofocusDirective } from '../../../directives/auto-focus.directive';
 import { NgxMaskDirective, NgxMaskService } from 'ngx-mask';
@@ -16,11 +16,11 @@ import { IconComponent } from '@lab900/ui';
   imports: [
     MatFormFieldModule,
     MatInputModule,
-    ReactiveFormsModule,
-    TranslateModule,
+    TranslatePipe,
     AutofocusDirective,
     NgxMaskDirective,
     IconComponent,
+    ReactiveFormsModule,
   ],
 })
 export class InputFieldComponent extends FormComponent<FormFieldInput> {

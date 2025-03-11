@@ -3,13 +3,13 @@ import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldRadioButtons } from './radio-buttons-field.model';
 import { MatError, MatLabel } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 
 @Component({
   selector: 'lab900-radio-buttons-field',
   templateUrl: './radio-buttons-field.component.html',
-  imports: [MatLabel, ReactiveFormsModule, TranslateModule, MatRadioGroup, MatRadioButton, MatError],
+  imports: [MatLabel, ReactiveFormsModule, TranslatePipe, MatRadioGroup, MatRadioButton, MatError],
   host: {
     class: 'lab900-form-field',
   },

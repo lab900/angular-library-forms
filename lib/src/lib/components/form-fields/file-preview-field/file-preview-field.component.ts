@@ -8,7 +8,7 @@ import { ImagePreviewModalComponent } from '../../image-preview-modal/image-prev
 import { fetchImageBase64 } from '../../../utils/image.utils';
 import { FormFieldFilePreview } from './file-preview-field.model';
 import { take } from 'rxjs/operators';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { MatButton } from '@angular/material/button';
 import { MatCard } from '@angular/material/card';
@@ -20,7 +20,7 @@ import { MatTooltip } from '@angular/material/tooltip';
   selector: 'lab900-file-preview-field',
   templateUrl: './file-preview-field.component.html',
   styleUrls: ['./file-preview-field.component.scss'],
-  imports: [TranslateModule, MatButton, MatCard, MatIcon, AuthImageDirective, MatTooltip],
+  imports: [TranslatePipe, MatButton, MatCard, MatIcon, AuthImageDirective, MatTooltip],
 })
 export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePreview> {
   private readonly dialog = inject(MatDialog);

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Lab900NavListComponent, NavItemGroup } from '@lab900/ui';
 import { showcaseFormsNavItems } from './modules/showcase-forms/showcase-forms.nav-items';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatIcon, MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import packageInfo from '../../package.json';
@@ -23,7 +23,7 @@ import { AsyncPipe, NgOptimizedImage } from '@angular/common';
     MatToolbar,
     MatIcon,
     MatIconButton,
-    TranslateModule,
+    TranslatePipe,
     RouterLink,
     MatDrawerContainer,
     Lab900NavListComponent,

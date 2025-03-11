@@ -1,6 +1,5 @@
 import { Component, computed, HostBinding } from '@angular/core';
 import { FormComponent } from '../AbstractFormComponent';
-import { matFormFieldAnimations } from '@angular/material/form-field';
 import { FormFieldUtils } from '../../utils/form-field.utils';
 import { FormRow } from './form-row.model';
 import { Lab900FormField } from '../../models/lab900-form-field.type';
@@ -8,14 +7,13 @@ import { FormFieldDirective } from '../../directives/form-field.directive';
 import { MatIcon } from '@angular/material/icon';
 
 import { MatTooltip } from '@angular/material/tooltip';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'lab900-form-row',
   templateUrl: './form-row.component.html',
   styleUrls: ['./form-row.component.scss'],
-  animations: [matFormFieldAnimations.transitionMessages],
-  imports: [FormFieldDirective, MatIcon, MatTooltip, TranslateModule],
+  imports: [FormFieldDirective, MatIcon, MatTooltip, TranslatePipe],
 })
 export class FormRowComponent extends FormComponent<FormRow> {
   @HostBinding('class')

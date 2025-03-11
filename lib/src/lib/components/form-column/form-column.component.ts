@@ -1,10 +1,9 @@
 import { Component, computed, HostBinding } from '@angular/core';
 import { FormComponent } from '../AbstractFormComponent';
-import { matFormFieldAnimations } from '@angular/material/form-field';
 import { FormFieldUtils } from '../../utils/form-field.utils';
 import { FormColumn } from './form-column.model';
 import { Lab900FormField } from '../../models/lab900-form-field.type';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { FormFieldDirective } from '../../directives/form-field.directive';
 import { MatIcon } from '@angular/material/icon';
@@ -14,8 +13,7 @@ import { MatTooltip } from '@angular/material/tooltip';
   selector: 'lab900-form-column',
   templateUrl: './form-column.component.html',
   styleUrls: ['./form-column.component.scss'],
-  animations: [matFormFieldAnimations.transitionMessages],
-  imports: [TranslateModule, FormFieldDirective, MatIcon, MatTooltip],
+  imports: [TranslatePipe, FormFieldDirective, MatIcon, MatTooltip],
 })
 export class FormColumnComponent extends FormComponent<FormColumn> {
   @HostBinding('class')

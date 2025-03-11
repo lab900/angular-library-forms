@@ -15,7 +15,7 @@ import { ValueLabel } from '../../../../models/form-field-base';
 import { LanguagePickerComponent } from '../../../language-picker/language-picker.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
@@ -23,7 +23,7 @@ import { MatInputModule } from '@angular/material/input';
   templateUrl: './multi-lang-field-control.component.html',
   styleUrls: ['./multi-lang-field-control.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LanguagePickerComponent, MatFormFieldModule, MatInputModule, TranslateModule, FormsModule],
+  imports: [LanguagePickerComponent, MatFormFieldModule, MatInputModule, TranslatePipe, FormsModule],
 })
 export class MultiLangFieldControlComponent implements ControlValueAccessor {
   private readonly cdr = inject(ChangeDetectorRef);
@@ -51,14 +51,11 @@ export class MultiLangFieldControlComponent implements ControlValueAccessor {
       this.control.valueAccessor = this;
     }
 
-    effect(
-      () => {
-        if (this.availableLanguages()?.length) {
-          this.resetDefaultLanguage();
-        }
-      },
-      { allowSignalWrites: true },
-    );
+    effect(() => {
+      if (this.availableLanguages()?.length) {
+        this.resetDefaultLanguage();
+      }
+    });
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function

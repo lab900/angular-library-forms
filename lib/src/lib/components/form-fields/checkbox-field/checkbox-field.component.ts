@@ -4,14 +4,14 @@ import { MatError, matFormFieldAnimations, MatHint } from '@angular/material/for
 import { CheckboxFieldModel } from './checkbox-field.model';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'lab900-checkbox-field',
   templateUrl: './checkbox-field.component.html',
   styleUrls: ['./checkbox-field.component.css'],
   animations: [matFormFieldAnimations.transitionMessages],
-  imports: [MatCheckbox, ReactiveFormsModule, TranslateModule, MatHint, MatError],
+  imports: [MatCheckbox, ReactiveFormsModule, TranslatePipe, MatHint, MatError],
   host: { class: 'lab900-form-field' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

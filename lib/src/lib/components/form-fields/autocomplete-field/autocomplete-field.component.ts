@@ -9,7 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 import { MatAutocomplete, MatAutocompleteTrigger, MatOption } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
@@ -20,7 +20,7 @@ import { MatIcon } from '@angular/material/icon';
     MatInputModule,
     ReactiveFormsModule,
     MatAutocompleteTrigger,
-    TranslateModule,
+    TranslatePipe,
     AsyncPipe,
     MatAutocomplete,
     MatIcon,

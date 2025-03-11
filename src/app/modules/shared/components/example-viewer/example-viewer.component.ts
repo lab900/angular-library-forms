@@ -1,12 +1,12 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { MatCardModule } from '@angular/material/card';
-import { TranslateModule } from '@ngx-translate/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MarkdownModule } from 'ngx-markdown';
+import { TranslatePipe } from '@ngx-translate/core';
 import { LowerCasePipe } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MarkdownComponent } from 'ngx-markdown';
+import { MatIconButton } from '@angular/material/button';
+import { MatTab, MatTabGroup } from '@angular/material/tabs';
 
 export interface ExampleFile {
   extension: string;
@@ -19,14 +19,18 @@ export interface ExampleFile {
   templateUrl: './example-viewer.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    MatCardModule,
-    TranslateModule,
-    MatButtonModule,
-    MatTabsModule,
-    MarkdownModule,
+    TranslatePipe,
     LowerCasePipe,
-    MatIconModule,
-    MatTooltipModule,
+    MatCard,
+    MatCardHeader,
+    MatTooltip,
+    MatIcon,
+    MatCardContent,
+    MarkdownComponent,
+    MatCardTitle,
+    MatIconButton,
+    MatTabGroup,
+    MatTab,
   ],
 })
 export class ExampleViewerComponent implements AfterViewInit {

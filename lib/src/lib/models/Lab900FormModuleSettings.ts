@@ -1,6 +1,6 @@
 import { MatFormFieldDefaultOptions } from '@angular/material/form-field';
 import { InjectionToken } from '@angular/core';
-import { IConfig } from 'ngx-mask';
+import { NgxMaskConfig } from 'ngx-mask/lib/ngx-mask.config';
 
 export const LAB900_FORM_MODULE_SETTINGS = new InjectionToken<Lab900FormModuleSettings>('lab900FormModuleSetting');
 
@@ -18,7 +18,7 @@ export interface Lab900AmountFieldOptions {
 
 export interface Lab900FormModuleSettings {
   formField?: Lab900FormFieldOptions;
-  fieldMask?: Partial<IConfig>;
+  fieldMask?: Partial<NgxMaskConfig>;
   amountField?: Lab900AmountFieldOptions;
   disableBrowserAutocomplete?: boolean;
 }

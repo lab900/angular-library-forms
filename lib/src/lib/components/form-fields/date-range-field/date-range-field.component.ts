@@ -2,9 +2,15 @@ import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { FormFieldDateRange } from './date-range-field.model';
-import { MatDatepickerModule, MatDateRangeInput } from '@angular/material/datepicker';
+import {
+  MatDatepickerToggle,
+  MatDateRangeInput,
+  MatDateRangePicker,
+  MatEndDate,
+  MatStartDate,
+} from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
@@ -15,8 +21,11 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    TranslateModule,
-    MatDatepickerModule,
+    TranslatePipe,
+    MatDatepickerToggle,
+    MatDateRangePicker,
+    MatEndDate,
+    MatStartDate,
   ],
 })
 export class DateRangeFieldComponent extends FormComponent<FormFieldDateRange> {

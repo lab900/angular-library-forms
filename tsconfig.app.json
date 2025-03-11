@@ -2,7 +2,10 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    "types": [],
+    "paths": {
+      "@lab900/forms": ["lib/src/public-api.ts"],
+    }
   },
   "files": ["src/main.ts"],
   "include": ["src/**/*.d.ts"],

@@ -39,15 +39,12 @@ export class FormFieldDirective {
   public readonly component = signal<ComponentRef<FormComponent> | undefined>(undefined);
 
   public constructor() {
-    effect(
-      () => {
-        const componentType = this.componentType();
-        if (componentType) {
-          this.createComponent();
-        }
-      },
-      { allowSignalWrites: true },
-    );
+    effect(() => {
+      const componentType = this.componentType();
+      if (componentType) {
+        this.createComponent();
+      }
+    });
     effect(() => {
       const schema = this.schema();
       const component = this.component();

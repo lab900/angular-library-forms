@@ -146,31 +146,25 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
 
   public constructor() {
     super();
-    effect(
-      () => {
-        const group = this._group();
-        const options = this._options();
-        const fieldControl = this._fieldControl();
-        if (group && fieldControl) {
+    effect(() => {
+      const group = this._group();
+      const options = this._options();
+      const fieldControl = this._fieldControl();
+      if (group && fieldControl) {
+        this.setFieldProperties();
+        group.valueChanges.subscribe(() => {
           this.setFieldProperties();
-          group.valueChanges.subscribe(() => {
-            this.setFieldProperties();
-            if (options?.onChangeFn) {
-              options.onChangeFn(group.value, fieldControl);
-            }
-          });
-        }
-      },
-      { allowSignalWrites: true },
-    );
-    effect(
-      () => {
-        if (this._schema().conditions?.length) {
-          this.createConditions();
-        }
-      },
-      { allowSignalWrites: true },
-    );
+          if (options?.onChangeFn) {
+            options.onChangeFn(group.value, fieldControl);
+          }
+        });
+      }
+    });
+    effect(() => {
+      if (this._schema().conditions?.length) {
+        this.createConditions();
+      }
+    });
   }
 
   public onConditionalChange(
