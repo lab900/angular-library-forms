@@ -102,13 +102,14 @@ provideNativeDateAdapter(), provideNgxMatNativeDate();
 Install the following packages.
 
 ```bash
-npm install moment @angular/material-moment-adapter --save-dev
+npm install moment @angular/material-moment-adapter @ngxmc/moment-adapter --save
+
 ```
 
 Add the imports before importing the `Lab900FormsModule.forRoot()`.
 
 ```ts
-provideMomentDateAdapter(), importProvidersFrom(NgxMatMomentModule);
+provideMomentDateAdapter(), provideNgxMatMomentDate();
 ```
 
 ### Luxon dates
@@ -116,7 +117,7 @@ provideMomentDateAdapter(), importProvidersFrom(NgxMatMomentModule);
 **Unfortionally, a Luxon date adapter is not available for the dateTime picker.**
 
 ```bash
-npm install luxon @angular/material-luxon-adapter --save-dev
+npm install luxon @angular/material-luxon-adapter --save
 ```
 
 ```ts
