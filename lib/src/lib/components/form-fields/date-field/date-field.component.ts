@@ -3,25 +3,14 @@ import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldDatePicker } from './date-field.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { MatFormField, MatInput } from '@angular/material/input';
-import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
-import { MatError, MatHint, MatLabel } from '@angular/material/form-field';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'lab900-date-field',
   templateUrl: './date-field.component.html',
-  imports: [
-    MatInput,
-    MatFormField,
-    MatLabel,
-    MatHint,
-    MatError,
-    ReactiveFormsModule,
-    TranslatePipe,
-    MatDatepickerInput,
-    MatDatepickerToggle,
-    MatDatepicker,
-  ],
+  imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule, TranslatePipe, MatDatepickerModule],
 })
 export class DateFieldComponent extends FormComponent<FormFieldDatePicker> {
   @HostBinding('class')

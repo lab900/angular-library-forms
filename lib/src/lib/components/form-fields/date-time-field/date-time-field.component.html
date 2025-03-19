@@ -14,7 +14,7 @@
       [matDatepickerFilter]="options?.dateFilter"
       [max]="maxDate()"
       [min]="minDate()" />
-    <ngx-mat-datepicker-toggle [disabled]="fieldIsReadonly || fieldControl?.disabled" matSuffix [for]="picker" />
+    <ngx-mat-datepicker-toggle [disabled]="fieldIsReadonly || fieldControl?.disabled" matIconSuffix [for]="picker" />
     <ngx-mat-datetime-picker
       #picker
       [disabled]="fieldIsReadonly || fieldControl?.disabled"

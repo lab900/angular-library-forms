@@ -1,5 +1,10 @@
 # Changelog
 
+## 19.0.1
+
+- Bug fix: date picker toggle not appearing
+- Bug fix: select giving nativeElement not found error
+
 ## 19.0.0
 
 - Angular 19 update
