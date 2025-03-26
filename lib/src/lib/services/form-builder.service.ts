@@ -8,7 +8,6 @@ import {
 } from '@angular/forms';
 import { EditType } from '../models/editType';
 import { inject, Injectable } from '@angular/core';
-import { FormFieldUtils } from '../utils/form-field.utils';
 import { Lab900FormField } from '../models/lab900-form-field.type';
 import { FormFieldAutocomplete } from '../components/form-fields/autocomplete-field/autocomplete-field.model';
 import { requireMatchValidator } from '../validators/require-match.validator';
@@ -24,8 +23,8 @@ export class Lab900FormBuilderService {
       return [];
     }
     if (
-      !validators.includes(Validators.required) &&
-      FormFieldUtils.isRequired(FormFieldUtils.isReadOnly(field.options, data), field, data)
+      !validators.includes(Validators.required)
+      // fixme FormFieldUtils.isRequired(FormFieldUtils.isReadOnly(field.options, data), field, data)
     ) {
       validators.push(Validators.required);
     }

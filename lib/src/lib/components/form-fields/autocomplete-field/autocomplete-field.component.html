@@ -1,37 +1,33 @@
-@if (!fieldIsHidden) {
-  <mat-form-field
-    [formGroup]="group"
-    class="lab900-autocomplete-field"
-    id="lab900-autocomplete-field-{{ elementId() }}">
-    @if (label(); as label) {
-      <mat-label translate>{{ label }}</mat-label>
+<mat-form-field [formGroup]="group" class="lab900-autocomplete-field" id="lab900-autocomplete-field-{{ elementId() }}">
+  @if (label(); as label) {
+    <mat-label translate>{{ label }}</mat-label>
+  }
+  <input
+    #input
+    (input)="inputChanged($event)"
+    [formControlName]="fieldAttribute"
+    [matAutocomplete]="auto"
+    [required]="fieldIsRequired"
+    matInput
+    placeholder="{{ placeholder | translate }}"
+    type="text" />
+
+  <mat-autocomplete #auto="matAutocomplete" [displayWith]="options?.displayInputFn">
+    @if (filteredOptions) {
+      @for (option of filteredOptions | async; track option) {
+        <mat-option [value]="option?.value" [disabled]="option?.disabled">
+          <div [innerHTML]="option.label | translate"></div>
+        </mat-option>
+      }
     }
-    <input
-      #input
-      (input)="inputChanged($event)"
-      [formControlName]="fieldAttribute"
-      [matAutocomplete]="auto"
-      [required]="fieldIsRequired"
-      matInput
-      placeholder="{{ placeholder | translate }}"
-      type="text" />
-    @if (!fieldIsReadonly()) {
-      @if (hint && !(options?.hint.hideHintOnValidValue && input.value)) {
-        <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
-      }
-      @if (!valid) {
-        <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
-      }
-      <mat-icon matSuffix>search</mat-icon>
-    }
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="options?.displayInputFn">
-      @if (filteredOptions) {
-        @for (option of filteredOptions | async; track option) {
-          <mat-option [value]="option?.value" [disabled]="option?.disabled">
-            <div [innerHTML]="option.label | translate"></div>
-          </mat-option>
-        }
-      }
-    </mat-autocomplete>
-  </mat-form-field>
-}
+  </mat-autocomplete>
+  @if (!fieldIsReadonly() && hint && !(options?.hint.hideHintOnValidValue && input.value)) {
+    <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
+  }
+  @if (!valid && touched) {
+    <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
+  }
+  @if (!fieldIsReadonly()) {
+    <mat-icon matSuffix>search</mat-icon>
+  }
+</mat-form-field>

@@ -1,34 +1,28 @@
-@if (visible() && _schema()) {
-  <div
-    [hidden]="isHidden(schema)"
-    class="lab900-form-column {{ _options()?.customClass }}"
-    id="lab900-form-column-{{ elementId() }}">
-    @if (fieldIsReadonly()) {
-      @if (readonlyLabel(); as label) {
-        <span class="lab900-form-field-label lab900-form-row-label {{ _options()?.customTitleClass }}">{{
-          label | translate
-        }}</span>
-      }
+<div class="lab900-form-column {{ _options()?.customClass }}" id="lab900-form-column-{{ elementId() }}">
+  @if (fieldIsReadonly()) {
+    @if (readonlyLabel(); as label) {
+      <span class="lab900-form-field-label lab900-form-row-label {{ _options()?.customTitleClass }}">{{
+        label | translate
+      }}</span>
     }
-    <div class="form-column" [class.mobile-cols]="_options()?.mobileCols" id="form-column-{{ elementId }}">
-      @for (field of nestedFields(); track $index) {
-        <div
-          [class.hidden]="isHidden(field)"
-          lab900FormField
-          [schema]="field"
-          [availableLanguages]="availableLanguages()"
-          [language]="language()"
-          [group]="fieldAttribute ? group.get(fieldAttribute) : group"
-          [readonly]="fieldIsReadonly()">
-          @if (infoTooltip(field); as tip) {
-            <div class="form-col__info">
-              <mat-icon [matTooltipClass]="tip.class" [matTooltip]="tip.text | translate">{{
-                tip.icon || 'info'
-              }}</mat-icon>
-            </div>
-          }
-        </div>
-      }
-    </div>
+  }
+  <div class="form-column" [class.mobile-cols]="_options()?.mobileCols" id="form-column-{{ elementId }}">
+    @for (field of nestedFields(); track $index) {
+      <div
+        lab900FormField
+        [schema]="field"
+        [availableLanguages]="availableLanguages()"
+        [language]="language()"
+        [group]="fieldAttribute ? group.get(fieldAttribute) : group"
+        [readonly]="fieldIsReadonly()">
+        @if (infoTooltip(field); as tip) {
+          <div class="form-col__info">
+            <mat-icon [matTooltipClass]="tip.class" [matTooltip]="tip.text | translate">{{
+              tip.icon || 'info'
+            }}</mat-icon>
+          </div>
+        }
+      </div>
+    }
   </div>
-}
+</div>

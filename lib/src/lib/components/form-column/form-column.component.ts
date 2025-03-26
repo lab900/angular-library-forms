@@ -19,18 +19,7 @@ export class FormColumnComponent extends FormComponent<FormColumn> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
-  public readonly visible = computed(() => {
-    const options = this._options();
-    if (options && options.visibleFn) {
-      return options.visibleFn(this);
-    }
-    return true;
-  });
   protected readonly nestedFields = computed(() => this._schema().nestedFields);
-
-  public isHidden(field: Lab900FormField): boolean {
-    return !!field.options && FormFieldUtils.isHidden(field.options, this.group);
-  }
 
   public infoTooltip(field: Lab900FormField): { text: string; icon?: string; class?: string } | null {
     return field.options ? FormFieldUtils.infoTooltip(field.options, this.group) : null;

@@ -47,7 +47,6 @@ export interface FormFieldBaseOptions {
   readonlyContainerClass?: string | ((data?: any) => string);
   readonlyLabel?: string;
   readonlyDisplay?: (data?: any) => any;
-  visibleFn?: (item: any) => boolean;
   onChangeFn?: (value: any, currentControl?: AbstractControl) => void;
   infoTooltip?:
     | { text: string; icon?: string; class?: string }

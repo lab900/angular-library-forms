@@ -142,11 +142,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
         this.component.schema.validators = newValidators;
         this.component.fieldIsRequired = newValidators.includes(Validators.required);
       }
-      if (!this.schema.options?.visibleFn) {
-        this.runVisibilityConditions(value);
-      } else {
-        throw new Error(`Can't create visibility conditions: visibleFn option is set and may cause conflicts`);
-      }
+      this.runVisibilityConditions(value);
       this.runDisableConditions(value);
       if (callback && typeof callback === 'function') {
         callback(dependOn, value, firstRun);
@@ -185,7 +181,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
           hide(!isTrue)
         );
         // Refresh hide settings
-        this.component.hide();
+        //this.component.hide();
       }
     });
   }

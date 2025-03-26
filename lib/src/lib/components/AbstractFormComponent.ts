@@ -114,8 +114,8 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   public readonly language = input<string | undefined>(undefined);
   public readonly availableLanguages = input<ValueLabel[]>([]);
   public readonly fieldIsReadonly = input<boolean>(false, { alias: 'readonly' }); // Global form readonly flag
+  public readonly fieldIsHidden = input<boolean>(false); // Global form readonly flag
 
-  public fieldIsHidden!: boolean;
   public fieldIsRequired!: boolean;
 
   public get valid(): boolean {
@@ -166,9 +166,10 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
 
     effect(() => {
       const readonly = this.fieldIsReadonly();
+      const hidden = this.fieldIsHidden();
       const control = this._fieldControl();
       if (control) {
-        if (readonly) {
+        if (readonly || hidden) {
           control.disable();
         } else {
           control.enable();
@@ -218,13 +219,6 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     }
   }
 
-  public hide(): void {
-    if (this.schema?.options) {
-      this.fieldIsHidden = FormFieldUtils.isHidden(this.schema.options, this.group);
-      this.changeDetectorRef.markForCheck();
-    }
-  }
-
   private isRequired(): void {
     const isRequired = FormFieldUtils.isRequired(this.fieldIsReadonly(), this.schema, this.group.value) ?? false;
     if (this.fieldIsRequired != isRequired) {
@@ -237,7 +231,6 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   }
 
   private setFieldProperties(): void {
-    this.hide();
     this.isRequired();
   }
 
