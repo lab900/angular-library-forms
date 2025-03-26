@@ -1,4 +1,4 @@
-@if (!fieldIsHidden && !fieldIsReadonly) {
+@if (!fieldIsHidden && !fieldIsReadonly()) {
   @if (label(); as label) {
     <span class="lab900-form-field-label" translate>{{ label }}</span>
   }

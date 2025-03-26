@@ -3,10 +3,10 @@ import { FormFieldBaseOptions } from '../models/form-field-base';
 import { Lab900FormField } from '../models/lab900-form-field.type';
 
 export class FormFieldUtils {
-  public static isReadOnly(fieldOptions: FormFieldBaseOptions, data: any, readonly?: boolean): boolean {
+  public static isReadOnly(fieldOptions: FormFieldBaseOptions | undefined, data: any, readonly?: boolean): boolean {
     let isReadOnly: boolean;
     if (readonly === true) {
-      isReadOnly = readonly;
+      return true;
     } else if (typeof fieldOptions?.readonly === 'function') {
       isReadOnly = fieldOptions?.readonly(data);
     } else {

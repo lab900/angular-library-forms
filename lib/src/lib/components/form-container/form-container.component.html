@@ -5,7 +5,7 @@
     [autocomplete]="setting?.disableBrowserAutocomplete ? 'off' : 'on'"
     id="lab900-form-{{ formId() }}">
     <div class="lab900-form__inner">
-      @for (field of fields(); track field) {
+      @for (field of fields(); track $index) {
         <ng-container
           lab900FormField
           [schema]="field"
@@ -13,7 +13,7 @@
           [language]="language()"
           [availableLanguages]="availableLanguages()"
           [externalForms]="externalForms()"
-          [readonly]="readonly()" />
+          [readonly]="formIsReadOnly()" />
       }
     </div>
   </form>

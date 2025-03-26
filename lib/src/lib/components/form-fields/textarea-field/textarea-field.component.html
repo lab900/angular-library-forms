@@ -5,18 +5,17 @@
     }
     <textarea
       #input
-      [readonly]="fieldIsReadonly"
       [formControlName]="fieldAttribute"
       [required]="fieldIsRequired"
       matInput
       placeholder="{{ placeholder | translate }}"></textarea>
-    @if (hint && !fieldIsReadonly && !(options?.hint?.hideHintOnValidValue && input.value)) {
+    @if (hint && !fieldIsReadonly() && !(options?.hint?.hideHintOnValidValue && input.value)) {
       <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
     }
-    @if (options?.maxLength && showLengthIndicator && !fieldIsReadonly) {
+    @if (options?.maxLength && showLengthIndicator && !fieldIsReadonly()) {
       <mat-hint align="end"> {{ input.value?.length || 0 }}/{{ options?.maxLength }} </mat-hint>
     }
-    @if (!valid && !fieldIsReadonly) {
+    @if (!valid && !fieldIsReadonly()) {
       <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
     }
   </mat-form-field>

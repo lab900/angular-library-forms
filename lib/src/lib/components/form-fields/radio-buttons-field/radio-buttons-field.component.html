@@ -7,7 +7,7 @@
     }
     <mat-radio-group [formControlName]="fieldAttribute" [color]="color()" [required]="fieldIsRequired">
       @for (value of radioOptions(); track value) {
-        <mat-radio-button [value]="value.value" [disabled]="value.disabled || fieldIsReadonly">{{
+        <mat-radio-button [value]="value.value" [disabled]="value.disabled || fieldIsReadonly()">{{
           value.label | translate
         }}</mat-radio-button>
       }

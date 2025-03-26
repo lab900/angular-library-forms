@@ -14,8 +14,7 @@
         placeholder="{{ placeholder | translate }}"
         [formControlName]="fieldAttribute"
         [required]="fieldIsRequired"
-        [readonly]="fieldIsReadonly"
-        [class.readonly]="fieldIsReadonly"
+        [class.readonly]="fieldIsReadonly()"
         lab900InputAutofocus
         [autofocus]="options?.autofocus"
         [style]="options?.style || ''" />
@@ -26,8 +25,7 @@
         placeholder="{{ placeholder | translate }}"
         [formControlName]="fieldAttribute"
         [required]="fieldIsRequired"
-        [readonly]="fieldIsReadonly"
-        [class.readonly]="fieldIsReadonly"
+        [class.readonly]="fieldIsReadonly()"
         [mask]="fieldMask()?.mask"
         [prefix]="(fieldMask()?.prefix ?? setting?.fieldMask?.prefix) || ''"
         [suffix]="(fieldMask()?.suffix ?? setting?.fieldMask?.suffix) || ''"
@@ -59,15 +57,15 @@
     @if (prefix(); as prefix) {
       <span class="lab900-input-field--prefix" matTextPrefix>{{ prefix | translate }}</span>
     }
-    @if (hint && !(options?.hint?.hideHintOnValidValue && fieldControl?.value) && !fieldIsReadonly) {
+    @if (hint && !(options?.hint?.hideHintOnValidValue && fieldControl?.value) && !fieldIsReadonly()) {
       <mat-hint>
         <span [innerHTML]="hint | translate: hintValueTranslateData"></span>
       </mat-hint>
     }
-    @if (showLengthIndicator() && !fieldIsReadonly) {
+    @if (showLengthIndicator() && !fieldIsReadonly()) {
       <mat-hint align="end">{{ fieldControl?.value?.length || 0 }}/{{ options?.maxLength }}</mat-hint>
     }
-    @if (!valid && !fieldIsReadonly) {
+    @if (!valid && !fieldIsReadonly()) {
       <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
     }
   </mat-form-field>

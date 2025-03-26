@@ -28,12 +28,6 @@ export class FormColumnComponent extends FormComponent<FormColumn> {
   });
   protected readonly nestedFields = computed(() => this._schema().nestedFields);
 
-  public columnIsReadonly(field: Lab900FormField): boolean {
-    return field.options?.readonly != null
-      ? FormFieldUtils.isReadOnly(field.options, this.group.value, this.readonly)
-      : !!this.options && FormFieldUtils.isReadOnly(this.options, this.group.value, this.readonly);
-  }
-
   public isHidden(field: Lab900FormField): boolean {
     return !!field.options && FormFieldUtils.isHidden(field.options, this.group);
   }
