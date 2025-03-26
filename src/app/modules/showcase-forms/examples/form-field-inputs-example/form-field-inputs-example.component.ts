@@ -22,6 +22,7 @@ export class FormFieldInputsExampleComponent {
             editType: EditType.Input,
             options: {
               readonly: true,
+              required: true,
               readonlyContainerClass: 'readonlyInputCustomContainerClass',
               defaultValue: 'MANUAL',
               elementId: 'ExampleOfCustomId',

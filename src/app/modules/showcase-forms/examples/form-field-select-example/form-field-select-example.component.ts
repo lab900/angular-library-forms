@@ -4,9 +4,7 @@ import { EditType, Lab900Form, Lab900FormConfig, SelectFieldComponent } from '@l
 
 @Component({
   selector: 'lab900-form-field-select-example',
-  template: `<lab900-form [schema]="formSchema" />
-    <lab900-select-field [schema]="selectSchema" fieldAttribute="example-select" [group]="formGroup" />
-    <button (click)="clearSelect()">clear All</button>`,
+  template: `<lab900-form [schema]="formSchema" /> <button (click)="clearSelect()">clear All</button>`,
   imports: [Lab900Form, SelectFieldComponent],
 })
 export class FormFieldSelectExampleComponent {
@@ -20,6 +18,7 @@ export class FormFieldSelectExampleComponent {
           {
             attribute: 'somePropName',
             editType: EditType.Select,
+            title: 'Select yes or no (req)',
             options: {
               placeholder: 'select yes or no',
               selectOptions: [

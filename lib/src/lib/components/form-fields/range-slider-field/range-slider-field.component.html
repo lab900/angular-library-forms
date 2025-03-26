@@ -10,7 +10,7 @@
     [max]="max()"
     [steps]="steps()"
     [format]="format()"
-    [required]="fieldIsRequired" />
+    [required]="fieldIsRequired()" />
   @if (touched && !valid && !fieldIsReadonly) {
     <div class="radio-buttons-field__error">
       <mat-error>{{ errorMessage() }}</mat-error>
