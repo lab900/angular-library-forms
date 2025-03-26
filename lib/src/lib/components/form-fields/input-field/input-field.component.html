@@ -12,7 +12,6 @@
       [type]="'number'"
       placeholder="{{ placeholder | translate }}"
       [formControlName]="fieldAttribute"
-      [required]="fieldIsRequired"
       [class.readonly]="fieldIsReadonly()"
       lab900InputAutofocus
       [autofocus]="options?.autofocus"
@@ -23,7 +22,6 @@
       [type]="type()"
       placeholder="{{ placeholder | translate }}"
       [formControlName]="fieldAttribute"
-      [required]="fieldIsRequired"
       [class.readonly]="fieldIsReadonly()"
       [mask]="fieldMask()?.mask"
       [prefix]="(fieldMask()?.prefix ?? setting?.fieldMask?.prefix) || ''"

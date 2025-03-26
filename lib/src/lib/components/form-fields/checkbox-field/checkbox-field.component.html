@@ -1,10 +1,5 @@
 <div [formGroup]="group" class="lab900-checkbox-field" id="lab900-checkbox-field-{{ elementId() }}">
-  <mat-checkbox
-    #checkbox
-    [color]="color()"
-    [formControlName]="fieldAttribute"
-    [indeterminate]="indeterminate()"
-    [required]="fieldIsRequired">
+  <mat-checkbox #checkbox [color]="color()" [formControlName]="fieldAttribute" [indeterminate]="indeterminate()">
     {{ label()! | translate }}
   </mat-checkbox>
   @if (!fieldIsReadonly()) {

@@ -8,7 +8,7 @@
         <mat-label>{{ label | translate }}</mat-label>
       </div>
     }
-    <mat-button-toggle-group [formControlName]="fieldAttribute" [required]="fieldIsRequired">
+    <mat-button-toggle-group [formControlName]="fieldAttribute">
       @for (value of options?.buttonOptions; track value) {
         <mat-button-toggle
           [value]="value.value"

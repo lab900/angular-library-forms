@@ -13,6 +13,7 @@ export class FormFieldTextareaExampleComponent {
         attribute: 'Textarea',
         title: 'Textarea',
         editType: EditType.TextArea,
+        options: { required: true },
       },
     ],
   };

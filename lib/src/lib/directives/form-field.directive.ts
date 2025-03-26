@@ -46,6 +46,13 @@ export class FormFieldDirective {
     }
     return !!options?.hide;
   });
+  public readonly fieldIsRequired = computed(() => {
+    const options = this.schema().options;
+    if (typeof options?.required === 'function') {
+      return options?.required(this.fieldGroup().value);
+    }
+    return !!options?.required;
+  });
 
   public readonly externalForms = input<Record<string, UntypedFormGroup> | undefined>(undefined);
   public readonly componentType = computed(() => {
@@ -119,6 +126,12 @@ export class FormFieldDirective {
       const component = this.component();
       if (component) {
         component.setInput('externalForms', this.externalForms());
+      }
+    });
+    effect(() => {
+      const component = this.component();
+      if (component) {
+        component.setInput('fieldIsRequired', this.fieldIsRequired());
       }
     });
   }

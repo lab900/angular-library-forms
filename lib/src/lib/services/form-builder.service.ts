@@ -17,16 +17,10 @@ import { FormFieldRepeater } from '../components/form-fields/repeater-field/repe
 export class Lab900FormBuilderService {
   private readonly fb = inject(UntypedFormBuilder);
 
-  public static addValidators(field: Lab900FormField, data: any): ValidatorFn[] {
+  public static addValidators(field: Lab900FormField): ValidatorFn[] {
     const validators: ValidatorFn[] = field?.validators ?? [];
     if (!field.options) {
       return [];
-    }
-    if (
-      !validators.includes(Validators.required)
-      // fixme FormFieldUtils.isRequired(FormFieldUtils.isReadOnly(field.options, data), field, data)
-    ) {
-      validators.push(Validators.required);
     }
     if (field.options?.minLength) {
       validators.push(Validators.minLength(field.options.minLength));
@@ -55,7 +49,7 @@ export class Lab900FormBuilderService {
       if (field.attribute) {
         if ((field.editType === EditType.Row || field.editType === EditType.Column) && field.nestedFields) {
           const nestedGroup = this.createFormGroup(field.nestedFields, undefined, data?.[field.attribute as keyof T]);
-          nestedGroup.setValidators(Lab900FormBuilderService.addValidators(field, data));
+          nestedGroup.setValidators(Lab900FormBuilderService.addValidators(field));
           formGroup.addControl(field.attribute, nestedGroup);
         } else {
           const fieldGroup = this.setFieldGroup(field.attribute, formGroup);
@@ -99,7 +93,7 @@ export class Lab900FormBuilderService {
 
     if (field.editType === EditType.Repeater) {
       const repeaterArray = this.createFormArray(formData, field);
-      repeaterArray.setValidators(Lab900FormBuilderService.addValidators(field, data));
+      repeaterArray.setValidators(Lab900FormBuilderService.addValidators(field));
       fieldGroup.addControl(attribute, repeaterArray);
     } else if (field.editType === EditType.DateRange) {
       const options = field?.options;
@@ -119,7 +113,7 @@ export class Lab900FormBuilderService {
             ? field.options.defaultValue(data)
             : field.options.defaultValue;
       }
-      const formControl = new UntypedFormControl(data, Lab900FormBuilderService.addValidators(field, data));
+      const formControl = new UntypedFormControl(data, Lab900FormBuilderService.addValidators(field));
       fieldGroup.addControl(attribute, formControl);
     }
   }

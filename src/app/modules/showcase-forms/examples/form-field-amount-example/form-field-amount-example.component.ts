@@ -29,6 +29,7 @@ export class FormFieldAmountExampleComponent {
           minDecimals: 3,
           maxDecimals: 3,
           suffix: 'EUR',
+          required: true,
         },
       },
       {

@@ -140,7 +140,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
         this.fieldControl.setValidators(newValidators);
         this.fieldControl.updateValueAndValidity();
         this.component.schema.validators = newValidators;
-        this.component.fieldIsRequired = newValidators.includes(Validators.required);
+        this.component.fieldIsRequired.set(newValidators.includes(Validators.required));
       }
       this.runVisibilityConditions(value);
       this.runDisableConditions(value);
@@ -163,11 +163,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
     setTimeout(() => {
       const schema = this.schema;
       if (schema) {
-        const hide = (isTrue: boolean): any =>
-          (schema.options = {
-            ...(schema.options ?? {}),
-            hide: isTrue,
-          });
+        const hide = (isTrue: boolean): any => this.component.fieldIsHidden.set(isTrue);
         this.run('hideIfHasValue', !!this.hideIfHasValue && FieldConditions.hasValue(value), (isTrue: boolean) =>
           hide(isTrue)
         );
@@ -187,8 +183,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
   }
 
   public runDisableConditions(value: T): void {
-    const enable = (isTrue: boolean): any =>
-      setTimeout(() => (isTrue ? this.fieldControl.enable() : this.fieldControl.disable()));
+    const enable = (isTrue: boolean): any => this.component.fieldIsReadonly.set(isTrue);
     this.run('disableIfHasValue', !!this.disableIfHasValue && FieldConditions.hasValue(value), (isTrue: boolean) =>
       enable(!isTrue)
     );
