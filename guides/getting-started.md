@@ -7,7 +7,7 @@ This guide explains how to setup your Angular project to begin using Lab900 form
 Install via npm package manager.
 
 ```bash
-npm install --save @lab900/forms
+npm install --save @lab900/forms @kolkov/angular-editor ngx-mask @ngxmc/datetime-picker ngx-mat-select-search
 ```
 
 ## How to use
