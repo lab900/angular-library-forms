@@ -11,6 +11,7 @@ import { Lab900FormBuilderService } from '../services/form-builder.service';
 import { LAB900_FORM_MODULE_SETTINGS, Lab900FormModuleSettings } from '../models/Lab900FormModuleSettings';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs/operators';
+import { uniqueId } from 'lodash';
 
 @Directive()
 export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
@@ -59,7 +60,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     } else if (fieldAttribute) {
       return `${fieldAttribute}`;
     }
-    return `random-${Math.random().toString(36)}`;
+    return uniqueId('form-elm');
   });
 
   public readonly errorMessage = toSignal<string>(
@@ -112,11 +113,8 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
 
   public readonly language = input<string | undefined>(undefined);
   public readonly availableLanguages = input<ValueLabel[]>([]);
+  public readonly fieldIsReadonly = input<boolean>(false, { alias: 'readonly' }); // Global form readonly flag
 
-  @Input()
-  public readonly = false; // Global form readonly flag
-
-  public fieldIsReadonly!: boolean;
   public fieldIsHidden!: boolean;
   public fieldIsRequired!: boolean;
 
@@ -163,6 +161,18 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
       const fieldControl = this._fieldControl();
       if (fieldControl && this._schema().conditions?.length) {
         this.createConditions();
+      }
+    });
+
+    effect(() => {
+      const readonly = this.fieldIsReadonly();
+      const control = this._fieldControl();
+      if (control) {
+        if (readonly) {
+          control.disable();
+        } else {
+          control.enable();
+        }
       }
     });
   }
@@ -215,15 +225,8 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     }
   }
 
-  private isReadonly(): void {
-    if (this.schema?.options) {
-      this.fieldIsReadonly = FormFieldUtils.isReadOnly(this.schema.options, this.group.value, this.readonly);
-      this.changeDetectorRef.markForCheck();
-    }
-  }
-
   private isRequired(): void {
-    const isRequired = FormFieldUtils.isRequired(this.fieldIsReadonly, this.schema, this.group.value) ?? false;
+    const isRequired = FormFieldUtils.isRequired(this.fieldIsReadonly(), this.schema, this.group.value) ?? false;
     if (this.fieldIsRequired != isRequired) {
       this.fieldIsRequired = isRequired;
       this.fieldControl?.setValidators(Lab900FormBuilderService.addValidators(this.schema, this.group.value));
@@ -235,7 +238,6 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
 
   private setFieldProperties(): void {
     this.hide();
-    this.isReadonly();
     this.isRequired();
   }
 

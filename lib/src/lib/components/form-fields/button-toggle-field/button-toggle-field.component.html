@@ -1,4 +1,4 @@
-@if (!fieldIsHidden && !fieldIsReadonly) {
+@if (!fieldIsHidden && !fieldIsReadonly()) {
   <div
     [formGroup]="group"
     class="lab900-button-toggle-field button-toggle-field mat-form-field-wrapper"
@@ -11,7 +11,6 @@
     <mat-button-toggle-group [formControlName]="fieldAttribute" [required]="fieldIsRequired">
       @for (value of options?.buttonOptions; track value) {
         <mat-button-toggle
-          [disabled]="fieldIsReadonly"
           [value]="value.value"
           class="{{ value?.buttonClass }}"
           (change)="onChange($event)"
@@ -30,13 +29,13 @@
         </mat-button-toggle>
       }
     </mat-button-toggle-group>
-    @if (touched && !valid && !fieldIsReadonly) {
+    @if (touched && !valid) {
       <mat-error class="mat-form-field-subscript-wrapper">{{ errorMessage() }}</mat-error>
     }
   </div>
 }
 
-@if (fieldIsReadonly && !fieldIsHidden) {
+@if (fieldIsReadonly() && !fieldIsHidden) {
   <div class="lab900-readonly-field">
     @if (readonlyLabel(); as label) {
       <span class="lab900-readonly-field__label">{{ label | translate }}</span>

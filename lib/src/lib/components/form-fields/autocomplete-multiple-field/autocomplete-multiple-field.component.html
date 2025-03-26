@@ -6,20 +6,20 @@
     @if (label(); as label) {
       <mat-label>{{ label | translate }}</mat-label>
     }
-    @if (hint && !fieldIsReadonly && !(options?.hint.hideHintOnValidValue && input.value)) {
-      <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
-    }
-    @if (!valid && !fieldIsReadonly) {
-      <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
-    }
-    @if (!fieldIsReadonly) {
+    @if (!fieldIsReadonly()) {
+      @if (hint && !(options?.hint.hideHintOnValidValue && input.value)) {
+        <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
+      }
+      @if (!valid) {
+        <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
+      }
       <mat-icon matSuffix>search</mat-icon>
     }
     <mat-chip-grid #chipList [formControlName]="fieldAttribute">
       @for (opt of selectedOptions; track opt; let i = $index) {
-        <mat-chip-row [removable]="!fieldIsReadonly" (removed)="remove(i)" [value]="opt">
+        <mat-chip-row [removable]="!fieldIsReadonly()" (removed)="remove(i)" [value]="opt">
           <div [innerHTML]="options?.displayInputFn?.(opt) ?? '' | translate"></div>
-          @if (!fieldIsReadonly) {
+          @if (!fieldIsReadonly()) {
             <mat-icon matChipRemove>cancel</mat-icon>
           }
         </mat-chip-row>
@@ -29,7 +29,6 @@
         matAutocomplete
         (input)="inputChanged($event)"
         placeholder="{{ placeholder | translate }}"
-        [readOnly]="fieldIsReadonly"
         [matAutocomplete]="auto"
         [matChipInputFor]="chipList"
         [matChipInputSeparatorKeyCodes]="separatorKeysCodes" />

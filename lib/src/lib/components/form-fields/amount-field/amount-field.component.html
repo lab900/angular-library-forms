@@ -14,8 +14,7 @@
       placeholder="{{ placeholder | translate }}"
       [formControlName]="fieldAttribute"
       [required]="fieldIsRequired"
-      [readonly]="fieldIsReadonly"
-      [class.readonly]="fieldIsReadonly"
+      [class.readonly]="fieldIsReadonly()"
       lab900InputAutofocus
       lab900AmountInput
       [autofocus]="_options()?.autofocus"
@@ -34,12 +33,12 @@
     @if (prefix(); as prefix) {
       <span class="lab900-input-field--prefix" matTextPrefix>{{ prefix | translate }}</span>
     }
-    @if (hint && !(options?.hint?.hideHintOnValidValue && input.value) && !fieldIsReadonly) {
+    @if (hint && !(options?.hint?.hideHintOnValidValue && input.value) && !fieldIsReadonly()) {
       <mat-hint>
         <span [innerHTML]="hint | translate: hintValueTranslateData"></span>
       </mat-hint>
     }
-    @if (!valid && !fieldIsReadonly) {
+    @if (!valid && !fieldIsReadonly()) {
       <mat-error>
         <span [innerHTML]="errorMessage()"></span>
       </mat-error>

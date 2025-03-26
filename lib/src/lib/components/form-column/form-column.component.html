@@ -3,13 +3,15 @@
     [hidden]="isHidden(schema)"
     class="lab900-form-column {{ _options()?.customClass }}"
     id="lab900-form-column-{{ elementId() }}">
-    @if ((fieldIsReadonly && _options()?.readonlyLabel) || label()) {
-      <span class="lab900-form-field-label lab900-form-column-label {{ _options()?.customTitleClass }}">{{
-        (!fieldIsReadonly ? label() : _options()?.readonlyLabel || label()) | translate
-      }}</span>
+    @if (fieldIsReadonly()) {
+      @if (readonlyLabel(); as label) {
+        <span class="lab900-form-field-label lab900-form-row-label {{ _options()?.customTitleClass }}">{{
+          label | translate
+        }}</span>
+      }
     }
     <div class="form-column" [class.mobile-cols]="_options()?.mobileCols" id="form-column-{{ elementId }}">
-      @for (field of nestedFields(); track field) {
+      @for (field of nestedFields(); track $index) {
         <div
           [class.hidden]="isHidden(field)"
           lab900FormField
@@ -17,7 +19,7 @@
           [availableLanguages]="availableLanguages()"
           [language]="language()"
           [group]="fieldAttribute ? group.get(fieldAttribute) : group"
-          [readonly]="columnIsReadonly(field)">
+          [readonly]="fieldIsReadonly()">
           @if (infoTooltip(field); as tip) {
             <div class="form-col__info">
               <mat-icon [matTooltipClass]="tip.class" [matTooltip]="tip.text | translate">{{

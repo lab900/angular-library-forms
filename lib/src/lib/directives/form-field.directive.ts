@@ -17,9 +17,29 @@ export class FormFieldDirective {
 
   public readonly schema = input.required<Lab900FormField>();
   public readonly group = input.required<UntypedFormGroup>();
+  public readonly fieldGroup = computed(() => {
+    const schema = this.schema();
+    if (schema?.attribute?.includes('.')) {
+      const attributeMap = schema?.attribute.split('.');
+      return this.group().get(attributeMap.join('.')) as UntypedFormGroup;
+    }
+    return this.group();
+  });
+
   public readonly language = input<string | undefined>(undefined);
   public readonly availableLanguages = input<ValueLabel[]>([]);
   public readonly readonly = input<boolean>(false);
+  public readonly fieldIsReadonly = computed(() => {
+    const options = this.schema().options;
+    if (this.readonly()) {
+      return true;
+    }
+    if (typeof options?.readonly === 'function') {
+      return options?.readonly(this.fieldGroup().value);
+    }
+    return !!options?.readonly;
+  });
+
   public readonly externalForms = input<Record<string, UntypedFormGroup> | undefined>(undefined);
   public readonly componentType = computed(() => {
     this.validateType();
@@ -48,13 +68,14 @@ export class FormFieldDirective {
     effect(() => {
       const schema = this.schema();
       const component = this.component();
-      if (component && schema?.attribute?.includes('.')) {
-        const attributeMap = schema?.attribute.split('.');
-        component.setInput('fieldAttribute', attributeMap.pop());
-        component.setInput('group', this.group().get(attributeMap.join('.')) as UntypedFormGroup);
-      } else if (component) {
-        component.setInput('fieldAttribute', schema.attribute);
-        component.setInput('group', this.group());
+      if (component) {
+        if (schema?.attribute?.includes('.')) {
+          const attributeMap = schema?.attribute.split('.');
+          component.setInput('fieldAttribute', attributeMap.pop());
+        } else if (component) {
+          component.setInput('fieldAttribute', schema.attribute);
+        }
+        component.setInput('group', this.fieldGroup());
       }
     });
     effect(() => {
@@ -77,8 +98,9 @@ export class FormFieldDirective {
     });
     effect(() => {
       const component = this.component();
+      console.log(this.fieldIsReadonly());
       if (component) {
-        component.setInput('readonly', this.readonly());
+        component.setInput('readonly', this.fieldIsReadonly());
       }
     });
     effect(() => {
