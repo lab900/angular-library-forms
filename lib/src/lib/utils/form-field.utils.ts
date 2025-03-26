@@ -3,18 +3,6 @@ import { FormFieldBaseOptions } from '../models/form-field-base';
 import { Lab900FormField } from '../models/lab900-form-field.type';
 
 export class FormFieldUtils {
-  public static isReadOnly(fieldOptions: FormFieldBaseOptions | undefined, data: any, readonly?: boolean): boolean {
-    let isReadOnly: boolean;
-    if (readonly === true) {
-      return true;
-    } else if (typeof fieldOptions?.readonly === 'function') {
-      isReadOnly = fieldOptions?.readonly(data);
-    } else {
-      isReadOnly = fieldOptions?.readonly ?? false;
-    }
-    return isReadOnly;
-  }
-
   public static isRequired(isReadOnly: boolean, field: Lab900FormField<any>, data: any): boolean {
     const { options, validators = [] } = field;
     if (isReadOnly) {
@@ -26,14 +14,6 @@ export class FormFieldUtils {
       return options.required(data) ?? false;
     } else {
       return options?.required ?? false;
-    }
-  }
-
-  public static isHidden(fieldOptions: FormFieldBaseOptions, group: UntypedFormGroup): boolean {
-    if (typeof fieldOptions?.hide === 'function') {
-      return fieldOptions?.hide(group.value);
-    } else {
-      return fieldOptions?.hide ?? false;
     }
   }
 

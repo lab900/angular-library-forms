@@ -31,14 +31,11 @@ export class FormFieldRepeaterAdvancedExampleComponent {
             editType: EditType.Row,
             options: {
               colspan: 12,
-              visibleFn: (item: any) => {
-                if (
+              hide: item => {
+                return (
                   (item.group.parent.controls as any[]).indexOf(item.group) ===
                   (item.group.parent.controls as any[]).length - 1
-                ) {
-                  return false;
-                }
-                return true;
+                );
               },
             },
             nestedFields: [

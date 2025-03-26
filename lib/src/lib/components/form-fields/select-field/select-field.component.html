@@ -1,4 +1,4 @@
-@if (!fieldIsReadonly() && !fieldIsHidden) {
+@if (!fieldIsReadonly()) {
   <mat-form-field
     [formGroup]="group"
     class="lab900-select-field"
@@ -100,9 +100,7 @@
       <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
     }
   </mat-form-field>
-}
-
-@if (fieldIsReadonly() && !fieldIsHidden) {
+} @else {
   <div class="lab900-readonly-field">
     @if (readonlyLabel(); as label) {
       <span class="lab900-readonly-field__label">{{ label | translate }}</span>

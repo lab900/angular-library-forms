@@ -1,49 +1,47 @@
-@if (!fieldIsHidden) {
-  <mat-form-field [formGroup]="group" class="lab900-input-field" id="lab900-input-field-{{ elementId() }}">
-    @if (label(); as label) {
-      <mat-label>{{ label | translate }}</mat-label>
-    }
-    <input
-      matInput
-      type="text"
-      placeholder="{{ placeholder | translate }}"
-      [formControlName]="fieldAttribute"
-      [required]="fieldIsRequired"
-      [options]="options"
-      [class.readonly]="fieldIsReadonly()"
-      [style]="options?.style || ''"
-      lab900InputAutofocus
-      lab900SearchInput
-      #searchRef="lab900SearchInput"
-      #inputRef />
-    @if (options?.addNewFn && !!inputRef.value && (searchRef?.noResult$ | async) === true) {
-      <button
-        mat-icon-button
-        matSuffix
-        [color]="options?.addNewBtnColor ?? 'primary'"
-        (click)="handleAddNew(inputRef.value)"
-        [matTooltip]="options?.addNewLabel ?? 'form.field.add_new' | translate: { searchQuery: inputRef.value }"
-        style="align-items: flex-start">
-        <mat-icon>add</mat-icon>
-      </button>
-    }
-    @if (!options?.hideClearButton && !!fieldControl?.value) {
-      <button matSuffix mat-icon-button type="button" aria-label="Clear" (click)="clear(inputRef)">
-        <mat-icon>close</mat-icon>
-      </button>
-    }
-    @if ((searchRef?.searching$ | async) === true) {
-      <mat-spinner matSuffix diameter="16" style="display: inline-flex" />
-    }
-    @if (!!inputRef.value && (searchRef?.noResult$ | async) === true) {
-      <mat-hint>
-        {{ options?.notFoundLabel ?? 'forms.search-field.notFoundLabel' | translate: { value: inputRef.value } }}
-      </mat-hint>
-    }
-    @if (!valid && !fieldIsReadonly()) {
-      <mat-error>
-        <span [innerHTML]="errorMessage()"></span>
-      </mat-error>
-    }
-  </mat-form-field>
-}
+<mat-form-field [formGroup]="group" class="lab900-input-field" id="lab900-input-field-{{ elementId() }}">
+  @if (label(); as label) {
+    <mat-label>{{ label | translate }}</mat-label>
+  }
+  <input
+    matInput
+    type="text"
+    placeholder="{{ placeholder | translate }}"
+    [formControlName]="fieldAttribute"
+    [required]="fieldIsRequired"
+    [options]="options"
+    [class.readonly]="fieldIsReadonly()"
+    [style]="options?.style || ''"
+    lab900InputAutofocus
+    lab900SearchInput
+    #searchRef="lab900SearchInput"
+    #inputRef />
+  @if (options?.addNewFn && !!inputRef.value && (searchRef?.noResult$ | async) === true) {
+    <button
+      mat-icon-button
+      matSuffix
+      [color]="options?.addNewBtnColor ?? 'primary'"
+      (click)="handleAddNew(inputRef.value)"
+      [matTooltip]="options?.addNewLabel ?? 'form.field.add_new' | translate: { searchQuery: inputRef.value }"
+      style="align-items: flex-start">
+      <mat-icon>add</mat-icon>
+    </button>
+  }
+  @if (!options?.hideClearButton && !!fieldControl?.value) {
+    <button matSuffix mat-icon-button type="button" aria-label="Clear" (click)="clear(inputRef)">
+      <mat-icon>close</mat-icon>
+    </button>
+  }
+  @if ((searchRef?.searching$ | async) === true) {
+    <mat-spinner matSuffix diameter="16" style="display: inline-flex" />
+  }
+  @if (!!inputRef.value && (searchRef?.noResult$ | async) === true) {
+    <mat-hint>
+      {{ options?.notFoundLabel ?? 'forms.search-field.notFoundLabel' | translate: { value: inputRef.value } }}
+    </mat-hint>
+  }
+  @if (!valid && !fieldIsReadonly()) {
+    <mat-error>
+      <span [innerHTML]="errorMessage()"></span>
+    </mat-error>
+  }
+</mat-form-field>

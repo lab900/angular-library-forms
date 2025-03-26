@@ -39,6 +39,13 @@ export class FormFieldDirective {
     }
     return !!options?.readonly;
   });
+  public readonly fieldIsHidden = computed(() => {
+    const options = this.schema().options;
+    if (typeof options?.hide === 'function') {
+      return options?.hide(this.fieldGroup().value);
+    }
+    return !!options?.hide;
+  });
 
   public readonly externalForms = input<Record<string, UntypedFormGroup> | undefined>(undefined);
   public readonly componentType = computed(() => {
@@ -61,7 +68,7 @@ export class FormFieldDirective {
   public constructor() {
     effect(() => {
       const componentType = this.componentType();
-      if (componentType) {
+      if (componentType && !this.fieldIsHidden()) {
         this.createComponent();
       }
     });
@@ -98,9 +105,14 @@ export class FormFieldDirective {
     });
     effect(() => {
       const component = this.component();
-      console.log(this.fieldIsReadonly());
       if (component) {
         component.setInput('readonly', this.fieldIsReadonly());
+      }
+    });
+    effect(() => {
+      const component = this.component();
+      if (component) {
+        component.setInput('fieldIsHidden', this.fieldIsHidden());
       }
     });
     effect(() => {
