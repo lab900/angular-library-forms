@@ -1,5 +1,9 @@
 # Changelog
 
+## 19.0.3
+
+- Bug fix: conditional fields throwing errors
+
 ## 19.0.2
 
 - Bug fix: repeater issues

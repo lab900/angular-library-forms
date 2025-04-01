@@ -60,20 +60,23 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
     private readonly component: FormComponent<any>,
     fieldConditions?: IFieldConditions
   ) {
-    if (component.fieldControl) {
-      this.group = component.group;
-      this.schema = component.schema;
-      this.fieldControl = component.fieldControl;
+    const fieldControl = component._fieldControl();
+    if (fieldControl) {
+      this.group = component._group();
+      this.schema = component._schema();
+      this.fieldControl = fieldControl;
       this.externalForms = component?.externalForms;
       if (fieldConditions) {
         Object.assign(this, fieldConditions);
         this.setDependOnControls();
         if (!this.skipIfNotExists && (!this.dependControls || !Object.keys(this.dependControls)?.length)) {
-          throw new Error(`Can't create conditional form field: no control with name ${this.dependOn} found`);
+          throw new Error(
+            `Can't create conditional for form field ${this.schema?.attribute}: no control with name ${this.dependOn} found`
+          );
         }
       }
     } else {
-      throw new Error(`Can't create conditional form field: fieldControl is undefined`);
+      throw new Error(`Can't create conditional for form field ${this.schema?.attribute}: fieldControl is undefined`);
     }
   }
 

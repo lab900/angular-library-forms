@@ -31,7 +31,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     return this._group();
   }
 
-  protected readonly _fieldControl = computed(() => {
+  public readonly _fieldControl = computed(() => {
     const attr = this._fieldAttribute();
     const group = this._group();
     if (group && attr) {
@@ -160,7 +160,8 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
       }
     });
     effect(() => {
-      if (this._schema().conditions?.length) {
+      const fieldControl = this._fieldControl();
+      if (fieldControl && this._schema().conditions?.length) {
         this.createConditions();
       }
     });
@@ -239,7 +240,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   }
 
   private createConditions(): void {
-    (this.schema?.conditions ?? [])
+    (this._schema().conditions ?? [])
       .filter(c => c.dependOn)
       .map(c => new FieldConditions(this, c))
       .forEach((conditions: FieldConditions) => {
