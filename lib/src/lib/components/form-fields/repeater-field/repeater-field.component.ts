@@ -50,29 +50,37 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
     return !!this._options()?.fixedList;
   });
 
-  public get repeaterArray(): UntypedFormArray | undefined {
-    return this.fieldAttribute ? (this.group.get(this.fieldAttribute) as UntypedFormArray) : undefined;
-  }
+  public readonly repeaterArray = computed(() => {
+    const attr = this._fieldAttribute();
+    const group = this._group();
+    if (attr && group) {
+      return group.get(attr) as UntypedFormArray;
+    }
+    return undefined;
+  });
 
   public readonly hasMaxRows = computed(() => {
     const maxRows = this.maxRows();
-    return maxRows != undefined && !!this.repeaterArray && this.repeaterArray?.length >= maxRows;
+    const repeaterArray = this.repeaterArray();
+    return maxRows != undefined && !!repeaterArray && repeaterArray?.length >= maxRows;
   });
 
   public addToArray(): void {
-    if (this.repeaterArray && this.schema.nestedFields) {
+    const repeaterArray = this.repeaterArray();
+    if (repeaterArray && this.schema.nestedFields) {
       const formGroup = this.fb.createFormGroup(this.schema.nestedFields);
-      this.repeaterArray.push(formGroup);
-      this.repeaterArray.markAsDirty();
-      this.repeaterArray.markAsTouched();
+      repeaterArray.push(formGroup);
+      repeaterArray.markAsDirty();
+      repeaterArray.markAsTouched();
     }
   }
 
   public removeFromArray(index: number): void {
-    if (this.repeaterArray && this.repeaterArray?.length > this.minRows()) {
-      this.repeaterArray.removeAt(index);
-      this.repeaterArray.markAsDirty();
-      this.repeaterArray.markAsTouched();
+    const repeaterArray = this.repeaterArray();
+    if (repeaterArray && repeaterArray?.length > this.minRows()) {
+      repeaterArray.removeAt(index);
+      repeaterArray.markAsDirty();
+      repeaterArray.markAsTouched();
     }
   }
 }

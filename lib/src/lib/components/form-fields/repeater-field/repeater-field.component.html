@@ -8,37 +8,39 @@
       @if (label(); as label) {
         <span class="lab900-form-field-label lab900-form-field-label--with-info">
           {{ label | translate }}
-          @if (options?.infoTooltip; as tip) {
+          @if (_options()?.infoTooltip; as tip) {
             <mat-icon [matTooltip]="tip?.text | translate">
               {{ tip?.icon || 'info' }}
             </mat-icon>
           }
         </span>
       }
-      @if (repeaterArray; as repeater) {
-        @for (control of repeater.controls; track control; let i = $index) {
-          <div class="repeater-row">
-            <div class="repeater-row__fields">
-              @for (field of schema.nestedFields; track field) {
-                <ng-container lab900FormField [schema]="field" [group]="control"></ng-container>
-              }
-            </div>
-            @if (!fixedList() && !fieldIsReadonly) {
-              <div class="repeater-row__actions">
-                @if (i + 1 > minRows() || options?.removeAll) {
-                  <button
-                    type="button"
-                    (click)="removeFromArray(i)"
-                    mat-mini-fab
-                    class="mat-elevation-z0"
-                    [color]="options?.buttonColor || 'accent'"
-                    aria-label="Delete">
-                    <mat-icon>delete</mat-icon>
-                  </button>
+      @if (repeaterArray(); as repeater) {
+        @if (repeater && repeater.controls) {
+          @for (control of repeater.controls; track control; let i = $index) {
+            <div class="repeater-row">
+              <div class="repeater-row__fields">
+                @for (field of schema.nestedFields; track field) {
+                  <ng-container lab900FormField [schema]="field" [group]="control" />
                 }
               </div>
-            }
-          </div>
+              @if (!fixedList() && !fieldIsReadonly) {
+                <div class="repeater-row__actions">
+                  @if (i + 1 > minRows() || _options()?.removeAll) {
+                    <button
+                      type="button"
+                      (click)="removeFromArray(i)"
+                      mat-mini-fab
+                      class="mat-elevation-z0"
+                      [color]="_options()?.buttonColor || 'accent'"
+                      aria-label="Delete">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+          }
         }
       }
       @if (touched && !valid && !fieldIsReadonly) {
@@ -46,7 +48,7 @@
           errorMessage()
         }}</mat-error>
       }
-      @if (!fixedList && !fieldIsReadonly) {
+      @if (!fixedList() && !fieldIsReadonly) {
         <div class="repeater-field__actions">
           <button mat-button color="primary" [disabled]="hasMaxRows()" (click)="addToArray()" class="repeater-add">
             {{ addLabel() | translate }}

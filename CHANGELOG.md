@@ -1,5 +1,9 @@
 # Changelog
 
+## 19.0.2
+
+- Bug fix: repeater issues
+
 ## 19.0.1
 
 - Bug fix: date picker toggle not appearing
