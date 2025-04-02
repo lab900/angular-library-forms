@@ -1,5 +1,9 @@
 # Changelog
 
+## 19.0.4
+
+- Bug fix: title of text area field is now properly translated
+
 ## 19.0.3
 
 - Bug fix: conditional fields throwing errors
