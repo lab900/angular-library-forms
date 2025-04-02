@@ -1,7 +1,7 @@
 @if (!fieldIsHidden) {
   <mat-form-field
     [formGroup]="group"
-    class="lab900-input-field {{ options?.align || 'left' }}"
+    class="lab900-input-field {{ _options()?.align || 'left' }}"
     [class.spanFix]="suffix() || prefix()"
     id="lab900-input-field-{{ elementId() }}">
     @if (label(); as label) {
@@ -18,8 +18,8 @@
       [class.readonly]="fieldIsReadonly"
       lab900InputAutofocus
       lab900AmountInput
-      [autofocus]="options?.autofocus"
-      [style]="options?.style || ''"
+      [autofocus]="_options()?.autofocus"
+      [style]="_options()?.style || ''"
       [maxDecimals]="maxDecimals()"
       [minDecimals]="minDecimals()" />
     @if (schema?.icon?.position === 'left') {

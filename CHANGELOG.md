@@ -1,5 +1,9 @@
 # Changelog
 
+## 19.0.5
+
+- Bug fix: issue with amount field not showing the correct value
+
 ## 19.0.4
 
 - Bug fix: title of text area field is now properly translated

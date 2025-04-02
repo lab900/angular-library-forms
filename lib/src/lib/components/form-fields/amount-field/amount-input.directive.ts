@@ -34,8 +34,8 @@ export class AmountInputDirective implements ControlValueAccessor {
   private readonly settings = inject(LAB900_FORM_MODULE_SETTINGS, { optional: true });
   private readonly locale = this.settings?.amountField?.locale ?? this.appLocale;
 
-  public readonly maxDecimals = input<number | undefined>(this.settings?.amountField?.maxDecimals, {});
-  public readonly minDecimals = input<number | undefined>(this.settings?.amountField?.minDecimals, {});
+  public readonly maxDecimals = input<number | undefined>(this.settings?.amountField?.maxDecimals);
+  public readonly minDecimals = input<number | undefined>(this.settings?.amountField?.minDecimals);
   public readonly focused = signal(false);
 
   private readonly thousandSeparator: string = getThousandSeparator(this.locale);
@@ -80,8 +80,8 @@ export class AmountInputDirective implements ControlValueAccessor {
     if (validateValue?.length) {
       const max = this.maxDecimals();
       const sIndex = v.indexOf('.');
-      if (sIndex >= 0) {
-        validateValue = v.slice(0, sIndex) + (typeof max === 'undefined' || max === 0 ? '' : v.slice(sIndex, max + 1));
+      if (sIndex >= 0 && typeof max !== 'undefined' && max >= 0) {
+        validateValue = v.slice(0, sIndex + max + 1);
         target.value = validateValue;
       }
     }
