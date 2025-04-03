@@ -5,7 +5,6 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
 @Directive({
   selector: '[lab900FormDialog]',
-  standalone: true,
 })
 export class FormDialogDirective<T> {
   public readonly dialog: MatDialog = inject(MatDialog);

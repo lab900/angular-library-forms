@@ -5,7 +5,6 @@ import { formatAmountWithoutRounding, getAmountFormatter } from './amount.helper
 
 @Pipe({
   name: 'amount',
-  standalone: true,
 })
 export class AmountPipe implements PipeTransform {
   private readonly settings: Lab900FormModuleSettings = inject(LAB900_FORM_MODULE_SETTINGS);

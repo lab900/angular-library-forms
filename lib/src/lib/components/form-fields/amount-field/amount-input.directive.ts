@@ -27,7 +27,6 @@ import { LAB900_FORM_MODULE_SETTINGS } from '../../../models/Lab900FormModuleSet
       multi: true,
     },
   ],
-  standalone: true,
 })
 export class AmountInputDirective implements ControlValueAccessor {
   private readonly appLocale = inject(LOCALE_ID);

@@ -9,7 +9,6 @@ import { FormFieldMappingService } from '../services/form-field-mapping.service'
 
 @Directive({
   selector: '[lab900FormField]',
-  standalone: true,
 })
 export class FormFieldDirective {
   private readonly container = inject(ViewContainerRef);

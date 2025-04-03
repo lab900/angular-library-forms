@@ -8,16 +8,13 @@
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss",
-          "standalone": true,
           "skipTests": true
         },
         "@schematics/angular:directive": {
-          "skipTests": true,
-          "standalone": true
+          "skipTests": true
         },
         "@schematics/angular:pipe": {
-          "skipTests": true,
-          "standalone": true
+          "skipTests": true
         }
       },
       "root": "",

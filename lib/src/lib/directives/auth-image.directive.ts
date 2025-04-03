@@ -6,7 +6,6 @@ import { take } from 'rxjs/operators';
 
 @Directive({
   selector: '[lab900AuthImage]',
-  standalone: true,
 })
 export class AuthImageDirective {
   public readonly image = model.required<Lab900File>();
