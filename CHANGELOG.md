@@ -1,8 +1,9 @@
 # Changelog
 
-## 19.1.1
+## 19.1.2
 
 - Bug fix: select readonly state not working
+- Bug fix: make sure raw values are checked
 
 ## 19.1.0
 

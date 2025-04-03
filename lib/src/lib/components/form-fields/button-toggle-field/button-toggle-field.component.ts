@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, effect, HostBinding, signal } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldButtonToggle } from './button-toggle-field.model';
 import { MatButtonToggle, MatButtonToggleChange, MatButtonToggleGroup } from '@angular/material/button-toggle';
@@ -28,16 +28,14 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
 
   // This stores the current value of the button toggle.
   // It is used to calculate the readonly label and to check if the toggle needs to be deselected.
-  private currentValue: any;
+  protected readonly value = signal<unknown | undefined>(undefined);
 
   public constructor() {
     super();
-    setTimeout(() => {
-      if (this.group?.controls && this.fieldControl) {
-        this.currentValue = this.fieldControl.value;
-        this.addSubscription(this.fieldControl.valueChanges, (value: any) =>
-          setTimeout(() => (this.currentValue = value))
-        );
+    effect(() => {
+      const control = this._fieldControl();
+      if (control) {
+        this.value.set(control.getRawValue());
       }
     });
   }
@@ -45,18 +43,21 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
   // This calculates the readonly label. If the readonlyDisplay() function is set, this is used.
   // Otherwise the button label is displayed
   public get readonlyButtonLabel(): string {
-    const option = this.options?.buttonOptions.find(o => o.value === this.currentValue);
-    return this.options?.readonlyDisplay ? this.options?.readonlyDisplay(this.group.value) : option?.label;
+    const option = this.options?.buttonOptions.find(o => o.value === this.value());
+    return this.options?.readonlyDisplay ? this.options?.readonlyDisplay(this.group.getRawValue()) : option?.label;
   }
 
   // If the deselect option is set and the previous value of the toggle is the same as the current value the toggle will be deselected
   public onChange($event: MatButtonToggleChange): void {
-    if (this.options?.deselectOnClick && this.currentValue === $event.value) {
+    if (this.options?.deselectOnClick && this.value() === $event.value) {
       setTimeout(() => {
         this._fieldControl()?.setValue(null);
         this._fieldControl()?.markAsDirty();
         this._fieldControl()?.markAsTouched();
       });
+      this.value.set(null);
+    } else {
+      this.value.set($event.value);
     }
   }
 }

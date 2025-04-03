@@ -50,7 +50,7 @@ export class AutocompleteMultipleFieldComponent<T>
   public inputChange: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   public get selectedOptions(): T[] {
-    return this._fieldControl()?.value ?? [];
+    return this._fieldControl()?.getRawValue() ?? [];
   }
 
   public ngAfterViewInit(): void {

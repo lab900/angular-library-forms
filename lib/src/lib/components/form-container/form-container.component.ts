@@ -58,7 +58,7 @@ export class Lab900Form<T> {
   }
 
   public get value(): T {
-    return this._form().value as T;
+    return this._form().getRawValue() as T;
   }
 
   public constructor() {

@@ -6,7 +6,7 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
  */
 export function requireMatchValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
-    const value = control.value;
+    const value = control.getRawValue();
     if (value !== '' && typeof value === 'string') {
       return { requireMatch: true };
     }

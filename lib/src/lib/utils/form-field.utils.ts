@@ -7,7 +7,7 @@ export class FormFieldUtils {
     group: UntypedFormGroup
   ): { text: string; icon?: string; class?: string } | null {
     if (typeof fieldOptions?.infoTooltip === 'function') {
-      return fieldOptions.infoTooltip(group.value) ?? null;
+      return fieldOptions.infoTooltip(group.getRawValue()) ?? null;
     } else {
       return fieldOptions?.infoTooltip ?? null;
     }

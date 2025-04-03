@@ -217,10 +217,10 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
     const entries = this.dependControls && Object.entries(this.dependControls);
     if (entries && entries?.length > 1) {
       return entries.reduce((acc, [key, control]) => {
-        acc = { ...acc, [key]: control?.value };
+        acc = { ...acc, [key]: control?.getRawValue() };
         return acc;
       }, {} as T);
     }
-    return entries?.[0]?.[1]?.value;
+    return entries?.[0]?.[1]?.getRawValue();
   }
 }

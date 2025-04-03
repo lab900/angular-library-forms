@@ -40,7 +40,7 @@ export class InputFieldComponent extends FormComponent<FormFieldInput> {
   public readonly suffix = computed(() => {
     const opt = this._options();
     if (typeof opt?.suffix === 'function') {
-      return opt.suffix(this._group()?.value);
+      return opt.suffix(this._group()?.getRawValue());
     }
     return opt?.suffix;
   });
@@ -48,7 +48,7 @@ export class InputFieldComponent extends FormComponent<FormFieldInput> {
   public readonly prefix = computed(() => {
     const opt = this._options();
     if (typeof opt?.prefix === 'function') {
-      return opt.prefix(this._group()?.value);
+      return opt.prefix(this._group()?.getRawValue());
     }
     return opt?.prefix;
   });

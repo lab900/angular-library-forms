@@ -27,7 +27,7 @@ export class ReadonlyFieldComponent extends FormComponent {
     effect(() => {
       const control = this._fieldControl();
       if (control) {
-        this.setValue(control.value);
+        this.setValue(control.getRawValue());
         control.valueChanges.subscribe((value: unknown) => {
           this.setValue(value);
         });
@@ -37,6 +37,6 @@ export class ReadonlyFieldComponent extends FormComponent {
 
   private setValue(value: any): void {
     const readonlyDisplayFn = this._options()?.readonlyDisplay;
-    this.value.set(readonlyDisplayFn ? readonlyDisplayFn(this._group().value) : value);
+    this.value.set(readonlyDisplayFn ? readonlyDisplayFn(this._group().getRawValue()) : value);
   }
 }

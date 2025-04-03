@@ -17,7 +17,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class CheckboxFieldComponent extends FormComponent<CheckboxFieldModel> {
   protected readonly indeterminate = computed(
-    () => !this._options()?.disabledIndeterminate && this._fieldControl()?.value === null
+    () => !this._options()?.disabledIndeterminate && this._fieldControl()?.getRawValue() === null
   );
   protected readonly color = computed(() => this._options()?.color ?? 'primary');
 }

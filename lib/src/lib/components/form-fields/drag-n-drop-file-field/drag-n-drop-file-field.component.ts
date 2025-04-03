@@ -20,7 +20,7 @@ export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDro
   public classList = 'lab900-form-field';
 
   public get files(): Lab900File[] {
-    return (this.fieldControl?.value as Lab900File[]) ?? [];
+    return (this.fieldControl?.getRawValue() as Lab900File[]) ?? [];
   }
 
   public handleInput(target: EventTarget): void {

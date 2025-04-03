@@ -35,7 +35,7 @@ export class FormFieldDirective {
       return true;
     }
     if (typeof options?.readonly === 'function') {
-      return options?.readonly(this.fieldGroup().value);
+      return options?.readonly(this.fieldGroup().getRawValue());
     }
     return !!options?.readonly;
   });

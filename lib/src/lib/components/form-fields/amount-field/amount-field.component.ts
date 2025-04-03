@@ -38,7 +38,7 @@ export class AmountFieldComponent extends FormComponent<FormFieldAmount> {
   public readonly prefix = computed(() => {
     const opt = this._options();
     if (typeof opt?.prefix === 'function') {
-      return opt.prefix(this._group()?.value);
+      return opt.prefix(this._group()?.getRawValue());
     }
     return opt?.prefix;
   });
@@ -46,7 +46,7 @@ export class AmountFieldComponent extends FormComponent<FormFieldAmount> {
   public readonly maxDecimals = computed(() => {
     const opt = this._options();
     if (typeof opt?.maxDecimals === 'function') {
-      return opt.maxDecimals(this._group()?.value);
+      return opt.maxDecimals(this._group()?.getRawValue());
     }
     return opt?.maxDecimals;
   });
@@ -54,7 +54,7 @@ export class AmountFieldComponent extends FormComponent<FormFieldAmount> {
   public readonly minDecimals = computed(() => {
     const opt = this._options();
     if (typeof opt?.minDecimals === 'function') {
-      return opt.minDecimals(this._group()?.value);
+      return opt.minDecimals(this._group()?.getRawValue());
     }
     return opt?.minDecimals;
   });

@@ -12,7 +12,7 @@
     </mat-date-range-input>
     <mat-datepicker-toggle matIconSuffix [for]="picker" />
     <mat-date-range-picker [dateClass]="options?.dateClass" #picker />
-    @if (hint && !fieldIsReadonly() && !(options?.hint?.hideHintOnValidValue && dateFormGroup()?.value)) {
+    @if (hint && !fieldIsReadonly() && !(options?.hint?.hideHintOnValidValue && dateFormGroup()?.getRawValue())) {
       <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
     }
     @if (!valid && !fieldIsReadonly()) {

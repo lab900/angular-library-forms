@@ -150,8 +150,9 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
 
     if (this.fieldControl) {
       // add the current value to the options without waiting for the options to be fetched
-      if (this.fieldControl.value) {
-        this.fieldValue.set(this.fieldControl.value);
+      const value = this.fieldControl.getRawValue();
+      if (value) {
+        this.fieldValue.set(value);
         this.selectOptions.set(this.addValueToOptions());
       }
       this.addSubscription(this.fieldControl.valueChanges, value => {
@@ -189,7 +190,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
    * Reset the search and make sure that the current value is in the select options when the select closes
    */
   public onOpenedChange(open: boolean): void {
-    if (!open && this.fieldControl?.value && this.searchQuery()?.length) {
+    if (!open && this.fieldControl?.getRawValue() && this.searchQuery()?.length) {
       if (!this.valueInOptions()) {
         this.selectOptions.set(this.addValueToOptions());
       }
@@ -205,7 +206,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
   }
 
   public getOptionsMatchingTheValue(options = this.selectOptions()): ValueLabel<T>[] {
-    const value = this.fieldControl?.value ? coerceArray(this.fieldControl.value) : [];
+    const value = this.fieldControl?.getRawValue() ? coerceArray(this.fieldControl!.getRawValue()) : [];
     const compare = this.compareFn();
     return options?.filter(o => value.some(v => compare(o.value, v)));
   }
@@ -217,8 +218,8 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
       );
       if (condition?.conditionalOptions) {
         if (!firstRun || !value) {
-          if (this.fieldControl?.value) {
-            this.conditionalItemToSelectWhenExists.set(this.fieldControl?.value);
+          if (this.fieldControl?.getRawValue()) {
+            this.conditionalItemToSelectWhenExists.set(this.fieldControl?.getRawValue());
           }
           this.fieldControl?.reset();
         }
@@ -329,7 +330,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
     return values$.pipe(
       catchError(() => of([])),
       tap((options: ValueLabel<T>[]) => {
-        if (options?.length === 1 && !this.fieldControl?.value && this.schema.options?.autoselectOnlyOption) {
+        if (options?.length === 1 && !this.fieldControl?.getRawValue() && this.schema.options?.autoselectOnlyOption) {
           this.fieldControl?.setValue(options[0].value);
         }
       })
@@ -363,7 +364,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
        * This gives issues if the value is not an object
        * Not to be mistaken with the first addValueToOptions in this method, this is still needed in some cases
        */
-      if (this.fieldControl?.value && !this.searchQuery()?.length) {
+      if (this.fieldControl?.getRawValue() && !this.searchQuery()?.length) {
         return this.addValueToOptions(newOptionsSet);
       }
       return [...newOptionsSet];
@@ -401,7 +402,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
       );
     }
     const compare = this.compareFn();
-    const missingOptions = coerceArray(this.fieldControl?.value)
+    const missingOptions = coerceArray(this.fieldControl?.getRawValue())
       .filter(value => !options?.some(o => compare(o.value, value)))
       .map((v: T) => ({
         value: v,

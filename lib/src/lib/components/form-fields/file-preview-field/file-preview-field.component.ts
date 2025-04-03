@@ -29,7 +29,7 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
   private readonly fileFieldComponent = viewChild<ElementRef>('fileField');
 
   public get files(): Lab900File[] {
-    return (this.fieldControl?.value as Lab900File[]) ?? [];
+    return (this.fieldControl?.getRawValue() as Lab900File[]) ?? [];
   }
 
   public fileChange(event: Event): void {

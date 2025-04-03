@@ -30,7 +30,7 @@
       (focus)="onFocus()">
       @if (customerTriggerFn(); as customerTriggerFn) {
         <mat-select-trigger>
-          <div [innerHTML]="customerTriggerFn(fieldControl?.value)"></div>
+          <div [innerHTML]="customerTriggerFn(fieldControl?.getRawValue())"></div>
         </mat-select-trigger>
       }
       @if (searchOptions()?.enabled) {

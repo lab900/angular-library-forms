@@ -170,7 +170,7 @@ export class FormFieldSelectAdvancedExampleComponent {
               selectOptions: (filter, fieldControl, schema) => {
                 return this.getSelectOptions({
                   filter,
-                  author: fieldControl?.value,
+                  author: fieldControl?.getRawValue(),
                   schema,
                 });
               },
