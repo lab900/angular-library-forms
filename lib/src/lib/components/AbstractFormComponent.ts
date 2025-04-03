@@ -1,4 +1,4 @@
-import { AbstractControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { computed, Directive, effect, inject, input, model } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { EMPTY, Observable, switchMap } from 'rxjs';
@@ -16,38 +16,28 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   public readonly setting: Lab900FormModuleSettings = inject(LAB900_FORM_MODULE_SETTINGS);
   protected readonly translateService = inject(TranslateService);
 
-  public readonly _fieldAttribute = input<string | undefined>(undefined, { alias: 'fieldAttribute' });
-  public get fieldAttribute(): string | undefined {
-    return this._fieldAttribute();
-  }
-
-  public _group = input.required<UntypedFormGroup>({ alias: 'group' });
-  public get group(): UntypedFormGroup {
-    return this._group();
-  }
-
-  public readonly _fieldControl = computed(() => {
-    const attr = this._fieldAttribute();
-    const group = this._group();
+  public readonly fieldAttribute = input<string | undefined>(undefined, { alias: 'fieldAttribute' });
+  public readonly group = input.required<UntypedFormGroup>();
+  public readonly fieldControl = computed(() => {
+    const attr = this.fieldAttribute();
+    const group = this.group();
     if (group && attr) {
       return group.get(attr) ?? undefined;
     }
     return undefined;
   });
 
-  public get fieldControl(): AbstractControl | undefined {
-    return this._fieldControl();
-  }
-
-  public readonly _schema = input.required<S>({ alias: 'schema' });
-  public readonly _options = computed<S['options']>(() => this._schema().options);
-  public readonly label = computed<string | undefined>(() => this._schema().title);
-  public readonly readonlyLabel = computed<string | undefined>(() => this._options()?.readonlyLabel ?? this.label());
-  private readonly conditions = computed(() => this._schema().conditions);
+  public readonly schema = input.required<S>();
+  public readonly schemaOptions = computed<S['options']>(() => this.schema().options);
+  public readonly label = computed<string | undefined>(() => this.schema().title);
+  public readonly readonlyLabel = computed<string | undefined>(
+    () => this.schemaOptions()?.readonlyLabel ?? this.label()
+  );
+  private readonly conditions = computed(() => this.schema().conditions);
 
   public readonly elementId = computed<string>(() => {
-    const elementId = this._options()?.elementId;
-    const fieldAttribute = this.fieldAttribute;
+    const elementId = this.schemaOptions()?.elementId;
+    const fieldAttribute = this.fieldAttribute();
     if (elementId) {
       return `${elementId}`;
     } else if (fieldAttribute) {
@@ -57,11 +47,11 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   });
 
   public readonly errorMessage = toSignal<string>(
-    toObservable(this._fieldControl).pipe(
+    toObservable(this.fieldControl).pipe(
       filter(field => !!field),
       switchMap(field => field.statusChanges),
       switchMap(() => {
-        const field = this.fieldControl;
+        const field = this.fieldControl();
         if (!field) {
           return EMPTY;
         }
@@ -79,7 +69,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
         if (!errors) {
           return EMPTY;
         }
-        const errorMessages = this._schema().errorMessages;
+        const errorMessages = this.schema().errorMessages;
         Object.keys(errors).forEach((key: string) => {
           if (field.hasError(key)) {
             if (errorMessages && Object.keys(errorMessages).includes(key)) {
@@ -94,13 +84,6 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     )
   );
 
-  public get options(): S['options'] {
-    return this._options();
-  }
-  public get schema(): S {
-    return this._schema();
-  }
-
   public readonly externalForms = input<Record<string, UntypedFormGroup> | undefined>(undefined);
   public readonly language = input<string | undefined>(undefined);
   public readonly availableLanguages = input<ValueLabel[]>([]);
@@ -113,34 +96,33 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   public readonly fieldIsRequired = model<boolean>(false);
 
   public get valid(): boolean {
-    return !!this.fieldControl?.valid;
+    return !!this.fieldControl()?.valid;
   }
 
   public get touched(): boolean {
-    return !!this.fieldControl?.touched;
+    return !!this.fieldControl()?.touched;
   }
 
-  public get hint(): string | undefined {
-    return this.options?.hint?.value;
-  }
-
-  public get hintValueTranslateData(): object | undefined {
-    return this.options?.hint?.valueTranslateData;
-  }
-
-  public get placeholder(): string {
-    if (typeof this.options?.placeholder === 'function') {
-      return this.options.placeholder(this.group.value) ?? '';
+  public readonly hintOptions = computed(() => {
+    return this.schemaOptions()?.hint;
+  });
+  public readonly hideHintOnValidValue = computed(() => !!this.hintOptions()?.hideHintOnValidValue);
+  public readonly hint = computed(() => (this.fieldIsReadonly() ? undefined : this.hintOptions()?.value));
+  public readonly hintValueTranslateData = computed(() => this.hintOptions()?.valueTranslateData);
+  public readonly placeholder = computed(() => {
+    const placeholder = this.schemaOptions()?.placeholder;
+    if (typeof placeholder === 'function') {
+      return placeholder(this.group()?.value) ?? '';
     }
-    return this.options?.placeholder ?? '';
-  }
+    return placeholder ?? '';
+  });
 
   public constructor() {
     super();
     effect(() => {
-      const group = this._group();
-      const options = this._options();
-      const fieldControl = this._fieldControl();
+      const group = this.group();
+      const options = this.schemaOptions();
+      const fieldControl = this.fieldControl();
       if (group && fieldControl) {
         group.valueChanges.subscribe(() => {
           if (options?.onChangeFn) {
@@ -150,7 +132,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
       }
     });
     effect(() => {
-      const fieldControl = this._fieldControl();
+      const fieldControl = this.fieldControl();
       if (fieldControl && this.conditions()?.length) {
         this.createConditions();
       }
@@ -158,7 +140,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     effect(() => {
       const readonly = this.fieldIsReadonly();
       const hidden = this.fieldIsHidden();
-      const control = this._fieldControl();
+      const control = this.fieldControl();
       if (control) {
         if (readonly || hidden) {
           control.disable();
@@ -168,7 +150,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
       }
     });
     effect(() => {
-      const control = this._fieldControl();
+      const control = this.fieldControl();
       if (control) {
         const readonly = this.fieldIsReadonly();
         const hidden = this.fieldIsHidden();
@@ -200,9 +182,16 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     // Override in child component
   }
 
+  public setValue(value: any): void {
+    const fieldControl = this.fieldControl();
+    if (fieldControl) {
+      fieldControl.setValue(value);
+    }
+  }
+
   private getDefaultErrorMessage(
     key: string,
-    interpolateParams: object | undefined = this.options
+    interpolateParams: object | undefined = this.schemaOptions()
   ): Observable<string> {
     switch (key) {
       case 'required':

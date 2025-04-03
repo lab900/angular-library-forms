@@ -16,6 +16,6 @@ import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RadioButtonsFieldComponent extends FormComponent<FormFieldRadioButtons> {
-  protected readonly radioOptions = computed(() => this._options()?.radioOptions);
-  protected readonly color = computed(() => this._options()?.color ?? 'primary');
+  protected readonly radioOptions = computed(() => this.schemaOptions()?.radioOptions);
+  protected readonly color = computed(() => this.schemaOptions()?.color ?? 'primary');
 }

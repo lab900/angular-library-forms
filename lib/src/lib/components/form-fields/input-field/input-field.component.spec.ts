@@ -42,13 +42,13 @@ describe('InputFieldComponent', () => {
         },
       } satisfies FormFieldInput<any>);
 
-      component.fieldControl?.setValue('ABCD-123456/7');
+      component.setValue('ABCD-123456/7');
       fixture.detectChanges();
-      expect(component.fieldControl?.valid).toBeTruthy();
+      expect(component.valid).toBeTruthy();
 
-      component.fieldControl?.setValue('ABC1234567');
+      component.setValue('ABC1234567');
       fixture.detectChanges();
-      expect(component.fieldControl?.valid).toBeFalsy();
+      expect(component.valid).toBeFalsy();
     });
   });
 });

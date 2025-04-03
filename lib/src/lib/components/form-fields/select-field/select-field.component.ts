@@ -62,14 +62,16 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
   private readonly fetchedOnFocus = signal<boolean>(false);
   private readonly fieldValue = signal<unknown>(undefined);
 
-  public readonly multiple = computed(() => !!this._options()?.multiple);
-  public readonly panelWidth = computed(() => this._options()?.panelWidth ?? 'auto');
-  public readonly customerTriggerFn = computed(() => this._options()?.customTriggerFn);
-  public readonly compareFn = computed(() => this._options()?.compareWith || ((o1: T, o2: T): boolean => o1 === o2));
-  public readonly searchOptions = computed(() => this._options()?.search);
-  public readonly infiniteScrollOptions = computed(() => this._options()?.infiniteScroll);
-  public readonly selectAllOptions = computed(() => this._options()?.selectAll);
-  public readonly clearOptions = computed(() => this._options()?.clearFieldButton);
+  public readonly multiple = computed(() => !!this.schemaOptions()?.multiple);
+  public readonly panelWidth = computed(() => this.schemaOptions()?.panelWidth ?? 'auto');
+  public readonly customerTriggerFn = computed(() => this.schemaOptions()?.customTriggerFn);
+  public readonly compareFn = computed(
+    () => this.schemaOptions()?.compareWith || ((o1: T, o2: T): boolean => o1 === o2)
+  );
+  public readonly searchOptions = computed(() => this.schemaOptions()?.search);
+  public readonly infiniteScrollOptions = computed(() => this.schemaOptions()?.infiniteScroll);
+  public readonly selectAllOptions = computed(() => this.schemaOptions()?.selectAll);
+  public readonly clearOptions = computed(() => this.schemaOptions()?.clearFieldButton);
   public readonly hasValue = computed(() => {
     const value = this.fieldValue();
     return !!value && (Array.isArray(value) ? value.length : true);
@@ -79,7 +81,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
     if (!this.hasValue()) {
       return false;
     } else if (typeof clearOptions?.enabled === 'function') {
-      return clearOptions.enabled(this.group.value);
+      return clearOptions.enabled(this.group().value);
     }
     return clearOptions?.enabled;
   });
@@ -90,7 +92,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
       return '-';
     }
     // if a custom display function is set, use that
-    const readonlyDisplay = this._options()?.readonlyDisplay;
+    const readonlyDisplay = this.schemaOptions()?.readonlyDisplay;
     if (readonlyDisplay) {
       return this.translateService.instant(readonlyDisplay(this.fieldValue()));
     }
@@ -140,26 +142,29 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
         });
       }
     });
+
+    effect(() => {
+      const control = this.fieldControl();
+      if (control) {
+        // add the current value to the options without waiting for the options to be fetched
+        if (control.value) {
+          this.fieldValue.set(control.value);
+          this.selectOptions.set(this.addValueToOptions());
+        }
+        control.valueChanges.subscribe(value => {
+          this.fieldValue.set(value);
+          if (value && !this.valueInOptions()) {
+            this.selectOptions.set(this.addValueToOptions());
+          }
+        });
+      }
+    });
   }
 
   public ngOnInit(): void {
     // load all options from the start
-    if (typeof this.options?.selectOptions !== 'function' || !this.options?.fetchOptionsOnFocus) {
+    if (typeof this.schemaOptions()?.selectOptions !== 'function' || !this.schemaOptions()?.fetchOptionsOnFocus) {
       this.selectOptionsListener();
-    }
-
-    if (this.fieldControl) {
-      // add the current value to the options without waiting for the options to be fetched
-      if (this.fieldControl.value) {
-        this.fieldValue.set(this.fieldControl.value);
-        this.selectOptions.set(this.addValueToOptions());
-      }
-      this.addSubscription(this.fieldControl.valueChanges, value => {
-        this.fieldValue.set(value);
-        if (value && !this.valueInOptions()) {
-          this.selectOptions.set(this.addValueToOptions());
-        }
-      });
     }
 
     this.addSubscription(
@@ -180,7 +185,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
   }
 
   public onFocus(): void {
-    if (this.options?.fetchOptionsOnFocus && !this.fetchedOnFocus()) {
+    if (this.schemaOptions()?.fetchOptionsOnFocus && !this.fetchedOnFocus()) {
       this.selectOptionsListener();
     }
   }
@@ -189,7 +194,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
    * Reset the search and make sure that the current value is in the select options when the select closes
    */
   public onOpenedChange(open: boolean): void {
-    if (!open && this.fieldControl?.value && this.searchQuery()?.length) {
+    if (!open && this.fieldValue() && this.searchQuery()?.length) {
       if (!this.valueInOptions()) {
         this.selectOptions.set(this.addValueToOptions());
       }
@@ -205,25 +210,27 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
   }
 
   public getOptionsMatchingTheValue(options = this.selectOptions()): ValueLabel<T>[] {
-    const value = this.fieldControl?.value ? coerceArray(this.fieldControl.value) : [];
+    const control = this.fieldControl();
+    const value = control?.value ? coerceArray(control.value) : [];
     const compare = this.compareFn();
     return options?.filter(o => value.some(v => compare(o.value, v)));
   }
 
   public onConditionalChange(dependOn: string, value: string, firstRun: boolean): void {
     setTimeout(() => {
-      const condition = this.schema?.conditions?.find(c =>
+      const control = this.fieldControl();
+      const condition = this.schema()?.conditions?.find(c =>
         (Array.isArray(c.dependOn) ? c.dependOn : [c.dependOn]).includes(dependOn)
       );
       if (condition?.conditionalOptions) {
         if (!firstRun || !value) {
-          if (this.fieldControl?.value) {
-            this.conditionalItemToSelectWhenExists.set(this.fieldControl?.value);
+          if (control?.value) {
+            this.conditionalItemToSelectWhenExists.set(control?.value);
           }
-          this.fieldControl?.reset();
+          control?.reset();
         }
         // When conditional has no value, this field is disabled. No need to fetch the options yet.
-        if (!condition.enableIfHasValue || this.fieldControl?.enabled) {
+        if (!condition.enableIfHasValue || control?.enabled) {
           this.conditionalOptionsChange.next({ condition, value });
         }
       }
@@ -256,14 +263,15 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
 
   public handleClearFieldButtonClick($event: Event): void {
     $event.stopPropagation();
-    if (this.fieldControl) {
+    const control = this.fieldControl();
+    if (control) {
       const clearClickFn = this.clearOptions()?.click;
       if (clearClickFn) {
-        clearClickFn(this.fieldControl, $event);
+        clearClickFn(control, $event);
       } else {
-        this.fieldControl.setValue(null);
-        this.fieldControl.markAsTouched();
-        this.fieldControl.markAsDirty();
+        control.setValue(null);
+        control.markAsTouched();
+        control.markAsDirty();
       }
     }
   }
@@ -329,8 +337,8 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
     return values$.pipe(
       catchError(() => of([])),
       tap((options: ValueLabel<T>[]) => {
-        if (options?.length === 1 && !this.fieldControl?.value && this.schema.options?.autoselectOnlyOption) {
-          this.fieldControl?.setValue(options[0].value);
+        if (options?.length === 1 && !this.fieldControl()?.value && this.schemaOptions()?.autoselectOnlyOption) {
+          this.fieldControl()?.setValue(options[0].value);
         }
       })
     );
@@ -363,7 +371,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
        * This gives issues if the value is not an object
        * Not to be mistaken with the first addValueToOptions in this method, this is still needed in some cases
        */
-      if (this.fieldControl?.value && !this.searchQuery()?.length) {
+      if (this.fieldControl()?.value && !this.searchQuery()?.length) {
         return this.addValueToOptions(newOptionsSet);
       }
       return [...newOptionsSet];
@@ -373,11 +381,11 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
       const value = coerceArray(this.conditionalItemToSelectWhenExists());
       const inOptions = this.selectOptions().some(o => value.some(v => v && compare(o.value, v)));
       if (inOptions) {
-        this.fieldControl?.setValue(this.conditionalItemToSelectWhenExists());
+        this.fieldControl()?.setValue(this.conditionalItemToSelectWhenExists());
       }
     }
 
-    if (this.options?.fetchOptionsOnFocus && !this.fetchedOnFocus()) {
+    if (this.schemaOptions()?.fetchOptionsOnFocus && !this.fetchedOnFocus()) {
       this.fetchedOnFocus.set(true);
       // fix for the select not opening when the options are fetched on focus
       setTimeout(() => {
@@ -394,18 +402,18 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
    */
   private addValueToOptions(options = this.selectOptions()): ValueLabel<T>[] {
     let label: string;
-    if (typeof this.options?.selectOptions === 'function' && !this.options?.displaySelectedOptionFn) {
+    if (typeof this.schemaOptions()?.selectOptions === 'function' && !this.schemaOptions()?.displaySelectedOptionFn) {
       label = "ERROR: Can't display";
       console.error(
-        `Please define a displaySelectedOptionFn to display your currently selected option for the field with attribute ${this.fieldAttribute} since it is not included in the current options`
+        `Please define a displaySelectedOptionFn to display your currently selected option for the field with attribute ${this.fieldAttribute()} since it is not included in the current options`
       );
     }
     const compare = this.compareFn();
-    const missingOptions = coerceArray(this.fieldControl?.value)
+    const missingOptions = coerceArray(this.fieldControl()?.value)
       .filter(value => !options?.some(o => compare(o.value, value)))
       .map((v: T) => ({
         value: v,
-        label: label ?? this.options?.displaySelectedOptionFn?.(v),
+        label: label ?? this.schemaOptions()?.displaySelectedOptionFn?.(v),
       }));
 
     if (missingOptions?.length) {
@@ -423,20 +431,21 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
   }
 
   private selectOptionsListener(): void {
-    if (this.options?.selectOptions && this.fieldControl) {
-      const { selectOptions } = this.options;
+    const options = this.schemaOptions();
+    const fieldControl = this.fieldControl();
+
+    if (options?.selectOptions && fieldControl) {
+      const { selectOptions } = options;
       this.updateOptionsFn(
-        typeof selectOptions === 'function'
-          ? f => selectOptions(f, this.fieldControl, this.schema)
-          : () => selectOptions
+        typeof selectOptions === 'function' ? f => selectOptions(f, fieldControl, this.schema()) : () => selectOptions
       );
     }
 
     this.addSubscription(this.conditionalOptionsChange, ({ condition, value }) => {
       const conditionalOptions = condition?.conditionalOptions;
-      const fieldControl = this.fieldControl;
+      const fieldControl = this.fieldControl();
       if (conditionalOptions && fieldControl) {
-        this.updateOptionsFn(f => conditionalOptions(value, fieldControl, f, this.schema));
+        this.updateOptionsFn(f => conditionalOptions(value, fieldControl, f, this.schema()));
       }
     });
   }

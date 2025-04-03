@@ -15,9 +15,9 @@ export class ReadonlyFieldComponent extends FormComponent {
 
   protected readonly value = signal<string | undefined>(undefined);
   protected readonly readonlyContainerClass = computed(() => {
-    const readonlyContainerClass = this._options()?.readonlyContainerClass;
+    const readonlyContainerClass = this.schemaOptions()?.readonlyContainerClass;
     if (typeof readonlyContainerClass === 'function') {
-      return readonlyContainerClass(this._group().value);
+      return readonlyContainerClass(this.group().value);
     }
     return readonlyContainerClass;
   });
@@ -25,18 +25,18 @@ export class ReadonlyFieldComponent extends FormComponent {
   public constructor() {
     super();
     effect(() => {
-      const control = this._fieldControl();
+      const control = this.fieldControl();
       if (control) {
-        this.setValue(control.value);
+        this.setCurrentValue(control.value);
         control.valueChanges.subscribe((value: unknown) => {
-          this.setValue(value);
+          this.setCurrentValue(value);
         });
       }
     });
   }
 
-  private setValue(value: any): void {
-    const readonlyDisplayFn = this._options()?.readonlyDisplay;
-    this.value.set(readonlyDisplayFn ? readonlyDisplayFn(this._group().value) : value);
+  private setCurrentValue(value: any): void {
+    const readonlyDisplayFn = this.schemaOptions()?.readonlyDisplay;
+    this.value.set(readonlyDisplayFn ? readonlyDisplayFn(this.group().value) : value);
   }
 }

@@ -15,10 +15,10 @@ import { TranslatePipe } from '@ngx-translate/core';
   },
 })
 export class RangeSliderFieldComponent extends FormComponent<FormFieldRangeSlider> {
-  protected readonly fromLabel = computed(() => this._options()?.fromLabel ?? 'From');
-  protected readonly toLabel = computed(() => this._options()?.toLabel ?? 'To');
-  protected readonly steps = computed(() => this._options()?.steps);
-  protected readonly min = computed(() => this._options()?.min);
-  protected readonly max = computed(() => this._options()?.max);
-  protected readonly format = computed(() => this._options()?.format);
+  protected readonly fromLabel = computed(() => this.schemaOptions()?.fromLabel ?? 'From');
+  protected readonly toLabel = computed(() => this.schemaOptions()?.toLabel ?? 'To');
+  protected readonly steps = computed(() => this.schemaOptions()?.steps);
+  protected readonly min = computed(() => this.schemaOptions()?.min);
+  protected readonly max = computed(() => this.schemaOptions()?.max);
+  protected readonly format = computed(() => this.schemaOptions()?.format);
 }

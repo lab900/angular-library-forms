@@ -1,11 +1,11 @@
 @if (!fieldIsHidden()) {
-  <div [formGroup]="group" class="lab900-radio-buttons-field" id="lab900-radio-buttons-field-{{ elementId() }}">
+  <div [formGroup]="group()" class="lab900-radio-buttons-field" id="lab900-radio-buttons-field-{{ elementId() }}">
     @if (label(); as label) {
       <div class="lab900-radio-buttons-field__label">
         <mat-label>{{ label | translate }}</mat-label>
       </div>
     }
-    <mat-radio-group [formControlName]="fieldAttribute" [color]="color()">
+    <mat-radio-group [formControlName]="fieldAttribute()" [color]="color()">
       @for (value of radioOptions(); track value) {
         <mat-radio-button [value]="value.value" [disabled]="value.disabled || fieldIsReadonly()">{{
           value.label | translate

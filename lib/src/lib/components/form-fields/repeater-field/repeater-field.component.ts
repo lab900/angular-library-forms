@@ -35,24 +35,26 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
   public classList = 'lab900-form-field';
 
   public readonly addLabel = computed(() => {
-    return this._options()?.addLabel ?? 'Add new';
+    return this.schemaOptions()?.addLabel ?? 'Add new';
   });
 
   public readonly minRows = computed(() => {
-    return this._options()?.minRows ?? DEFAULT_REPEATER_MIN_ROWS;
+    return this.schemaOptions()?.minRows ?? DEFAULT_REPEATER_MIN_ROWS;
   });
 
   public readonly maxRows = computed(() => {
-    return this._options()?.maxRows;
+    return this.schemaOptions()?.maxRows;
   });
 
   public readonly fixedList = computed(() => {
-    return !!this._options()?.fixedList;
+    return !!this.schemaOptions()?.fixedList;
   });
 
+  protected readonly nestedFields = computed(() => this.schema().nestedFields);
+
   public readonly repeaterArray = computed(() => {
-    const attr = this._fieldAttribute();
-    const group = this._group();
+    const attr = this.fieldAttribute();
+    const group = this.group();
     if (attr && group) {
       return group.get(attr) as UntypedFormArray;
     }
@@ -67,8 +69,9 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
 
   public addToArray(): void {
     const repeaterArray = this.repeaterArray();
-    if (repeaterArray && this.schema.nestedFields) {
-      const formGroup = this.fb.createFormGroup(this.schema.nestedFields);
+    const nestedFields = this.nestedFields();
+    if (repeaterArray && nestedFields) {
+      const formGroup = this.fb.createFormGroup(nestedFields);
       repeaterArray.push(formGroup);
       repeaterArray.markAsDirty();
       repeaterArray.markAsTouched();

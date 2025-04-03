@@ -96,7 +96,7 @@ export class FormFieldSelectAdvancedExampleComponent {
                     key: searchQuery,
                   };
                   select.selectOptions.set([{ value: book, label: book.title }]);
-                  select.fieldControl?.setValue({
+                  select.setValue({
                     title: searchQuery,
                     key: searchQuery,
                   });

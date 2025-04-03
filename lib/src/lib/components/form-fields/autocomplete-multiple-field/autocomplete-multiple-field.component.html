@@ -1,15 +1,15 @@
 @if (!fieldIsHidden()) {
   <mat-form-field
-    [formGroup]="group"
+    [formGroup]="group()"
     class="lab900-autocomplete-multi-field"
     id="lab900-autocomplete-multi-field-{{ elementId() }}">
     @if (label(); as label) {
       <mat-label>{{ label | translate }}</mat-label>
     }
-    <mat-chip-grid #chipList [formControlName]="fieldAttribute">
+    <mat-chip-grid #chipList [formControlName]="fieldAttribute()">
       @for (opt of selectedOptions; track opt; let i = $index) {
         <mat-chip-row [removable]="!fieldIsReadonly()" (removed)="remove(i)" [value]="opt">
-          <div [innerHTML]="options?.displayInputFn?.(opt) ?? '' | translate"></div>
+          <div [innerHTML]="schemaOptions()?.displayInputFn?.(opt) ?? '' | translate"></div>
           @if (!fieldIsReadonly()) {
             <mat-icon matChipRemove>cancel</mat-icon>
           }
@@ -19,7 +19,7 @@
         #input
         matAutocomplete
         (input)="inputChanged($event)"
-        placeholder="{{ placeholder | translate }}"
+        placeholder="{{ placeholder() | translate }}"
         [matAutocomplete]="auto"
         [matChipInputFor]="chipList"
         [matChipInputSeparatorKeyCodes]="separatorKeysCodes" />
@@ -33,14 +33,16 @@
         }
       }
     </mat-autocomplete>
-    @if (!fieldIsReadonly() && hint && !(options?.hint.hideHintOnValidValue && input.value)) {
-      <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
+    @if (hint(); as hint) {
+      @if (hint && !(hideHintOnValidValue() && input.value)) {
+        <mat-hint>
+          <span [innerHTML]="hint | translate: hintValueTranslateData()"></span>
+        </mat-hint>
+      }
     }
-    @if (!valid && touched) {
-      <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
-    }
-    @if (!fieldIsReadonly()) {
-      <mat-icon matSuffix>search</mat-icon>
-    }
+    <mat-icon matSuffix>search</mat-icon>
+    <mat-error>
+      <span [innerHTML]="errorMessage()"></span>
+    </mat-error>
   </mat-form-field>
 }

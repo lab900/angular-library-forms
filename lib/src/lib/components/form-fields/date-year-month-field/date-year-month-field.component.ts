@@ -42,20 +42,19 @@ export class DateYearMonthFieldComponent extends FormComponent<FormFieldDateYear
   public classList = 'lab900-form-field';
 
   public readonly startView = computed(() => {
-    return this._options()?.startView ?? 'multi-year';
+    return this.schemaOptions()?.startView ?? 'multi-year';
   });
 
   public readonly maxDate = computed(() => {
-    return this._options()?.maxDate;
+    return this.schemaOptions()?.maxDate;
   });
 
   public readonly minDate = computed(() => {
-    return this._options()?.minDate;
+    return this.schemaOptions()?.minDate;
   });
 
   public monthSelectedHandler(chosenMonthDate: Date, picker: MatDatepicker<Date>): void {
     picker.close();
-    this._fieldControl()?.setValue(chosenMonthDate);
-    this._fieldControl()?.markAsDirty();
+    this.setValue(chosenMonthDate);
   }
 }

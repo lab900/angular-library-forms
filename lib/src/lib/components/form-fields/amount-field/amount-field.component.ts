@@ -28,33 +28,33 @@ export class AmountFieldComponent extends FormComponent<FormFieldAmount> {
   public classList = `lab900-form-field`;
 
   public readonly suffix = computed(() => {
-    const opt = this._options();
+    const opt = this.schemaOptions();
     if (typeof opt?.suffix === 'function') {
-      return opt.suffix(this._group()?.value);
+      return opt.suffix(this.group()?.value);
     }
     return opt?.suffix;
   });
 
   public readonly prefix = computed(() => {
-    const opt = this._options();
+    const opt = this.schemaOptions();
     if (typeof opt?.prefix === 'function') {
-      return opt.prefix(this._group()?.value);
+      return opt.prefix(this.group()?.value);
     }
     return opt?.prefix;
   });
 
   public readonly maxDecimals = computed(() => {
-    const opt = this._options();
+    const opt = this.schemaOptions();
     if (typeof opt?.maxDecimals === 'function') {
-      return opt.maxDecimals(this._group()?.value);
+      return opt.maxDecimals(this.group()?.value);
     }
     return opt?.maxDecimals;
   });
 
   public readonly minDecimals = computed(() => {
-    const opt = this._options();
+    const opt = this.schemaOptions();
     if (typeof opt?.minDecimals === 'function') {
-      return opt.minDecimals(this._group()?.value);
+      return opt.minDecimals(this.group()?.value);
     }
     return opt?.minDecimals;
   });

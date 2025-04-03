@@ -20,7 +20,7 @@ export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDro
   public classList = 'lab900-form-field';
 
   public get files(): Lab900File[] {
-    return (this.fieldControl?.value as Lab900File[]) ?? [];
+    return (this.fieldControl()?.value as Lab900File[]) ?? [];
   }
 
   public handleInput(target: EventTarget): void {
@@ -37,7 +37,7 @@ export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDro
 
   private ingestFiles(files: Lab900File[]): void {
     if (files) {
-      const maxFiles = this._options()?.maxFiles;
+      const maxFiles = this.schemaOptions()?.maxFiles;
       if (maxFiles != undefined && files.length > maxFiles) {
         console.error(
           `Too many files loaded ${files.length}, max is ${maxFiles}.
@@ -56,9 +56,7 @@ export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDro
   }
 
   private setFieldControlValue(files: Lab900File[]): void {
-    this.fieldControl?.setValue(files);
-    this.fieldControl?.markAsDirty();
-    this.fieldControl?.markAsTouched();
+    this.setValue(files);
   }
 
   public formatBytes(size: number): string {

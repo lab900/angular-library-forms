@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, computed, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldTextarea } from './textarea-field.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,8 +15,10 @@ import { TranslatePipe } from '@ngx-translate/core';
 export class TextareaFieldComponent extends FormComponent<FormFieldTextarea> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
-
-  public get showLengthIndicator(): boolean {
-    return !!this.setting?.formField?.showLengthIndicator || !!this.options?.showLengthIndicator;
-  }
+  protected readonly showLengthIndicator = computed(
+    () =>
+      !this.fieldIsReadonly() &&
+      !!this.schemaOptions()?.maxLength &&
+      (!!this.setting?.formField?.showLengthIndicator || !!this.schemaOptions()?.showLengthIndicator)
+  );
 }

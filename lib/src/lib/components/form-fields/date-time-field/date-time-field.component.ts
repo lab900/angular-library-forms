@@ -41,27 +41,27 @@ export class DateTimeFieldComponent extends FormComponent<FormFieldDateTimePicke
   private readonly adapter = inject(NgxMatDateAdapter);
 
   public readonly startView = computed(() => {
-    return this._options()?.startView ?? 'month';
+    return this.schemaOptions()?.startView ?? 'month';
   });
 
   public readonly maxDate = computed(() => {
-    return this._options()?.maxDate;
+    return this.schemaOptions()?.maxDate;
   });
 
   public readonly minDate = computed(() => {
-    return this._options()?.minDate;
+    return this.schemaOptions()?.minDate;
   });
 
   public readonly showSeconds = computed(() => {
-    return this._options()?.showSeconds ?? true;
+    return this.schemaOptions()?.showSeconds ?? true;
   });
 
   public readonly defaultTime = computed(() => {
-    return this._options()?.defaultTime;
+    return this.schemaOptions()?.defaultTime;
   });
 
   public readonly stepMinute = computed(() => {
-    return this._options()?.stepMinute || 1;
+    return this.schemaOptions()?.stepMinute || 1;
   });
 
   public pickerOpened(datePicker: NgxMatDatetimepicker<any>): void {

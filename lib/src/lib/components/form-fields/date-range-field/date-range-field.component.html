@@ -1,22 +1,26 @@
 @if (!fieldIsHidden() && dateFormGroup() && startControl() && endControl()) {
-  <mat-form-field [formGroup]="_group()" class="lab900-date-range-field" id="lab900-date-range-field-{{ elementId() }}">
+  <mat-form-field [formGroup]="group()" class="lab900-date-range-field" id="lab900-date-range-field-{{ elementId() }}">
     @if (label(); as label) {
       <mat-label translate>{{ label }}</mat-label>
     }
-    <mat-date-range-input [formGroup]="dateFormGroup()" [rangePicker]="picker" [dateFilter]="options?.dateFilter">
-      <input
-        matStartDate
-        [formControl]="startControl()"
-        placeholder="{{ options?.startLabel || 'Start date' | translate }}" />
-      <input matEndDate [formControl]="endControl()" placeholder="{{ options?.endLabel || 'End date' | translate }}" />
+    <mat-date-range-input
+      [formGroup]="dateFormGroup()"
+      [rangePicker]="picker"
+      [dateFilter]="schemaOptions()?.dateFilter">
+      <input matStartDate [formControl]="startControl()" placeholder="{{ startLabel() | translate }}" />
+      <input matEndDate [formControl]="endControl()" placeholder="{{ endLabel() | translate }}" />
     </mat-date-range-input>
     <mat-datepicker-toggle matIconSuffix [for]="picker" />
-    <mat-date-range-picker [dateClass]="options?.dateClass" #picker />
-    @if (hint && !fieldIsReadonly() && !(options?.hint?.hideHintOnValidValue && dateFormGroup()?.value)) {
-      <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
+    <mat-date-range-picker [dateClass]="schemaOptions()?.dateClass" #picker />
+    @if (hint(); as hint) {
+      @if (hint && !(hideHintOnValidValue() && dateFormGroup()?.value)) {
+        <mat-hint>
+          <span [innerHTML]="hint | translate: hintValueTranslateData()"></span>
+        </mat-hint>
+      }
     }
-    @if (!valid && !fieldIsReadonly()) {
-      <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
-    }
+    <mat-error>
+      <span [innerHTML]="errorMessage()"></span>
+    </mat-error>
   </mat-form-field>
 }

@@ -1,6 +1,6 @@
 @if (!fieldIsHidden()) {
   <mat-form-field
-    [formGroup]="group"
+    [formGroup]="group()"
     class="lab900-select-field"
     [class.has-value]="hasValue()"
     id="lab900-select-field-{{ elementId() }}">
@@ -15,22 +15,22 @@
     }
     <mat-select
       #select
-      placeholder="{{ placeholder | translate }}"
+      placeholder="{{ placeholder() | translate }}"
       [compareWith]="compareFn()"
-      [formControlName]="fieldAttribute"
+      [formControlName]="fieldAttribute()"
       [multiple]="multiple()"
       lab900InfiniteScroll
       [complete]="!infiniteScrollOptions()?.enabled"
       [threshold]="infiniteScrollOptions()?.threshold || '15%'"
       [debounceTime]="infiniteScrollOptions()?.debounceTime || 150"
       [panelWidth]="panelWidth()"
-      [panelClass]="options?.panelClass"
+      [panelClass]="schemaOptions()?.panelClass"
       (infiniteScroll)="onScroll()"
       (openedChange)="onOpenedChange($event)"
       (focus)="onFocus()">
       @if (customerTriggerFn(); as customerTriggerFn) {
         <mat-select-trigger>
-          <div [innerHTML]="customerTriggerFn(fieldControl?.value)"></div>
+          <div [innerHTML]="customerTriggerFn(fieldControl()?.value)"></div>
         </mat-select-trigger>
       }
       @if (searchOptions()?.enabled) {
@@ -92,11 +92,15 @@
         <mat-icon>close</mat-icon>
       </button>
     }
-    @if (hint && !(options?.hint?.hideHintOnValidValue && select.value)) {
-      <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
+    @if (hint(); as hint) {
+      @if (hint && !(hideHintOnValidValue() && select.value)) {
+        <mat-hint>
+          <span [innerHTML]="hint | translate: hintValueTranslateData()"></span>
+        </mat-hint>
+      }
     }
-    @if (!valid) {
-      <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
-    }
+    <mat-error>
+      <span [innerHTML]="errorMessage()"></span>
+    </mat-error>
   </mat-form-field>
 }

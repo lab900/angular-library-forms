@@ -1,17 +1,25 @@
 @if (!fieldIsHidden()) {
-  <mat-form-field [formGroup]="group" class="lab900-textarea-field" id="lab900-textarea-field-{{ elementId() }}">
+  <mat-form-field [formGroup]="group()" class="lab900-textarea-field" id="lab900-textarea-field-{{ elementId() }}">
     @if (label(); as label) {
       <mat-label>{{ label | translate }}</mat-label>
     }
-    <textarea #input [formControlName]="fieldAttribute" matInput placeholder="{{ placeholder | translate }}"></textarea>
-    @if (hint && !fieldIsReadonly() && !(options?.hint?.hideHintOnValidValue && input.value)) {
-      <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
+    <textarea
+      #input
+      [formControlName]="fieldAttribute()"
+      matInput
+      placeholder="{{ placeholder() | translate }}"></textarea>
+    @if (hint(); as hint) {
+      @if (hint && !(hideHintOnValidValue() && input.value)) {
+        <mat-hint>
+          <span [innerHTML]="hint | translate: hintValueTranslateData()"></span>
+        </mat-hint>
+      }
+      @if (showLengthIndicator()) {
+        <mat-hint align="end"> {{ input.value?.length || 0 }}/{{ schemaOptions()?.maxLength }}</mat-hint>
+      }
     }
-    @if (options?.maxLength && showLengthIndicator && !fieldIsReadonly()) {
-      <mat-hint align="end"> {{ input.value?.length || 0 }}/{{ options?.maxLength }} </mat-hint>
-    }
-    @if (!valid && !fieldIsReadonly()) {
-      <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
-    }
+    <mat-error>
+      <span [innerHTML]="errorMessage()"></span>
+    </mat-error>
   </mat-form-field>
 }

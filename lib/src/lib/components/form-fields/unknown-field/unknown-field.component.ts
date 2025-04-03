@@ -6,7 +6,7 @@ import { JsonPipe } from '@angular/common';
   selector: 'lab900-unknown-field',
   template: ` <div>
     <p>Unknown schema:</p>
-    <pre>{{ _schema() | json }}</pre>
+    <pre>{{ schema() | json }}</pre>
   </div>`,
   imports: [JsonPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,

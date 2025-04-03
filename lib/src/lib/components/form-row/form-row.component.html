@@ -1,23 +1,23 @@
-<div class="lab900-form-row {{ _options()?.customClass }}" id="lab900-form-row-{{ elementId() }}">
+<div class="lab900-form-row {{ schemaOptions()?.customClass }}" id="lab900-form-row-{{ elementId() }}">
   @if (fieldIsReadonly()) {
     @if (readonlyLabel(); as label) {
-      <span class="lab900-form-field-label lab900-form-row-label {{ _options()?.customTitleClass }}">{{
+      <span class="lab900-form-field-label lab900-form-row-label {{ schemaOptions()?.customTitleClass }}">{{
         label | translate
       }}</span>
     }
   }
-  <div class="form-row" [class.mobile-cols]="_options()?.mobileCols" id="form-col-{{ elementId() }}">
+  <div class="form-row" [class.mobile-cols]="schemaOptions()?.mobileCols" id="form-col-{{ elementId() }}">
     @for (field of nestedFields(); track $index) {
       <div
         class="form-col"
         [style.width]="(100 * (field.options?.colspan || 12)) / 12 + '%'"
-        id="form-col-{{ elementId() }}-{{ _options()?.elementId }}">
+        id="form-col-{{ elementId() }}-{{ schemaOptions()?.elementId }}">
         <ng-container
           lab900FormField
           [schema]="field"
           [availableLanguages]="availableLanguages()"
           [language]="language()"
-          [group]="fieldAttribute ? group.get(fieldAttribute) : group"
+          [group]="fieldGroup()"
           [readonly]="fieldIsReadonly()" />
         @if (infoTooltip(field); as tip) {
           <div class="form-col__info">

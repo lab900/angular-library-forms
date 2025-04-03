@@ -50,7 +50,7 @@ export class AutocompleteMultipleFieldComponent<T>
   public inputChange: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   public get selectedOptions(): T[] {
-    return this._fieldControl()?.value ?? [];
+    return this.fieldControl()?.value ?? [];
   }
 
   public ngAfterViewInit(): void {
@@ -62,11 +62,13 @@ export class AutocompleteMultipleFieldComponent<T>
   }
 
   private initFilteredOptionsListener(): void {
-    if (this.options?.autocompleteOptions && this.fieldControl) {
+    const options = this.schemaOptions();
+    const control = this.fieldControl();
+    if (options?.autocompleteOptions && control) {
       this.filteredOptions = this.inputChange.pipe(
-        debounceTime(this.options?.debounceTime ?? 300),
+        debounceTime(options?.debounceTime ?? 300),
         switchMap((input: string) => {
-          const res = this.options!.autocompleteOptions!(input, this.fieldControl!);
+          const res = options!.autocompleteOptions!(input, control!);
           return isObservable(res) ? res : of(res);
         })
       );
@@ -93,13 +95,10 @@ export class AutocompleteMultipleFieldComponent<T>
     if (nativeElm) {
       nativeElm.value = '';
     }
-    this.group.markAsDirty();
+    this.group().markAsDirty();
   }
 
   private updateControlValue(val: T[]): void {
-    this._fieldControl()?.setValue(val);
-    this._fieldControl()?.updateValueAndValidity();
-    this._fieldControl()?.markAsDirty();
-    this._fieldControl()?.markAsTouched();
+    this.setValue(val);
   }
 }

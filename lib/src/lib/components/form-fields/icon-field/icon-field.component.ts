@@ -12,5 +12,5 @@ import { IconComponent } from '@lab900/ui';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconFieldComponent extends FormComponent<FormFieldIcon> {
-  protected readonly icon = computed(() => this._options()?.icon);
+  protected readonly icon = computed(() => this.schemaOptions()?.icon);
 }

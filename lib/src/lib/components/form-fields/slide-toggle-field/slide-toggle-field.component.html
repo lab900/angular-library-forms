@@ -1,6 +1,6 @@
 @if (!fieldIsHidden()) {
   <div
-    [formGroup]="group"
+    [formGroup]="group()"
     class="lab900-slide-toggle-field mat-form-field-wrapper"
     id="lab900-slide-toggle-field-{{ elementId() }}">
     @if (label(); as label) {
@@ -10,10 +10,10 @@
     }
     <mat-slide-toggle
       [class.readonly]="fieldIsReadonly()"
-      [formControlName]="fieldAttribute"
-      [color]="options?.color || 'primary'"
-      [labelPosition]="options?.labelPosition">
-      {{ options?.label | translate }}
+      [formControlName]="fieldAttribute()"
+      [color]="schemaOptions()?.color || 'primary'"
+      [labelPosition]="schemaOptions()?.labelPosition">
+      {{ schemaOptions()?.label | translate }}
     </mat-slide-toggle>
     @if (touched && !valid && !fieldIsReadonly()) {
       <mat-error class="lab900-slide-toggle-field__error">{{ errorMessage() }}</mat-error>

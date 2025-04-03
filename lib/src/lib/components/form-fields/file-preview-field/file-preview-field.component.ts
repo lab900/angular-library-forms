@@ -29,7 +29,7 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
   private readonly fileFieldComponent = viewChild<ElementRef>('fileField');
 
   public get files(): Lab900File[] {
-    return (this.fieldControl?.value as Lab900File[]) ?? [];
+    return (this.fieldControl()?.value as Lab900File[]) ?? [];
   }
 
   public fileChange(event: Event): void {
@@ -111,7 +111,7 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
   }
 
   public handleImageClick(file: Lab900File): void {
-    if (this.options?.canEditFileMetaData && !this.fieldIsReadonly()) {
+    if (this.schemaOptions()?.canEditFileMetaData && !this.fieldIsReadonly()) {
       this.openMetaDataDialog(file);
     } else if (file.imageSrc != null) {
       this.openPreviewDialog(file);
@@ -121,7 +121,7 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
   private openMetaDataDialog(file: Lab900File): void {
     this.dialog.open(FormDialogComponent, {
       data: {
-        schema: this.options?.fileMetaDataConfig,
+        schema: this.schemaOptions()?.fileMetaDataConfig,
         data: file,
         submit: this.onMetaDataChanged.bind(this),
       },
@@ -129,14 +129,15 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
   }
 
   public openPreviewDialog(file: Lab900File): void {
+    const httpCb = this.schemaOptions()?.httpCallback;
     if (file.imageBase64 != null) {
       this.dialog.open(ImagePreviewModalComponent, {
         data: {
           image: file,
         },
       });
-    } else if (this.options?.httpCallback) {
-      fetchImageBase64(this.options.httpCallback, file, result => {
+    } else if (httpCb) {
+      fetchImageBase64(httpCb, file, result => {
         file.imageBase64 = result as string;
         this.dialog.open(ImagePreviewModalComponent, {
           data: {
@@ -150,16 +151,15 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
   }
 
   public showOverlay(file: Lab900File): boolean {
-    if (typeof this.options?.showOverlay === 'function') {
-      return this.options?.showOverlay(file);
+    const showOverlay = this.schemaOptions()?.showOverlay;
+    if (typeof showOverlay === 'function') {
+      return showOverlay(file);
     } else {
-      return this.options?.showOverlay ?? false;
+      return showOverlay ?? false;
     }
   }
 
   private setFieldControlValue(files: Lab900File[]): void {
-    this.fieldControl?.setValue(files);
-    this.fieldControl?.markAsDirty();
-    this.fieldControl?.markAsTouched();
+    this.setValue(files);
   }
 }

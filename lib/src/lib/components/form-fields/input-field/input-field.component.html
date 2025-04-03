@@ -1,7 +1,7 @@
 @if (!fieldIsHidden()) {
   <mat-form-field
-    [formGroup]="group"
-    class="lab900-input-field {{ options?.align || 'left' }}"
+    [formGroup]="group()"
+    class="lab900-input-field {{ schemaOptions()?.align || 'left' }}"
     [class.spanFix]="suffix() || prefix()"
     id="lab900-input-field-{{ elementId() }}">
     @if (label(); as label) {
@@ -11,18 +11,18 @@
       <input
         matInput
         [type]="'number'"
-        placeholder="{{ placeholder | translate }}"
-        [formControlName]="fieldAttribute"
+        placeholder="{{ placeholder() | translate }}"
+        [formControlName]="fieldAttribute()"
         [class.readonly]="fieldIsReadonly()"
         lab900InputAutofocus
-        [autofocus]="options?.autofocus"
-        [style]="options?.style || ''" />
+        [autofocus]="schemaOptions()?.autofocus"
+        [style]="schemaOptions()?.style || ''" />
     } @else {
       <input
         matInput
         [type]="type()"
-        placeholder="{{ placeholder | translate }}"
-        [formControlName]="fieldAttribute"
+        placeholder="{{ placeholder() | translate }}"
+        [formControlName]="fieldAttribute()"
         [class.readonly]="fieldIsReadonly()"
         [mask]="fieldMask()?.mask"
         [prefix]="(fieldMask()?.prefix ?? setting?.fieldMask?.prefix) || ''"
@@ -41,8 +41,8 @@
           fieldMask()?.specialCharacters ?? setting?.fieldMask?.specialCharacters ?? defaultSpecialCharacters
         "
         lab900InputAutofocus
-        [autofocus]="options?.autofocus"
-        [style]="options?.style || ''" />
+        [autofocus]="schemaOptions()?.autofocus"
+        [style]="schemaOptions()?.style || ''" />
     }
     @if (icon()?.position === 'left') {
       <lab900-icon [icon]="icon()" matTextPrefix />
@@ -55,16 +55,20 @@
     @if (prefix(); as prefix) {
       <span class="lab900-input-field--prefix" matTextPrefix>{{ prefix | translate }}</span>
     }
-    @if (hint && !(options?.hint?.hideHintOnValidValue && fieldControl?.value) && !fieldIsReadonly()) {
-      <mat-hint>
-        <span [innerHTML]="hint | translate: hintValueTranslateData"></span>
-      </mat-hint>
+    @if (hint(); as hint) {
+      @if (hint && !(hideHintOnValidValue() && fieldControl()?.value)) {
+        <mat-hint>
+          <span [innerHTML]="hint | translate: hintValueTranslateData()"></span>
+        </mat-hint>
+      }
     }
-    @if (showLengthIndicator() && !fieldIsReadonly()) {
-      <mat-hint align="end">{{ fieldControl?.value?.length || 0 }}/{{ options?.maxLength }}</mat-hint>
+    @if (showLengthIndicator()) {
+      <mat-hint align="end">{{ fieldControl()?.value?.length || 0 }}/{{ schemaOptions()?.maxLength }}</mat-hint>
     }
-    @if (!valid && !fieldIsReadonly()) {
-      <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
+    @if (!valid) {
+      <mat-error>
+        <span [innerHTML]="errorMessage()"></span>
+      </mat-error>
     }
   </mat-form-field>
 }

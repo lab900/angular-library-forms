@@ -60,10 +60,10 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
     private readonly component: FormComponent<any>,
     fieldConditions?: IFieldConditions
   ) {
-    const fieldControl = component._fieldControl();
+    const fieldControl = component.fieldControl();
     if (fieldControl) {
-      this.group = component._group();
-      this.schema = component._schema();
+      this.group = component.group();
+      this.schema = component.schema();
       this.fieldControl = fieldControl;
       this.externalForms = component?.externalForms();
       if (fieldConditions) {
@@ -139,7 +139,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
         const newValidators = this.validators(value);
         this.fieldControl.setValidators(newValidators);
         this.fieldControl.updateValueAndValidity();
-        this.component.schema.validators = newValidators;
+        // this.component.schema.validators = newValidators;
         this.component.fieldIsRequired.set(newValidators.includes(Validators.required));
       }
       this.runVisibilityConditions(value);

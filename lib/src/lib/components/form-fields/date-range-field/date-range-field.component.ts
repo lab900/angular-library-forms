@@ -33,14 +33,17 @@ export class DateRangeFieldComponent extends FormComponent<FormFieldDateRange> {
   public classList = 'lab900-form-field';
 
   public readonly dateFormGroup = computed(() => {
-    return this._fieldControl() as UntypedFormGroup | undefined;
+    return this.fieldControl() as UntypedFormGroup | undefined;
   });
 
   public readonly startControl = computed(() => {
-    return this.dateFormGroup()?.get(this._options()?.startKey || 'start');
+    return this.dateFormGroup()?.get(this.schemaOptions()?.startKey || 'start');
   });
 
   public readonly endControl = computed(() => {
-    return this.dateFormGroup()?.get(this._options()?.endKey || 'end');
+    return this.dateFormGroup()?.get(this.schemaOptions()?.endKey || 'end');
   });
+
+  protected readonly startLabel = computed(() => this.schemaOptions()?.startLabel ?? 'Start date');
+  protected readonly endLabel = computed(() => this.schemaOptions()?.endLabel ?? 'End date');
 }

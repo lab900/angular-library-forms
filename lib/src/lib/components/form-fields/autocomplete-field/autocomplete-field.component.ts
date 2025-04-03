@@ -47,11 +47,13 @@ export class AutocompleteFieldComponent<T> extends FormComponent<FormFieldAutoco
   }
 
   private initFilteredOptionsListener(): void {
-    if (this.options?.autocompleteOptions && this.fieldControl) {
+    const options = this.schemaOptions();
+    const control = this.fieldControl();
+    if (options?.autocompleteOptions && control) {
       this.filteredOptions = this.inputChange.pipe(
-        debounceTime(this.options?.debounceTime ?? 300),
+        debounceTime(options?.debounceTime ?? 300),
         switchMap((input: string) => {
-          const res = this.options!.autocompleteOptions!(input, this.fieldControl!);
+          const res = options!.autocompleteOptions!(input, control!);
           return isObservable(res) ? res : of(res);
         })
       );

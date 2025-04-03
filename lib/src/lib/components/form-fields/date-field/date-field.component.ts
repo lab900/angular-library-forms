@@ -17,14 +17,14 @@ export class DateFieldComponent extends FormComponent<FormFieldDatePicker> {
   public classList = 'lab900-form-field';
 
   public readonly startView = computed(() => {
-    return this._options()?.startView ?? 'month';
+    return this.schemaOptions()?.startView ?? 'month';
   });
 
   public readonly maxDate = computed(() => {
-    return this._options()?.maxDate;
+    return this.schemaOptions()?.maxDate;
   });
 
   public readonly minDate = computed(() => {
-    return this._options()?.minDate;
+    return this.schemaOptions()?.minDate;
   });
 }

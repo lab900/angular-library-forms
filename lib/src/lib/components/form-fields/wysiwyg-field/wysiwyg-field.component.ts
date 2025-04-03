@@ -8,8 +8,8 @@ import { ReactiveFormsModule } from '@angular/forms';
   selector: 'lab900-wysiwyg-field',
   template: `
     @if (!fieldIsHidden()) {
-      <div [formGroup]="_group()" class="lab900-wysiwyg-field">
-        <angular-editor [formControlName]="_fieldAttribute()" [config]="editorConfig()" />
+      <div [formGroup]="group()" class="lab900-wysiwyg-field">
+        <angular-editor [formControlName]="fieldAttribute()" [config]="editorConfig()" />
       </div>
     }
   `,
@@ -25,7 +25,7 @@ export class WysiwygFieldComponent extends FormComponent<WysiwgFieldModel> {
     return {
       editable: true,
       sanitize: false,
-      ...(this._options()?.editorConfig ?? {}),
+      ...(this.schemaOptions()?.editorConfig ?? {}),
     };
   });
 }

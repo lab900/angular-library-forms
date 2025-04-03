@@ -25,30 +25,31 @@ import { IconComponent } from '@lab900/ui';
 })
 export class InputFieldComponent extends FormComponent<FormFieldInput> {
   protected readonly defaultSpecialCharacters = inject(NgxMaskService).specialCharacters;
-  public readonly icon = computed(() => this._schema()?.icon);
-  public readonly fieldMask = computed(() => this._options()?.fieldMask);
-  public readonly type = computed(() => this._options()?.type ?? 'text');
+  public readonly icon = computed(() => this.schema()?.icon);
+  public readonly fieldMask = computed(() => this.schemaOptions()?.fieldMask);
+  public readonly type = computed(() => this.schemaOptions()?.type ?? 'text');
   public readonly showLengthIndicator = computed(
     () =>
-      !!this._options()?.maxLength &&
-      (!!this.setting?.formField?.showLengthIndicator || !!this._options()?.showLengthIndicator)
+      !this.fieldIsReadonly() &&
+      !!this.schemaOptions()?.maxLength &&
+      (!!this.setting?.formField?.showLengthIndicator || !!this.schemaOptions()?.showLengthIndicator)
   );
 
   @HostBinding('class')
   public classList = `lab900-form-field`;
 
   public readonly suffix = computed(() => {
-    const opt = this._options();
+    const opt = this.schemaOptions();
     if (typeof opt?.suffix === 'function') {
-      return opt.suffix(this._group()?.value);
+      return opt.suffix(this.group()?.value);
     }
     return opt?.suffix;
   });
 
   public readonly prefix = computed(() => {
-    const opt = this._options();
+    const opt = this.schemaOptions();
     if (typeof opt?.prefix === 'function') {
-      return opt.prefix(this._group()?.value);
+      return opt.prefix(this.group()?.value);
     }
     return opt?.prefix;
   });
