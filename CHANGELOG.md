@@ -1,5 +1,9 @@
 # Changelog
 
+## 19.1.1
+
+- Bug fix: select readonly state not working
+
 ## 19.1.0
 
 - Readonly, hidden and required states are reactive

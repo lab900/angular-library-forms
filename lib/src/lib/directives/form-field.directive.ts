@@ -57,7 +57,7 @@ export class FormFieldDirective {
   public readonly externalForms = input<Record<string, UntypedFormGroup> | undefined>(undefined);
   public readonly componentType = computed(() => {
     this.validateType();
-    return this.readonly() &&
+    return this.fieldIsReadonly() &&
       ![
         EditType.Row,
         EditType.Column,
@@ -65,6 +65,7 @@ export class FormFieldDirective {
         EditType.ButtonToggle,
         EditType.SlideToggle,
         EditType.Button,
+        EditType.Select,
       ].includes(this.schema().editType)
       ? ReadonlyFieldComponent
       : this.formFieldMappingService.mapToComponent(this.schema());
