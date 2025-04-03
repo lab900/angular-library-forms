@@ -1,4 +1,4 @@
-@if (!fieldIsHidden) {
+@if (!fieldIsHidden()) {
   <mat-form-field [formGroup]="group" class="lab900-input-field" id="lab900-input-field-{{ elementId() }}">
     @if (label(); as label) {
       <mat-label>{{ label | translate }}</mat-label>
@@ -8,10 +8,8 @@
       type="text"
       placeholder="{{ placeholder | translate }}"
       [formControlName]="fieldAttribute"
-      [required]="fieldIsRequired"
       [options]="options"
-      [readonly]="fieldIsReadonly"
-      [ngClass]="{ readonly: fieldIsReadonly }"
+      [class.readonly]="fieldIsReadonly()"
       [style]="options?.style || ''"
       lab900InputAutofocus
       lab900SearchInput
@@ -41,7 +39,7 @@
         {{ options?.notFoundLabel ?? 'forms.search-field.notFoundLabel' | translate: { value: inputRef.value } }}
       </mat-hint>
     }
-    @if (!valid && !fieldIsReadonly) {
+    @if (!valid && !fieldIsReadonly()) {
       <mat-error>
         <span [innerHTML]="errorMessage()"></span>
       </mat-error>

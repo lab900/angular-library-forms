@@ -1,22 +1,21 @@
-@if (!fieldIsHidden) {
+@if (!fieldIsHidden()) {
   <div
     [formGroup]="group"
     class="lab900-slide-toggle-field mat-form-field-wrapper"
     id="lab900-slide-toggle-field-{{ elementId() }}">
-    @if (schema.title) {
+    @if (label(); as label) {
       <div class="lab900-slide-toggle-field__title">
-        <mat-label>{{ schema.title | translate }}</mat-label>
+        <mat-label>{{ label | translate }}</mat-label>
       </div>
     }
     <mat-slide-toggle
-      [class.readonly]="fieldIsReadonly"
+      [class.readonly]="fieldIsReadonly()"
       [formControlName]="fieldAttribute"
-      [required]="fieldIsRequired"
       [color]="options?.color || 'primary'"
       [labelPosition]="options?.labelPosition">
       {{ options?.label | translate }}
     </mat-slide-toggle>
-    @if (touched && !valid && !fieldIsReadonly) {
+    @if (touched && !valid && !fieldIsReadonly()) {
       <mat-error class="lab900-slide-toggle-field__error">{{ errorMessage() }}</mat-error>
     }
   </div>

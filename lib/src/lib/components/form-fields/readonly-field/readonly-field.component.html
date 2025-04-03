@@ -1,8 +1,8 @@
-@if (!fieldIsHidden) {
-  <div class="lab900-readonly-field" [class]="getReadonlyContainerClass()" id="lab900-readonly-field-{{ elementId() }}">
+@if (!fieldIsHidden()) {
+  <div class="lab900-readonly-field" [class]="readonlyContainerClass()" id="lab900-readonly-field-{{ elementId() }}">
     @if (readonlyLabel(); as label) {
       <span class="lab900-readonly-field__label">{{ label | translate }}</span>
     }
-    <div [innerHTML]="value || '-' | translate"></div>
+    <div [innerHTML]="value() || '-' | translate"></div>
   </div>
 }

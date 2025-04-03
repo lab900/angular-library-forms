@@ -1,5 +1,12 @@
 # Changelog
 
+## 19.1.0
+
+- Readonly, hidden and required states are reactive
+- Bug fix: issue with error messages not showing
+- Bug fix: this disabled/enabled form controls warnings should be gone as this is now done as it should
+- Bug fix: issue with unique ids not always being unique
+
 ## 19.0.5
 
 - Bug fix: issue with amount field not showing the correct value

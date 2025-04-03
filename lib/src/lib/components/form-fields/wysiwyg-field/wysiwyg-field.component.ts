@@ -1,4 +1,4 @@
-import { Component, computed, HostBinding } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
 import { WysiwgFieldModel } from './wysiwg-field.model';
@@ -7,10 +7,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 @Component({
   selector: 'lab900-wysiwyg-field',
   template: `
-    <div [formGroup]="group" class="lab900-wysiwyg-field">
-      <angular-editor [formControlName]="fieldAttribute" [config]="editorConfig()" />
-    </div>
+    @if (!fieldIsHidden()) {
+      <div [formGroup]="_group()" class="lab900-wysiwyg-field">
+        <angular-editor [formControlName]="_fieldAttribute()" [config]="editorConfig()" />
+      </div>
+    }
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./wysiwyg-field.component.scss'],
   imports: [ReactiveFormsModule, AngularEditorModule],
 })

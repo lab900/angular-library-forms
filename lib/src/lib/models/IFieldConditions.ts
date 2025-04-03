@@ -65,7 +65,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
       this.group = component._group();
       this.schema = component._schema();
       this.fieldControl = fieldControl;
-      this.externalForms = component?.externalForms;
+      this.externalForms = component?.externalForms();
       if (fieldConditions) {
         Object.assign(this, fieldConditions);
         this.setDependOnControls();
@@ -140,13 +140,9 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
         this.fieldControl.setValidators(newValidators);
         this.fieldControl.updateValueAndValidity();
         this.component.schema.validators = newValidators;
-        this.component.fieldIsRequired = newValidators.includes(Validators.required);
+        this.component.fieldIsRequired.set(newValidators.includes(Validators.required));
       }
-      if (!this.schema.options?.visibleFn) {
-        this.runVisibilityConditions(value);
-      } else {
-        throw new Error(`Can't create visibility conditions: visibleFn option is set and may cause conflicts`);
-      }
+      this.runVisibilityConditions(value);
       this.runDisableConditions(value);
       if (callback && typeof callback === 'function') {
         callback(dependOn, value, firstRun);
@@ -156,54 +152,45 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
   }
 
   public run(key: string, condition: boolean, callback: (isTrue: boolean) => void): void {
-    // eslint-disable-next-line no-prototype-builtins
-    if (this.hasOwnProperty(key)) {
+    if (Object.hasOwn(this, key)) {
       callback(condition);
     }
   }
 
   public runVisibilityConditions(value: T): void {
-    // Fix ExpressionChangedAfterItHasBeenCheckedError with timeout
-    setTimeout(() => {
-      const schema = this.schema;
-      if (schema) {
-        const hide = (isTrue: boolean): any =>
-          (schema.options = {
-            ...(schema.options ?? {}),
-            hide: isTrue,
-          });
-        this.run('hideIfHasValue', !!this.hideIfHasValue && FieldConditions.hasValue(value), (isTrue: boolean) =>
-          hide(isTrue)
-        );
-        this.run('showIfHasValue', !!this.showIfHasValue && FieldConditions.hasValue(value), (isTrue: boolean) =>
-          hide(!isTrue)
-        );
-        this.run('hideIfEquals', FieldConditions.valueIsEqualTo(value, this.hideIfEquals), (isTrue: boolean) =>
-          hide(isTrue)
-        );
-        this.run('showIfEquals', FieldConditions.valueIsEqualTo(value, this.showIfEquals), (isTrue: boolean) =>
-          hide(!isTrue)
-        );
-        // Refresh hide settings
-        this.component.hide();
-      }
-    });
+    const schema = this.schema;
+    if (schema) {
+      const hide = (isTrue: boolean): void => this.component.fieldIsHidden.set(isTrue);
+      this.run('hideIfHasValue', !!this.hideIfHasValue && FieldConditions.hasValue(value), (isTrue: boolean) =>
+        hide(isTrue)
+      );
+      this.run('showIfHasValue', !!this.showIfHasValue && FieldConditions.hasValue(value), (isTrue: boolean) =>
+        hide(!isTrue)
+      );
+      this.run('hideIfEquals', FieldConditions.valueIsEqualTo(value, this.hideIfEquals), (isTrue: boolean) =>
+        hide(isTrue)
+      );
+      this.run('showIfEquals', FieldConditions.valueIsEqualTo(value, this.showIfEquals), (isTrue: boolean) =>
+        hide(!isTrue)
+      );
+    }
   }
 
   public runDisableConditions(value: T): void {
-    const enable = (isTrue: boolean): any =>
-      setTimeout(() => (isTrue ? this.fieldControl.enable() : this.fieldControl.disable()));
+    const disable = (isTrue: boolean): void => {
+      return this.component.fieldIsReadonly.set(isTrue);
+    };
     this.run('disableIfHasValue', !!this.disableIfHasValue && FieldConditions.hasValue(value), (isTrue: boolean) =>
-      enable(!isTrue)
+      disable(isTrue)
     );
     this.run('enableIfHasValue', !!this.enableIfHasValue && FieldConditions.hasValue(value), (isTrue: boolean) =>
-      enable(isTrue)
+      disable(!isTrue)
     );
     this.run('disableIfEquals', FieldConditions.valueIsEqualTo(value, this.disableIfEquals), (isTrue: boolean) =>
-      enable(!isTrue)
+      disable(isTrue)
     );
     this.run('enabledIfEquals', FieldConditions.valueIsEqualTo(value, this.enabledIfEquals), (isTrue: boolean) =>
-      enable(isTrue)
+      disable!(isTrue)
     );
   }
 

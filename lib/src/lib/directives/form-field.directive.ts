@@ -9,7 +9,6 @@ import { FormFieldMappingService } from '../services/form-field-mapping.service'
 
 @Directive({
   selector: '[lab900FormField]',
-  standalone: true,
 })
 export class FormFieldDirective {
   private readonly container = inject(ViewContainerRef);
@@ -17,9 +16,44 @@ export class FormFieldDirective {
 
   public readonly schema = input.required<Lab900FormField>();
   public readonly group = input.required<UntypedFormGroup>();
+  public readonly fieldGroup = computed(() => {
+    const schema = this.schema();
+    if (schema?.attribute?.includes('.')) {
+      const attributeMap = schema?.attribute.split('.');
+      attributeMap.pop();
+      return this.group().get(attributeMap.join('.')) as UntypedFormGroup;
+    }
+    return this.group();
+  });
+
   public readonly language = input<string | undefined>(undefined);
   public readonly availableLanguages = input<ValueLabel[]>([]);
   public readonly readonly = input<boolean>(false);
+  public readonly fieldIsReadonly = computed(() => {
+    const options = this.schema().options;
+    if (this.readonly()) {
+      return true;
+    }
+    if (typeof options?.readonly === 'function') {
+      return options?.readonly(this.fieldGroup().value);
+    }
+    return !!options?.readonly;
+  });
+  public readonly fieldIsHidden = computed(() => {
+    const options = this.schema().options;
+    if (typeof options?.hide === 'function') {
+      return options?.hide(this.fieldGroup().value);
+    }
+    return !!options?.hide;
+  });
+  public readonly fieldIsRequired = computed(() => {
+    const options = this.schema().options;
+    if (typeof options?.required === 'function') {
+      return options?.required(this.fieldGroup().value);
+    }
+    return !!options?.required;
+  });
+
   public readonly externalForms = input<Record<string, UntypedFormGroup> | undefined>(undefined);
   public readonly componentType = computed(() => {
     this.validateType();
@@ -27,7 +61,6 @@ export class FormFieldDirective {
       ![
         EditType.Row,
         EditType.Column,
-        EditType.Select,
         EditType.FilePreview,
         EditType.ButtonToggle,
         EditType.SlideToggle,
@@ -41,22 +74,26 @@ export class FormFieldDirective {
   public constructor() {
     effect(() => {
       const componentType = this.componentType();
-      if (componentType) {
+      const group = this.fieldGroup();
+      if (componentType && group && !this.fieldIsHidden()) {
         this.createComponent();
       }
     });
     effect(() => {
       const schema = this.schema();
       const component = this.component();
-      if (component && schema?.attribute?.includes('.')) {
-        const attributeMap = schema?.attribute.split('.');
-        component.setInput('fieldAttribute', attributeMap.pop());
-        component.setInput('group', this.group().get(attributeMap.join('.')) as UntypedFormGroup);
-      } else if (component) {
-        component.setInput('fieldAttribute', schema.attribute);
-        component.setInput('group', this.group());
+      const group = this.fieldGroup();
+      if (component && group) {
+        if (schema?.attribute?.includes('.')) {
+          const attributeMap = schema?.attribute.split('.');
+          component.setInput('fieldAttribute', attributeMap.pop());
+        } else if (component) {
+          component.setInput('fieldAttribute', schema.attribute);
+        }
+        component.setInput('group', this.fieldGroup());
       }
     });
+
     effect(() => {
       const component = this.component();
       if (component) {
@@ -78,13 +115,25 @@ export class FormFieldDirective {
     effect(() => {
       const component = this.component();
       if (component) {
-        component.setInput('readonly', this.readonly());
+        component.setInput('readonly', this.fieldIsReadonly());
+      }
+    });
+    effect(() => {
+      const component = this.component();
+      if (component) {
+        component.setInput('fieldIsHidden', this.fieldIsHidden());
       }
     });
     effect(() => {
       const component = this.component();
       if (component) {
         component.setInput('externalForms', this.externalForms());
+      }
+    });
+    effect(() => {
+      const component = this.component();
+      if (component) {
+        component.setInput('fieldIsRequired', this.fieldIsRequired());
       }
     });
   }

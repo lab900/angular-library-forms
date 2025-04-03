@@ -1,4 +1,4 @@
-@if (!fieldIsHidden) {
+@if (!fieldIsHidden()) {
   <div
     [formGroup]="group"
     class="lab900-button-field button-field mat-form-field-wrapper"
@@ -12,7 +12,7 @@
     <lab900-button
       [type]="options?.type"
       [color]="options?.color"
-      [disabled]="options?.disabled ?? options?.readonly ?? readonly"
+      [disabled]="fieldIsReadonly()"
       (btnClick)="handleClick($event)"
       [label]="options?.label"
       [matTooltip]="options?.tooltip?.text | translate"

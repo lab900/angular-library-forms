@@ -1,5 +1,5 @@
-@if (!fieldIsHidden) {
-  <mat-form-field [formGroup]="group" class="lab900-date-time-field" id="lab900-date-time-field-{{ elementId() }}">
+@if (!fieldIsHidden()) {
+  <mat-form-field [formGroup]="_group()" class="lab900-date-time-field" id="lab900-date-time-field-{{ elementId() }}">
     @if (label(); as label) {
       <mat-label>{{ label | translate }}</mat-label>
     }
@@ -9,15 +9,12 @@
       placeholder="{{ placeholder | translate }}"
       [ngxMatDatetimePicker]="picker"
       [formControlName]="fieldAttribute"
-      [required]="fieldIsRequired"
-      [readonly]="fieldIsReadonly"
       [matDatepickerFilter]="options?.dateFilter"
       [max]="maxDate()"
       [min]="minDate()" />
-    <ngx-mat-datepicker-toggle [disabled]="fieldIsReadonly || fieldControl?.disabled" matIconSuffix [for]="picker" />
+    <ngx-mat-datepicker-toggle matIconSuffix [for]="picker" />
     <ngx-mat-datetime-picker
       #picker
-      [disabled]="fieldIsReadonly || fieldControl?.disabled"
       [showSpinners]="true"
       [showSeconds]="showSeconds()"
       [startView]="startView()"
@@ -34,10 +31,10 @@
         </button>
       </ngx-mat-datepicker-actions>
     </ngx-mat-datetime-picker>
-    @if (hint && !fieldIsReadonly && !(options?.hint?.hideHintOnValidValue && input.value)) {
+    @if (hint && !fieldIsReadonly() && !(options?.hint?.hideHintOnValidValue && input.value)) {
       <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
     }
-    @if (!valid && !fieldIsReadonly) {
+    @if (!valid && !fieldIsReadonly()) {
       <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
     }
   </mat-form-field>

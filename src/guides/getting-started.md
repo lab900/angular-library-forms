@@ -61,7 +61,6 @@ import {Lab900Forms} from '@lab900/forms';
 @Component({
     selector: 'my-component',
     template: '<lab900-form [schema]="formSchema" [data]="data" />',
-    standalone: true,
     imports: [Lab900Form],
 })
 export class myComponent {

@@ -13,7 +13,6 @@ export class FormFieldDateYearMonthPickerExampleComponent {
         attribute: 'test',
         title: 'Select a date year/month',
         editType: EditType.DateYearMonth,
-        options: {},
       },
     ],
   };

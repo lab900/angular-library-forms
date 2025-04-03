@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { EditType, Lab900Form, Lab900FormConfig, SelectFieldComponent } from '@lab900/forms';
+import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 
 @Component({
   selector: 'lab900-form-field-select-example',
-  template: `<lab900-form [schema]="formSchema" />
-    <lab900-select-field [schema]="selectSchema" fieldAttribute="example-select" [group]="formGroup" />
-    <button (click)="clearSelect()">clear All</button>`,
-  imports: [Lab900Form, SelectFieldComponent],
+  template: `<lab900-form [schema]="formSchema" /> <button (click)="clearSelect()">clear All</button>`,
+  imports: [Lab900Form],
 })
 export class FormFieldSelectExampleComponent {
   public readonly formGroup = new UntypedFormGroup({});
@@ -20,6 +18,7 @@ export class FormFieldSelectExampleComponent {
           {
             attribute: 'somePropName',
             editType: EditType.Select,
+            title: 'Select yes or no (req)',
             options: {
               placeholder: 'select yes or no',
               selectOptions: [

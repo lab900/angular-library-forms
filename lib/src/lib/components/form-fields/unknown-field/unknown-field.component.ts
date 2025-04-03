@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { JsonPipe } from '@angular/common';
 
@@ -6,9 +6,10 @@ import { JsonPipe } from '@angular/common';
   selector: 'lab900-unknown-field',
   template: ` <div>
     <p>Unknown schema:</p>
-    <pre>{{ schema | json }}</pre>
+    <pre>{{ _schema() | json }}</pre>
   </div>`,
   imports: [JsonPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnknownFieldComponent extends FormComponent {
   @HostBinding('class')

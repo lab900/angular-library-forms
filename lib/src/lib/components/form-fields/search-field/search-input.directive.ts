@@ -14,7 +14,6 @@ import { FormFieldSearchOptions } from './field-search.model';
       multi: true,
     },
   ],
-  standalone: true,
 })
 export class SearchInputDirective<T> implements ControlValueAccessor, OnChanges {
   private readonly searchQuery$ = new ReplaySubject<string>();

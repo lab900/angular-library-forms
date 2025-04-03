@@ -1,4 +1,4 @@
-@if (!fieldIsReadonly && !fieldIsHidden) {
+@if (!fieldIsHidden()) {
   <mat-form-field
     [formGroup]="group"
     class="lab900-select-field"
@@ -19,7 +19,6 @@
       [compareWith]="compareFn()"
       [formControlName]="fieldAttribute"
       [multiple]="multiple()"
-      [required]="fieldIsRequired"
       lab900InfiniteScroll
       [complete]="!infiniteScrollOptions()?.enabled"
       [threshold]="infiniteScrollOptions()?.threshold || '15%'"
@@ -100,13 +99,4 @@
       <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
     }
   </mat-form-field>
-}
-
-@if (fieldIsReadonly && !fieldIsHidden) {
-  <div class="lab900-readonly-field">
-    @if (readonlyLabel(); as label) {
-      <span class="lab900-readonly-field__label">{{ label | translate }}</span>
-    }
-    <div [innerHTML]="readOnlyDisplay()"></div>
-  </div>
 }

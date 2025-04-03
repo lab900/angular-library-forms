@@ -1,25 +1,20 @@
-import { AbstractControl, UntypedFormGroup, ValidationErrors } from '@angular/forms';
-import { ChangeDetectorRef, computed, Directive, effect, inject, input, Input, OnDestroy } from '@angular/core';
+import { AbstractControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { computed, Directive, effect, inject, input, model } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { EMPTY, Observable, switchMap } from 'rxjs';
 import { FieldConditions } from '../models/IFieldConditions';
-import { FormFieldUtils } from '../utils/form-field.utils';
 import { SubscriptionBasedDirective } from '../directives/subscription-based.directive';
 import { Lab900FormField } from '../models/lab900-form-field.type';
 import { ValueLabel } from '../models/form-field-base';
-import { Lab900FormBuilderService } from '../services/form-builder.service';
 import { LAB900_FORM_MODULE_SETTINGS, Lab900FormModuleSettings } from '../models/Lab900FormModuleSettings';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs/operators';
+import { uniqueId } from 'lodash';
 
 @Directive()
-export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
-  extends SubscriptionBasedDirective
-  implements OnDestroy
-{
+export abstract class FormComponent<S extends Lab900FormField = Lab900FormField> extends SubscriptionBasedDirective {
   public readonly setting: Lab900FormModuleSettings = inject(LAB900_FORM_MODULE_SETTINGS);
   protected readonly translateService = inject(TranslateService);
-  protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   public readonly _fieldAttribute = input<string | undefined>(undefined, { alias: 'fieldAttribute' });
   public get fieldAttribute(): string | undefined {
@@ -47,9 +42,8 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   public readonly _schema = input.required<S>({ alias: 'schema' });
   public readonly _options = computed<S['options']>(() => this._schema().options);
   public readonly label = computed<string | undefined>(() => this._schema().title);
-  public readonly readonlyLabel = computed<string | undefined>(
-    () => this._schema().options?.readonlyLabel ?? this.label()
-  );
+  public readonly readonlyLabel = computed<string | undefined>(() => this._options()?.readonlyLabel ?? this.label());
+  private readonly conditions = computed(() => this._schema().conditions);
 
   public readonly elementId = computed<string>(() => {
     const elementId = this._options()?.elementId;
@@ -59,7 +53,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     } else if (fieldAttribute) {
       return `${fieldAttribute}`;
     }
-    return `random-${Math.random().toString(36)}`;
+    return uniqueId('form-elm');
   });
 
   public readonly errorMessage = toSignal<string>(
@@ -107,18 +101,16 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     return this._schema();
   }
 
-  @Input()
-  public externalForms?: Record<string, UntypedFormGroup>;
-
+  public readonly externalForms = input<Record<string, UntypedFormGroup> | undefined>(undefined);
   public readonly language = input<string | undefined>(undefined);
   public readonly availableLanguages = input<ValueLabel[]>([]);
 
-  @Input()
-  public readonly = false; // Global form readonly flag
-
-  public fieldIsReadonly!: boolean;
-  public fieldIsHidden!: boolean;
-  public fieldIsRequired!: boolean;
+  /**
+   * Field state
+   */
+  public readonly fieldIsReadonly = model<boolean>(false, { alias: 'readonly' });
+  public readonly fieldIsHidden = model<boolean>(false);
+  public readonly fieldIsRequired = model<boolean>(false);
 
   public get valid(): boolean {
     return !!this.fieldControl?.valid;
@@ -150,9 +142,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
       const options = this._options();
       const fieldControl = this._fieldControl();
       if (group && fieldControl) {
-        this.setFieldProperties();
         group.valueChanges.subscribe(() => {
-          this.setFieldProperties();
           if (options?.onChangeFn) {
             options.onChangeFn(group.value, fieldControl);
           }
@@ -161,8 +151,40 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     });
     effect(() => {
       const fieldControl = this._fieldControl();
-      if (fieldControl && this._schema().conditions?.length) {
+      if (fieldControl && this.conditions()?.length) {
         this.createConditions();
+      }
+    });
+    effect(() => {
+      const readonly = this.fieldIsReadonly();
+      const hidden = this.fieldIsHidden();
+      const control = this._fieldControl();
+      if (control) {
+        if (readonly || hidden) {
+          control.disable();
+        } else {
+          control.enable();
+        }
+      }
+    });
+    effect(() => {
+      const control = this._fieldControl();
+      if (control) {
+        const readonly = this.fieldIsReadonly();
+        const hidden = this.fieldIsHidden();
+        const required = this.fieldIsRequired();
+        if (!readonly && !hidden) {
+          if (required && !control.hasValidator(Validators.required)) {
+            control.setValidators(Validators.required);
+            control.updateValueAndValidity();
+          } else if (!required && control.hasValidator(Validators.required)) {
+            control.removeValidators(Validators.required);
+            control.updateValueAndValidity();
+          }
+        } else if (control.hasValidator(Validators.required)) {
+          control.removeValidators(Validators.required);
+          control.updateValueAndValidity();
+        }
       }
     });
   }
@@ -208,39 +230,8 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     }
   }
 
-  public hide(): void {
-    if (this.schema?.options) {
-      this.fieldIsHidden = FormFieldUtils.isHidden(this.schema.options, this.group);
-      this.changeDetectorRef.markForCheck();
-    }
-  }
-
-  private isReadonly(): void {
-    if (this.schema?.options) {
-      this.fieldIsReadonly = FormFieldUtils.isReadOnly(this.schema.options, this.group.value, this.readonly);
-      this.changeDetectorRef.markForCheck();
-    }
-  }
-
-  private isRequired(): void {
-    const isRequired = FormFieldUtils.isRequired(this.fieldIsReadonly, this.schema, this.group.value) ?? false;
-    if (this.fieldIsRequired != isRequired) {
-      this.fieldIsRequired = isRequired;
-      this.fieldControl?.setValidators(Lab900FormBuilderService.addValidators(this.schema, this.group.value));
-      setTimeout(() => {
-        this.changeDetectorRef.markForCheck();
-      });
-    }
-  }
-
-  private setFieldProperties(): void {
-    this.hide();
-    this.isReadonly();
-    this.isRequired();
-  }
-
   private createConditions(): void {
-    (this._schema().conditions ?? [])
+    (this.conditions() ?? [])
       .filter(c => c.dependOn)
       .map(c => new FieldConditions(this, c))
       .forEach((conditions: FieldConditions) => {
