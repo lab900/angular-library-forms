@@ -152,7 +152,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
   }
 
   public run(key: string, condition: boolean, callback: (isTrue: boolean) => void): void {
-    if (Object.prototype.hasOwnProperty.call(this, key)) {
+    if (Object.hasOwn(this, key)) {
       callback(condition);
     }
   }
@@ -160,7 +160,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
   public runVisibilityConditions(value: T): void {
     const schema = this.schema;
     if (schema) {
-      const hide = (isTrue: boolean): any => this.component.fieldIsHidden.set(isTrue);
+      const hide = (isTrue: boolean): void => this.component.fieldIsHidden.set(isTrue);
       this.run('hideIfHasValue', !!this.hideIfHasValue && FieldConditions.hasValue(value), (isTrue: boolean) =>
         hide(isTrue)
       );
@@ -177,7 +177,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
   }
 
   public runDisableConditions(value: T): void {
-    const disable = (isTrue: boolean): any => {
+    const disable = (isTrue: boolean): void => {
       return this.component.fieldIsReadonly.set(isTrue);
     };
     this.run('disableIfHasValue', !!this.disableIfHasValue && FieldConditions.hasValue(value), (isTrue: boolean) =>
