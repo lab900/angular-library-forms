@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, HostBinding, signal } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 
 import { TranslatePipe } from '@ngx-translate/core';
@@ -7,33 +7,36 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'lab900-readonly',
   templateUrl: './readonly-field.component.html',
   imports: [TranslatePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReadonlyFieldComponent extends FormComponent implements OnDestroy {
+export class ReadonlyFieldComponent extends FormComponent {
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
-  public value: any;
+  protected readonly value = signal<string | undefined>(undefined);
+  protected readonly readonlyContainerClass = computed(() => {
+    const readonlyContainerClass = this._options()?.readonlyContainerClass;
+    if (typeof readonlyContainerClass === 'function') {
+      return readonlyContainerClass(this._group().value);
+    }
+    return readonlyContainerClass;
+  });
 
   public constructor() {
     super();
-    setTimeout(() => {
-      if (this.group?.controls && this.fieldAttribute) {
-        this.setValue(this.group.controls[this.fieldAttribute].value);
-        this.addSubscription(this.group.controls[this.fieldAttribute].valueChanges, (value: any) =>
-          setTimeout(() => this.setValue(value))
-        );
+    effect(() => {
+      const control = this._fieldControl();
+      if (control) {
+        this.setValue(control.value);
+        control.valueChanges.subscribe((value: unknown) => {
+          this.setValue(value);
+        });
       }
     });
   }
 
   private setValue(value: any): void {
-    this.value = this.options?.readonlyDisplay ? this.options?.readonlyDisplay(this.group.value) : value;
-  }
-
-  public getReadonlyContainerClass(): string | undefined {
-    if (typeof this.options?.readonlyContainerClass === 'function') {
-      return this.options.readonlyContainerClass(this.group.value);
-    }
-    return this.options?.readonlyContainerClass;
+    const readonlyDisplayFn = this._options()?.readonlyDisplay;
+    this.value.set(readonlyDisplayFn ? readonlyDisplayFn(this._group().value) : value);
   }
 }

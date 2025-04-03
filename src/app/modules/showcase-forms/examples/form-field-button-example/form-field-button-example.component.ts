@@ -36,7 +36,6 @@ export class FormFieldButtonExampleComponent {
             attribute: 'button',
             editType: EditType.Button,
             options: {
-              readonly: true,
               colspan: 1,
               type: 'mini-fab',
               label: 'calculate',

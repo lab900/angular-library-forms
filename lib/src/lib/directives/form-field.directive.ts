@@ -61,7 +61,6 @@ export class FormFieldDirective {
       ![
         EditType.Row,
         EditType.Column,
-        EditType.Select,
         EditType.FilePreview,
         EditType.ButtonToggle,
         EditType.SlideToggle,

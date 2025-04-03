@@ -1,5 +1,5 @@
 import { AbstractControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { computed, Directive, effect, inject, input, Input, model, OnDestroy } from '@angular/core';
+import { computed, Directive, effect, inject, input, model } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { EMPTY, Observable, switchMap } from 'rxjs';
 import { FieldConditions } from '../models/IFieldConditions';
@@ -12,10 +12,7 @@ import { filter } from 'rxjs/operators';
 import { uniqueId } from 'lodash';
 
 @Directive()
-export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
-  extends SubscriptionBasedDirective
-  implements OnDestroy
-{
+export abstract class FormComponent<S extends Lab900FormField = Lab900FormField> extends SubscriptionBasedDirective {
   public readonly setting: Lab900FormModuleSettings = inject(LAB900_FORM_MODULE_SETTINGS);
   protected readonly translateService = inject(TranslateService);
 
@@ -104,9 +101,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     return this._schema();
   }
 
-  @Input()
-  public externalForms?: Record<string, UntypedFormGroup>;
-
+  public readonly externalForms = input<Record<string, UntypedFormGroup> | undefined>(undefined);
   public readonly language = input<string | undefined>(undefined);
   public readonly availableLanguages = input<ValueLabel[]>([]);
 
