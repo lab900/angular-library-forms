@@ -35,7 +35,7 @@ export class FormFieldNestedGroupsByAttributeExampleComponent {
             conditions: [
               {
                 dependOn: 'parentAttr.disable',
-                disableIfEquals: true,
+                hideIfEquals: true,
               },
             ],
           },

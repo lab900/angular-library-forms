@@ -1,22 +1,24 @@
-<div
-  [formGroup]="group"
-  class="lab900-multi-lang-field lab900-multi-lang-field--{{ setting?.formField?.appearance || 'standard' }}"
-  id="lab900-multi-lang-field-{{ elementId() }}"
-  style="padding-bottom: 1.34375em">
-  <lab900-multi-lang-field-control
-    [formControlName]="fieldAttribute"
-    [defaultLanguage]="language()"
-    [availableLanguages]="availableLanguages()"
-    [required]="fieldIsRequired()"
-    [readonly]="fieldIsReadonly()"
-    [label]="label()"
-    [buttonColor]="_options()?.buttonColor"
-    [translateLabel]="_options()?.translateLabel"
-    [stopTranslateLabel]="_options()?.stopTranslateLabel"
-    [useTextAreaField]="_options()?.useTextAreaField" />
-  @if (!valid && touched && !fieldIsReadonly) {
-    <div>
-      <mat-error>{{ errorMessage() }}</mat-error>
-    </div>
-  }
-</div>
+@if (!fieldIsHidden()) {
+  <div
+    [formGroup]="_group()"
+    class="lab900-multi-lang-field lab900-multi-lang-field--{{ setting?.formField?.appearance || 'standard' }}"
+    id="lab900-multi-lang-field-{{ elementId() }}"
+    style="padding-bottom: 1.34375em">
+    <lab900-multi-lang-field-control
+      [formControlName]="_fieldAttribute()"
+      [defaultLanguage]="language()"
+      [availableLanguages]="availableLanguages()"
+      [required]="fieldIsRequired()"
+      [readonly]="fieldIsReadonly()"
+      [label]="label()"
+      [buttonColor]="_options()?.buttonColor"
+      [translateLabel]="_options()?.translateLabel"
+      [stopTranslateLabel]="_options()?.stopTranslateLabel"
+      [useTextAreaField]="_options()?.useTextAreaField" />
+    @if (!valid && touched && !fieldIsReadonly()) {
+      <div>
+        <mat-error>{{ errorMessage() }}</mat-error>
+      </div>
+    }
+  </div>
+}

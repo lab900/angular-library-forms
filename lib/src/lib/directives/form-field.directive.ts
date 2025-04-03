@@ -21,6 +21,7 @@ export class FormFieldDirective {
     const schema = this.schema();
     if (schema?.attribute?.includes('.')) {
       const attributeMap = schema?.attribute.split('.');
+      attributeMap.pop();
       return this.group().get(attributeMap.join('.')) as UntypedFormGroup;
     }
     return this.group();
@@ -74,14 +75,16 @@ export class FormFieldDirective {
   public constructor() {
     effect(() => {
       const componentType = this.componentType();
-      if (componentType && !this.fieldIsHidden()) {
+      const group = this.fieldGroup();
+      if (componentType && group && !this.fieldIsHidden()) {
         this.createComponent();
       }
     });
     effect(() => {
       const schema = this.schema();
       const component = this.component();
-      if (component) {
+      const group = this.fieldGroup();
+      if (component && group) {
         if (schema?.attribute?.includes('.')) {
           const attributeMap = schema?.attribute.split('.');
           component.setInput('fieldAttribute', attributeMap.pop());
@@ -91,6 +94,7 @@ export class FormFieldDirective {
         component.setInput('group', this.fieldGroup());
       }
     });
+
     effect(() => {
       const component = this.component();
       if (component) {

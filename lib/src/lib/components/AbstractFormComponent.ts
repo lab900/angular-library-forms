@@ -41,9 +41,9 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
 
   public readonly _schema = input.required<S>({ alias: 'schema' });
   public readonly _options = computed<S['options']>(() => this._schema().options);
-  private readonly conditions = computed(() => this._schema().conditions);
   public readonly label = computed<string | undefined>(() => this._schema().title);
   public readonly readonlyLabel = computed<string | undefined>(() => this._options()?.readonlyLabel ?? this.label());
+  private readonly conditions = computed(() => this._schema().conditions);
 
   public readonly elementId = computed<string>(() => {
     const elementId = this._options()?.elementId;

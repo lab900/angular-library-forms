@@ -1,4 +1,4 @@
-@if (dateFormGroup() && startControl() && endControl()) {
+@if (!fieldIsHidden() && dateFormGroup() && startControl() && endControl()) {
   <mat-form-field [formGroup]="_group()" class="lab900-date-range-field" id="lab900-date-range-field-{{ elementId() }}">
     @if (label(); as label) {
       <mat-label translate>{{ label }}</mat-label>

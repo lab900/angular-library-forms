@@ -1,4 +1,4 @@
-@if (!fieldIsReadonly()) {
+@if (!fieldIsReadonly() && !fieldIsHidden()) {
   <div
     [formGroup]="group"
     class="lab900-button-toggle-field button-toggle-field mat-form-field-wrapper"

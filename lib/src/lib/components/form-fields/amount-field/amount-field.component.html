@@ -1,44 +1,46 @@
-<mat-form-field
-  [formGroup]="group"
-  class="lab900-input-field {{ options?.align || 'left' }}"
-  [class.spanFix]="suffix() || prefix()"
-  id="lab900-input-field-{{ elementId() }}">
-  @if (label(); as label) {
-    <mat-label>{{ label | translate }}</mat-label>
-  }
-  <input
-    matInput
-    #input
-    type="text"
-    placeholder="{{ placeholder | translate }}"
-    [formControlName]="fieldAttribute"
-    [class.readonly]="fieldIsReadonly()"
-    lab900InputAutofocus
-    lab900AmountInput
-    [autofocus]="options?.autofocus"
-    [style]="options?.style || ''"
-    [maxDecimals]="maxDecimals()"
-    [minDecimals]="minDecimals()" />
-  @if (schema?.icon?.position === 'left') {
-    <lab900-icon [icon]="schema.icon" matPrefix class="input-field__icon-left"></lab900-icon>
-  }
-  @if (schema?.icon?.position === 'right') {
-    <lab900-icon [icon]="schema.icon" matSuffix></lab900-icon>
-  }
-  @if (suffix(); as suffix) {
-    <span class="lab900-input-field--suffix" matTextSuffix>{{ suffix | translate }}</span>
-  }
-  @if (prefix(); as prefix) {
-    <span class="lab900-input-field--prefix" matTextPrefix>{{ prefix | translate }}</span>
-  }
-  @if (hint && !(options?.hint?.hideHintOnValidValue && input.value) && !fieldIsReadonly()) {
-    <mat-hint>
-      <span [innerHTML]="hint | translate: hintValueTranslateData"></span>
-    </mat-hint>
-  }
-  @if (!valid && !fieldIsReadonly()) {
-    <mat-error>
-      <span [innerHTML]="errorMessage()"></span>
-    </mat-error>
-  }
-</mat-form-field>
+@if (!fieldIsHidden()) {
+  <mat-form-field
+    [formGroup]="group"
+    class="lab900-input-field {{ options?.align || 'left' }}"
+    [class.spanFix]="suffix() || prefix()"
+    id="lab900-input-field-{{ elementId() }}">
+    @if (label(); as label) {
+      <mat-label>{{ label | translate }}</mat-label>
+    }
+    <input
+      matInput
+      #input
+      type="text"
+      placeholder="{{ placeholder | translate }}"
+      [formControlName]="fieldAttribute"
+      [class.readonly]="fieldIsReadonly()"
+      lab900InputAutofocus
+      lab900AmountInput
+      [autofocus]="options?.autofocus"
+      [style]="options?.style || ''"
+      [maxDecimals]="maxDecimals()"
+      [minDecimals]="minDecimals()" />
+    @if (schema?.icon?.position === 'left') {
+      <lab900-icon [icon]="schema.icon" matPrefix class="input-field__icon-left"></lab900-icon>
+    }
+    @if (schema?.icon?.position === 'right') {
+      <lab900-icon [icon]="schema.icon" matSuffix></lab900-icon>
+    }
+    @if (suffix(); as suffix) {
+      <span class="lab900-input-field--suffix" matTextSuffix>{{ suffix | translate }}</span>
+    }
+    @if (prefix(); as prefix) {
+      <span class="lab900-input-field--prefix" matTextPrefix>{{ prefix | translate }}</span>
+    }
+    @if (hint && !(options?.hint?.hideHintOnValidValue && input.value) && !fieldIsReadonly()) {
+      <mat-hint>
+        <span [innerHTML]="hint | translate: hintValueTranslateData"></span>
+      </mat-hint>
+    }
+    @if (!valid && !fieldIsReadonly()) {
+      <mat-error>
+        <span [innerHTML]="errorMessage()"></span>
+      </mat-error>
+    }
+  </mat-form-field>
+}

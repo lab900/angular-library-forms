@@ -1,15 +1,17 @@
-<div [formGroup]="group" class="lab900-checkbox-field" id="lab900-checkbox-field-{{ elementId() }}">
-  <mat-checkbox #checkbox [color]="color()" [formControlName]="fieldAttribute" [indeterminate]="indeterminate()">
-    {{ label()! | translate }}
-  </mat-checkbox>
-  @if (!fieldIsReadonly()) {
-    <div class="subscript-wrapper" [@transitionMessages]="valid ? 'void' : 'enter'">
-      @if (hint && !(options?.hint?.hideHintOnValidValue && checkbox.value)) {
-        <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
-      }
-      @if (!valid && touched) {
-        <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
-      }
-    </div>
-  }
-</div>
+@if (!fieldIsHidden()) {
+  <div [formGroup]="group" class="lab900-checkbox-field" id="lab900-checkbox-field-{{ elementId() }}">
+    <mat-checkbox #checkbox [color]="color()" [formControlName]="fieldAttribute" [indeterminate]="indeterminate()">
+      {{ label()! | translate }}
+    </mat-checkbox>
+    @if (!fieldIsReadonly()) {
+      <div class="subscript-wrapper" [@transitionMessages]="valid ? 'void' : 'enter'">
+        @if (hint && !(options?.hint?.hideHintOnValidValue && checkbox.value)) {
+          <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
+        }
+        @if (!valid && touched) {
+          <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
+        }
+      </div>
+    }
+  </div>
+}

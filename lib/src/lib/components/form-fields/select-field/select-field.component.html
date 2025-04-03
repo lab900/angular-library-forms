@@ -1,98 +1,102 @@
-<mat-form-field
-  [formGroup]="group"
-  class="lab900-select-field"
-  [class.has-value]="hasValue()"
-  id="lab900-select-field-{{ elementId() }}">
-  @if (label(); as label) {
-    <mat-label>
-      @if (loading()) {
-        {{ 'form.field.loading' | translate }}
-      } @else {
-        {{ label | translate }}
+@if (!fieldIsHidden()) {
+  <mat-form-field
+    [formGroup]="group"
+    class="lab900-select-field"
+    [class.has-value]="hasValue()"
+    id="lab900-select-field-{{ elementId() }}">
+    @if (label(); as label) {
+      <mat-label>
+        @if (loading()) {
+          {{ 'form.field.loading' | translate }}
+        } @else {
+          {{ label | translate }}
+        }
+      </mat-label>
+    }
+    <mat-select
+      #select
+      placeholder="{{ placeholder | translate }}"
+      [compareWith]="compareFn()"
+      [formControlName]="fieldAttribute"
+      [multiple]="multiple()"
+      lab900InfiniteScroll
+      [complete]="!infiniteScrollOptions()?.enabled"
+      [threshold]="infiniteScrollOptions()?.threshold || '15%'"
+      [debounceTime]="infiniteScrollOptions()?.debounceTime || 150"
+      [panelWidth]="panelWidth()"
+      [panelClass]="options?.panelClass"
+      (infiniteScroll)="onScroll()"
+      (openedChange)="onOpenedChange($event)"
+      (focus)="onFocus()">
+      @if (customerTriggerFn(); as customerTriggerFn) {
+        <mat-select-trigger>
+          <div [innerHTML]="customerTriggerFn(fieldControl?.value)"></div>
+        </mat-select-trigger>
       }
-    </mat-label>
-  }
-  <mat-select
-    #select
-    placeholder="{{ placeholder | translate }}"
-    [compareWith]="compareFn()"
-    [formControlName]="fieldAttribute"
-    [multiple]="multiple()"
-    lab900InfiniteScroll
-    [complete]="!infiniteScrollOptions()?.enabled"
-    [threshold]="infiniteScrollOptions()?.threshold || '15%'"
-    [debounceTime]="infiniteScrollOptions()?.debounceTime || 150"
-    [panelWidth]="panelWidth()"
-    [panelClass]="options?.panelClass"
-    (infiniteScroll)="onScroll()"
-    (openedChange)="onOpenedChange($event)"
-    (focus)="onFocus()">
-    @if (customerTriggerFn(); as customerTriggerFn) {
-      <mat-select-trigger>
-        <div [innerHTML]="customerTriggerFn(fieldControl?.value)"></div>
-      </mat-select-trigger>
-    }
-    @if (searchOptions()?.enabled) {
-      <mat-option style="background: #fff">
-        <ngx-mat-select-search
-          [ngModel]="searchQuery()"
-          [searching]="loading()"
-          (ngModelChange)="onSearch($event)"
-          [ngModelOptions]="{ standalone: true }"
-          [placeholderLabel]="searchOptions()?.placeholder ?? 'form.field.search' | translate"
-          [disableScrollToActiveOnOptionsChanged]="infiniteScrollOptions()?.enabled"
-          [clearSearchInput]="searchOptions()?.clearOnClose ?? false">
-          <div class="no-entries-found" ngxMatSelectNoEntriesFound>
-            @if (searchQuery().length) {
-              <span>{{
-                searchOptions()?.notFoundLabel ?? 'form.field.no_options_found'
-                  | translate: { searchQuery: searchQuery() }
-              }}</span>
-              @if (searchOptions()?.addNewFn) {
-                <button
-                  mat-button
-                  [color]="searchOptions()?.addNewBtnColor ?? 'primary'"
-                  (click)="handleAddNew(searchQuery())">
-                  <mat-icon>add</mat-icon>
-                  <span>{{
-                    searchOptions()?.addNewLabel ?? 'form.field.add_new' | translate: { searchQuery: searchQuery() }
-                  }}</span>
-                </button>
+      @if (searchOptions()?.enabled) {
+        <mat-option style="background: #fff">
+          <ngx-mat-select-search
+            [ngModel]="searchQuery()"
+            [searching]="loading()"
+            (ngModelChange)="onSearch($event)"
+            [ngModelOptions]="{ standalone: true }"
+            [placeholderLabel]="searchOptions()?.placeholder ?? 'form.field.search' | translate"
+            [disableScrollToActiveOnOptionsChanged]="infiniteScrollOptions()?.enabled"
+            [clearSearchInput]="searchOptions()?.clearOnClose ?? false">
+            <div class="no-entries-found" ngxMatSelectNoEntriesFound>
+              @if (searchQuery().length) {
+                <span>{{
+                  searchOptions()?.notFoundLabel ?? 'form.field.no_options_found'
+                    | translate: { searchQuery: searchQuery() }
+                }}</span>
+                @if (searchOptions()?.addNewFn) {
+                  <button
+                    mat-button
+                    [color]="searchOptions()?.addNewBtnColor ?? 'primary'"
+                    (click)="handleAddNew(searchQuery())">
+                    <mat-icon>add</mat-icon>
+                    <span>{{
+                      searchOptions()?.addNewLabel ?? 'form.field.add_new' | translate: { searchQuery: searchQuery() }
+                    }}</span>
+                  </button>
+                }
               }
-            }
-          </div>
-        </ngx-mat-select-search>
-      </mat-option>
+            </div>
+          </ngx-mat-select-search>
+        </mat-option>
+      }
+      @if (multiple() && selectAllOptions()?.enabled && selectOptions()?.length) {
+        <div
+          class="mat-mdc-option mdc-list-item mat-mdc-option-multiple select-all"
+          (click)="handleToggleAllSelection()">
+          <mat-pseudo-checkbox [state]="selectAllState()" [disabled]="selectAllOptions()?.disabled || loading()" />
+          <span class="mdc-list-item__primary-text">
+            {{ selectAllOptions()?.label || 'forms.select-field.selectAllLabel' | translate }}
+          </span>
+        </div>
+      }
+      @for (item of selectOptions(); track item) {
+        <mat-option [value]="item.value" [disabled]="item.disabled || loading()">
+          <div [innerHTML]="item.label | translate"></div>
+        </mat-option>
+      }
+    </mat-select>
+    @if (showClearButton()) {
+      <button
+        class="select-clear-button"
+        matSuffix
+        mat-icon-button
+        type="button"
+        aria-label="Clear"
+        (click)="handleClearFieldButtonClick($event)">
+        <mat-icon>close</mat-icon>
+      </button>
     }
-    @if (multiple() && selectAllOptions()?.enabled && selectOptions()?.length) {
-      <div class="mat-mdc-option mdc-list-item mat-mdc-option-multiple select-all" (click)="handleToggleAllSelection()">
-        <mat-pseudo-checkbox [state]="selectAllState()" [disabled]="selectAllOptions()?.disabled || loading()" />
-        <span class="mdc-list-item__primary-text">
-          {{ selectAllOptions()?.label || 'forms.select-field.selectAllLabel' | translate }}
-        </span>
-      </div>
+    @if (hint && !(options?.hint?.hideHintOnValidValue && select.value)) {
+      <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
     }
-    @for (item of selectOptions(); track item) {
-      <mat-option [value]="item.value" [disabled]="item.disabled || loading()">
-        <div [innerHTML]="item.label | translate"></div>
-      </mat-option>
+    @if (!valid) {
+      <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
     }
-  </mat-select>
-  @if (showClearButton()) {
-    <button
-      class="select-clear-button"
-      matSuffix
-      mat-icon-button
-      type="button"
-      aria-label="Clear"
-      (click)="handleClearFieldButtonClick($event)">
-      <mat-icon>close</mat-icon>
-    </button>
-  }
-  @if (hint && !(options?.hint?.hideHintOnValidValue && select.value)) {
-    <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
-  }
-  @if (!valid) {
-    <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
-  }
-</mat-form-field>
+  </mat-form-field>
+}
