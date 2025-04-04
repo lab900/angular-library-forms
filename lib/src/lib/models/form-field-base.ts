@@ -1,6 +1,7 @@
 import { AbstractControl, ValidatorFn } from '@angular/forms';
 import { IFieldConditions } from './IFieldConditions';
 import { Lab900FormField } from './lab900-form-field.type';
+import { Signal } from '@angular/core';
 
 export interface ValueLabel<T = any> {
   value: T;
@@ -27,7 +28,9 @@ export interface FormFieldBase<
 }
 
 export interface FormFieldBaseOptions {
-  hide?: boolean | ((data?: any) => boolean);
+  hide?: boolean | ((data?: any) => boolean | Signal<boolean>) | Signal<boolean>;
+  required?: boolean | ((data?: any) => boolean | Signal<boolean>) | Signal<boolean>;
+  readonly?: boolean | ((data?: any) => boolean | Signal<boolean>) | Signal<boolean>;
   hint?: {
     value?: string;
     hideHintOnValidValue?: boolean;
@@ -36,8 +39,6 @@ export interface FormFieldBaseOptions {
   placeholder?: string | ((data?: any) => string);
   colspan?: number; // 12 column grid = value from 1 to 12.
   mobileCols?: boolean; // keep colspan on mobile (only for form rows)
-  required?: boolean | ((data?: any) => boolean);
-  readonly?: boolean | ((data?: any) => boolean);
   minLength?: number;
   maxLength?: number;
   min?: number;
