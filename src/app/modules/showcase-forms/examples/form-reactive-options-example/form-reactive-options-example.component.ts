@@ -1,4 +1,4 @@
-import { Component, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { MatButton } from '@angular/material/button';
 
@@ -14,6 +14,7 @@ import { MatButton } from '@angular/material/button';
     </div>
   `,
   imports: [MatButton, Lab900Form],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormReactiveOptionsExampleComponent {
   public readonly form = viewChild<Lab900Form<any>>(Lab900Form);

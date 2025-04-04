@@ -158,7 +158,7 @@ export class FormFieldDirective {
   ): boolean {
     const options = this.schema().options;
     let response = false;
-    if (typeof options?.[key] !== 'undefined') {
+    if (options?.[key] != null) {
       let keyValue = options[key];
       if (!isSignal(keyValue) && typeof keyValue === 'function') {
         keyValue = keyValue(this.fieldGroup().getRawValue());
