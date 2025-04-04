@@ -1,9 +1,19 @@
-import { ComponentRef, computed, Directive, effect, inject, input, signal, ViewContainerRef } from '@angular/core';
+import {
+  ComponentRef,
+  computed,
+  Directive,
+  effect,
+  inject,
+  input,
+  isSignal,
+  signal,
+  ViewContainerRef,
+} from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { FormComponent } from '../components/AbstractFormComponent';
 import { ReadonlyFieldComponent } from '../components/form-fields/readonly-field/readonly-field.component';
 import { EditType } from '../models/editType';
-import { ValueLabel } from '../models/form-field-base';
+import { FormFieldBaseOptions, ValueLabel } from '../models/form-field-base';
 import { Lab900FormField } from '../models/lab900-form-field.type';
 import { FormFieldMappingService } from '../services/form-field-mapping.service';
 
@@ -29,29 +39,18 @@ export class FormFieldDirective {
   public readonly language = input<string | undefined>(undefined);
   public readonly availableLanguages = input<ValueLabel[]>([]);
   public readonly readonly = input<boolean>(false);
+
   public readonly fieldIsReadonly = computed(() => {
-    const options = this.schema().options;
     if (this.readonly()) {
       return true;
     }
-    if (typeof options?.readonly === 'function') {
-      return options?.readonly(this.fieldGroup().getRawValue());
-    }
-    return !!options?.readonly;
+    return this.computeReactiveBooleanOption('readonly');
   });
   public readonly fieldIsHidden = computed(() => {
-    const options = this.schema().options;
-    if (typeof options?.hide === 'function') {
-      return options?.hide(this.fieldGroup().value);
-    }
-    return !!options?.hide;
+    return this.computeReactiveBooleanOption('hide');
   });
   public readonly fieldIsRequired = computed(() => {
-    const options = this.schema().options;
-    if (typeof options?.required === 'function') {
-      return options?.required(this.fieldGroup().value);
-    }
-    return !!options?.required;
+    return this.computeReactiveBooleanOption('required');
   });
 
   public readonly externalForms = input<Record<string, UntypedFormGroup> | undefined>(undefined);
@@ -152,5 +151,24 @@ export class FormFieldDirective {
         Supported types: ${supportedTypes}`
       );
     }
+  }
+
+  private computeReactiveBooleanOption(
+    key: keyof Pick<FormFieldBaseOptions, 'hide' | 'required' | 'readonly'>
+  ): boolean {
+    const options = this.schema().options;
+    let response = false;
+    if (options?.[key] != null) {
+      let keyValue = options[key];
+      if (!isSignal(keyValue) && typeof keyValue === 'function') {
+        keyValue = keyValue(this.fieldGroup().getRawValue());
+      }
+      if (isSignal(keyValue)) {
+        response = keyValue();
+      } else if (typeof keyValue === 'boolean') {
+        response = keyValue;
+      }
+    }
+    return response;
   }
 }

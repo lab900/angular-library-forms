@@ -34,6 +34,7 @@ import { FormFieldAmountExampleComponent } from './examples/form-field-amount-ex
 import { FormFieldSearchExampleComponent } from './examples/form-field-search-example/form-field-search-example.component';
 import { FormConditionalWithExternalFormExampleComponent } from './examples/form-condtional-with-external-form-example/form-conditional-with-external-form-example.component';
 import { FormConditionalValidationExampleComponent } from './examples/form-condtional-validation-example/form-conditional-validation-example.component';
+import { FormReactiveOptionsExampleComponent } from './examples/form-reactive-options-example/form-reactive-options-example.component';
 
 export default [
   {
@@ -59,6 +60,7 @@ export default [
     new ShowcaseExample(FormConditionalsExampleComponent, 'Conditional Form Container', undefined, ['TS', 'config.ts']),
     new ShowcaseExample(FormConditionalValidationExampleComponent, 'Conditional validation'),
     new ShowcaseExample(FormConditionalWithExternalFormExampleComponent, 'Conditionals across multiple forms'),
+    new ShowcaseExample(FormReactiveOptionsExampleComponent, 'Reactive options'),
   ]),
   new ShowcaseRoute('form-field-autocomplete', 'Form Fields: Autocomplete', [
     new ShowcaseExample(FormFieldAutocompleteExampleComponent, 'Autocomplete'),

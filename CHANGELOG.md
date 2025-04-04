@@ -1,5 +1,9 @@
 # Changelog
 
+## 19.1.3
+
+- Feat: hide/readonly/required can now handle signals
+
 ## 19.1.2
 
 - Bug fix: select readonly state not working
