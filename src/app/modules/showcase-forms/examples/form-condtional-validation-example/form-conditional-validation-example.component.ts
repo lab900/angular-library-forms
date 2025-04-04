@@ -4,7 +4,8 @@ import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'lab900-form-condtional-validation-example',
-  template: '<lab900-form #lab900FormContainer [schema]="schema"/>',
+  template:
+    '<lab900-form #lab900FormContainer [schema]="schema" [data]="{markAsRequired: true}"/> {{lab900FormContainer.valid}}',
   imports: [Lab900Form],
 })
 export class FormConditionalValidationExampleComponent {
@@ -26,10 +27,14 @@ export class FormConditionalValidationExampleComponent {
         title: 'Input Field?',
         options: {
           colspan: 6,
+          hide: true,
         },
         conditions: [
           {
             dependOn: 'markAsRequired',
+            showIfEquals: (v: boolean) => {
+              return v;
+            },
             validators: v => {
               if (v === true) {
                 return [Validators.required];

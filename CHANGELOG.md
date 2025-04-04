@@ -1,5 +1,10 @@
 # Changelog
 
+## 19.1.4
+
+- Bug fix: reactive options based on form group values
+- Bug fix: hidden fields
+
 ## 19.1.3
 
 - Feat: hide/readonly/required can now handle signals

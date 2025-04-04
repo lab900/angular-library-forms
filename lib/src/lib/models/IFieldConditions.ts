@@ -138,9 +138,9 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
       if (this.validators) {
         const newValidators = this.validators(value);
         this.fieldControl.setValidators(newValidators);
-        this.fieldControl.updateValueAndValidity();
         this.component.schema.validators = newValidators;
         this.component.fieldIsRequired.set(newValidators.includes(Validators.required));
+        this.fieldControl.updateValueAndValidity();
       }
       this.runVisibilityConditions(value);
       this.runDisableConditions(value);

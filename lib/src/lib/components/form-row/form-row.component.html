@@ -1,32 +1,34 @@
-<div class="lab900-form-row {{ _options()?.customClass }}" id="lab900-form-row-{{ elementId() }}">
-  @if (fieldIsReadonly()) {
-    @if (readonlyLabel(); as label) {
-      <span class="lab900-form-field-label lab900-form-row-label {{ _options()?.customTitleClass }}">{{
-        label | translate
-      }}</span>
+@if (!fieldIsHidden()) {
+  <div class="lab900-form-row {{ _options()?.customClass }}" id="lab900-form-row-{{ elementId() }}">
+    @if (fieldIsReadonly()) {
+      @if (readonlyLabel(); as label) {
+        <span class="lab900-form-field-label lab900-form-row-label {{ _options()?.customTitleClass }}">{{
+          label | translate
+        }}</span>
+      }
     }
-  }
-  <div class="form-row" [class.mobile-cols]="_options()?.mobileCols" id="form-col-{{ elementId() }}">
-    @for (field of nestedFields(); track $index) {
-      <div
-        class="form-col"
-        [style.width]="(100 * (field.options?.colspan || 12)) / 12 + '%'"
-        id="form-col-{{ elementId() }}-{{ _options()?.elementId }}">
-        <ng-container
-          lab900FormField
-          [schema]="field"
-          [availableLanguages]="availableLanguages()"
-          [language]="language()"
-          [group]="fieldAttribute ? group.get(fieldAttribute) : group"
-          [readonly]="fieldIsReadonly()" />
-        @if (infoTooltip(field); as tip) {
-          <div class="form-col__info">
-            <mat-icon [matTooltipClass]="tip.class" [matTooltip]="tip.text | translate">{{
-              tip.icon || 'info'
-            }}</mat-icon>
-          </div>
-        }
-      </div>
-    }
+    <div class="form-row" [class.mobile-cols]="_options()?.mobileCols" id="form-col-{{ elementId() }}">
+      @for (field of nestedFields(); track $index) {
+        <div
+          class="form-col"
+          [style.width]="(100 * (field.options?.colspan || 12)) / 12 + '%'"
+          id="form-col-{{ elementId() }}-{{ _options()?.elementId }}">
+          <ng-container
+            lab900FormField
+            [schema]="field"
+            [availableLanguages]="availableLanguages()"
+            [language]="language()"
+            [group]="fieldAttribute ? group.get(fieldAttribute) : group"
+            [readonly]="fieldIsReadonly()" />
+          @if (infoTooltip(field); as tip) {
+            <div class="form-col__info">
+              <mat-icon [matTooltipClass]="tip.class" [matTooltip]="tip.text | translate">{{
+                tip.icon || 'info'
+              }}</mat-icon>
+            </div>
+          }
+        </div>
+      }
+    </div>
   </div>
-</div>
+}

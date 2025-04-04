@@ -82,7 +82,7 @@ export class FormFieldDirective {
     effect(() => {
       const componentType = this.componentType();
       const group = this.fieldGroup();
-      if (componentType && group && !this.fieldIsHidden()) {
+      if (componentType && group) {
         this.createComponent();
       }
     });
