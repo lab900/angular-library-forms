@@ -27,16 +27,21 @@ export interface FormFieldBase<
   nestedFields?: Lab900FormField[];
 }
 
+export type ReactiveOption<T> = T | ((data?: any) => T | Signal<T>) | Signal<T>;
+export type ReactiveBooleanOption = ReactiveOption<boolean>;
+export type ReactiveStringOption = ReactiveOption<string>;
+export type ReactiveNumberOption = ReactiveOption<number>;
+
 export interface FormFieldBaseOptions {
-  hide?: boolean | ((data?: any) => boolean | Signal<boolean>) | Signal<boolean>;
-  required?: boolean | ((data?: any) => boolean | Signal<boolean>) | Signal<boolean>;
-  readonly?: boolean | ((data?: any) => boolean | Signal<boolean>) | Signal<boolean>;
+  hide?: ReactiveBooleanOption;
+  required?: ReactiveBooleanOption;
+  readonly?: ReactiveBooleanOption;
   hint?: {
     value?: string;
     hideHintOnValidValue?: boolean;
     valueTranslateData?: object;
   };
-  placeholder?: string | ((data?: any) => string);
+  placeholder?: ReactiveStringOption;
   colspan?: number; // 12 column grid = value from 1 to 12.
   mobileCols?: boolean; // keep colspan on mobile (only for form rows)
   minLength?: number;
@@ -45,7 +50,7 @@ export interface FormFieldBaseOptions {
   max?: number;
   defaultValue?: any;
   pattern?: RegExp;
-  readonlyContainerClass?: string | ((data?: any) => string);
+  readonlyContainerClass?: ReactiveStringOption;
   readonlyLabel?: string;
   readonlyDisplay?: (data?: any) => any;
   onChangeFn?: (value: any, currentControl?: AbstractControl) => void;

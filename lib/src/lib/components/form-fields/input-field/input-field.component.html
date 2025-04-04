@@ -11,7 +11,7 @@
       <input
         matInput
         [type]="'number'"
-        placeholder="{{ placeholder | translate }}"
+        placeholder="{{ placeholder() | translate }}"
         [formControlName]="fieldAttribute"
         [class.readonly]="fieldIsReadonly()"
         lab900InputAutofocus
@@ -21,7 +21,7 @@
       <input
         matInput
         [type]="type()"
-        placeholder="{{ placeholder | translate }}"
+        placeholder="{{ placeholder() | translate }}"
         [formControlName]="fieldAttribute"
         [class.readonly]="fieldIsReadonly()"
         [mask]="fieldMask()?.mask"

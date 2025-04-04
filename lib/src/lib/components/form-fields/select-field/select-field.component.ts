@@ -79,7 +79,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
     if (!this.hasValue()) {
       return false;
     } else if (typeof clearOptions?.enabled === 'function') {
-      return clearOptions.enabled(this.group.value);
+      return clearOptions.enabled(this.groupValue());
     }
     return clearOptions?.enabled;
   });

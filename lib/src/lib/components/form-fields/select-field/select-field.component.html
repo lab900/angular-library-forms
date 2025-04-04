@@ -15,7 +15,7 @@
     }
     <mat-select
       #select
-      placeholder="{{ placeholder | translate }}"
+      placeholder="{{ placeholder() | translate }}"
       [compareWith]="compareFn()"
       [formControlName]="fieldAttribute"
       [multiple]="multiple()"

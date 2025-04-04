@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, HostBinding, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, HostBinding, signal } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 
 import { TranslatePipe } from '@ngx-translate/core';
@@ -14,13 +14,7 @@ export class ReadonlyFieldComponent extends FormComponent {
   public classList = 'lab900-form-field';
 
   protected readonly value = signal<string | undefined>(undefined);
-  protected readonly readonlyContainerClass = computed(() => {
-    const readonlyContainerClass = this._options()?.readonlyContainerClass;
-    if (typeof readonlyContainerClass === 'function') {
-      return readonlyContainerClass(this._group().value);
-    }
-    return readonlyContainerClass;
-  });
+  protected readonly readonlyContainerClass = this.computeReactiveOptionalStringOption('readonlyContainerClass');
 
   public constructor() {
     super();

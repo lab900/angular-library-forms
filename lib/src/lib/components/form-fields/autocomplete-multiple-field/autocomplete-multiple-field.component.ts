@@ -75,7 +75,7 @@ export class AutocompleteMultipleFieldComponent<T>
 
   public remove(index: number): void {
     if (index >= 0) {
-      const value = this.selectedOptions;
+      const value = this.controlValue();
       value.splice(index, 1);
       this.updateControlValue(value);
       const nativeElm = this.input()?.nativeElement;

@@ -1,4 +1,4 @@
-import { Component, computed, HostBinding } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldAmount } from './amount-field.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,35 +27,8 @@ export class AmountFieldComponent extends FormComponent<FormFieldAmount> {
   @HostBinding('class')
   public classList = `lab900-form-field`;
 
-  public readonly suffix = computed(() => {
-    const opt = this._options();
-    if (typeof opt?.suffix === 'function') {
-      return opt.suffix(this._group()?.value);
-    }
-    return opt?.suffix;
-  });
-
-  public readonly prefix = computed(() => {
-    const opt = this._options();
-    if (typeof opt?.prefix === 'function') {
-      return opt.prefix(this._group()?.getRawValue());
-    }
-    return opt?.prefix;
-  });
-
-  public readonly maxDecimals = computed(() => {
-    const opt = this._options();
-    if (typeof opt?.maxDecimals === 'function') {
-      return opt.maxDecimals(this._group()?.getRawValue());
-    }
-    return opt?.maxDecimals;
-  });
-
-  public readonly minDecimals = computed(() => {
-    const opt = this._options();
-    if (typeof opt?.minDecimals === 'function') {
-      return opt.minDecimals(this._group()?.getRawValue());
-    }
-    return opt?.minDecimals;
-  });
+  public readonly suffix = this.computeReactiveOptionalStringOption('suffix');
+  public readonly prefix = this.computeReactiveOptionalStringOption('prefix');
+  public readonly maxDecimals = this.computeReactiveOptionalNumberOption('maxDecimals');
+  public readonly minDecimals = this.computeReactiveOptionalNumberOption('minDecimals');
 }

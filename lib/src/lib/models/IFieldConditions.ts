@@ -19,7 +19,7 @@ export interface IFieldConditions<T = any> {
   showIfEquals?: ((value: T) => boolean) | T;
   disableIfEquals?: ((value: T) => boolean) | T;
   enabledIfEquals?: ((value: T) => boolean) | T;
-  onChangeFn?: (value: T, currentControl: AbstractControl, currentScheme: Lab900FormField) => void;
+  onChangeFn?: (value: T, currentControl: AbstractControl, currentScheme: Readonly<Lab900FormField>) => void;
   conditionalOptions?: (
     value: T,
     currentControl: AbstractControl,
@@ -46,7 +46,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
   public showIfEquals?: ((value: T) => boolean) | T;
   public disableIfEquals?: ((value: T) => boolean) | T;
   public enabledIfEquals?: ((value: T) => boolean) | T;
-  public onChangeFn?: (value: T, currentControl: AbstractControl, currentScheme: Lab900FormField) => any;
+  public onChangeFn?: (value: T, currentControl: AbstractControl, currentScheme: Readonly<Lab900FormField>) => any;
   public conditionalOptions?: (value: T) => any;
   public skipIfNotExists = false;
   public validators?: (value: T) => ValidatorFn[];

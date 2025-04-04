@@ -1,4 +1,4 @@
-import { Component, effect, HostBinding, signal } from '@angular/core';
+import { Component, computed, effect, HostBinding, signal } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldButtonToggle } from './button-toggle-field.model';
 import { MatButtonToggle, MatButtonToggleChange, MatButtonToggleGroup } from '@angular/material/button-toggle';
@@ -29,6 +29,16 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
   // This stores the current value of the button toggle.
   // It is used to calculate the readonly label and to check if the toggle needs to be deselected.
   protected readonly value = signal<unknown | undefined>(undefined);
+  // This calculates the readonly label. If the readonlyDisplay() function is set, this is used.
+  // Otherwise the button label is displayed
+  protected readonly readonlyButtonLabel = computed(() => {
+    const options = this._options();
+    return (
+      (options?.readonlyDisplay
+        ? options?.readonlyDisplay(this.groupValue())
+        : options?.buttonOptions.find(o => o.value === this.controlValue())?.label) ?? '-'
+    );
+  });
 
   public constructor() {
     super();
@@ -38,13 +48,6 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
         this.value.set(control.getRawValue());
       }
     });
-  }
-
-  // This calculates the readonly label. If the readonlyDisplay() function is set, this is used.
-  // Otherwise the button label is displayed
-  public get readonlyButtonLabel(): string {
-    const option = this.options?.buttonOptions.find(o => o.value === this.value());
-    return this.options?.readonlyDisplay ? this.options?.readonlyDisplay(this.group.getRawValue()) : option?.label;
   }
 
   // If the deselect option is set and the previous value of the toggle is the same as the current value the toggle will be deselected

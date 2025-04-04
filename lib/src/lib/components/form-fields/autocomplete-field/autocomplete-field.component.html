@@ -12,7 +12,7 @@
       [formControlName]="fieldAttribute"
       [matAutocomplete]="auto"
       matInput
-      placeholder="{{ placeholder | translate }}"
+      placeholder="{{ placeholder() | translate }}"
       type="text" />
 
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="options?.displayInputFn">

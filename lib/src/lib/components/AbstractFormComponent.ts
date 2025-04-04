@@ -1,15 +1,26 @@
 import { AbstractControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { computed, Directive, effect, inject, input, model } from '@angular/core';
+import { computed, Directive, effect, inject, input, model, Signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { EMPTY, Observable, switchMap } from 'rxjs';
+import { concat, defer, EMPTY, Observable, of, switchMap } from 'rxjs';
 import { FieldConditions } from '../models/IFieldConditions';
 import { SubscriptionBasedDirective } from '../directives/subscription-based.directive';
 import { Lab900FormField } from '../models/lab900-form-field.type';
-import { ValueLabel } from '../models/form-field-base';
+import {
+  ReactiveBooleanOption,
+  ReactiveNumberOption,
+  ReactiveStringOption,
+  ValueLabel,
+} from '../models/form-field-base';
 import { LAB900_FORM_MODULE_SETTINGS, Lab900FormModuleSettings } from '../models/Lab900FormModuleSettings';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { filter } from 'rxjs/operators';
+import { rxResource, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { filter, map } from 'rxjs/operators';
 import { uniqueId } from 'lodash';
+import {
+  computeReactiveBooleanOption,
+  computeReactiveNumberOption,
+  computeReactiveStrictStringOption,
+  computeReactiveStringOption,
+} from '../utils/helpers';
 
 @Directive()
 export abstract class FormComponent<S extends Lab900FormField = Lab900FormField> extends SubscriptionBasedDirective {
@@ -38,6 +49,32 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   public get fieldControl(): AbstractControl | undefined {
     return this._fieldControl();
   }
+
+  public readonly controlValue = rxResource({
+    request: () => this._fieldControl(),
+    loader: ({ request }) => {
+      if (request) {
+        return concat(
+          defer(() => of(request.getRawValue)),
+          request.valueChanges.pipe(map(() => request.getRawValue()))
+        );
+      }
+      return of(null);
+    },
+  }).value;
+
+  public readonly groupValue = rxResource({
+    request: () => this._group(),
+    loader: ({ request }) => {
+      if (request) {
+        return concat(
+          defer(() => of(request.getRawValue)),
+          request.valueChanges.pipe(map(() => request.getRawValue()))
+        );
+      }
+      return of(null);
+    },
+  }).value;
 
   public readonly _schema = input.required<S>({ alias: 'schema' });
   public readonly _options = computed<S['options']>(() => this._schema().options);
@@ -128,12 +165,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     return this.options?.hint?.valueTranslateData;
   }
 
-  public get placeholder(): string {
-    if (typeof this.options?.placeholder === 'function') {
-      return this.options.placeholder(this.group.value) ?? '';
-    }
-    return this.options?.placeholder ?? '';
-  }
+  public readonly placeholder = this.computeReactiveStringOption('placeholder');
 
   public constructor() {
     super();
@@ -144,7 +176,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
       if (group && fieldControl) {
         group.valueChanges.subscribe(() => {
           if (options?.onChangeFn) {
-            options.onChangeFn(group.value, fieldControl);
+            options.onChangeFn(group.getRawValue(), fieldControl);
           }
         });
       }
@@ -244,5 +276,49 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
           this.subscriptions.concat(subs);
         }
       });
+  }
+
+  protected computeReactiveBooleanOption<O = S['options']>(key: keyof O): Signal<boolean> {
+    return computed(() => {
+      const options = this._schema().options;
+      const keyValue: ReactiveBooleanOption | undefined = (options as O)?.[key] as ReactiveBooleanOption | undefined;
+      if (keyValue != null) {
+        return computeReactiveBooleanOption(keyValue, this.groupValue);
+      }
+      return false;
+    });
+  }
+
+  protected computeReactiveOptionalStringOption<O = S['options']>(key: keyof O): Signal<string | undefined> {
+    return computed(() => {
+      const options = this._schema().options;
+      const keyValue: ReactiveStringOption | undefined = (options as O)?.[key] as ReactiveStringOption | undefined;
+      if (keyValue != null) {
+        return computeReactiveStringOption(keyValue, this.groupValue);
+      }
+      return undefined;
+    });
+  }
+
+  protected computeReactiveOptionalNumberOption<O = S['options']>(key: keyof O): Signal<number | undefined> {
+    return computed(() => {
+      const options = this._schema().options;
+      const keyValue: ReactiveNumberOption | undefined = (options as O)?.[key] as ReactiveNumberOption | undefined;
+      if (keyValue != null) {
+        return computeReactiveNumberOption(keyValue, this.groupValue);
+      }
+      return undefined;
+    });
+  }
+
+  protected computeReactiveStringOption<O = S['options']>(key: keyof O): Signal<string> {
+    return computed(() => {
+      const options = this._schema().options;
+      const keyValue: ReactiveStringOption | undefined = (options as O)?.[key] as ReactiveStringOption | undefined;
+      if (keyValue != null) {
+        return computeReactiveStrictStringOption(keyValue, this.groupValue);
+      }
+      return '';
+    });
   }
 }

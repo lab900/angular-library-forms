@@ -1,5 +1,11 @@
 import { EditType } from '../../../models/editType';
-import { FormFieldBase, FormFieldBaseOptions, Icon } from '../../../models/form-field-base';
+import {
+  FormFieldBase,
+  FormFieldBaseOptions,
+  Icon,
+  ReactiveNumberOption,
+  ReactiveStringOption,
+} from '../../../models/form-field-base';
 
 export interface AmountOptions extends FormFieldBaseOptions {
   maxDecimals?: number;
@@ -8,10 +14,10 @@ export interface AmountOptions extends FormFieldBaseOptions {
 
 export interface AmountFieldInputOptions extends FormFieldBaseOptions {
   autofocus?: boolean;
-  maxDecimals?: AmountOptions['maxDecimals'] | ((data?: any) => number);
-  minDecimals?: AmountOptions['minDecimals'] | ((data?: any) => number);
-  suffix?: string | ((data?: any) => string);
-  prefix?: string | ((data?: any) => string);
+  maxDecimals?: ReactiveNumberOption;
+  minDecimals?: ReactiveNumberOption;
+  suffix?: ReactiveStringOption;
+  prefix?: ReactiveStringOption;
   align?: 'left' | 'right';
   style?: string;
 }

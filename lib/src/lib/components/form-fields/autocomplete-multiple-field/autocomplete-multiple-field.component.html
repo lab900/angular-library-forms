@@ -19,7 +19,7 @@
         #input
         matAutocomplete
         (input)="inputChanged($event)"
-        placeholder="{{ placeholder | translate }}"
+        placeholder="{{ placeholder() | translate }}"
         [matAutocomplete]="auto"
         [matChipInputFor]="chipList"
         [matChipInputSeparatorKeyCodes]="separatorKeysCodes" />

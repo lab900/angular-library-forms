@@ -6,7 +6,7 @@
     <input
       #input
       matInput
-      placeholder="{{ placeholder | translate }}"
+      placeholder="{{ placeholder() | translate }}"
       [ngxMatDatetimePicker]="picker"
       [formControlName]="fieldAttribute"
       [matDatepickerFilter]="options?.dateFilter"

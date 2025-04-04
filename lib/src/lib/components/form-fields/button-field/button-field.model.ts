@@ -9,7 +9,7 @@ import { TooltipPosition } from '@angular/material/tooltip';
 export interface FormFieldButtonOptions extends FormFieldBaseOptions {
   type: Lab900ButtonType;
   color?: ThemePalette;
-  onClick?: (formGroup: UntypedFormGroup, currentScheme: Lab900FormField, event: Event) => any;
+  onClick?: (formGroup: UntypedFormGroup, currentScheme: Readonly<Lab900FormField>, event: Event) => any;
   label?: string;
   tooltip?: {
     text: string;

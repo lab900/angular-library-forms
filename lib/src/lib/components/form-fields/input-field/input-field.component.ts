@@ -37,19 +37,6 @@ export class InputFieldComponent extends FormComponent<FormFieldInput> {
   @HostBinding('class')
   public classList = `lab900-form-field`;
 
-  public readonly suffix = computed(() => {
-    const opt = this._options();
-    if (typeof opt?.suffix === 'function') {
-      return opt.suffix(this._group()?.getRawValue());
-    }
-    return opt?.suffix;
-  });
-
-  public readonly prefix = computed(() => {
-    const opt = this._options();
-    if (typeof opt?.prefix === 'function') {
-      return opt.prefix(this._group()?.getRawValue());
-    }
-    return opt?.prefix;
-  });
+  public readonly suffix = this.computeReactiveOptionalStringOption('suffix');
+  public readonly prefix = this.computeReactiveOptionalStringOption('prefix');
 }

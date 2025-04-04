@@ -6,7 +6,7 @@
     <input
       matInput
       type="text"
-      placeholder="{{ placeholder | translate }}"
+      placeholder="{{ placeholder() | translate }}"
       [formControlName]="fieldAttribute"
       [options]="options"
       [class.readonly]="fieldIsReadonly()"
