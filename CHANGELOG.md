@@ -1,5 +1,9 @@
 # Changelog
 
+## 19.1.5
+- Bug fix: fix tooltips showing for hidden fields
+- Feat: reactive button labels
+
 ## 19.1.4
 
 - Bug fix: reactive options based on form group values

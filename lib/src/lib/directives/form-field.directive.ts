@@ -13,6 +13,7 @@ import { map } from 'rxjs/operators';
 
 @Directive({
   selector: '[lab900FormField]',
+  exportAs: 'lab900FormField',
 })
 export class FormFieldDirective {
   private readonly container = inject(ViewContainerRef);

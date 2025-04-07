@@ -1,6 +1,6 @@
 @if (!fieldIsHidden()) {
   <div
-    [formGroup]="group"
+    [formGroup]="_group()"
     class="lab900-button-field button-field mat-form-field-wrapper"
     id="lab900-button-field-{{ elementId() }}">
     @if (label(); as label) {
@@ -10,17 +10,17 @@
     }
 
     <lab900-button
-      [type]="options?.type"
-      [color]="options?.color"
+      [type]="_options()?.type"
+      [color]="_options()?.color"
       [disabled]="fieldIsReadonly()"
       (btnClick)="handleClick($event)"
-      [label]="options?.label"
-      [matTooltip]="options?.tooltip?.text | translate"
-      [matTooltipPosition]="options?.tooltip?.position || 'above'"
-      [prefixIcon]="options?.prefixIcon"
-      [suffixIcon]="options?.suffixIcon"
-      [svgIcon]="options?.svgIcon"
-      [containerClass]="options?.containerClass"
-      [buttonId]="options?.buttonId" />
+      [label]="buttonLabel()"
+      [matTooltip]="_options()?.tooltip?.text | translate"
+      [matTooltipPosition]="_options()?.tooltip?.position || 'above'"
+      [prefixIcon]="prefixIcon()"
+      [suffixIcon]="suffixIcon()"
+      [svgIcon]="_options()?.svgIcon"
+      [containerClass]="_options()?.containerClass"
+      [buttonId]="_options()?.buttonId" />
   </div>
 }

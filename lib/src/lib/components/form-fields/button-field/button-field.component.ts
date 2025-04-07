@@ -17,6 +17,10 @@ export class ButtonFieldComponent extends FormComponent<FormFieldButton> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
+  public readonly suffixIcon = this.computeReactiveOptionalStringOption('suffixIcon');
+  public readonly prefixIcon = this.computeReactiveOptionalStringOption('prefixIcon');
+  public readonly buttonLabel = this.computeReactiveOptionalStringOption('label');
+
   @ViewChild(Lab900ButtonComponent, { read: ElementRef })
   public set buttonComp(buttonComp: ElementRef) {
     // fix for trigger action on enter
