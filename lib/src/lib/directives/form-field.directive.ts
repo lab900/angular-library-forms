@@ -47,6 +47,7 @@ export class FormFieldDirective {
   public readonly language = input<string | undefined>(undefined);
   public readonly availableLanguages = input<ValueLabel[]>([]);
   public readonly readonly = input<boolean>(false);
+  public readonly hidden = signal<boolean | null>(null);
 
   public readonly fieldIsReadonly = computed(() => {
     if (this.readonly()) {
@@ -55,6 +56,9 @@ export class FormFieldDirective {
     return this.getReactiveBooleanOption('readonly');
   });
   public readonly fieldIsHidden = computed(() => {
+    if (this.hidden() != null) {
+      return this.hidden();
+    }
     return this.getReactiveBooleanOption('hide');
   });
   public readonly fieldIsRequired = computed(() => {
@@ -101,7 +105,12 @@ export class FormFieldDirective {
         component.setInput('group', this.fieldGroup());
       }
     });
-
+    effect(() => {
+      const component = this.component();
+      if (component) {
+        component.instance.fieldIsHidden.subscribe(this.hidden.set);
+      }
+    });
     effect(() => {
       const component = this.component();
       if (component) {

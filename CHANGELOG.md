@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.1.6
+- Bug fix: fix tooltips showing for conditional hidden fields
+
 ## 19.1.5
 - Bug fix: fix tooltips showing for hidden fields
 - Feat: reactive button labels
