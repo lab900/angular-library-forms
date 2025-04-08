@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.1.8
+- Feat: reactive form field icon
+
 ## 19.1.7
 - Bug fix: hidden form-col class
 

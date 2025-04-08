@@ -1,8 +1,8 @@
 import { EditType } from '../../../models/editType';
-import { FormFieldBase, FormFieldBaseOptions, Icon } from '../../../models/form-field-base';
+import { FormFieldBase, FormFieldBaseOptions, Icon, ReactiveOption } from '../../../models/form-field-base';
 
 export interface FormFieldIconOptions extends FormFieldBaseOptions {
-  icon?: Icon;
+  icon?: ReactiveOption<Icon>;
 }
 
 export interface FormFieldIcon<T extends string | number = string> extends FormFieldBase<T, FormFieldIconOptions> {
