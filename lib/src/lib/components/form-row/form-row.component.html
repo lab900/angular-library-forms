@@ -10,6 +10,7 @@
     <div class="form-row" [class.mobile-cols]="_options()?.mobileCols" id="form-col-{{ elementId() }}">
       @for (field of nestedFields(); track $index) {
         <div
+          #columnElm
           class="form-col"
           [style.width]="(100 * (field.options?.colspan || 12)) / 12 + '%'"
           id="form-col-{{ elementId() }}-{{ _options()?.elementId }}">
@@ -17,9 +18,10 @@
             lab900FormField
             #ref="lab900FormField"
             [schema]="field"
+            [columnElm]="columnElm"
             [availableLanguages]="availableLanguages()"
             [language]="language()"
-            [group]="fieldAttribute ? group.get(fieldAttribute) : group"
+            [group]="formGroup()"
             [readonly]="fieldIsReadonly()" />
           @if (!ref.fieldIsHidden()) {
             @if (infoTooltip(field); as tip) {

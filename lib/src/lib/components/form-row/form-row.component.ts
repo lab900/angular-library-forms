@@ -8,6 +8,7 @@ import { MatIcon } from '@angular/material/icon';
 
 import { MatTooltip } from '@angular/material/tooltip';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'lab900-form-row',
@@ -20,6 +21,11 @@ export class FormRowComponent extends FormComponent<FormRow> {
   public classList = 'lab900-form-field';
 
   protected readonly nestedFields = computed(() => this._schema().nestedFields);
+  protected readonly formGroup = computed(() => {
+    const fieldAttribute = this._fieldAttribute();
+    const group = this._group();
+    return (fieldAttribute ? group.get(fieldAttribute) : group) as FormGroup | undefined;
+  });
 
   public infoTooltip(field: Lab900FormField): { text: string; icon?: string; class?: string } | null {
     return field.options ? FormFieldUtils.infoTooltip(field.options, this.group) : null;

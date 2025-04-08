@@ -19,6 +19,7 @@ export class FormFieldDirective {
   private readonly container = inject(ViewContainerRef);
   private readonly formFieldMappingService = inject(FormFieldMappingService);
 
+  public readonly columnElm = input<HTMLElement | null>(null);
   public readonly schema = input.required<Lab900FormField>();
   public readonly group = input.required<UntypedFormGroup>();
   public readonly fieldGroup = computed(() => {
@@ -138,7 +139,16 @@ export class FormFieldDirective {
     effect(() => {
       const component = this.component();
       if (component) {
-        component.setInput('fieldIsHidden', this.fieldIsHidden());
+        const hidden = this.fieldIsHidden();
+        const columnElm = this.columnElm();
+        if (columnElm) {
+          if (hidden) {
+            columnElm.classList.add('hidden');
+          } else {
+            columnElm.classList.remove('hidden');
+          }
+        }
+        component.setInput('fieldIsHidden', hidden);
       }
     });
     effect(() => {
