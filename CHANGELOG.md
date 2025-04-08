@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.1.7
+- Bug fix: hidden form-col class
+
 ## 19.1.6
 - Bug fix: fix tooltips showing for conditional hidden fields
 
