@@ -1,11 +1,9 @@
 @if (fieldIsHidden()) {
   <div class="lab900-form-column {{ _options()?.customClass }}" id="lab900-form-column-{{ elementId() }}">
-    @if (fieldIsReadonly()) {
-      @if (readonlyLabel(); as label) {
-        <span class="lab900-form-field-label lab900-form-row-label {{ _options()?.customTitleClass }}">{{
-          label | translate
-        }}</span>
-      }
+    @if (columnLabel(); as label) {
+      <span class="lab900-form-field-label lab900-form-row-label {{ _options()?.customTitleClass }}">{{
+        label | translate
+      }}</span>
     }
     <div class="form-column" [class.mobile-cols]="_options()?.mobileCols" id="form-column-{{ elementId() }}">
       @for (field of nestedFields(); track $index) {
@@ -15,7 +13,7 @@
           [schema]="field"
           [availableLanguages]="availableLanguages()"
           [language]="language()"
-          [group]="fieldAttribute ? group.get(fieldAttribute) : group"
+          [group]="formGroup()"
           [readonly]="fieldIsReadonly()">
           @if (!ref.fieldIsHidden()) {
             @if (infoTooltip(field); as tip) {

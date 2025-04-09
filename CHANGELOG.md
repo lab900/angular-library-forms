@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.1.9
+- Fix: row labels
+
 ## 19.1.8
 - Feat: reactive form field icon
 

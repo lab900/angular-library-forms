@@ -20,6 +20,13 @@ export class FormRowComponent extends FormComponent<FormRow> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
+  protected readonly rowLabel = computed(() => {
+    if (this.fieldIsReadonly() && this.readonlyLabel()) {
+      return this.readonlyLabel();
+    }
+    return this.label();
+  });
+
   protected readonly nestedFields = computed(() => this._schema().nestedFields);
   protected readonly formGroup = computed(() => {
     const fieldAttribute = this._fieldAttribute();
