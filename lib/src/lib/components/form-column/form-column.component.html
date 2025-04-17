@@ -1,4 +1,4 @@
-@if (fieldIsHidden()) {
+@if (!fieldIsHidden()) {
   <div class="lab900-form-column {{ _options()?.customClass }}" id="lab900-form-column-{{ elementId() }}">
     @if (columnLabel(); as label) {
       <span class="lab900-form-field-label lab900-form-row-label {{ _options()?.customTitleClass }}">{{

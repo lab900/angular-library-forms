@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.1.10
+- Fix: column hidden state
+
 ## 19.1.9
 - Fix: row labels
 
