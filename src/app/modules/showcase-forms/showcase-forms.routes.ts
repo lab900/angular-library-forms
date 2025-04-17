@@ -35,6 +35,7 @@ import { FormFieldSearchExampleComponent } from './examples/form-field-search-ex
 import { FormConditionalWithExternalFormExampleComponent } from './examples/form-condtional-with-external-form-example/form-conditional-with-external-form-example.component';
 import { FormConditionalValidationExampleComponent } from './examples/form-condtional-validation-example/form-conditional-validation-example.component';
 import { FormReactiveOptionsExampleComponent } from './examples/form-reactive-options-example/form-reactive-options-example.component';
+import { FormFieldEditorExampleComponent } from './examples/form-field-editor-example/form-field-editor-example.component';
 
 export default [
   {
@@ -123,5 +124,8 @@ export default [
   ]),
   new ShowcaseRoute('form-field-search', 'Form Fields: Search', [
     new ShowcaseExample(FormFieldSearchExampleComponent, 'Search field'),
+  ]),
+  new ShowcaseRoute('form-field-editor', 'Form Fields: Editor (Wysiwyg)', [
+    new ShowcaseExample(FormFieldEditorExampleComponent, 'Editor (Wysiwyg)'),
   ]),
 ] satisfies Routes;

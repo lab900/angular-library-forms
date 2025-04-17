@@ -124,3 +124,14 @@ provideLuxonDateAdapter();
 ```
 
 More info on date adapters. [Angular Material Date Adapter](https://material.angular.io/components/datepicker/overview#choosing-a-date-implementation-and-date-adapter)
+
+## Wysiwyg editor
+The library uses [@kolkov/angular-editor](https://www.npmjs.com/package/@kolkov/angular-editor) for the editor.
+To serve the icons file, ensure that your angular.json contains the following asset configuration:
+```json lines
+{
+    "glob": "**/*",
+    "input": "node_modules/@kolkov/angular-editor/assets/icons",
+    "output": "assets/ae-icons/"
+}
+```

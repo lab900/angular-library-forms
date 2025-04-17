@@ -20,7 +20,7 @@ export const showcaseFormsNavItems: NavItemGroup[] = [
             label: 'Conditional Forms',
             route: 'conditional-forms',
           },
-        ],
+        ].sort((a, b) => a.label.localeCompare(b.label)),
       },
       {
         label: 'forms.form-fields',
@@ -32,6 +32,10 @@ export const showcaseFormsNavItems: NavItemGroup[] = [
           {
             label: 'Autocomplete',
             route: 'form-field-autocomplete',
+          },
+          {
+            label: 'Editor (Wysiwyg)',
+            route: 'form-field-editor',
           },
           {
             label: 'Input & Textarea',
@@ -89,7 +93,7 @@ export const showcaseFormsNavItems: NavItemGroup[] = [
             label: 'Nested groups',
             route: 'form-field-nested-groups',
           },
-        ],
+        ].sort((a, b) => a.label.localeCompare(b.label)),
       },
     ],
   },

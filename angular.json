@@ -38,6 +38,11 @@
                 "glob": "**/*-example.component.*",
                 "input": "src/app/modules/showcase-forms/examples",
                 "output": "/examples"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@kolkov/angular-editor/assets/icons",
+                "output": "assets/ae-icons/"
               }
             ],
             "styles": [
