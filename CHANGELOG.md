@@ -2,6 +2,7 @@
 
 ## 
 - Added text functionality to icon
+
 ## 19.1.10
 - Fix: column hidden state
 
