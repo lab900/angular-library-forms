@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.1.11
+- Added text functionality to icon
+
 ## 19.1.10
 - Fix: column hidden state
 
