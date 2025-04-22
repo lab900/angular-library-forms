@@ -3,6 +3,7 @@ import { FormFieldBase, FormFieldBaseOptions, Icon, ReactiveOption } from '../..
 
 export interface FormFieldIconOptions extends FormFieldBaseOptions {
   icon?: ReactiveOption<Icon>;
+  text?: ReactiveOption<string>;
 }
 
 export interface FormFieldIcon<T extends string | number = string> extends FormFieldBase<T, FormFieldIconOptions> {

@@ -35,7 +35,7 @@ export class FormFieldRepeaterAdvancedExampleComponent {
             nestedFields: [
               {
                 editType: EditType.Icon,
-                options: { icon: { name: 'arrow_downward' }, colspan: 12 },
+                options: { icon: { name: 'arrow_downward' }, text: 'pj', colspan: 12 },
               },
             ],
           },
