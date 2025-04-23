@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.1.13
+- Added translate logic to Icon field text option
+
 ## 19.1.11
 - Added text functionality to icon
 
