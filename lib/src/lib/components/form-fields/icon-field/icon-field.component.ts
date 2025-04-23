@@ -3,6 +3,7 @@ import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldIcon } from './icon-field.model';
 import { IconComponent } from '@lab900/ui';
 import { Icon, ReactiveOption } from '../../../models/form-field-base';
+import { TranslatePipe } from '@ngx-translate/core';
 
 function computeReactiveIconOption(option: ReactiveOption<Icon>, groupValue: Signal<any>): Icon | undefined {
   let response: Icon | undefined = undefined;
@@ -22,7 +23,7 @@ function computeReactiveIconOption(option: ReactiveOption<Icon>, groupValue: Sig
   selector: 'lab900-icon-field',
   templateUrl: './icon-field.component.html',
   styleUrls: ['./icon-field.component.scss'],
-  imports: [IconComponent],
+  imports: [IconComponent, TranslatePipe],
   host: { class: 'lab900-form-field' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
