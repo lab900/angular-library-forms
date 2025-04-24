@@ -35,11 +35,17 @@ export class IconFieldComponent extends FormComponent<FormFieldIcon> {
     }
     return computeReactiveIconOption(iconOpt, this.groupValue);
   });
-  protected readonly text = computed(() => {
+  protected readonly text = computed((): string | undefined => {
     const opt = this._options()?.text;
     if (!opt) return undefined;
-    if (typeof opt === 'function') return opt(this.groupValue());
-    if (isSignal(opt)) return opt();
-    return opt;
+
+    if (typeof opt === 'function') {
+      const result = opt(this.groupValue());
+      return isSignal(result) ? (result() as string | undefined) : (result as string | undefined);
+    }
+
+    if (isSignal(opt)) return opt() as string | undefined;
+
+    return opt as string | undefined;
   });
 }
