@@ -48,5 +48,4 @@ export class IconFieldComponent extends FormComponent<FormFieldIcon> {
 
     return opt as string | undefined;
   });
-
 }
