@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldAmount } from './amount-field.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -22,6 +22,7 @@ import { IconComponent } from '@lab900/ui';
     AmountInputDirective,
     IconComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AmountFieldComponent extends FormComponent<FormFieldAmount> {
   @HostBinding('class')
@@ -31,4 +32,5 @@ export class AmountFieldComponent extends FormComponent<FormFieldAmount> {
   public readonly prefix = this.computeReactiveOptionalStringOption('prefix');
   public readonly maxDecimals = this.computeReactiveOptionalNumberOption('maxDecimals');
   public readonly minDecimals = this.computeReactiveOptionalNumberOption('minDecimals');
+  public readonly icon = computed(() => this._schema()?.icon);
 }

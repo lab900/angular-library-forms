@@ -7,6 +7,7 @@ import {
   inject,
   input,
   LOCALE_ID,
+  Renderer2,
   signal,
 } from '@angular/core';
 import {
@@ -32,6 +33,8 @@ export class AmountInputDirective implements ControlValueAccessor {
   private readonly appLocale = inject(LOCALE_ID);
   private readonly settings = inject(LAB900_FORM_MODULE_SETTINGS, { optional: true });
   private readonly locale = this.settings?.amountField?.locale ?? this.appLocale;
+  private readonly renderer = inject(Renderer2);
+  private readonly elementRef: ElementRef<HTMLInputElement> = inject(ElementRef<HTMLInputElement>);
 
   public readonly maxDecimals = input<number | undefined>(this.settings?.amountField?.maxDecimals);
   public readonly minDecimals = input<number | undefined>(this.settings?.amountField?.minDecimals);
@@ -46,13 +49,11 @@ export class AmountInputDirective implements ControlValueAccessor {
     })
   );
 
-  public constructor(private elementRef: ElementRef<HTMLInputElement>) {}
-
   public writeValue(value: number): void {
     if (!isNaN(value) && !this.focused()) {
       this.formatValue(value);
     } else {
-      this.elementRef.nativeElement.value = value as any;
+      this.renderer.setProperty(this.elementRef.nativeElement, 'value', value);
     }
   }
 
@@ -70,7 +71,7 @@ export class AmountInputDirective implements ControlValueAccessor {
   }
 
   public setDisabledState(isDisabled: boolean): void {
-    this.elementRef.nativeElement.disabled = isDisabled;
+    this.renderer.setProperty(this.elementRef.nativeElement, 'disabled', isDisabled);
   }
 
   @HostListener('input', ['$event.target.value', '$event.target'])
@@ -94,7 +95,7 @@ export class AmountInputDirective implements ControlValueAccessor {
       const pastedInput: string = event.clipboardData.getData('text/plain');
       if (pastedInput?.length) {
         const newValue = amountToNumber(this.getUnformattedValue(pastedInput)) as any;
-        this.elementRef.nativeElement.value = newValue;
+        this.renderer.setProperty(this.elementRef.nativeElement, 'value', newValue);
         this.onChange(newValue);
         this.onTouched();
       }
@@ -105,9 +106,13 @@ export class AmountInputDirective implements ControlValueAccessor {
   public onFocus(value: string): void {
     if (!this.focused() && this.canUpdate()) {
       this.focused.set(true);
-      this.elementRef.nativeElement.type = 'number';
-      this.elementRef.nativeElement.setAttribute('step', '0.01');
-      this.elementRef.nativeElement.value = amountToNumber(this.getUnformattedValue(value)) as any;
+      this.renderer.setProperty(this.elementRef.nativeElement, 'type', 'number');
+      this.renderer.setAttribute(this.elementRef.nativeElement, 'step', '0.01');
+      this.renderer.setProperty(
+        this.elementRef.nativeElement,
+        'value',
+        amountToNumber(this.getUnformattedValue(value))
+      );
     }
   }
 
@@ -115,7 +120,7 @@ export class AmountInputDirective implements ControlValueAccessor {
   public onBlur(value: number): void {
     if (this.focused() && this.canUpdate()) {
       this.focused.set(false);
-      this.elementRef.nativeElement.type = 'string';
+      this.renderer.setProperty(this.elementRef.nativeElement, 'type', 'string');
       this.formatValue(value);
       this.onTouched();
     }
@@ -123,8 +128,11 @@ export class AmountInputDirective implements ControlValueAccessor {
 
   private formatValue(value: number): void {
     const v = amountToNumber(String(value)) ?? null;
-    this.elementRef.nativeElement.value =
-      v != null ? formatAmountWithoutRounding(v, this.formatter(), this.maxDecimals()) : '';
+    this.renderer.setProperty(
+      this.elementRef.nativeElement,
+      'value',
+      v != null ? formatAmountWithoutRounding(v, this.formatter(), this.maxDecimals()) : ''
+    );
   }
 
   private getUnformattedValue(value: string): string {

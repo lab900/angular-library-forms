@@ -54,7 +54,7 @@ export class Lab900Form<T> {
   }
 
   public get valid(): boolean {
-    return this._form().valid;
+    return this._form().valid || this._form().disabled;
   }
 
   public get value(): T {
@@ -63,21 +63,25 @@ export class Lab900Form<T> {
 
   public constructor() {
     effect(() => {
-      const form = untracked(this._form);
       const data = this.data();
-      if (data && form) {
-        this.patchValues(data, untracked(this.emitEventOnDataChange));
-      }
+      untracked(() => {
+        const form = untracked(this._form);
+        if (data && form) {
+          this.patchValues(data, this.emitEventOnDataChange());
+        }
+      });
     });
   }
 
   public patchValues(data: T, emitEvent = true): void {
     const dataKeys = Object.keys(data as object) as (keyof T)[];
+    const controls = this.controls();
+    const fields = this.fields();
     dataKeys.forEach(key => {
-      const control = untracked(this.controls)?.[key as string];
+      const control = controls?.[key as string];
       if (control) {
         if (control instanceof UntypedFormArray) {
-          const fieldSchema = untracked(this.fields).find((field: Lab900FormField) => field.attribute === key);
+          const fieldSchema = fields.find((field: Lab900FormField) => field.attribute === key);
           if (fieldSchema?.editType === EditType.Repeater && fieldSchema?.nestedFields) {
             const nestedArrayData = data[key] as unknown[] | undefined;
             const nbOfControlRows = control.controls?.length ?? 0;
@@ -109,7 +113,6 @@ export class Lab900Form<T> {
 
   public setValues(data: T, emitEvent = true): void {
     const dataKeys = Object.keys(data as object) as (keyof T)[];
-
     dataKeys.forEach(key => {
       const control = untracked(this.controls)?.[key as string];
       if (control) {
