@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { AbstractControl, ValidatorFn } from '@angular/forms';
 
@@ -22,6 +22,7 @@ function validateResources(): ValidatorFn {
   selector: 'lab900-form-field-repeater-example',
   template: ` <lab900-form [schema]="formSchema" (click)="logValue(form)" [data]="data" #form />`,
   imports: [Lab900Form],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldRepeaterExampleComponent {
   public data: any = {

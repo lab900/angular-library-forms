@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 
@@ -6,6 +6,7 @@ import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
   selector: 'lab900-form-field-select-example',
   template: `<lab900-form [schema]="formSchema" /> <button (click)="clearSelect()">clear All</button>`,
   imports: [Lab900Form],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldSelectExampleComponent {
   public readonly formGroup = new UntypedFormGroup({});

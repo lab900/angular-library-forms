@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 
@@ -6,6 +6,7 @@ import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
   selector: 'lab900-form-field-button-example',
   template: '<lab900-form [schema]="formSchema"/>',
   imports: [Lab900Form],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldButtonExampleComponent {
   public formSchema: Lab900FormConfig = {

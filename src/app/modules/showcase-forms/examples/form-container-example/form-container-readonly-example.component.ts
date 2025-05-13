@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { formFieldsExample } from './config/form-fields-example';
 import { formDataExample } from './config/form-data-example';
@@ -10,6 +10,7 @@ import { formDataExample } from './config/form-data-example';
     <button (click)="toggleReadOnly()">Toggle edit</button>
   `,
   imports: [Lab900Form],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormContainerReadonlyExampleComponent {
   public formFields: Lab900FormConfig = {

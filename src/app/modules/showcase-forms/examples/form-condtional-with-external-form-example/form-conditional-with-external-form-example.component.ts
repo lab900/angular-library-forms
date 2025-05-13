@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 
 @Component({
@@ -10,6 +10,7 @@ import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
     <lab900-form #form2 [schema]="schema2" [externalForms]="{ form1: form1.form }" />
   `,
   imports: [Lab900Form],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormConditionalWithExternalFormExampleComponent {
   public schema: Lab900FormConfig = {

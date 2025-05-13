@@ -1,4 +1,4 @@
-import { Component, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { EditType, Lab900Form, Lab900FormConfig, ValueLabel } from '@lab900/forms';
 import { of } from 'rxjs';
 import { MatButton } from '@angular/material/button';
@@ -9,6 +9,7 @@ import { MatButton } from '@angular/material/button';
   template:
     '<lab900-form [schema]="formSchema"/><button mat-raised-button color="primary" (click)="validate()">Submit</button>',
   imports: [Lab900Form, MatButton],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldAutocompleteExampleComponent {
   public readonly form = viewChild<Lab900Form<any>>(Lab900Form);

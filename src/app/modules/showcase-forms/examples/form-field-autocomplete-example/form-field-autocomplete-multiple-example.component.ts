@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { EditType, Lab900Form, Lab900FormConfig, ValueLabel } from '@lab900/forms';
 import { of } from 'rxjs';
 import { JsonPipe } from '@angular/common';
@@ -7,6 +7,7 @@ import { JsonPipe } from '@angular/common';
   selector: 'lab900-form-field-autocomplete-multiple-example',
   template: '<lab900-form #form [schema]="formSchema"/><pre>{{form?.value | json }}</pre>',
   imports: [Lab900Form, JsonPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldAutocompleteMultipleExampleComponent {
   public options: ValueLabel[] = [{ name: 'Mary' }, { name: 'Shelley' }, { name: 'Igor' }].map(value => ({
