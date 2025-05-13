@@ -15,15 +15,20 @@
         [formControlName]="_fieldAttribute()"
         [class.readonly]="fieldIsReadonly()"
         lab900InputAutofocus
-        [autofocus]="_options()?.autofocus"
+        [autofocus]="!!_options()?.autofocus"
         [style]="_options()?.style || ''" />
     } @else {
-      @let mask = fieldMask();
+      <!--
+       the value input is set here to solve a floating issue with ng-mask
+       with formControlName this shouldn't be needed
+       @see https://github.com/JsDaddy/ngx-mask/issues/1305
+      -->
       <input
         matInput
         [type]="type()"
         placeholder="{{ placeholder() | translate }}"
         [formControlName]="_fieldAttribute()"
+        [value]="controlValue()"
         [class.readonly]="fieldIsReadonly()"
         [mask]="fieldMask()?.mask"
         [prefix]="(fieldMask()?.prefix ?? setting?.fieldMask?.prefix) || ''"
@@ -32,8 +37,8 @@
         [dropSpecialCharacters]="
           fieldMask()?.dropSpecialCharacters ?? setting?.fieldMask?.dropSpecialCharacters ?? true
         "
-        [allowNegativeNumbers]="fieldMask()?.allowNegativeNumbers ?? setting?.fieldMask?.allowNegativeNumbers"
-        [showMaskTyped]="fieldMask()?.showMaskTyped ?? setting?.fieldMask?.showMaskTyped"
+        [allowNegativeNumbers]="!!fieldMask()?.allowNegativeNumbers ?? setting?.fieldMask?.allowNegativeNumbers"
+        [showMaskTyped]="!!fieldMask()?.showMaskTyped ?? setting?.fieldMask?.showMaskTyped"
         [decimalMarker]="fieldMask()?.decimalMarker ?? setting?.fieldMask?.decimalMarker"
         [thousandSeparator]="fieldMask()?.thousandSeparator ?? setting?.fieldMask?.thousandSeparator"
         [patterns]="fieldMask()?.patterns ?? setting?.fieldMask?.patterns"
@@ -42,7 +47,7 @@
           fieldMask()?.specialCharacters ?? setting?.fieldMask?.specialCharacters ?? defaultSpecialCharacters
         "
         lab900InputAutofocus
-        [autofocus]="_options()?.autofocus"
+        [autofocus]="!!_options()?.autofocus"
         [style]="_options()?.style || ''" />
     }
     @if (icon()?.position === 'left') {
