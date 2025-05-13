@@ -29,6 +29,6 @@ export class ButtonFieldComponent extends FormComponent<FormFieldButton> {
 
   public handleClick(event: Event): void {
     event.stopPropagation();
-    this.options?.onClick?.(this.group, this.schema, event);
+    this._options()?.onClick?.(this._group(), this._schema(), event);
   }
 }

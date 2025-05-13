@@ -1,4 +1,4 @@
-import { Component, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import {
   EditType,
   FormFieldSelect,
@@ -33,6 +33,7 @@ const compare = (a: Book, b: Book): boolean => a?.key != undefined && b?.key != 
   template: ` <lab900-form [schema]="formSchema" [data]="data()" />
     <button (click)="logFormValue()">Log form data</button>`,
   imports: [Lab900Form],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldSelectAdvancedExampleComponent {
   private readonly MAX_ITEMS_FOR_SELECT_ALL = 157;

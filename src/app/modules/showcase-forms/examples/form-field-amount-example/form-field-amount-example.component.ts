@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { AmountPipe, EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { JsonPipe } from '@angular/common';
 
@@ -16,6 +16,7 @@ import { JsonPipe } from '@angular/common';
     <p>Will result in: {{ 204500.456 | amount }}</p>
   </div>`,
   imports: [Lab900Form, JsonPipe, AmountPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldAmountExampleComponent {
   public readonly data = signal<any>(undefined);

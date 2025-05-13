@@ -33,14 +33,15 @@
         }
       }
     </mat-autocomplete>
-    @if (!fieldIsReadonly() && hint && !(options?.hint.hideHintOnValidValue && input.value)) {
-      <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
-    }
-    @if (!valid && touched) {
-      <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
+    @let hint = _options()?.hint;
+    @if (!!hint?.value && !(hint?.hideHintOnValidValue && input.value) && !fieldIsReadonly()) {
+      <mat-hint>
+        <span [innerHTML]="hint.value | translate: hint.valueTranslateData"></span>
+      </mat-hint>
     }
     @if (!fieldIsReadonly()) {
       <mat-icon matSuffix>search</mat-icon>
     }
+    <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
   </mat-form-field>
 }

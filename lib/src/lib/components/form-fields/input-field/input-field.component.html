@@ -1,7 +1,7 @@
 @if (!fieldIsHidden()) {
   <mat-form-field
-    [formGroup]="group"
-    class="lab900-input-field {{ options?.align || 'left' }}"
+    [formGroup]="_group()"
+    class="lab900-input-field {{ _options()?.align || 'left' }}"
     [class.spanFix]="suffix() || prefix()"
     id="lab900-input-field-{{ elementId() }}">
     @if (label(); as label) {
@@ -12,17 +12,23 @@
         matInput
         [type]="'number'"
         placeholder="{{ placeholder() | translate }}"
-        [formControlName]="fieldAttribute"
+        [formControlName]="_fieldAttribute()"
         [class.readonly]="fieldIsReadonly()"
         lab900InputAutofocus
-        [autofocus]="options?.autofocus"
-        [style]="options?.style || ''" />
+        [autofocus]="!!_options()?.autofocus"
+        [style]="_options()?.style || ''" />
     } @else {
+      <!--
+       the value input is set here to solve a floating issue with ng-mask
+       with formControlName this shouldn't be needed
+       @see https://github.com/JsDaddy/ngx-mask/issues/1305
+      -->
       <input
         matInput
         [type]="type()"
         placeholder="{{ placeholder() | translate }}"
-        [formControlName]="fieldAttribute"
+        [formControlName]="_fieldAttribute()"
+        [value]="controlValue()"
         [class.readonly]="fieldIsReadonly()"
         [mask]="fieldMask()?.mask"
         [prefix]="(fieldMask()?.prefix ?? setting?.fieldMask?.prefix) || ''"
@@ -31,8 +37,8 @@
         [dropSpecialCharacters]="
           fieldMask()?.dropSpecialCharacters ?? setting?.fieldMask?.dropSpecialCharacters ?? true
         "
-        [allowNegativeNumbers]="fieldMask()?.allowNegativeNumbers ?? setting?.fieldMask?.allowNegativeNumbers"
-        [showMaskTyped]="fieldMask()?.showMaskTyped ?? setting?.fieldMask?.showMaskTyped"
+        [allowNegativeNumbers]="!!fieldMask()?.allowNegativeNumbers ?? setting?.fieldMask?.allowNegativeNumbers"
+        [showMaskTyped]="!!fieldMask()?.showMaskTyped ?? setting?.fieldMask?.showMaskTyped"
         [decimalMarker]="fieldMask()?.decimalMarker ?? setting?.fieldMask?.decimalMarker"
         [thousandSeparator]="fieldMask()?.thousandSeparator ?? setting?.fieldMask?.thousandSeparator"
         [patterns]="fieldMask()?.patterns ?? setting?.fieldMask?.patterns"
@@ -41,8 +47,8 @@
           fieldMask()?.specialCharacters ?? setting?.fieldMask?.specialCharacters ?? defaultSpecialCharacters
         "
         lab900InputAutofocus
-        [autofocus]="options?.autofocus"
-        [style]="options?.style || ''" />
+        [autofocus]="!!_options()?.autofocus"
+        [style]="_options()?.style || ''" />
     }
     @if (icon()?.position === 'left') {
       <lab900-icon [icon]="icon()" matTextPrefix />
@@ -55,15 +61,16 @@
     @if (prefix(); as prefix) {
       <span class="lab900-input-field--prefix" matTextPrefix>{{ prefix | translate }}</span>
     }
-    @if (hint && !(options?.hint?.hideHintOnValidValue && fieldControl?.getRawValue()) && !fieldIsReadonly()) {
+    @let hint = _options()?.hint;
+    @if (!!hint?.value && !(hint?.hideHintOnValidValue && !!controlValue()?.length) && !fieldIsReadonly()) {
       <mat-hint>
-        <span [innerHTML]="hint | translate: hintValueTranslateData"></span>
+        <span [innerHTML]="hint.value | translate: hint.valueTranslateData"></span>
       </mat-hint>
     }
     @if (showLengthIndicator() && !fieldIsReadonly()) {
-      <mat-hint align="end">{{ fieldControl?.getRawValue()?.length || 0 }}/{{ options?.maxLength }}</mat-hint>
+      <mat-hint align="end">{{ controlValue()?.length || 0 }}/{{ _options()?.maxLength }}</mat-hint>
     }
-    @if (!valid && !fieldIsReadonly()) {
+    @if (!fieldIsReadonly()) {
       <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
     }
   </mat-form-field>

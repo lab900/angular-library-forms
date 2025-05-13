@@ -1,10 +1,10 @@
 @if (!fieldIsHidden()) {
   <div
-    [formGroup]="group"
+    [formGroup]="_group()"
     class="lab900-repeater-field repeater-field"
     id="lab900-repeater-field-{{ elementId() }}"
     [class.fixed-list]="fixedList()">
-    <div [formArrayName]="fieldAttribute">
+    <div [formArrayName]="_fieldAttribute()">
       @if (label(); as label) {
         <span class="lab900-form-field-label lab900-form-field-label--with-info">
           {{ label | translate }}
@@ -20,7 +20,7 @@
           @for (control of repeater.controls; track control; let i = $index) {
             <div class="repeater-row">
               <div class="repeater-row__fields">
-                @for (field of schema.nestedFields; track field) {
+                @for (field of nestedFields(); track field) {
                   <ng-container lab900FormField [schema]="field" [group]="control" />
                 }
               </div>
@@ -43,8 +43,8 @@
           }
         }
       }
-      @if (touched && !valid && !fieldIsReadonly()) {
-        <mat-error class="subscript-wrapper" [@transitionMessages]="valid ? 'void' : 'enter'"
+      @if (touched && !controlValid() && !fieldIsReadonly()) {
+        <mat-error class="subscript-wrapper" [@transitionMessages]="controlValid() ? 'void' : 'enter'"
           >{{ errorMessage() }}
         </mat-error>
       }

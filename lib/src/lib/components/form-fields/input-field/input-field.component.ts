@@ -1,4 +1,4 @@
-import { Component, computed, HostBinding, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, HostBinding, inject } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldInput } from './input-field.model';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -13,6 +13,7 @@ import { IconComponent } from '@lab900/ui';
   selector: 'lab900-input-field',
   templateUrl: './input-field.component.html',
   styleUrls: ['./input-field.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatFormFieldModule,
     MatInputModule,

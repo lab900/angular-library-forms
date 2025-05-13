@@ -3,20 +3,24 @@
     @if (label(); as label) {
       <mat-label translate>{{ label }}</mat-label>
     }
-    <mat-date-range-input [formGroup]="dateFormGroup()" [rangePicker]="picker" [dateFilter]="options?.dateFilter">
+    <mat-date-range-input [formGroup]="dateFormGroup()" [rangePicker]="picker" [dateFilter]="_options()?.dateFilter">
       <input
         matStartDate
         [formControl]="startControl()"
-        placeholder="{{ options?.startLabel || 'Start date' | translate }}" />
-      <input matEndDate [formControl]="endControl()" placeholder="{{ options?.endLabel || 'End date' | translate }}" />
+        placeholder="{{ _options()?.startLabel || 'Start date' | translate }}" />
+      <input
+        matEndDate
+        [formControl]="endControl()"
+        placeholder="{{ _options()?.endLabel || 'End date' | translate }}" />
     </mat-date-range-input>
     <mat-datepicker-toggle matIconSuffix [for]="picker" />
-    <mat-date-range-picker [dateClass]="options?.dateClass" #picker />
-    @if (hint && !fieldIsReadonly() && !(options?.hint?.hideHintOnValidValue && dateFormGroup()?.getRawValue())) {
-      <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
+    <mat-date-range-picker [dateClass]="_options()?.dateClass" #picker />
+    @let hint = _options()?.hint;
+    @if (!!hint?.value && !(hint?.hideHintOnValidValue && !!groupValue()) && !fieldIsReadonly()) {
+      <mat-hint>
+        <span [innerHTML]="hint.value | translate: hint.valueTranslateData"></span>
+      </mat-hint>
     }
-    @if (!valid && !fieldIsReadonly()) {
-      <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
-    }
+    <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
   </mat-form-field>
 }

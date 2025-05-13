@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { JsonPipe } from '@angular/common';
 
@@ -9,6 +9,7 @@ import { JsonPipe } from '@angular/common';
     <pre>{{ form?.value | json }}</pre>
   `,
   imports: [Lab900Form, JsonPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldNestedGroupsByAttributeExampleComponent {
   public formSchema: Lab900FormConfig = {

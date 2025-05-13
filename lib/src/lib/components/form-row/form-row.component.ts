@@ -1,4 +1,4 @@
-import { Component, computed, HostBinding } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, HostBinding } from '@angular/core';
 import { FormComponent } from '../AbstractFormComponent';
 import { FormFieldUtils } from '../../utils/form-field.utils';
 import { FormRow } from './form-row.model';
@@ -15,6 +15,7 @@ import { FormGroup } from '@angular/forms';
   templateUrl: './form-row.component.html',
   styleUrls: ['./form-row.component.scss'],
   imports: [FormFieldDirective, MatIcon, MatTooltip, TranslatePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormRowComponent extends FormComponent<FormRow> {
   @HostBinding('class')
