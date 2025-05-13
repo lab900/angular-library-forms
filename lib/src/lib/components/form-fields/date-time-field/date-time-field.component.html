@@ -8,8 +8,8 @@
       matInput
       placeholder="{{ placeholder() | translate }}"
       [ngxMatDatetimePicker]="picker"
-      [formControlName]="fieldAttribute"
-      [matDatepickerFilter]="options?.dateFilter"
+      [formControlName]="_fieldAttribute()"
+      [matDatepickerFilter]="_options()?.dateFilter"
       [max]="maxDate()"
       [min]="minDate()" />
     <ngx-mat-datepicker-toggle matIconSuffix [for]="picker" />
@@ -20,7 +20,7 @@
       [startView]="startView()"
       [defaultTime]="defaultTime()"
       [stepMinute]="stepMinute()"
-      [dateClass]="options?.dateClass"
+      [dateClass]="_options()?.dateClass"
       (opened)="pickerOpened(picker)">
       <ngx-mat-datepicker-actions>
         <button mat-button ngxMatDatepickerCancel>
@@ -31,11 +31,12 @@
         </button>
       </ngx-mat-datepicker-actions>
     </ngx-mat-datetime-picker>
-    @if (hint && !fieldIsReadonly() && !(options?.hint?.hideHintOnValidValue && input.value)) {
-      <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
+    @let hint = _options()?.hint;
+    @if (!!hint?.value && !(hint?.hideHintOnValidValue && input.value) && !fieldIsReadonly()) {
+      <mat-hint>
+        <span [innerHTML]="hint.value | translate: hint.valueTranslateData"></span>
+      </mat-hint>
     }
-    @if (!valid && !fieldIsReadonly()) {
-      <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
-    }
+    <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
   </mat-form-field>
 }

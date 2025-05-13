@@ -1,6 +1,6 @@
 @if (!fieldIsHidden()) {
   <mat-form-field
-    [formGroup]="group"
+    [formGroup]="_group()"
     class="lab900-autocomplete-field"
     id="lab900-autocomplete-field-{{ elementId() }}">
     @if (label(); as label) {
@@ -9,13 +9,13 @@
     <input
       #input
       (input)="inputChanged($event)"
-      [formControlName]="fieldAttribute"
+      [formControlName]="_fieldAttribute()"
       [matAutocomplete]="auto"
       matInput
       placeholder="{{ placeholder() | translate }}"
       type="text" />
 
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="options?.displayInputFn">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="_options()?.displayInputFn">
       @if (filteredOptions) {
         @for (option of filteredOptions | async; track option) {
           <mat-option [value]="option?.value" [disabled]="option?.disabled">
@@ -24,14 +24,15 @@
         }
       }
     </mat-autocomplete>
-    @if (!fieldIsReadonly() && hint && !(options?.hint.hideHintOnValidValue && input.value)) {
-      <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
-    }
-    @if (!valid && touched) {
-      <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
+    @let hint = _options()?.hint;
+    @if (!!hint?.value && !(hint?.hideHintOnValidValue && input.value) && !fieldIsReadonly()) {
+      <mat-hint>
+        <span [innerHTML]="hint.value | translate: hint.valueTranslateData"></span>
+      </mat-hint>
     }
     @if (!fieldIsReadonly()) {
       <mat-icon matSuffix>search</mat-icon>
     }
+    <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
   </mat-form-field>
 }

@@ -213,7 +213,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
 
   public onConditionalChange(dependOn: string, value: string, firstRun: boolean): void {
     setTimeout(() => {
-      const condition = this.schema?.conditions?.find(c =>
+      const condition = this._schema()?.conditions?.find(c =>
         (Array.isArray(c.dependOn) ? c.dependOn : [c.dependOn]).includes(dependOn)
       );
       if (condition?.conditionalOptions) {
@@ -330,8 +330,8 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
     return values$.pipe(
       catchError(() => of([])),
       tap((options: ValueLabel<T>[]) => {
-        if (options?.length === 1 && !this.fieldControl?.getRawValue() && this.schema.options?.autoselectOnlyOption) {
-          this.fieldControl?.setValue(options[0].value);
+        if (options?.length === 1 && !this.controlValue() && this._options()?.autoselectOnlyOption) {
+          this._fieldControl()?.setValue(options[0].value);
         }
       })
     );

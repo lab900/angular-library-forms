@@ -1,4 +1,4 @@
-import { Component, computed, HostBinding, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, HostBinding, inject } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { ReactiveFormsModule, UntypedFormArray } from '@angular/forms';
 import { Lab900FormBuilderService } from '../../../services/form-builder.service';
@@ -17,6 +17,7 @@ export const DEFAULT_REPEATER_MIN_ROWS = 1;
   templateUrl: './repeater-field.component.html',
   styleUrls: ['./repeater-field.component.scss'],
   animations: [matFormFieldAnimations.transitionMessages],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     MatIcon,
@@ -33,6 +34,8 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
 
   @HostBinding('class')
   public classList = 'lab900-form-field';
+
+  protected readonly nestedFields = computed(() => this._schema().nestedFields);
 
   public readonly addLabel = computed(() => {
     return this._options()?.addLabel ?? 'Add new';
@@ -67,8 +70,9 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
 
   public addToArray(): void {
     const repeaterArray = this.repeaterArray();
-    if (repeaterArray && this.schema.nestedFields) {
-      const formGroup = this.fb.createFormGroup(this.schema.nestedFields);
+    const nestedFields = this.nestedFields();
+    if (repeaterArray && nestedFields) {
+      const formGroup = this.fb.createFormGroup(nestedFields);
       repeaterArray.push(formGroup);
       repeaterArray.markAsDirty();
       repeaterArray.markAsTouched();

@@ -1,14 +1,17 @@
 @if (!fieldIsHidden()) {
-  <div [formGroup]="group" class="lab900-checkbox-field" id="lab900-checkbox-field-{{ elementId() }}">
-    <mat-checkbox #checkbox [color]="color()" [formControlName]="fieldAttribute" [indeterminate]="indeterminate()">
+  <div [formGroup]="_group()" class="lab900-checkbox-field" id="lab900-checkbox-field-{{ elementId() }}">
+    <mat-checkbox #checkbox [color]="color()" [formControlName]="_fieldAttribute()" [indeterminate]="indeterminate()">
       {{ label()! | translate }}
     </mat-checkbox>
     @if (!fieldIsReadonly()) {
-      <div class="subscript-wrapper" [@transitionMessages]="valid ? 'void' : 'enter'">
-        @if (hint && !(options?.hint?.hideHintOnValidValue && checkbox.value)) {
-          <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
+      <div class="subscript-wrapper" [@transitionMessages]="controlValid() ? 'void' : 'enter'">
+        @let hint = _options()?.hint;
+        @if (!!hint?.value && !(hint?.hideHintOnValidValue && checkbox.value) && !fieldIsReadonly()) {
+          <mat-hint>
+            <span [innerHTML]="hint.value | translate: hint.valueTranslateData"></span>
+          </mat-hint>
         }
-        @if (!valid && touched) {
+        @if (!controlValid() && touched) {
           <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
         }
       </div>

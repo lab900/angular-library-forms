@@ -34,12 +34,13 @@
     @if (prefix(); as prefix) {
       <span class="lab900-input-field--prefix" matTextPrefix>{{ prefix | translate }}</span>
     }
-    @if (hint && !(options?.hint?.hideHintOnValidValue && input.value) && !fieldIsReadonly()) {
+    @let hint = _options()?.hint;
+    @if (!!hint?.value && !(hint?.hideHintOnValidValue && input.value) && !fieldIsReadonly()) {
       <mat-hint>
-        <span [innerHTML]="hint | translate: hintValueTranslateData"></span>
+        <span [innerHTML]="hint.value | translate: hint.valueTranslateData"></span>
       </mat-hint>
     }
-    @if (!valid && !fieldIsReadonly()) {
+    @if (!fieldIsReadonly()) {
       <mat-error>
         <span [innerHTML]="errorMessage()"></span>
       </mat-error>

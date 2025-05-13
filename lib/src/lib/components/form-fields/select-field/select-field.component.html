@@ -1,6 +1,6 @@
 @if (!fieldIsHidden() && !fieldIsReadonly()) {
   <mat-form-field
-    [formGroup]="group"
+    [formGroup]="_group()"
     class="lab900-select-field"
     [class.has-value]="hasValue()"
     id="lab900-select-field-{{ elementId() }}">
@@ -17,14 +17,14 @@
       #select
       placeholder="{{ placeholder() | translate }}"
       [compareWith]="compareFn()"
-      [formControlName]="fieldAttribute"
+      [formControlName]="_fieldAttribute()"
       [multiple]="multiple()"
       lab900InfiniteScroll
       [complete]="!infiniteScrollOptions()?.enabled"
       [threshold]="infiniteScrollOptions()?.threshold || '15%'"
       [debounceTime]="infiniteScrollOptions()?.debounceTime || 150"
       [panelWidth]="panelWidth()"
-      [panelClass]="options?.panelClass"
+      [panelClass]="_options()?.panelClass"
       (infiniteScroll)="onScroll()"
       (openedChange)="onOpenedChange($event)"
       (focus)="onFocus()">
@@ -92,12 +92,13 @@
         <mat-icon>close</mat-icon>
       </button>
     }
-    @if (hint && !(options?.hint?.hideHintOnValidValue && select.value)) {
-      <mat-hint><span [innerHTML]="hint | translate: hintValueTranslateData"></span></mat-hint>
+    @let hint = _options()?.hint;
+    @if (!!hint?.value && !(hint?.hideHintOnValidValue && select.value) && !fieldIsReadonly()) {
+      <mat-hint>
+        <span [innerHTML]="hint.value | translate: hint.valueTranslateData"></span>
+      </mat-hint>
     }
-    @if (!valid) {
-      <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
-    }
+    <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
   </mat-form-field>
 } @else if (fieldIsReadonly() && !fieldIsHidden()) {
   <div class="lab900-readonly-field">

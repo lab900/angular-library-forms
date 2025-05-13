@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, HostBinding } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldTextarea } from './textarea-field.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,12 +11,15 @@ import { TranslatePipe } from '@ngx-translate/core';
   templateUrl: './textarea-field.component.html',
   styles: ['textarea { min-height: 100px; }'],
   imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule, TranslatePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TextareaFieldComponent extends FormComponent<FormFieldTextarea> {
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
-  public get showLengthIndicator(): boolean {
-    return !!this.setting?.formField?.showLengthIndicator || !!this.options?.showLengthIndicator;
-  }
+  public readonly showLengthIndicator = computed(
+    () =>
+      !!this._options()?.maxLength &&
+      (!!this.setting?.formField?.showLengthIndicator || !!this._options()?.showLengthIndicator)
+  );
 }

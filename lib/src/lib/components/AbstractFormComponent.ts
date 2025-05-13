@@ -63,6 +63,19 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     },
   }).value;
 
+  public readonly controlValid = rxResource({
+    request: () => this._fieldControl(),
+    loader: ({ request }) => {
+      if (request) {
+        return concat(
+          defer(() => of(request.valid)),
+          request.statusChanges.pipe(map(status => status === 'VALID'))
+        );
+      }
+      return of(null);
+    },
+  }).value;
+
   public readonly groupValue = rxResource({
     request: () => this._group(),
     loader: ({ request }) => {
@@ -131,9 +144,16 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     )
   );
 
+  /**
+   * @deprecated use signal instead
+   */
   public get options(): S['options'] {
     return this._options();
   }
+
+  /**
+   * @deprecated use signal instead
+   */
   public get schema(): S {
     return this._schema();
   }
@@ -155,14 +175,6 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
 
   public get touched(): boolean {
     return !!this.fieldControl?.touched;
-  }
-
-  public get hint(): string | undefined {
-    return this.options?.hint?.value;
-  }
-
-  public get hintValueTranslateData(): object | undefined {
-    return this.options?.hint?.valueTranslateData;
   }
 
   public readonly placeholder = this.computeReactiveStringOption('placeholder');
