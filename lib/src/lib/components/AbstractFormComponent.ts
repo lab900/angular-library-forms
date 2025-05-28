@@ -225,7 +225,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
         const required = this.fieldIsRequired();
         if (!readonly && !hidden) {
           if (required && !control.hasValidator(Validators.required)) {
-            control.setValidators(Validators.required);
+            control.addValidators(Validators.required);
             control.updateValueAndValidity();
           } else if (!required && control.hasValidator(Validators.required)) {
             control.removeValidators(Validators.required);
