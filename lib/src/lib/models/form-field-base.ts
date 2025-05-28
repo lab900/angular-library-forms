@@ -14,23 +14,23 @@ export interface Icon {
   svgName?: string;
 }
 
+export type ReactiveOption<T> = T | ((data?: any) => T | Signal<T>) | Signal<T>;
+export type ReactiveBooleanOption = ReactiveOption<boolean>;
+export type ReactiveStringOption = ReactiveOption<string>;
+export type ReactiveNumberOption = ReactiveOption<number>;
+
 export interface FormFieldBase<
   T extends string | number = string,
   O extends FormFieldBaseOptions = FormFieldBaseOptions,
 > {
   attribute?: T;
-  title?: string;
+  title?: ReactiveStringOption;
   validators?: ValidatorFn[];
   errorMessages?: Record<string, string>;
   conditions?: IFieldConditions[];
   options?: O;
   nestedFields?: Lab900FormField[];
 }
-
-export type ReactiveOption<T> = T | ((data?: any) => T | Signal<T>) | Signal<T>;
-export type ReactiveBooleanOption = ReactiveOption<boolean>;
-export type ReactiveStringOption = ReactiveOption<string>;
-export type ReactiveNumberOption = ReactiveOption<number>;
 
 export interface FormFieldBaseOptions {
   hide?: ReactiveBooleanOption;

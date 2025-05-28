@@ -91,7 +91,13 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
 
   public readonly _schema = input.required<S>({ alias: 'schema' });
   public readonly _options = computed<S['options']>(() => this._schema().options);
-  public readonly label = computed<string | undefined>(() => this._schema().title);
+  public readonly label = computed<string | undefined>(() => {
+    const keyValue: ReactiveStringOption | undefined = this._schema().title;
+    if (keyValue != null) {
+      return computeReactiveStringOption(keyValue, this.groupValue);
+    }
+    return undefined;
+  });
   public readonly readonlyLabel = computed<string | undefined>(() => this._options()?.readonlyLabel ?? this.label());
   private readonly conditions = computed(() => this._schema().conditions);
 
