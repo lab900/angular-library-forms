@@ -1,5 +1,9 @@
 # Changelog
 
+## 19.1.16
+- Feat: reactive form field title
+- Fix: validators when field is required
+
 ## 19.1.15
 - Fix: NgxMask having issues with the focus state
 - Fix: general focus state issues if parent components are on push
