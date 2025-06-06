@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.1.17
+- Fix: some labels where not being translated
+
 ## 19.1.16
 - Feat: reactive form field title
 - Fix: validators when field is required

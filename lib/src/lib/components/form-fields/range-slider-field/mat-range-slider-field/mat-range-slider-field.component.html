@@ -8,7 +8,7 @@
     </div>
     <div class="range-slider__input range-slider__input--from">
       <mat-form-field>
-        <mat-label translate>{{ fromLabel() }}</mat-label>
+        <mat-label>{{ fromLabel() | translate }}</mat-label>
         <input
           matInput
           [value]="formatValue(value?.[0])"
@@ -20,7 +20,7 @@
 
     <div class="range-slider__input range-slider__input--to">
       <mat-form-field>
-        <mat-label translate>{{ toLabel() }}</mat-label>
+        <mat-label>{{ toLabel() | translate }}</mat-label>
         <input
           matInput
           [value]="formatValue(value?.[1])"

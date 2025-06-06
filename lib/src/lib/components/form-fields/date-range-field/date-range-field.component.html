@@ -1,7 +1,7 @@
 @if (!fieldIsHidden() && dateFormGroup() && startControl() && endControl()) {
   <mat-form-field [formGroup]="_group()" class="lab900-date-range-field" id="lab900-date-range-field-{{ elementId() }}">
     @if (label(); as label) {
-      <mat-label translate>{{ label }}</mat-label>
+      <mat-label>{{ label | translate }}</mat-label>
     }
     <mat-date-range-input [formGroup]="dateFormGroup()" [rangePicker]="picker" [dateFilter]="_options()?.dateFilter">
       <input

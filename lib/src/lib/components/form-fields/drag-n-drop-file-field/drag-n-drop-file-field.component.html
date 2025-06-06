@@ -1,6 +1,6 @@
 @if (!fieldIsReadonly() && !fieldIsHidden()) {
   @if (label(); as label) {
-    <span class="lab900-form-field-label" translate>{{ label }}</span>
+    <span class="lab900-form-field-label">{{ label | translate }}</span>
   }
   <div class="upload-file" [class.upload-file--compact]="!!options?.compact" id="upload-file-{{ elementId() }}">
     <div
