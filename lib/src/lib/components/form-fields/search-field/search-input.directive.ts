@@ -21,6 +21,7 @@ export class SearchInputDirective<T> implements ControlValueAccessor, OnChanges 
   public readonly noResult$ = new BehaviorSubject<boolean>(false);
 
   public value?: T | null;
+  private initialized = false;
 
   @Input()
   public options!: FormFieldSearchOptions<T>;
@@ -34,7 +35,7 @@ export class SearchInputDirective<T> implements ControlValueAccessor, OnChanges 
         .pipe(
           distinctUntilChanged(),
           tap(() => this.noResult$.next(false)),
-          filter(searchQuery => !this.value || searchQuery !== this.getCurrentValueLabel()),
+          filter(searchQuery => this.initialized || !this.value || searchQuery !== this.getCurrentValueLabel()),
           tap(() => this.searching$.next(true)),
           debounceTime(this.options?.debounceTime ?? 500),
           switchMap(searchQuery => (searchQuery?.length ? this.options.searchFn(searchQuery) : of(null)))
@@ -49,6 +50,7 @@ export class SearchInputDirective<T> implements ControlValueAccessor, OnChanges 
             this.onChange(null);
           }
           this.onTouched();
+          this.initialized = true;
         });
     }
   }
