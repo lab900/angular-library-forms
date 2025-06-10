@@ -1,41 +1,57 @@
 # Changelog
 
+## 19.1.18
+
+- Fix: search field ignoring same input after clearing
+
 ## 19.1.17
+
 - Fix: some labels where not being translated
 
 ## 19.1.16
+
 - Feat: reactive form field title
 - Fix: validators when field is required
 
 ## 19.1.15
+
 - Fix: NgxMask having issues with the focus state
 - Fix: general focus state issues if parent components are on push
 
 ## 19.1.14
+
 - Fix: amount field triggering the patchValues
 
 ## 19.1.13
+
 - Added translate logic to Icon field text option
 
 ## 19.1.11
+
 - Added text functionality to icon
 
 ## 19.1.10
+
 - Fix: column hidden state
 
 ## 19.1.9
+
 - Fix: row labels
 
 ## 19.1.8
+
 - Feat: reactive form field icon
 
 ## 19.1.7
+
 - Bug fix: hidden form-col class
 
 ## 19.1.6
+
 - Bug fix: fix tooltips showing for conditional hidden fields
 
 ## 19.1.5
+
 - Bug fix: fix tooltips showing for hidden fields
 - Feat: reactive button labels
 
