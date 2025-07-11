@@ -6,6 +6,7 @@ import { Lab900FormField } from './lab900-form-field.type';
 import { FormFieldSelect } from '../components/form-fields/select-field/field-select.model';
 import { isDifferent } from '@lab900/ui';
 import { ValueLabel } from './form-field-base';
+import { EditType } from './editType';
 
 export interface IFieldConditions<T = any> {
   dependOn: string | string[];
@@ -31,7 +32,7 @@ export interface IFieldConditions<T = any> {
 }
 
 export class FieldConditions<T = any> implements IFieldConditions<T> {
-  private readonly fieldControl: AbstractControl;
+  private readonly fieldControl?: AbstractControl;
   private externalForms?: Record<string, UntypedFormGroup>;
 
   public dependOn!: string | string[];
@@ -60,23 +61,21 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
     private readonly component: FormComponent<any>,
     fieldConditions?: IFieldConditions
   ) {
-    const fieldControl = component._fieldControl();
-    if (fieldControl) {
-      this.group = component._group();
-      this.schema = component._schema();
-      this.fieldControl = fieldControl;
-      this.externalForms = component?.externalForms();
-      if (fieldConditions) {
-        Object.assign(this, fieldConditions);
-        this.setDependOnControls();
-        if (!this.skipIfNotExists && (!this.dependControls || !Object.keys(this.dependControls)?.length)) {
-          throw new Error(
-            `Can't create conditional for form field ${this.schema?.attribute}: no control with name ${this.dependOn} found`
-          );
-        }
-      }
-    } else {
+    this.group = component._group();
+    this.schema = component._schema();
+    this.fieldControl = component._fieldControl();
+    if (this.schema?.editType !== EditType.Row && !component._fieldControl()) {
       throw new Error(`Can't create conditional for form field ${this.schema?.attribute}: fieldControl is undefined`);
+    }
+    this.externalForms = component?.externalForms();
+    if (fieldConditions) {
+      Object.assign(this, fieldConditions);
+      this.setDependOnControls();
+      if (!this.skipIfNotExists && (!this.dependControls || !Object.keys(this.dependControls)?.length)) {
+        throw new Error(
+          `Can't create conditional for form field ${this.schema?.attribute}: no control with name ${this.dependOn} found`
+        );
+      }
     }
   }
 
@@ -131,16 +130,21 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
     firstRun: boolean,
     callback?: (dependOn: string, value: T, firstRun?: boolean) => void
   ): void {
+    // in case this is a row conditional we need to check on group level
+    const control = this.fieldControl || this.group;
+    if (!control) {
+      throw new Error(`Can't create conditional for form field ${this.schema?.attribute}: fieldControl is undefined`);
+    }
     if (this.schema && (firstRun || isDifferent(this.prevValue, value))) {
       if (this.onChangeFn && typeof this.onChangeFn === 'function') {
-        this.onChangeFn(value, this.fieldControl, this.schema);
+        this.onChangeFn(value, control, this.schema);
       }
       if (this.validators) {
         const newValidators = this.validators(value);
-        this.fieldControl.setValidators(newValidators);
+        control.setValidators(newValidators);
         this.component.schema.validators = newValidators;
         this.component.fieldIsRequired.set(newValidators.includes(Validators.required));
-        this.fieldControl.updateValueAndValidity();
+        control.updateValueAndValidity();
       }
       this.runVisibilityConditions(value);
       this.runDisableConditions(value);

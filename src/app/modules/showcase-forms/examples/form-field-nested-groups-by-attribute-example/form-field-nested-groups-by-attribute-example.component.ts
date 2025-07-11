@@ -27,18 +27,20 @@ export class FormFieldNestedGroupsByAttributeExampleComponent {
       },
       {
         editType: EditType.Row,
+        title: 'test conditional rows',
+        conditions: [
+          {
+            dependOn: 'parentAttr.disable',
+            hideIfEquals: true,
+            onChangeFn: console.log,
+          },
+        ],
         nestedFields: [
           {
             editType: EditType.Input,
             attribute: 'parentAttr.child',
             title: 'Child',
             options: { colspan: 6 },
-            conditions: [
-              {
-                dependOn: 'parentAttr.disable',
-                hideIfEquals: true,
-              },
-            ],
           },
           {
             editType: EditType.Input,

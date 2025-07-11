@@ -1,5 +1,5 @@
 import { AbstractControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { computed, Directive, effect, inject, input, model, Signal } from '@angular/core';
+import { computed, Directive, effect, inject, input, model, Signal, untracked } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { concat, defer, EMPTY, Observable, of, switchMap } from 'rxjs';
 import { FieldConditions } from '../models/IFieldConditions';
@@ -21,6 +21,7 @@ import {
   computeReactiveStrictStringOption,
   computeReactiveStringOption,
 } from '../utils/helpers';
+import { EditType } from '../models/editType';
 
 @Directive()
 export abstract class FormComponent<S extends Lab900FormField = Lab900FormField> extends SubscriptionBasedDirective {
@@ -200,7 +201,8 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
       }
     });
     effect(() => {
-      const fieldControl = this._fieldControl();
+      const editType = untracked(this._schema).editType;
+      const fieldControl = editType === EditType.Row ? this._group() : this._fieldControl();
       if (fieldControl && this.conditions()?.length) {
         this.createConditions();
       }

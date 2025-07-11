@@ -1,5 +1,10 @@
 # Changelog
 
+## 19.1.20
+
+- Fix: conditionals on rows not working
+
+
 ## 19.1.19
 
 - Fix: ngx-mask issues introduced in 19.1.15 (related to https://github.com/JsDaddy/ngx-mask/issues/1305)
