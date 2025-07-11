@@ -27,7 +27,13 @@ import { IconComponent } from '@lab900/ui';
 export class InputFieldComponent extends FormComponent<FormFieldInput> {
   protected readonly defaultSpecialCharacters = inject(NgxMaskService).specialCharacters;
   public readonly icon = computed(() => this._schema()?.icon);
-  public readonly fieldMask = computed(() => this._options()?.fieldMask);
+  public readonly fieldMask = computed(() => {
+    const fieldMask = this._options()?.fieldMask;
+    if (fieldMask) {
+      return { ...fieldMask, ...(this.setting?.fieldMask ?? {}) };
+    }
+    return undefined;
+  });
   public readonly type = computed(() => this._options()?.type ?? 'text');
   public readonly showLengthIndicator = computed(
     () =>

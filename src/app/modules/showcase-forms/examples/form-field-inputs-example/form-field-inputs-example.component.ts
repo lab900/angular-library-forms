@@ -141,6 +141,21 @@ export class FormFieldInputsExampleComponent {
         },
       },
       {
+        attribute: 'masPrefix',
+        title: 'masPrefix',
+        editType: EditType.Input,
+        options: {
+          style: 'letter-spacing: 4px',
+          fieldMask: {
+            prefix: '11111111',
+            shownMaskExpression: '__',
+            mask: '00',
+            showMaskTyped: true,
+            specialCharacters: ['|'],
+          },
+        },
+      },
+      {
         attribute: 'readOnlyInput',
         title: 'Read-only input',
         editType: EditType.Input,

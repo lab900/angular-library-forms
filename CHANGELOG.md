@@ -1,5 +1,9 @@
 # Changelog
 
+## 19.1.19
+
+- Fix: ngx-mask issues introduced in 19.1.15 (related to https://github.com/JsDaddy/ngx-mask/issues/1305)
+
 ## 19.1.18
 
 - Fix: search field ignoring same input after clearing
@@ -15,7 +19,7 @@
 
 ## 19.1.15
 
-- Fix: NgxMask having issues with the focus state
+- Fix: NgxMask having issues with the focus state (https://github.com/JsDaddy/ngx-mask/issues/1305)
 - Fix: general focus state issues if parent components are on push
 
 ## 19.1.14
