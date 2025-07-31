@@ -17,14 +17,14 @@
       #select
       placeholder="{{ placeholder() | translate }}"
       [compareWith]="compareFn()"
-      [formControlName]="_fieldAttribute()"
+      [formControlName]="_fieldAttribute()!"
       [multiple]="multiple()"
       lab900InfiniteScroll
-      [complete]="!infiniteScrollOptions()?.enabled"
+      [complete]="scrollingIsComplete()"
       [threshold]="infiniteScrollOptions()?.threshold || '15%'"
       [debounceTime]="infiniteScrollOptions()?.debounceTime || 150"
       [panelWidth]="panelWidth()"
-      [panelClass]="_options()?.panelClass"
+      [panelClass]="_options()?.panelClass ?? ''"
       (infiniteScroll)="onScroll()"
       (openedChange)="onOpenedChange($event)"
       (focus)="onFocus()">
@@ -41,7 +41,7 @@
             (ngModelChange)="onSearch($event)"
             [ngModelOptions]="{ standalone: true }"
             [placeholderLabel]="searchOptions()?.placeholder ?? 'form.field.search' | translate"
-            [disableScrollToActiveOnOptionsChanged]="infiniteScrollOptions()?.enabled"
+            [disableScrollToActiveOnOptionsChanged]="!!infiniteScrollOptions()?.enabled"
             [clearSearchInput]="searchOptions()?.clearOnClose ?? false">
             <div class="no-entries-found" ngxMatSelectNoEntriesFound>
               @if (searchQuery().length) {
@@ -93,9 +93,9 @@
       </button>
     }
     @let hint = _options()?.hint;
-    @if (!!hint?.value && !(hint?.hideHintOnValidValue && select.value) && !fieldIsReadonly()) {
+    @if (hint && !!hint?.value && !(hint?.hideHintOnValidValue && select.value) && !fieldIsReadonly()) {
       <mat-hint>
-        <span [innerHTML]="hint.value | translate: hint.valueTranslateData"></span>
+        <span [innerHTML]="hint.value! | translate: hint.valueTranslateData"></span>
       </mat-hint>
     }
     <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
