@@ -126,6 +126,12 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
   public readonly optionsFilter$ = toObservable(this.optionsFilter);
   public readonly searchQuery = computed(() => this.optionsFilter()?.searchQuery ?? '');
 
+  protected readonly isStaticOptionsList = computed(() => typeof this._options()?.selectOptions !== 'function');
+  private readonly isLastPage = signal<boolean>(false);
+  protected readonly scrollingIsComplete = computed(
+    () => this.isStaticOptionsList() || !this.infiniteScrollOptions()?.enabled || this.isLastPage()
+  );
+
   public constructor() {
     super();
     effect(() => {
@@ -144,7 +150,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
 
   public ngOnInit(): void {
     // load all options from the start
-    if (typeof this.options?.selectOptions !== 'function' || !this.options?.fetchOptionsOnFocus) {
+    if (this.isStaticOptionsList() || !this._options()?.fetchOptionsOnFocus) {
       this.selectOptionsListener();
     }
 
@@ -172,7 +178,14 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
             debounceTimeAfterFirst(this.searchOptions()?.debounceTime ?? 300),
             distinctUntilChanged((x: any, y: any) => !isDifferent(x, y)),
             tap(() => this.loading.set(true)),
-            switchMap(optionsFilter => this.handleGetOptions(optionsFn, optionsFilter))
+            switchMap(optionsFilter => this.handleGetOptions(optionsFn, optionsFilter)),
+            tap(options => {
+              if (this.infiniteScrollOptions()?.enabled && !options.length) {
+                this.isLastPage.set(true);
+              } else {
+                this.isLastPage.set(false);
+              }
+            })
           )
         )
       ),
@@ -181,7 +194,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
   }
 
   public onFocus(): void {
-    if (this.options?.fetchOptionsOnFocus && !this.fetchedOnFocus()) {
+    if (this._options()?.fetchOptionsOnFocus && !this.fetchedOnFocus()) {
       this.selectOptionsListener();
     }
   }
@@ -232,7 +245,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
   }
 
   public onScroll(): void {
-    if (this.infiniteScrollOptions()?.enabled && !this.loading()) {
+    if (!this.loading() && !this.scrollingIsComplete()) {
       this.optionsFilter.update(currentFilter => ({
         ...currentFilter,
         getAll: false,
