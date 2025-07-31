@@ -1,5 +1,9 @@
 # Changelog
 
+## 19.1.21
+
+- Fix: infinite scroll selects kept on requesting data when all data was already loaded
+
 ## 19.1.20
 
 - Fix: conditionals on rows not working
