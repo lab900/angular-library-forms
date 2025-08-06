@@ -3,18 +3,24 @@
     <mat-checkbox #checkbox [color]="color()" [formControlName]="_fieldAttribute()" [indeterminate]="indeterminate()">
       {{ label()! | translate }}
     </mat-checkbox>
-    @if (!fieldIsReadonly()) {
-      <div class="subscript-wrapper" [@transitionMessages]="controlValid() ? 'void' : 'enter'">
+    <div
+      class="mat-mdc-form-field-subscript-wrapper mat-mdc-form-field-bottom-align"
+      [@transitionMessages]="controlValid() ? 'void' : 'enter'">
+      @if (!fieldIsReadonly()) {
         @let hint = _options()?.hint;
-        @if (!!hint?.value && !(hint?.hideHintOnValidValue && checkbox.value) && !fieldIsReadonly()) {
-          <mat-hint>
-            <span [innerHTML]="hint.value | translate: hint.valueTranslateData"></span>
-          </mat-hint>
+        @if (hint) {
+          @if (!!hint.value && !(hint.hideHintOnValidValue && checkbox.value) && !fieldIsReadonly()) {
+            <mat-hint>
+              <span [innerHTML]="hint.value | translate: hint.valueTranslateData"></span>
+            </mat-hint>
+          }
         }
-        @if (!controlValid() && touched) {
-          <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
+        @if (touched && !controlValid()) {
+          <div class="mat-mdc-form-field-error-wrapper">
+            <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
+          </div>
         }
-      </div>
-    }
+      }
+    </div>
   </div>
 }

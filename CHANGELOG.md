@@ -1,5 +1,9 @@
 # Changelog
 
+## 19.1.22
+
+- Fix: alignment bug with readonly and editable checkboxes
+
 ## 19.1.21
 
 - Fix: infinite scroll selects kept on requesting data when all data was already loaded

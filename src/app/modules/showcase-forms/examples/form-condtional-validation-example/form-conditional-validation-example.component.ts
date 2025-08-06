@@ -3,7 +3,7 @@ import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { Validators } from '@angular/forms';
 
 @Component({
-  selector: 'lab900-form-condtional-validation-example',
+  selector: 'lab900-form-conditional-validation-example',
   template:
     '<lab900-form #lab900FormContainer [schema]="schema" [data]="{markAsRequired: true}"/> {{lab900FormContainer.valid}}',
   imports: [Lab900Form],
@@ -21,6 +21,22 @@ export class FormConditionalValidationExampleComponent {
           colspan: 6,
           disabledIndeterminate: true,
         },
+      },
+      {
+        attribute: 'markAsRequiredNot',
+        editType: EditType.Checkbox,
+        title: 'Mark not as required',
+        options: {
+          elementId: 'markAsRequiredCustomId',
+          colspan: 6,
+          disabledIndeterminate: true,
+        },
+        conditions: [
+          {
+            dependOn: 'markAsRequired',
+            disableIfEquals: (v: boolean) => v,
+          },
+        ],
       },
       {
         attribute: 'field',
