@@ -33,6 +33,27 @@ export class FormFieldButtonToggleExampleComponent {
         },
       },
       {
+        attribute: 'buttonGroupAttributeHideSelection',
+        title: 'Select yes or no with hide selection',
+        editType: EditType.ButtonToggle,
+        options: {
+          required: true,
+          deselectOnClick: true,
+          hideSelection: true,
+          buttonOptions: [
+            {
+              value: Involvement.VICTIM,
+              label: 'yes',
+              buttonClass: 'dsfkldsjflkdsjf',
+            },
+            {
+              value: Involvement.RELATED,
+              label: 'no',
+            },
+          ],
+        },
+      },
+      {
         attribute: 'value',
         editType: EditType.Row,
         options: { colspan: 12 },

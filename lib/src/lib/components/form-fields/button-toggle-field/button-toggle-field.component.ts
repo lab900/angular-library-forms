@@ -39,6 +39,7 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
         : options?.buttonOptions.find(o => o.value === this.controlValue())?.label) ?? '-'
     );
   });
+  protected readonly hideSelection = computed(() => this._options()?.hideSelection ?? false);
 
   public constructor() {
     super();

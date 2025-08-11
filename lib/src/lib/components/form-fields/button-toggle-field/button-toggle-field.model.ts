@@ -15,6 +15,7 @@ export interface FormFieldButtonToggleOptions extends FormFieldBaseOptions {
     };
   }[];
   color?: ThemePalette;
+  hideSelection?: boolean;
   deselectOnClick?: boolean;
 }
 

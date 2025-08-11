@@ -3,6 +3,7 @@
 ## 19.1.23
 
 - Fix: icon positioning in password input field
+- Add possibility to hide selected option indicator on toggle
 
 ## 19.1.22
 
