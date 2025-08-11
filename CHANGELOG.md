@@ -1,5 +1,9 @@
 # Changelog
 
+## 19.1.23
+
+- Fix: icon positioning in password input field
+
 ## 19.1.22
 
 - Fix: alignment bug with readonly and editable checkboxes
