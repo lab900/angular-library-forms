@@ -98,6 +98,24 @@ export class FormFieldInputsExampleComponent {
         errorMessages: {
           pattern: 'Does not match pattern',
         },
+        icon: { name: 'lock', position: 'left' },
+      },
+      {
+        attribute: 'passwordInput2',
+        title: 'Password Input',
+        editType: EditType.Password,
+        options: {
+          required: true,
+          togglePasswordVisibility: {
+            disabled: false,
+            passwordVisibleIcon: { name: 'visibility_off' },
+            passwordHiddenIcon: { name: 'visibility' },
+          },
+        },
+        validators: [Validators.pattern(/^(?=\D*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z]).{12,}$/)],
+        errorMessages: {
+          pattern: 'Does not match pattern',
+        },
       },
       {
         attribute: 'mask',

@@ -1,4 +1,4 @@
-import { FormFieldBase, FormFieldBaseOptions, Icon } from '../../../models/form-field-base';
+import { FormFieldBase, FormFieldBaseOptions, Icon, ReactiveBooleanOption } from '../../../models/form-field-base';
 import { ThemePalette } from '@angular/material/core';
 import { EditType } from '../../../models/editType';
 import { TooltipPosition } from '@angular/material/tooltip';
@@ -15,6 +15,7 @@ export interface FormFieldButtonToggleOptions extends FormFieldBaseOptions {
     };
   }[];
   color?: ThemePalette;
+  hideSelection?: ReactiveBooleanOption;
   deselectOnClick?: boolean;
 }
 
