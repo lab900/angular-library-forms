@@ -1,8 +1,7 @@
-import { FormFieldBase, FormFieldBaseOptions, Icon } from '../../../models/form-field-base';
+import { FormFieldBase, FormFieldBaseOptions, Icon, ReactiveBooleanOption } from '../../../models/form-field-base';
 import { ThemePalette } from '@angular/material/core';
 import { EditType } from '../../../models/editType';
 import { TooltipPosition } from '@angular/material/tooltip';
-import { ReactiveBooleanOption } from '@lab900/forms';
 
 export interface FormFieldButtonToggleOptions extends FormFieldBaseOptions {
   buttonOptions: {

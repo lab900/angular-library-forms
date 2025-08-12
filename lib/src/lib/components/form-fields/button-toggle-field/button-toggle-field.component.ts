@@ -1,12 +1,13 @@
 import { Component, computed, effect, HostBinding, signal } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { FormFieldButtonToggle } from './button-toggle-field.model';
+import { FormFieldButtonToggle, FormFieldButtonToggleOptions } from './button-toggle-field.model';
 import { MatButtonToggle, MatButtonToggleChange, MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatError, MatLabel } from '@angular/material/form-field';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatTooltip } from '@angular/material/tooltip';
 import { IconComponent } from '@lab900/ui';
+import { computeReactiveBooleanOption } from '../../../utils/helpers';
 
 @Component({
   selector: 'lab900-button-toggle-field',
@@ -39,7 +40,9 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
         : options?.buttonOptions.find(o => o.value === this.controlValue())?.label) ?? '-'
     );
   });
-  protected readonly hideSelection = computed(() => this._options()?.hideSelection ?? false);
+  public readonly hideSelectionIndicator = computed(() => {
+    return this.getReactiveBooleanOption('hideSelection');
+  });
 
   public constructor() {
     super();
@@ -63,5 +66,13 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
     } else {
       this.value.set($event.value);
     }
+  }
+
+  private getReactiveBooleanOption(key: keyof Pick<FormFieldButtonToggleOptions, 'hideSelection'>): boolean {
+    const options = this._schema().options;
+    if (options?.[key] != null) {
+      return computeReactiveBooleanOption(options[key], this.groupValue);
+    }
+    return false;
   }
 }
