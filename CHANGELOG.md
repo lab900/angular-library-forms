@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.1.24
+- Fix: fix visibility check for button toggle
+
 ## 19.1.23
 
 - Fix: icon positioning in password input field
