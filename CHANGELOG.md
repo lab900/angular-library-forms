@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.1.26
+- Fix: form dialog loading signal
+
 ## 19.1.25
 - Fix: file preview not showing files correctly
 
