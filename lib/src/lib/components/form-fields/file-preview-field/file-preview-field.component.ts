@@ -1,4 +1,12 @@
-import { Component, ElementRef, HostBinding, inject, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ElementRef,
+  HostBinding,
+  inject,
+  viewChild,
+} from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { Lab900File } from '../../../models/Lab900File';
 import { FormDialogComponent } from '../../form-dialog/form-dialog.component';
@@ -19,6 +27,7 @@ import { MatTooltip } from '@angular/material/tooltip';
   selector: 'lab900-file-preview-field',
   templateUrl: './file-preview-field.component.html',
   styleUrls: ['./file-preview-field.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TranslatePipe, MatButton, MatCard, MatIcon, AuthImageDirective, MatTooltip],
 })
 export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePreview> {
@@ -28,9 +37,9 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
 
   private readonly fileFieldComponent = viewChild<ElementRef>('fileField');
 
-  public get files(): Lab900File[] {
-    return (this.fieldControl?.getRawValue() as Lab900File[]) ?? [];
-  }
+  protected readonly files = computed<Lab900File[]>(() => {
+    return this.controlValue() ?? [];
+  });
 
   public fileChange(event: Event): void {
     const fileList: FileList | null = (event.target as HTMLInputElement).files;
@@ -72,11 +81,11 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
   private addFileToFieldControl(file: File): void {
     const lab900File = file as Lab900File;
     lab900File.fileName = file.name;
-    this.setFieldControlValue([...this.files, lab900File]);
+    this.setFieldControlValue([...this.files(), lab900File]);
   }
 
   public removeFile(file: Lab900File): void {
-    const files: Lab900File[] = this.files;
+    const files: Lab900File[] = this.files();
     files.splice(this.getFileIndex(file), 1);
     this.setFieldControlValue(files);
     const nativeElm = this.fileFieldComponent()?.nativeElement;
@@ -88,7 +97,7 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
   public onMetaDataChanged(data: T, originalData?: Lab900File): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       if (originalData) {
-        const files = this.files;
+        const files = this.files();
         const index = this.getFileIndex(originalData);
         if (index === -1) {
           console.error(`Couldn't find file in list`);
@@ -104,14 +113,14 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
   }
 
   private getFileIndex(file: Lab900File): number {
-    return this.files.findIndex(
+    return this.files().findIndex(
       (listFile: Lab900File) =>
         listFile.fileName === file.fileName && listFile.type === file.type && listFile.size === file.size
     );
   }
 
   public handleImageClick(file: Lab900File): void {
-    if (this.options?.canEditFileMetaData && !this.fieldIsReadonly()) {
+    if (this._options()?.canEditFileMetaData && !this.fieldIsReadonly()) {
       this.openMetaDataDialog(file);
     } else if (file.imageSrc != null) {
       this.openPreviewDialog(file);
@@ -121,7 +130,7 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
   private openMetaDataDialog(file: Lab900File): void {
     this.dialog.open(FormDialogComponent, {
       data: {
-        schema: this.options?.fileMetaDataConfig,
+        schema: this._options()?.fileMetaDataConfig,
         data: file,
         submit: this.onMetaDataChanged.bind(this),
       },
@@ -129,14 +138,15 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
   }
 
   public openPreviewDialog(file: Lab900File): void {
+    const httpCallback = this._options()?.httpCallback;
     if (file.imageBase64 != null) {
       this.dialog.open(ImagePreviewModalComponent, {
         data: {
           image: file,
         },
       });
-    } else if (this.options?.httpCallback) {
-      fetchImageBase64(this.options.httpCallback, file, result => {
+    } else if (httpCallback) {
+      fetchImageBase64(httpCallback, file, result => {
         file.imageBase64 = result as string;
         this.dialog.open(ImagePreviewModalComponent, {
           data: {
@@ -150,11 +160,11 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
   }
 
   public showOverlay(file: Lab900File): boolean {
-    if (typeof this.options?.showOverlay === 'function') {
-      return this.options?.showOverlay(file);
-    } else {
-      return this.options?.showOverlay ?? false;
+    const showOverlay = this._options()?.showOverlay;
+    if (typeof showOverlay === 'function') {
+      return showOverlay(file);
     }
+    return showOverlay ?? false;
   }
 
   private setFieldControlValue(files: Lab900File[]): void {

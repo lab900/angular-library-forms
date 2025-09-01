@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.1.25
+- Fix: file preview not showing files correctly
+
 ## 19.1.24
 - Fix: fix visibility check for button toggle
 

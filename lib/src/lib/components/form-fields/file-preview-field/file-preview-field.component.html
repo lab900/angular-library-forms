@@ -4,23 +4,23 @@
       #fileField
       type="file"
       style="display: none"
-      [multiple]="options?.multiple"
-      [accept]="options?.accept"
+      [multiple]="_options()?.multiple"
+      [accept]="_options()?.accept"
       (change)="fileChange($event)" />
     @if (!fieldIsReadonly()) {
       <button mat-raised-button color="primary" (click)="fileField.click()">
-        {{ options?.fileUploadButtonText || 'form.button.upload' | translate }}
+        {{ _options()?.fileUploadButtonText || 'form.button.upload' | translate }}
       </button>
     }
-    @if (files?.length) {
+    @if (files().length) {
       <div class="images-wrapper">
-        @for (file of files; track file) {
+        @for (file of files(); track file) {
           <mat-card appearance="outlined" class="image-wrapper" (click)="handleImageClick(file)">
             @if (!fieldIsReadonly()) {
               <mat-icon (click)="$event.stopPropagation(); removeFile(file)" class="delete-image">close</mat-icon>
             }
             @if (showOverlay(file)) {
-              @if (options?.overlay; as overlay) {
+              @if (_options()?.overlay; as overlay) {
                 <div
                   class="image"
                   [style.background-color]="overlay?.backgroundColor"
@@ -30,9 +30,8 @@
                   </span>
                 </div>
               }
-            }
-            @if (!showOverlay(file)) {
-              <div lab900AuthImage class="image" [image]="file" [httpCallback]="options?.httpCallback"></div>
+            } @else {
+              <div lab900AuthImage class="image" [image]="file" [httpCallback]="_options()?.httpCallback"></div>
             }
             <div class="file-name">
               @if (file.fileName) {
@@ -40,7 +39,7 @@
                   {{ file.fileName }}
                 </p>
               }
-              @if (options?.canEditFileMetaData && !fieldIsReadonly()) {
+              @if (_options()?.canEditFileMetaData && !fieldIsReadonly()) {
                 <mat-icon (click)="$event.stopPropagation(); openPreviewDialog(file)">visibility</mat-icon>
               }
             </div>
