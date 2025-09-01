@@ -74,8 +74,10 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
     if (repeaterArray && nestedFields) {
       const formGroup = this.fb.createFormGroup(nestedFields);
       repeaterArray.push(formGroup);
-      repeaterArray.markAsDirty();
-      repeaterArray.markAsTouched();
+      setTimeout(() => {
+        repeaterArray.markAsDirty();
+        repeaterArray.markAsTouched();
+      }, 1);
     }
   }
 
@@ -83,8 +85,10 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
     const repeaterArray = this.repeaterArray();
     if (repeaterArray && repeaterArray?.length > this.minRows()) {
       repeaterArray.removeAt(index);
-      repeaterArray.markAsDirty();
-      repeaterArray.markAsTouched();
+      setTimeout(() => {
+        repeaterArray.markAsDirty();
+        repeaterArray.markAsTouched();
+      }, 1);
     }
   }
 }

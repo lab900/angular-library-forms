@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.1.27
+- Fix: repeater dirty/touched state
+
 ## 19.1.26
 - Fix: form dialog loading signal
 
