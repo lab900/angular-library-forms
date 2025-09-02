@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.1.28
+- Fix: make edit metadata of file preview reactive
+
 ## 19.1.27
 - Fix: repeater dirty/touched state
 

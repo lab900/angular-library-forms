@@ -94,22 +94,25 @@ export class FilePreviewFieldComponent<T> extends FormComponent<FormFieldFilePre
     }
   }
 
-  public onMetaDataChanged(data: T, originalData?: Lab900File): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      if (originalData) {
-        const files = this.files();
-        const index = this.getFileIndex(originalData);
-        if (index === -1) {
-          console.error(`Couldn't find file in list`);
-          reject();
-        }
-        Object.assign(originalData, data);
-        files[index] = originalData;
-        this.setFieldControlValue(files);
-        resolve(true);
-      }
-      reject();
-    });
+  public onMetaDataChanged(data: T, originalData?: Lab900File): boolean {
+    if (!originalData) {
+      return false;
+    }
+
+    const files = this.files();
+    const index = this.getFileIndex(originalData);
+
+    if (index === -1) {
+      console.error(`Couldn't find file in list`);
+      return false;
+    }
+
+    const updatedFile = { ...originalData, ...data };
+    const updatedFiles = [...files];
+    updatedFiles[index] = updatedFile;
+
+    this.setFieldControlValue(updatedFiles);
+    return true;
   }
 
   private getFileIndex(file: Lab900File): number {
