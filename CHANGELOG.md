@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.1.29
+- Chore: update vulnerable package, still one left (angular-cli-ghpages, waiting on an update)
+
 ## 19.1.28
 - Fix: make edit metadata of file preview reactive
 
