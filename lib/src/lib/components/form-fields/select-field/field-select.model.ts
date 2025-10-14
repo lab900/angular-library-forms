@@ -29,6 +29,16 @@ export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
   customTriggerFn?: (value: T | undefined) => string;
   autoselectOnlyOption?: boolean;
   /**
+   * Will show an empty option displaying a message that no options could be found
+   * @default false
+   */
+  noOptionsIndicator?: boolean;
+  /**
+   * Label to use to display when no options are available
+   * noOptionsIndicator needs to be true for this to show
+   */
+  noOptionsLabel?: string;
+  /**
    * The function to display the current value of the select if this item is not present in the select options.
    * @param option Expects the current value of the field, not a ValueLabel!
    */
@@ -36,6 +46,9 @@ export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
   search?: {
     enabled: boolean;
     placeholder?: string;
+    /**
+     * Label to use to display a not found message based on given search message
+     */
     notFoundLabel?: string;
     addNewLabel?: string;
     /**

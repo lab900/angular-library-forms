@@ -10,7 +10,7 @@ import { coerceArray } from '@angular/cdk/coercion';
 import { isDifferent } from '@lab900/ui';
 import { debounceTimeAfterFirst } from '../../../utils/helpers';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
+import { _, TranslatePipe } from '@ngx-translate/core';
 import { SelectInfiniteScrollDirective } from './select-field-infinite-scroll.directive';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { MatButton, MatIconButton } from '@angular/material/button';
@@ -25,14 +25,20 @@ import { toObservable } from '@angular/core/rxjs-interop';
   templateUrl: './select-field.component.html',
   styles: [
     `
+      .no-entries-option {
+        pointer-events: all !important;
+      }
+
+      .no-entries-option ::ng-deep .mdc-list-item__primary-text {
+        width: 100%;
+        display: block;
+        opacity: 1 !important;
+      }
       .no-entries-found {
         display: flex;
         align-items: center;
         justify-content: space-between;
-      }
-
-      .no-entries-found button {
-        margin-left: 10px;
+        gap: 10px;
       }
     `,
   ],
@@ -132,6 +138,21 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
     () => this.isStaticOptionsList() || !this.infiniteScrollOptions()?.enabled || this.isLastPage()
   );
 
+  protected readonly showNotFound = computed(() => {
+    return !this.loading() && (!!this.searchQuery()?.length || !!this._options()?.noOptionsIndicator);
+  });
+
+  protected readonly notFoundLabel = computed(() => {
+    if (!this.searchQuery()?.length) {
+      return this._options()?.noOptionsLabel ?? _('form.field.no_options_found');
+    }
+    return this.searchOptions()?.notFoundLabel ?? _('form.field.no_options_found');
+  });
+
+  protected readonly addNewLabel = computed(() => {
+    return this.searchOptions()?.addNewLabel ?? _('form.field.add_new');
+  });
+
   public constructor() {
     super();
     effect(() => {
@@ -175,9 +196,9 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
         switchMap(optionsFn =>
           this.optionsFilter$.pipe(
             filter(filter => !!filter),
-            debounceTimeAfterFirst(this.searchOptions()?.debounceTime ?? 300),
-            distinctUntilChanged((x: any, y: any) => !isDifferent(x, y)),
+            distinctUntilChanged((x, y) => !isDifferent(x, y)),
             tap(() => this.loading.set(true)),
+            debounceTimeAfterFirst(this.searchOptions()?.debounceTime ?? 300),
             switchMap(optionsFilter => this.handleGetOptions(optionsFn, optionsFilter)),
             tap(options => {
               if (this.infiniteScrollOptions()?.enabled && !options.length) {

@@ -3,19 +3,19 @@ import { debounceTime, take } from 'rxjs/operators';
 import { ReactiveBooleanOption, ReactiveNumberOption, ReactiveStringOption } from '../models/form-field-base';
 import { isSignal, Signal } from '@angular/core';
 
-export function debounceTimeAfter(
+export function debounceTimeAfter<T = unknown>(
   amount: number,
   dueTime: number,
   scheduler: SchedulerLike = asyncScheduler
-): MonoTypeOperatorFunction<unknown> {
+): MonoTypeOperatorFunction<T> {
   return connect(value => concat(value.pipe(take(amount)), value.pipe(debounceTime(dueTime, scheduler))));
 }
 
-export function debounceTimeAfterFirst(
+export function debounceTimeAfterFirst<T = unknown>(
   dueTime: number,
   scheduler: SchedulerLike = asyncScheduler
-): MonoTypeOperatorFunction<unknown> {
-  return debounceTimeAfter(1, dueTime, scheduler);
+): MonoTypeOperatorFunction<T> {
+  return debounceTimeAfter<T>(1, dueTime, scheduler);
 }
 
 export function computeReactiveBooleanOption(option: ReactiveBooleanOption, groupValue: Signal<any>): boolean {
