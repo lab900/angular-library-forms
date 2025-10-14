@@ -168,7 +168,6 @@ export class FormFieldSelectAdvancedExampleComponent {
             title: 'Search a book',
             editType: EditType.Select,
             options: {
-              noOptionsIndicator: true,
               selectOptions: (filter, fieldControl, schema) => {
                 return this.getSelectOptions({
                   filter,
@@ -184,17 +183,6 @@ export class FormFieldSelectAdvancedExampleComponent {
               },
               search: {
                 enabled: true,
-                addNewFn: (searchQuery, select) => {
-                  const book: Book = {
-                    title: searchQuery,
-                    key: searchQuery,
-                  };
-                  select.selectOptions.set([{ value: book, label: book.title }]);
-                  select.fieldControl?.setValue({
-                    title: searchQuery,
-                    key: searchQuery,
-                  });
-                },
               },
               fetchOptionsOnFocus: true,
             },
@@ -243,7 +231,10 @@ export class FormFieldSelectAdvancedExampleComponent {
           if (filter?.getAll && schema?.options) {
             schema.options.infiniteScroll = { enabled: false };
           }
-          return [];
+          return res.docs.map((d: any) => ({
+            label: d.title,
+            value: d,
+          }));
         })
       );
   }
