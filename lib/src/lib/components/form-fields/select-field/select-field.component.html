@@ -43,26 +43,8 @@
               [ngModelOptions]="{ standalone: true }"
               [placeholderLabel]="searchOptions()?.placeholder ?? 'form.field.search' | translate"
               [disableScrollToActiveOnOptionsChanged]="!!infiniteScrollOptions()?.enabled"
-              [clearSearchInput]="searchOptions()?.clearOnClose ?? false">
-              <div class="no-entries-found" ngxMatSelectNoEntriesFound>
-                @if (searchQuery().length) {
-                  <span>{{
-                    searchOptions()?.notFoundLabel ?? 'form.field.no_options_found'
-                      | translate: { searchQuery: searchQuery() }
-                  }}</span>
-                  @if (searchOptions()?.addNewFn) {
-                    <button
-                      mat-button
-                      [color]="searchOptions()?.addNewBtnColor ?? 'primary'"
-                      (click)="handleAddNew(searchQuery())">
-                      <mat-icon>add</mat-icon>
-                      <span>{{
-                        searchOptions()?.addNewLabel ?? 'form.field.add_new' | translate: { searchQuery: searchQuery() }
-                      }}</span>
-                    </button>
-                  }
-                }
-              </div>
+              [clearSearchInput]="searchOptions()?.clearOnClose ?? false"
+              [noEntriesFoundLabel]="''">
             </ngx-mat-select-search>
           </mat-option>
         }
@@ -80,6 +62,23 @@
           <mat-option [value]="item.value" [disabled]="item.disabled || loading()">
             <div [innerHTML]="item.label | translate"></div>
           </mat-option>
+        } @empty {
+          @if (showNotFound()) {
+            <mat-option class="no-entries-option" disabled>
+              <div class="no-entries-found">
+                <span>{{ notFoundLabel() | translate: { searchQuery: searchQuery() } }}</span>
+                @if (searchOptions()?.addNewFn && searchQuery().length) {
+                  <button
+                    mat-button
+                    [color]="searchOptions()?.addNewBtnColor ?? 'primary'"
+                    (click)="handleAddNew(searchQuery())">
+                    <mat-icon>add</mat-icon>
+                    <span>{{ addNewLabel() | translate: { searchQuery: searchQuery() } }}</span>
+                  </button>
+                }
+              </div>
+            </mat-option>
+          }
         }
       </mat-select>
       @if (showClearButton()) {

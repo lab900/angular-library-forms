@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.1.30
+- Feat: support a no options indicator when a select has no initial options to show.
+
 ## 19.1.29
 - Chore: update vulnerable package, still one left (angular-cli-ghpages, waiting on an update)
 
