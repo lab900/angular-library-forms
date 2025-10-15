@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.1.31
+- Fix: hide checkbox in no options indicator for multiselects.
+
 ## 19.1.30
 - Feat: support a no options indicator when a select has no initial options to show.
 

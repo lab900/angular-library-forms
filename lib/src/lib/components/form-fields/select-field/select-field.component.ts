@@ -34,6 +34,10 @@ import { toObservable } from '@angular/core/rxjs-interop';
         display: block;
         opacity: 1 !important;
       }
+
+      .no-entries-option ::ng-deep .mat-pseudo-checkbox {
+        display: none;
+      }
       .no-entries-found {
         display: flex;
         align-items: center;
