@@ -19,6 +19,7 @@ export type FormFieldSelectOptionsFn<T> = (
 
 export interface FormFieldSelectOptions<T> extends FormFieldBaseOptions {
   multiple?: boolean;
+  showChipValue?: boolean;
   selectOptions?: FormFieldSelectOptionsFn<T> | ValueLabel<T>[] | Observable<ValueLabel<T>[]>;
   compareWith?: (o1: T, o2: T) => boolean;
   /**
