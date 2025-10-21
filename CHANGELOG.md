@@ -1,5 +1,9 @@
 # Changelog
 
+## 19.1.32
+- Fix: remove chip on autocomplete multiselect not working
+- Feat: add option to show selected options as chips in multiselect
+
 ## 19.1.31
 - Fix: hide checkbox in no options indicator for multiselects.
 
