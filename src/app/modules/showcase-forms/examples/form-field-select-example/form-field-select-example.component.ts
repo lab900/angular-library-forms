@@ -143,6 +143,33 @@ export class FormFieldSelectExampleComponent {
               },
             },
           },
+          {
+            attribute: 'forthMultipleChipPropName',
+            title: 'May the multiple with chip forces be with you',
+            editType: EditType.Select,
+            options: {
+              multiple: true,
+              showChipValue: true,
+              selectAll: { enabled: true },
+              selectOptions: [
+                {
+                  value: 'may',
+                  label: 'May',
+                },
+                {
+                  value: 'the',
+                  label: 'the',
+                },
+                {
+                  value: '4th',
+                  label: '4th',
+                },
+              ],
+              clearFieldButton: {
+                enabled: true,
+              },
+            },
+          },
         ],
       },
     ],

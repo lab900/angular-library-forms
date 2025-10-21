@@ -19,6 +19,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { MatOption } from '@angular/material/autocomplete';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { MatChipListbox, MatChipRow, MatChipRemove } from '@angular/material/chips';
 
 @Component({
   selector: 'lab900-select-field',
@@ -58,6 +59,9 @@ import { toObservable } from '@angular/core/rxjs-interop';
     MatPseudoCheckbox,
     MatIconButton,
     MatIcon,
+    MatChipListbox,
+    MatChipRow,
+    MatChipRemove,
   ],
   host: {
     class: 'lab900-form-field',
@@ -73,6 +77,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
   private readonly fieldValue = signal<unknown>(undefined);
 
   public readonly multiple = computed(() => !!this._options()?.multiple);
+  public readonly showChipValue = computed(() => this.multiple() && this._options()?.showChipValue);
   public readonly panelWidth = computed(() => this._options()?.panelWidth ?? 'auto');
   public readonly customerTriggerFn = computed(() => this._options()?.customTriggerFn);
   public readonly compareFn = computed(() => this._options()?.compareWith || ((o1: T, o2: T): boolean => o1 === o2));
@@ -478,5 +483,18 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
         this.updateOptionsFn(f => conditionalOptions(value, fieldControl, f, this.schema));
       }
     });
+  }
+
+  public removeChip(valueToRemove: T): void {
+    if (this.fieldControl && this.multiple()) {
+      const currentValue = coerceArray(this.fieldControl.value) as T[];
+      const compare = this.compareFn();
+
+      const newValue = currentValue.filter(value => !compare(value, valueToRemove));
+
+      this.fieldControl.setValue(newValue);
+      this.fieldControl.markAsDirty();
+      this.fieldControl.markAsTouched();
+    }
   }
 }

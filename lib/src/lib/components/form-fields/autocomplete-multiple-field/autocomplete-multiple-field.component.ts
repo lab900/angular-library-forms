@@ -15,7 +15,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatIcon } from '@angular/material/icon';
-import { MatChipGrid, MatChipInput, MatChipRow } from '@angular/material/chips';
+import { MatChipGrid, MatChipInput, MatChipRemove, MatChipRow } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
@@ -30,6 +30,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatChipRow,
     MatAutocompleteTrigger,
     MatChipInput,
+    MatChipRemove,
     MatAutocomplete,
     MatOption,
     AsyncPipe,

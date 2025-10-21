@@ -29,6 +29,22 @@
         (infiniteScroll)="onScroll()"
         (openedChange)="onOpenedChange($event)"
         (focus)="onFocus()">
+        @if (showChipValue()) {
+          <mat-select-trigger>
+            <mat-chip-listbox>
+              @for (item of getOptionsMatchingTheValue(); track item) {
+                <mat-chip-row [removable]="!fieldIsReadonly()" (removed)="removeChip(item.value)" [value]="item">
+                  <div>{{ item.label | translate }}</div>
+                  @if (!fieldIsReadonly()) {
+                    <button matChipRemove>
+                      <mat-icon>cancel</mat-icon>
+                    </button>
+                  }
+                </mat-chip-row>
+              }
+            </mat-chip-listbox>
+          </mat-select-trigger>
+        }
         @if (customerTriggerFn(); as customerTriggerFn) {
           <mat-select-trigger>
             <div [innerHTML]="customerTriggerFn(fieldControl?.getRawValue())"></div>
