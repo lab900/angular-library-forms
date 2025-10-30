@@ -8,7 +8,7 @@
       [accept]="_options()?.accept"
       (change)="fileChange($event)" />
     @if (!fieldIsReadonly()) {
-      <button mat-raised-button color="primary" (click)="fileField.click()">
+      <button mat-raised-button color="primary" (click)="fileField.click()" type="button">
         {{ _options()?.fileUploadButtonText || 'form.button.upload' | translate }}
       </button>
     }

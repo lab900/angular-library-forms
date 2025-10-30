@@ -23,10 +23,10 @@
       [dateClass]="_options()?.dateClass"
       (opened)="pickerOpened(picker)">
       <ngx-mat-datepicker-actions>
-        <button mat-button ngxMatDatepickerCancel>
+        <button mat-button ngxMatDatepickerCancel type="button">
           {{ 'GENERAL.CANCEL' | translate }}
         </button>
-        <button mat-raised-button color="primary" ngxMatDatepickerApply>
+        <button mat-raised-button color="primary" ngxMatDatepickerApply type="button">
           {{ 'GENERAL.SAVE' | translate }}
         </button>
       </ngx-mat-datepicker-actions>

@@ -36,7 +36,7 @@
                 <mat-chip-row [removable]="!fieldIsReadonly()" (removed)="removeChip(item.value)" [value]="item">
                   <div>{{ item.label | translate }}</div>
                   @if (!fieldIsReadonly()) {
-                    <button matChipRemove>
+                    <button matChipRemove type="button">
                       <mat-icon>cancel</mat-icon>
                     </button>
                   }

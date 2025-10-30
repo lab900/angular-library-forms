@@ -50,7 +50,13 @@
       }
       @if (!fixedList() && !fieldIsReadonly()) {
         <div class="repeater-field__actions">
-          <button mat-button color="primary" [disabled]="hasMaxRows()" (click)="addToArray()" class="repeater-add">
+          <button
+            mat-button
+            color="primary"
+            [disabled]="hasMaxRows()"
+            (click)="addToArray()"
+            class="repeater-add"
+            type="button">
             {{ addLabel() | translate }}
           </button>
         </div>

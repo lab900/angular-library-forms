@@ -44,7 +44,7 @@
               <div class="text-ellipsis">{{ file.name }}</div>
               {{ formatBytes(file.size) }}
             </div>
-            <button mat-icon-button class="file__icon" (click)="deleteFile(file)">
+            <button mat-icon-button class="file__icon" (click)="deleteFile(file)" type="button">
               <mat-icon>delete</mat-icon>
             </button>
           </div>

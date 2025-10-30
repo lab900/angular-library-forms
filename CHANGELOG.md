@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.1.33
+- Fix: file preview opening file select when hitting enter
+- 
 ## 19.1.32
 - Fix: remove chip on autocomplete multiselect not working
 - Feat: add option to show selected options as chips in multiselect
