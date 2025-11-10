@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.1.34
+- Fix: selected option showing empty when searching and option not in search results
+
 ## 19.1.33
 - Fix: file preview opening file select when hitting enter
 - 
