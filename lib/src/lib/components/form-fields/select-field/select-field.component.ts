@@ -407,7 +407,7 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
        * This gives issues if the value is not an object
        * Not to be mistaken with the first addValueToOptions in this method, this is still needed in some cases
        */
-      if (this.fieldControl?.getRawValue() && !this.searchQuery()?.length) {
+      if (this.fieldControl?.getRawValue()) {
         return this.addValueToOptions(newOptionsSet);
       }
       return [...newOptionsSet];
