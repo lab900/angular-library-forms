@@ -1,7 +1,10 @@
 # Changelog
 
-## 19.1.34
+## 19.1.35
 - Fix: selected option showing empty when searching and option not in search results
+
+## 19.1.34 - Broken
+- Broken due to new version of @kolkov/angular-editor which is only supported from Angular 20.
 
 ## 19.1.33
 - Fix: file preview opening file select when hitting enter

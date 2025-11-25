@@ -1,6 +1,6 @@
 {
   "name": "@lab900/forms",
-  "version": "19.1.34-alpha.2",
+  "version": "19.1.35",
   "author": "Lab900 <info@lab900.com> (https://lab900.com)",
   "license": "MIT",
   "peerDependencies": {
@@ -10,7 +10,7 @@
     "@ngx-translate/core": ">=16.0.4",
     "@angular/forms": ">=19.0.0",
     "@lab900/ui": ">=19.0.1",
-    "@kolkov/angular-editor": "^2.1.0",
+    "@kolkov/angular-editor": "3.0.0-beta.0",
     "ngx-mask": "^19.0.6",
     "ngx-mat-select-search": "^8.0.0",
     "@ngxmc/datetime-picker": "~19.2.2"
