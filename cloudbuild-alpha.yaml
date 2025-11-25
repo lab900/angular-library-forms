@@ -1,0 +1,32 @@
+steps:
+  - name: 'node'
+    entrypoint: 'npm'
+    id: Install CLI
+    args: ['install', '-g', '@angular/cli']
+  - name: 'node'
+    entrypoint: 'npm'
+    id: Install Dependencies
+    args: ['ci']
+  - name: 'node'
+    entrypoint: 'npm'
+    id: Test Library
+    args: ['run', 'test:silent']
+  - name: 'node'
+    entrypoint: 'npm'
+    id: Build Library
+    args: ['run', 'build:forms:prod']
+  - name: 'node'
+    id: Publish to NPM
+    secretEnv: ['NPM_TOKEN']
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        npm config set -- '//registry.npmjs.org/:_authToken' "$$NPM_TOKEN"
+        cd dist/@lab900/forms
+        npm publish --ignore-scripts --tag alpha
+availableSecrets:
+  secretManager:
+    - versionName: projects/18279890124/secrets/npm-access-key/versions/latest
+      env: 'NPM_TOKEN'
+timeout: '900s'
