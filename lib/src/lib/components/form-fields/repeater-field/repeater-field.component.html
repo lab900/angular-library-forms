@@ -26,6 +26,30 @@
               </div>
               @if (!fixedList() && !fieldIsReadonly()) {
                 <div class="repeater-row__actions">
+                  @if (enableReorder()) {
+                    <div class="repeater-row__actions__move-actions">
+                      <button
+                        type="button"
+                        (click)="moveUpInArray($index)"
+                        mat-mini-fab
+                        class="mat-elevation-z0"
+                        [color]="_options()?.buttonColor || 'accent'"
+                        [disabled]="$first"
+                        aria-label="Move up">
+                        <mat-icon>arrow_upward</mat-icon>
+                      </button>
+                      <button
+                        type="button"
+                        (click)="moveDownInArray($index)"
+                        mat-mini-fab
+                        class="mat-elevation-z0"
+                        [color]="_options()?.buttonColor || 'accent'"
+                        [disabled]="$last"
+                        aria-label="Move down">
+                        <mat-icon>arrow_downward</mat-icon>
+                      </button>
+                    </div>
+                  }
                   @if (i + 1 > minRows() || _options()?.removeAll) {
                     <button
                       type="button"

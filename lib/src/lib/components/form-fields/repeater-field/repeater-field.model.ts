@@ -9,6 +9,7 @@ export interface FormFieldRepeaterOptions extends FormFieldBaseOptions {
   minRows?: number;
   maxRows?: number;
   buttonColor?: ThemePalette;
+  enableReorder?: boolean;
 }
 
 export interface FormFieldRepeater<T extends string | number = string>
