@@ -17,16 +17,26 @@
       display: flex;
       gap: 0.25em;
       margin: 0.25em 0;
+      padding-bottom: 1.34375em;
+      align-items: center;
 
       &__move-actions {
         display: flex;
         flex-direction: row;
         gap: 0.25em;
+        align-items: center;
       }
     }
   }
 
   &__actions {
     margin: 0.25em 0;
+    padding-bottom: 1.34375em;
   }
+}
+
+.mat-mdc-icon-button.mat-mdc-button-base {
+  height: 40px;
+  width: 40px;
+  padding: 0;
 }

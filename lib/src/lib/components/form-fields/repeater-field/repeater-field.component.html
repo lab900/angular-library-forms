@@ -30,33 +30,32 @@
                     <div class="repeater-row__actions__move-actions">
                       <button
                         type="button"
-                        (click)="moveUpInArray($index)"
-                        mat-button
-                        class="mat-elevation-z0"
+                        mat-icon-button
                         [color]="_options()?.buttonColor || 'accent'"
                         [disabled]="$first"
+                        (click)="moveUpInArray($index)"
                         aria-label="Move up">
                         <mat-icon>arrow_upward</mat-icon>
                       </button>
                       <button
                         type="button"
-                        (click)="moveDownInArray($index)"
-                        mat-button
-                        class="mat-elevation-z0"
+                        mat-icon-button
                         [color]="_options()?.buttonColor || 'accent'"
                         [disabled]="$last"
+                        (click)="moveDownInArray($index)"
                         aria-label="Move down">
                         <mat-icon>arrow_downward</mat-icon>
                       </button>
                     </div>
                   }
-                  @if (i + 1 > minRows() || _options()?.removeAll) {
+                  @if ($count >= minRows() || _options()?.removeAll) {
                     <button
                       type="button"
                       (click)="removeFromArray(i)"
                       mat-mini-fab
                       class="mat-elevation-z0"
                       [color]="_options()?.buttonColor || 'accent'"
+                      [disabled]="$count === minRows()"
                       aria-label="Delete">
                       <mat-icon>delete</mat-icon>
                     </button>

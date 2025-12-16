@@ -8,7 +8,7 @@ import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatTooltip } from '@angular/material/tooltip';
 import { FormFieldDirective } from '../../../directives/form-field.directive';
-import { MatButton, MatMiniFabButton } from '@angular/material/button';
+import { MatButton, MatIconButton, MatMiniFabButton } from '@angular/material/button';
 
 export const DEFAULT_REPEATER_MIN_ROWS = 1;
 
@@ -27,6 +27,7 @@ export const DEFAULT_REPEATER_MIN_ROWS = 1;
     MatMiniFabButton,
     MatError,
     MatButton,
+    MatIconButton,
   ],
 })
 export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
