@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.1.36
+- Feat: add reordering option in repeater field
+
 ## 19.1.35
 - Fix: selected option showing empty when searching and option not in search results
 
