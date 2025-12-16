@@ -8,7 +8,7 @@ import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatTooltip } from '@angular/material/tooltip';
 import { FormFieldDirective } from '../../../directives/form-field.directive';
-import { MatButton, MatMiniFabButton } from '@angular/material/button';
+import { MatButton, MatIconButton, MatMiniFabButton } from '@angular/material/button';
 
 export const DEFAULT_REPEATER_MIN_ROWS = 1;
 
@@ -27,6 +27,7 @@ export const DEFAULT_REPEATER_MIN_ROWS = 1;
     MatMiniFabButton,
     MatError,
     MatButton,
+    MatIconButton,
   ],
 })
 export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
@@ -51,6 +52,10 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
 
   public readonly fixedList = computed(() => {
     return !!this._options()?.fixedList;
+  });
+
+  protected readonly enableReorder = computed(() => {
+    return !!this._options()?.enableReorder;
   });
 
   public readonly repeaterArray = computed(() => {
@@ -90,5 +95,41 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
         repeaterArray.markAsTouched();
       }, 1);
     }
+  }
+
+  public moveUpInArray(index: number): void {
+    const repeaterArray = this.repeaterArray();
+    if (!repeaterArray || index <= 0 || index >= repeaterArray.length) {
+      return;
+    }
+
+    const current = repeaterArray.at(index);
+    const previous = repeaterArray.at(index - 1);
+
+    repeaterArray.setControl(index - 1, current);
+    repeaterArray.setControl(index, previous);
+
+    setTimeout(() => {
+      repeaterArray.markAsDirty();
+      repeaterArray.markAsTouched();
+    }, 1);
+  }
+
+  public moveDownInArray(index: number): void {
+    const repeaterArray = this.repeaterArray();
+    if (!repeaterArray || index < 0 || index >= repeaterArray.length - 1) {
+      return;
+    }
+
+    const current = repeaterArray.at(index);
+    const next = repeaterArray.at(index + 1);
+
+    repeaterArray.setControl(index + 1, current);
+    repeaterArray.setControl(index, next);
+
+    setTimeout(() => {
+      repeaterArray.markAsDirty();
+      repeaterArray.markAsTouched();
+    }, 1);
   }
 }

@@ -36,6 +36,7 @@ import { FormConditionalWithExternalFormExampleComponent } from './examples/form
 import { FormConditionalValidationExampleComponent } from './examples/form-condtional-validation-example/form-conditional-validation-example.component';
 import { FormReactiveOptionsExampleComponent } from './examples/form-reactive-options-example/form-reactive-options-example.component';
 import { FormFieldEditorExampleComponent } from './examples/form-field-editor-example/form-field-editor-example.component';
+import { FormFieldRepeaterReorderExampleComponent } from './examples/form-field-repeater-reorder-example/form-field-repeater-reorder-example.component';
 
 export default [
   {
@@ -75,6 +76,7 @@ export default [
     new ShowcaseExample(FormFieldRepeaterAdvancedExampleComponent, 'Repeater (nested)'),
     new ShowcaseExample(FormFieldRepeaterExampleComponent, 'Repeater'),
     new ShowcaseExample(FormFieldRepeaterFixedExampleComponent, 'Repeater fixed'),
+    new ShowcaseExample(FormFieldRepeaterReorderExampleComponent, 'Repeater (reorder)'),
   ]),
   new ShowcaseRoute('form-field-datepicker', 'Form Fields: Datepicker', [
     new ShowcaseExample(FormFieldDatePickerExampleComponent, 'Date picker'),
