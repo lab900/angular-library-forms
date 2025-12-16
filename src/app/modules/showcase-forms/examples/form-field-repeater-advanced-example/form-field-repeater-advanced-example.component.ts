@@ -16,6 +16,7 @@ export class FormFieldRepeaterAdvancedExampleComponent {
         editType: EditType.Repeater,
         options: {
           enableReorder: true,
+          buttonColor: 'primary',
         },
         nestedFields: [
           {

@@ -31,7 +31,7 @@
                       <button
                         type="button"
                         (click)="moveUpInArray($index)"
-                        mat-mini-fab
+                        mat-button
                         class="mat-elevation-z0"
                         [color]="_options()?.buttonColor || 'accent'"
                         [disabled]="$first"
@@ -41,7 +41,7 @@
                       <button
                         type="button"
                         (click)="moveDownInArray($index)"
-                        mat-mini-fab
+                        mat-button
                         class="mat-elevation-z0"
                         [color]="_options()?.buttonColor || 'accent'"
                         [disabled]="$last"
