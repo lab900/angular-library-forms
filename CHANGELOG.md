@@ -1,6 +1,6 @@
 # Changelog
 
-## 19.1.38
+## 19.1.38, 19.1.39
 - Fix: error alignment issue
 
 ## 19.1.37

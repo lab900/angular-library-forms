@@ -46,7 +46,7 @@
     @if (!!filesSignal()?.length) {
       <div class="file-list" [class.file-list--compact]="compact()" [class.file-list--full]="!compact()">
         @for (file of filesSignal(); track file) {
-          <div class="file">
+          <div class="file" [class.only-item]="maxFiles() === 1">
             <div>
               <span class="file__icon"><mat-icon>description</mat-icon></span>
               <div class="file__info">
@@ -61,10 +61,24 @@
         }
       </div>
     }
-    @if (_fieldControl()?.touched && !controlValid()) {
-      <div class="mat-mdc-form-field-error-wrapper">
-        <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
-      </div>
-    }
+    <div
+      class="mat-mdc-form-field-subscript-wrapper mat-mdc-form-field-bottom-align"
+      [@transitionMessages]="controlValid() ? 'void' : 'enter'">
+      @if (!fieldIsReadonly()) {
+        @let hint = _options()?.hint;
+        @if (hint) {
+          @if (!!hint.value && !(hint.hideHintOnValidValue && filesSignal()) && !fieldIsReadonly()) {
+            <mat-hint>
+              <span [innerHTML]="hint.value | translate: hint.valueTranslateData"></span>
+            </mat-hint>
+          }
+        }
+        @if (touched && !controlValid()) {
+          <div class="mat-mdc-form-field-error-wrapper">
+            <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
+          </div>
+        }
+      }
+    </div>
   </div>
 }
