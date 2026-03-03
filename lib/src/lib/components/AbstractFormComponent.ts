@@ -256,7 +256,6 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     key: string,
     interpolateParams: object | undefined = this.options
   ): Observable<string> {
-    console.log('No custom error message found for key:', key, 'with params:', interpolateParams);
     switch (key) {
       case 'required':
         return this.translateService.stream('forms.error.required');
