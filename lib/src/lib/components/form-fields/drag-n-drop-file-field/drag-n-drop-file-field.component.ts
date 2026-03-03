@@ -7,14 +7,12 @@ import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatError } from '@angular/material/input';
-import { matFormFieldAnimations } from '@angular/material/form-field';
 import { FormatBytesPipe } from '../../../pipes/format-bytes.pipe';
 
 @Component({
   selector: 'lab900-drag-n-drop-file-field',
   templateUrl: './drag-n-drop-file-field.component.html',
   styleUrls: ['./drag-n-drop-file-field.component.scss'],
-  animations: [matFormFieldAnimations.transitionMessages],
   imports: [FileDropDirective, MatIcon, TranslatePipe, MatButton, MatIconButton, MatError, FormatBytesPipe],
 })
 export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDropFilePreview> {

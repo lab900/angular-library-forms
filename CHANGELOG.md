@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.1.38
+- Fix: error alignment issue
+
 ## 19.1.37
 - Fix: Drag&Drop not showing validation errors
 

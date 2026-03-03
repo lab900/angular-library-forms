@@ -62,9 +62,9 @@
       </div>
     }
     @if (_fieldControl()?.touched && !controlValid()) {
-      <mat-error class="mat-mdc-form-field-error-wrapper" [@transitionMessages]="controlValid() ? 'void' : 'enter'"
-        >{{ errorMessage() }}
-      </mat-error>
+      <div class="mat-mdc-form-field-error-wrapper">
+        <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
+      </div>
     }
   </div>
 }

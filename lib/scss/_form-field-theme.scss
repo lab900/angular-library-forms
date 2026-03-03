@@ -24,7 +24,6 @@
     .lab900-form-field-label {
       display: block;
       margin-bottom: $margin;
-      // @include mat.typography-level($configTypo, 'body-1');
 
       &--with-info {
         display: flex;
@@ -33,10 +32,6 @@
         .mat-icon {
           margin-left: 0.25em;
         }
-      }
-
-      &.invalid {
-        color: var(--mat-form-field-error-text-color);
       }
     }
 
