@@ -8,9 +8,11 @@
 .upload-file {
   width: 100%;
   padding-bottom: 1.34375em;
+  display: flex;
+  gap: 10px;
 
-  &--compact {
-    display: flex;
+  &:not(&.upload-file--compact) {
+    flex-direction: column;
   }
 
   &__container {
@@ -42,21 +44,18 @@
 }
 
 .file-list {
-  &--full {
-    margin: 5px -5px 0px;
-  }
+  display: flex;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  gap: 5px;
 
   &--compact {
-    margin: 0px 0px;
-  }
-
-  & {
     max-height: 200px;
-    overflow: auto;
-    display: flex;
-    align-content: flex-start;
-    flex-wrap: wrap;
-    flex: 1 1 auto;
+    overflow-y: auto;
+
+    .file {
+      width: 100%;
+    }
   }
 }
 
@@ -65,25 +64,31 @@
   align-items: center;
   justify-content: space-between;
   border: 1px solid #dee1f0;
-  height: 50px;
-  flex: 1 1 250px;
-  margin: 5px 5px;
   background-color: rgba(222, 225, 240, 0.2) !important;
   border-radius: 10px;
-  width: 100%;
+  gap: 10px;
+  padding: 5px;
 
-  &__icon {
-    flex: 0 0 auto;
-    width: 40px;
-    height: 40px;
+  > div {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 5px;
+  }
+
+  &__icon {
+    padding: 0 5px;
   }
 
   &__info {
-    display: grid;
-    width: calc(100% - 100px);
+    overflow: hidden;
+  }
+
+  .mat-mdc-icon-button.mat-mdc-button-base {
+    --mdc-icon-button-state-layer-size: 32px;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
   }
 }
 

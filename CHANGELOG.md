@@ -1,5 +1,8 @@
 # Changelog
 
+## 19.1.37
+- Fix: Drag&Drop not showing validation errors
+
 ## 19.1.36
 - Feat: add reordering option in repeater field
 

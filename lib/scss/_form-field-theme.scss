@@ -14,6 +14,7 @@
     .mat-mdc-form-field-error {
       font-size: 11px;
       margin-top: 1px;
+      color: var(--mat-form-field-error-text-color);
     }
 
     .mat-mdc-form-field {
@@ -32,6 +33,10 @@
         .mat-icon {
           margin-left: 0.25em;
         }
+      }
+
+      &.invalid {
+        color: var(--mat-form-field-error-text-color);
       }
     }
 

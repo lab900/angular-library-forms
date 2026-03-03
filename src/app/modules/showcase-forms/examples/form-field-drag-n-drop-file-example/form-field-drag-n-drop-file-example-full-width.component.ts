@@ -5,7 +5,7 @@ import { MatButton } from '@angular/material/button';
 @Component({
   selector: 'lab900-form-field-drag-n-drop-file-example-full-width',
   template:
-    '<lab900-form [schema]="formSchema"/><button mat-raised-button color="primary" (click)="validate()">Submit</button>',
+    '<lab900-form [schema]="formSchema"/><button mat-raised-button color="primary" (click)="submitForm()">Submit</button>',
   imports: [Lab900Form, MatButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -15,21 +15,17 @@ export class FormFieldDragNDropFileExampleFullWidthComponent {
   public formSchema: Lab900FormConfig = {
     fields: [
       {
-        editType: EditType.Row,
-        nestedFields: [
-          {
-            attribute: 'files',
-            title: 'My files',
-            editType: EditType.DragNDrop,
-            options: {
-              maxFiles: 5,
-              colspan: 12,
-            },
-          },
-        ],
+        attribute: 'files',
+        title: 'My files',
+        editType: EditType.DragNDrop,
+        options: {
+          maxFiles: 5,
+          colspan: 12,
+          required: true,
+        },
       },
       {
-        attribute: 'files',
+        attribute: 'filesCompact',
         title: 'My files',
         editType: EditType.DragNDrop,
         options: {
@@ -41,7 +37,11 @@ export class FormFieldDragNDropFileExampleFullWidthComponent {
     ],
   };
 
-  public validate(): void {
-    console.log(this.form()?.form.controls.files.value);
+  public submitForm(): void {
+    if (this.form()?.valid) {
+      console.log(this.form()?.value);
+    } else {
+      this.form()?.form?.markAllAsTouched();
+    }
   }
 }

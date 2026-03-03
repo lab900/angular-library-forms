@@ -1,21 +1,29 @@
 @if (!fieldIsHidden()) {
-  <div [formGroup]="group" class="lab900-range-slider-field" id="lab900-range-slider-field-{{ elementId() }}">
-    @if (label(); as label) {
-      <span class="lab900-form-field-label">{{ label | translate }}</span>
-    }
-    <lab900-mat-range-slider-field
-      [formControlName]="fieldAttribute"
-      [fromLabel]="fromLabel()"
-      [toLabel]="toLabel()"
-      [min]="min()"
-      [max]="max()"
-      [steps]="steps()"
-      [format]="format()"
-      [required]="fieldIsRequired()" />
-    @if (touched && !valid && !fieldIsReadonly()) {
-      <div class="radio-buttons-field__error">
-        <mat-error>{{ errorMessage() }}</mat-error>
-      </div>
-    }
-  </div>
+  @if (_fieldAttribute(); as attr) {
+    <div [formGroup]="_group()" class="lab900-range-slider-field" id="lab900-range-slider-field-{{ elementId() }}">
+      @if (label(); as label) {
+        <span class="lab900-form-field-label" [class.invalid]="!controlValid() && _fieldControl()?.touched">
+          @if (fieldIsRequired() && !setting?.formField?.hideRequiredMarker) {
+            {{ label | translate }}*
+          } @else {
+            {{ label | translate }}
+          }
+        </span>
+      }
+      <lab900-mat-range-slider-field
+        [formControlName]="attr"
+        [fromLabel]="fromLabel()"
+        [toLabel]="toLabel()"
+        [min]="min() ?? 0"
+        [max]="max() ?? 100"
+        [steps]="steps()"
+        [format]="format() ?? 'DEFAULT'"
+        [required]="fieldIsRequired()" />
+      @if (!controlValid() && _fieldControl()?.touched) {
+        <div class="radio-buttons-field__error">
+          <mat-error>{{ errorMessage() }}</mat-error>
+        </div>
+      }
+    </div>
+  }
 }

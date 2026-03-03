@@ -14,7 +14,7 @@
     }
     @if (files().length) {
       <div class="images-wrapper">
-        @for (file of files(); track file) {
+        @for (file of files(); track file.name + $index) {
           <mat-card appearance="outlined" class="image-wrapper" (click)="handleImageClick(file)">
             @if (!fieldIsReadonly()) {
               <mat-icon (click)="$event.stopPropagation(); removeFile(file)" class="delete-image">close</mat-icon>

@@ -12,6 +12,8 @@ import { Lab900FormField } from '../models/lab900-form-field.type';
 import { FormFieldAutocomplete } from '../components/form-fields/autocomplete-field/autocomplete-field.model';
 import { requireMatchValidator } from '../validators/require-match.validator';
 import { FormFieldRepeater } from '../components/form-fields/repeater-field/repeater-field.model';
+import { FormFieldDragNDropFileOptions } from '../components/form-fields/drag-n-drop-file-field/drag-n-drop-file-field.model';
+import { maxFilesValidator, requiredFilesValidator } from '../validators/max-files.validator';
 
 @Injectable()
 export class Lab900FormBuilderService {
@@ -37,9 +39,21 @@ export class Lab900FormBuilderService {
     if (field.options?.pattern) {
       validators.push(Validators.pattern(field.options.pattern));
     }
+
     if ((field as FormFieldAutocomplete<any>).options?.requireMatch) {
       validators.push(requireMatchValidator());
     }
+
+    if (field.editType === 'DragNDrop') {
+      const dragNDropFileOptions = field.options as FormFieldDragNDropFileOptions;
+      if (dragNDropFileOptions?.required) {
+        validators.push(requiredFilesValidator());
+      }
+      if (dragNDropFileOptions?.maxFiles) {
+        validators.push(maxFilesValidator(dragNDropFileOptions.maxFiles));
+      }
+    }
+
     return validators;
   }
 

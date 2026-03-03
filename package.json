@@ -1,8 +1,8 @@
 {
   "name": "angular-library-forms",
-  "version": "19.1.36",
+  "version": "19.1.37",
   "repository": "https://github.com/lab900/angular-library-forms",
-  "homepage": "https://lab900.github.io/angular-libraries/forms",
+  "homepage": "https://lab900.github.io/angular-library-forms",
   "author": "Lab900 <info@lab900.com> (https://lab900.com)",
   "licens": "MIT",
   "scripts": {
