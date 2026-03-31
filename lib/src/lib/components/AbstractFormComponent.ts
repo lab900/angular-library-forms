@@ -1,5 +1,5 @@
 import { AbstractControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { computed, Directive, effect, inject, input, model, Signal, untracked } from '@angular/core';
+import { computed, Directive, effect, inject, input, model, signal, Signal, untracked } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { concat, defer, EMPTY, Observable, of, switchMap } from 'rxjs';
 import { FieldConditions } from '../models/IFieldConditions';
@@ -175,6 +175,12 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   public readonly fieldIsReadonly = model<boolean>(false, { alias: 'readonly' });
   public readonly fieldIsHidden = model<boolean>(false);
   public readonly fieldIsRequired = model<boolean>(false);
+  /**
+   * Set to `true` by FieldConditions when a `validators` function is active for this field.
+   * When true the `fieldIsRequired` effect skips adding/removing the `Validators.required`
+   * singleton because the condition already owns the full validator array.
+   */
+  public readonly fieldConditionValidatorsActive = signal<boolean>(false);
 
   public get valid(): boolean {
     return !!this.fieldControl?.valid;
@@ -225,6 +231,12 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
         const readonly = this.fieldIsReadonly();
         const hidden = this.fieldIsHidden();
         const required = this.fieldIsRequired();
+        // When a condition's `validators` function manages the full validator array, skip
+        // the auto-add/remove of the Validators.required singleton to avoid double-validation
+        // and state inconsistency between consecutive condition runs.
+        if (this.fieldConditionValidatorsActive()) {
+          return;
+        }
         if (!readonly && !hidden) {
           if (required && !control.hasValidator(Validators.required)) {
             control.addValidators(Validators.required);
