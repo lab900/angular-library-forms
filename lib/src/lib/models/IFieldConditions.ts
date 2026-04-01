@@ -148,13 +148,23 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
       }
       if (this.validators) {
         const newValidators = this.validators(value);
-        control.setValidators(newValidators);
-        this.component.schema.validators = newValidators;
         const isRequired =
           this.required !== undefined
             ? this.required
             : newValidators.includes(Validators.required) ||
               newValidators.some(v => v(new FormControl(null))?.['required']);
+        // Angular Material reads control.hasValidator(Validators.required) to decide
+        // whether to render the required star (*).  Custom validators that return a
+        // `required` error but are not the Validators.required singleton are invisible
+        // to that check.  We therefore inject the singleton into the array whenever
+        // the field is required so the star always appears — without relying on the
+        // AbstractFormComponent effect (which is intentionally blocked by
+        // fieldConditionValidatorsActive to avoid double-management).
+        if (isRequired && !newValidators.includes(Validators.required)) {
+          newValidators.push(Validators.required);
+        }
+        control.setValidators(newValidators);
+        this.component.schema.validators = newValidators;
         this.component.fieldConditionValidatorsActive.set(true);
         this.component.fieldIsRequired.set(isRequired);
         control.updateValueAndValidity();
