@@ -1,25 +1,58 @@
 import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
+import { AbstractControl, ValidatorFn } from '@angular/forms';
 import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
-import { Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 
+// ---------------------------------------------------------------------------
+// The source-key types that make downstream fields required + visible.
+// This mirrors the real `sourceKeyTypes` array from the production codebase.
+// ---------------------------------------------------------------------------
+const SOURCE_KEY_TYPES = ['PARCEL_LINE', 'PRODUCTION_DOSSIER', 'TRUCK_ORDER'] as const;
+type SourceKeyType = (typeof SOURCE_KEY_TYPES)[number] | null;
+
 /**
- * Demonstrates IFieldConditions.required:
+ * A stand-in for the real `requiredField(() => condition)` helper used in
+ * production.  It behaves like `Validators.required` when `condition()` is
+ * true, but it is a plain arrow function — NOT the `Validators.required`
+ * singleton.
  *
- * - The "Name" field is hidden by default (`options.hide: true`).
- * - When the slide-toggle is switched on, `showIfEquals` makes the field appear.
- * - At the same time, `validators` injects `Validators.required` so the form
- *   control is invalid when empty.
- * - `required: true` is the explicit flag from `IFieldConditions` that tells the
- *   library to mark the field as required, which makes the red asterisk (*) appear
- *   in the field label.  Without this flag the library tries to auto-detect
- *   required-ness by running the validators against an empty control; setting it
- *   explicitly is more reliable and more readable.
+ * This is the root cause of the missing-star bug:
+ *   `IFieldConditions.runAll` sets `fieldIsRequired` via
+ *   `newValidators.includes(Validators.required)`.  Because this function is
+ *   not that singleton, the check returns `false` and the required star (*)
+ *   is never shown — even though the field IS validated as required.
+ */
+function conditionalRequired(condition: () => boolean): ValidatorFn {
+  return (control: AbstractControl) => {
+    if (condition() && !control.value) {
+      return { required: true };
+    }
+    return null;
+  };
+}
+
+/**
+ * Reproduces the missing required-star (*) bug.
+ *
+ * Steps to observe the issue:
+ *  1. Select any source type → the "Activity type" field appears.
+ *  2. Notice: there is NO red asterisk (*) next to "Activity type" even
+ *     though the field is required.
+ *  3. Click Submit without filling it in → the red "required" error DOES
+ *     appear, proving the validator works but the star is missing.
+ *
+ * Root cause:
+ *  The condition uses `conditionalRequired(...)` — a custom ValidatorFn —
+ *  instead of the `Validators.required` singleton.
+ *  `IFieldConditions` detects required-ness with a strict reference check:
+ *    `newValidators.includes(Validators.required)`
+ *  A custom function never passes that check, so `fieldIsRequired` stays
+ *  `false` and Angular Material never renders the star.
  */
 @Component({
   selector: 'lab900-form-conditional-required-example',
   template: `
-    <lab900-form #form [schema]="schema" [data]="data" />
+    <lab900-form #form [schema]="schema" />
     <button mat-stroked-button (click)="submit()">Submit</button>
   `,
   imports: [Lab900Form, MatButton],
@@ -28,57 +61,47 @@ import { MatButton } from '@angular/material/button';
 export class FormConditionalRequiredExampleComponent {
   public readonly form = viewChild<Lab900Form<any>>(Lab900Form);
 
-  /** Initial form data – the toggle starts off, so the name field is hidden. */
-  public readonly data = { showName: false };
-
   public readonly schema: Lab900FormConfig = {
     fields: [
       {
-        attribute: 'showName',
-        editType: EditType.SlideToggle,
-        title: 'Show required name field',
-        options: { colspan: 12 },
+        attribute: 'sourceKeyType',
+        editType: EditType.Select,
+        title: 'Source type',
+        options: {
+          required: true,
+          colspan: 6,
+          selectOptions: [
+            { value: null, label: '— none —' },
+            { value: 'PARCEL_LINE', label: 'Parcel line' },
+            { value: 'PRODUCTION_DOSSIER', label: 'Production dossier' },
+            { value: 'TRUCK_ORDER', label: 'Truck order' },
+          ],
+        },
       },
       {
-        attribute: 'name',
-        editType: EditType.Input,
-        title: 'Name',
+        attribute: 'activityType',
+        editType: EditType.Select,
+        title: 'Activity type',
         options: {
-          colspan: 12,
-          /**
-           * `hide: true` means the field is invisible (and its control is
-           * disabled) when the page first loads.  The condition below
-           * overrides this as soon as the toggle changes.
-           */
           hide: true,
+          colspan: 6,
+          selectOptions: [
+            { value: 'LOADING', label: 'Loading' },
+            { value: 'DISCHARGING', label: 'Discharging' },
+            { value: 'PRODUCTION', label: 'Production' },
+          ],
         },
         conditions: [
           {
-            /**
-             * Watch the `showName` control.
-             * `showIfEquals` makes this field visible whenever the value
-             *  satisfies the predicate (i.e. the toggle is on).
-             */
-            dependOn: 'showName',
-            showIfEquals: (v: boolean) => v,
-
-            /**
-             * Dynamically swap the validator list:
-             * - toggle ON  → the field is required
-             * - toggle OFF → no validators (field is hidden anyway)
-             */
-            validators: (v: boolean) => (v ? [Validators.required] : []),
-
-            /**
-             * `required: true` is the IFieldConditions flag that makes the
-             * required-star (*) appear next to the label.
-             *
-             * The library can auto-detect this from the validators array, but
-             * setting it explicitly makes the intent crystal-clear and avoids
-             * edge-cases with custom validators that don't use the standard
-             * Validators.required singleton.
-             */
-            required: true,
+            dependOn: 'sourceKeyType',
+            // Field appears whenever a real source-key type is selected.
+            showIfEquals: (type: SourceKeyType) => !!type && SOURCE_KEY_TYPES.includes(type),
+            // ⚠️  Uses a custom validator — NOT the Validators.required singleton.
+            // The field is functionally required (returns a `required` error on
+            // submit), but the required star (*) will NOT appear next to the
+            // label because the library's reference check fails:
+            //   newValidators.includes(Validators.required) → false
+            validators: (type: SourceKeyType) => [conditionalRequired(() => !!type && SOURCE_KEY_TYPES.includes(type))],
           },
         ],
       },
