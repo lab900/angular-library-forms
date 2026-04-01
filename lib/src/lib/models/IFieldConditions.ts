@@ -1,4 +1,4 @@
-import { AbstractControl, FormControl, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { FormComponent } from '../components/AbstractFormComponent';
@@ -29,12 +29,6 @@ export interface IFieldConditions<T = any> {
   ) => ValueLabel[] | Observable<ValueLabel[]>;
   skipIfNotExists?: boolean;
   validators?: (value: T) => ValidatorFn[];
-  /**
-   * Explicitly declare whether the field is required when this condition's validators are active.
-   * When omitted the library auto-detects by running each validator against an empty `FormControl`
-   * and checking for a `required` error key (Option A heuristic).
-   */
-  required?: boolean;
 }
 
 export class FieldConditions<T = any> implements IFieldConditions<T> {
@@ -57,7 +51,6 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
   public conditionalOptions?: (value: T) => any;
   public skipIfNotExists = false;
   public validators?: (value: T) => ValidatorFn[];
-  public required?: boolean;
 
   public dependControls?: Record<string, AbstractControl>;
   public prevValue?: T;
@@ -150,13 +143,7 @@ export class FieldConditions<T = any> implements IFieldConditions<T> {
         const newValidators = this.validators(value);
         control.setValidators(newValidators);
         this.component.schema.validators = newValidators;
-        const isRequired =
-          this.required !== undefined
-            ? this.required
-            : newValidators.includes(Validators.required) ||
-              newValidators.some(v => v(new FormControl(null))?.['required']);
-        this.component.fieldConditionValidatorsActive.set(true);
-        this.component.fieldIsRequired.set(isRequired);
+        this.component.fieldIsRequired.set(newValidators.includes(Validators.required));
         control.updateValueAndValidity();
       }
       this.runVisibilityConditions(value);
