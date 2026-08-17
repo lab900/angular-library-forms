@@ -28,4 +28,9 @@ export class DateFieldComponent extends FormComponent<FormFieldDatePicker> {
   public readonly minDate = computed(() => {
     return this._options()?.minDate;
   });
+
+  /**
+   * `dateClass` on MatDatepicker is not nullable, so fall back to a function that adds no class.
+   */
+  protected readonly dateClass = computed(() => this._options()?.dateClass ?? (() => ''));
 }

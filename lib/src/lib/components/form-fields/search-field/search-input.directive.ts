@@ -87,14 +87,33 @@ export class SearchInputDirective<T> implements ControlValueAccessor, OnChanges 
     this.elementRef.nativeElement.disabled = isDisabled;
   }
 
-  @HostListener('input', ['$event.target.value'])
+  /**
+   * Angular v21 type-checks host listener arguments, and `$event.target` is `EventTarget | null`, so the
+   * input element is read here instead of in the binding. The public handlers keep their signatures.
+   */
+  @HostListener('input', ['$event'])
+  public onInputEvent(event: Event): void {
+    this.onInput((event.target as HTMLInputElement).value);
+  }
+
+  @HostListener('paste', ['$event'])
+  public onPasteEvent(event: ClipboardEvent): void {
+    if (event.clipboardData) {
+      this.onPaste(event.clipboardData);
+    }
+  }
+
+  @HostListener('blur', ['$event'])
+  public onBlurEvent(event: Event): void {
+    this.onBlur((event.target as HTMLInputElement).value);
+  }
+
   public onInput(v: string): void {
     if (!this.options.disableSearchOnInput) {
       this.searchQuery$.next(v);
     }
   }
 
-  @HostListener('paste', ['$event.clipboardData'])
   public onPaste(event: DataTransfer): void {
     if (this.canUpdate()) {
       const value: string = event.getData('text/plain');
@@ -104,7 +123,6 @@ export class SearchInputDirective<T> implements ControlValueAccessor, OnChanges 
     }
   }
 
-  @HostListener('blur', ['$event.target.value'])
   public onBlur(value: string): void {
     if (this.canUpdate()) {
       if (value?.length) {

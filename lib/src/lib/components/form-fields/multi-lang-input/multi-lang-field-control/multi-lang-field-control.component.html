@@ -60,7 +60,7 @@
                     [required]="required()"
                     [readonly]="readonly()"
                     [class.readonly]="readonly()"
-                    [disabled]="$safeNavigationMigration(activeLanguage()?.disabled)" />
+                    [disabled]="activeLanguage()?.disabled ?? false" />
                 } @else {
                   <textarea
                     matInput
@@ -70,7 +70,7 @@
                     [required]="required()"
                     [readonly]="readonly()"
                     [class.readonly]="readonly()"
-                    [disabled]="$safeNavigationMigration(activeLanguage()?.disabled)"></textarea>
+                    [disabled]="activeLanguage()?.disabled ?? false"></textarea>
                 }
               </mat-form-field>
             }

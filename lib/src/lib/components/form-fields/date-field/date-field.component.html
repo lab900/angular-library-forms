@@ -8,12 +8,12 @@
       matInput
       placeholder="{{ placeholder() | translate }}"
       [matDatepicker]="picker"
-      [formControlName]="_fieldAttribute()"
-      [max]="maxDate()"
-      [min]="minDate()"
+      [formControlName]="_fieldAttribute() ?? ''"
+      [max]="maxDate() ?? null"
+      [min]="minDate() ?? null"
       [matDatepickerFilter]="$safeNavigationMigration(_options()?.dateFilter)" />
     <mat-datepicker-toggle matIconSuffix [for]="picker" />
-    <mat-datepicker #picker [dateClass]="$safeNavigationMigration(_options()?.dateClass)" [startView]="startView()" />
+    <mat-datepicker #picker [dateClass]="dateClass()" [startView]="startView()" />
     @let hint = $safeNavigationMigration(_options()?.hint);
     @if (!!hint?.value && !(hint?.hideHintOnValidValue && input.value) && !fieldIsReadonly()) {
       <mat-hint>

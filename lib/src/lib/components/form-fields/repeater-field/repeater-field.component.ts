@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, HostBinding, inject } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { ReactiveFormsModule, UntypedFormArray } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
+import { FormFieldUtils } from '../../../utils/form-field.utils';
 import { Lab900FormBuilderService } from '../../../services/form-builder.service';
 import { MatError } from '@angular/material/form-field';
 import { transitionMessages } from '../../../utils/form-field.animations';
@@ -38,6 +39,18 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
   public classList = 'lab900-form-field';
 
   protected readonly nestedFields = computed(() => this._schema().nestedFields);
+
+  /**
+   * `infoTooltip` is a reactive option, so it can also be a function. Resolve it here, the same way
+   * `FormRowComponent` does, instead of reading `.text` off a union in the template.
+   */
+  protected readonly infoTooltip = computed(() => {
+    const options = this._options();
+    return options ? FormFieldUtils.infoTooltip(options, this._group()) : null;
+  });
+
+  /** The rows of the array are always groups built by `Lab900FormBuilderService`. */
+  protected readonly repeaterRows = computed(() => (this.repeaterArray()?.controls ?? []) as UntypedFormGroup[]);
 
   public readonly addLabel = computed(() => {
     return this._options()?.addLabel ?? 'Add new';

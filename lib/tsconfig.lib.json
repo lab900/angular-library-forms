@@ -11,7 +11,7 @@
     "skipTemplateCodegen": true,
     "strictMetadataEmit": true,
     "enableResourceInlining": true,
-    "strictTemplates": false
+    "strictTemplates": true
   },
   "exclude": ["**/*.spec.ts"]
 }

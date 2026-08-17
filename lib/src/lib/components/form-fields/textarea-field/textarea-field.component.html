@@ -5,7 +5,7 @@
     }
     <textarea
       #input
-      [formControlName]="_fieldAttribute()"
+      [formControlName]="_fieldAttribute() ?? ''"
       matInput
       placeholder="{{ placeholder() | translate }}"></textarea>
 

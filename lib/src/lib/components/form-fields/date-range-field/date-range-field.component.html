@@ -1,23 +1,20 @@
-@if (!fieldIsHidden() && dateFormGroup() && startControl() && endControl()) {
+@let dateGroup = dateFormGroup();
+@let start = startControl();
+@let end = endControl();
+@if (!fieldIsHidden() && dateGroup && start && end) {
   <mat-form-field [formGroup]="_group()" class="lab900-date-range-field" id="lab900-date-range-field-{{ elementId() }}">
     @if (label(); as label) {
       <mat-label>{{ label | translate }}</mat-label>
     }
-    <mat-date-range-input
-      [formGroup]="dateFormGroup()"
-      [rangePicker]="picker"
-      [dateFilter]="$safeNavigationMigration(_options()?.dateFilter)">
+    <mat-date-range-input [formGroup]="dateGroup" [rangePicker]="picker" [dateFilter]="_options()?.dateFilter">
       <input
         matStartDate
-        [formControl]="startControl()"
+        [formControl]="start"
         placeholder="{{ _options()?.startLabel || 'Start date' | translate }}" />
-      <input
-        matEndDate
-        [formControl]="endControl()"
-        placeholder="{{ _options()?.endLabel || 'End date' | translate }}" />
+      <input matEndDate [formControl]="end" placeholder="{{ _options()?.endLabel || 'End date' | translate }}" />
     </mat-date-range-input>
     <mat-datepicker-toggle matIconSuffix [for]="picker" />
-    <mat-date-range-picker [dateClass]="$safeNavigationMigration(_options()?.dateClass)" #picker />
+    <mat-date-range-picker [dateClass]="dateClass()" #picker />
     @let hint = $safeNavigationMigration(_options()?.hint);
     @if (!!hint?.value && !(hint?.hideHintOnValidValue && !!groupValue()) && !fieldIsReadonly()) {
       <mat-hint>

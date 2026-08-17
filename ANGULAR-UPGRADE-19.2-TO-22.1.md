@@ -796,6 +796,78 @@ files, 5 in the library and 5 in the showcase app. The diff was reviewed rather 
 **Result.** All 17 errors gone. 3 type checks at 0 errors, all 3 builds pass, 32 tests pass. Lint is
 down to the 20 errors from the kept `Eager` opt-out.
 
+### `refactor: enable strictTemplates and fix the template types`
+
+**Symptom.** `strictTemplates: true` in all 3 tsconfigs produced 67 errors in 26 library files and 3 in
+the showcase app.
+
+**Cause.** Not the `?.` change. TypeScript has always typed `a?.b` as `T | undefined`; what changed is
+that `strictTemplates` checks **input binding types**, which the project's previous
+`fullTemplateTypeCheck: true` never did. So every `_options()?.x` bound to a Material input that declares
+`x` or `x | null` became an error at once.
+
+**Fix.** No `any`, no `$any()`, no suppression, and no `!` assertion — `attribute?` really is optional in
+`FormFieldBase`, so an assertion would have been a lie. Six patterns:
+
+1. **`?? null` where the target accepts null** — `[max]`, `[min]`, `[value]`, `[displayWith]`.
+2. **`?? <neutral default>` where the target is not nullable** — `?? ''` for `formControlName`,
+   `formArrayName`, labels and tooltips; `?? false` for booleans; `?? 'after'` for `labelPosition`,
+   which is Material's own default.
+3. **Non-null function defaults** — `dateClass` and `matDatepickerFilter` are declared non-nullable by
+   Material and by the picker. New computeds fall back to `() => ''` (adds no class) and `() => true`
+   (filters nothing).
+4. **`@let` before `@if` so narrowing sticks** — a signal call is not narrowed by an enclosing `@if`,
+   because each call is a fresh expression. `date-range-field`, `form-row`, `form-column`,
+   `search-field` and the multi-language example now bind narrowed `@let` locals.
+5. **Typed casts in the component, not the template** — `startControl` / `endControl` return
+   `FormControl | null`, and `repeaterRows` returns `UntypedFormGroup[]`.
+6. **Host listener arguments** — Angular type-checks them now, and `$event.target` is
+   `EventTarget | null`. `amount-input.directive.ts` and `search-input.directive.ts` gained thin
+   `onInputEvent` / `onFocusEvent` / `onBlurEvent` / `onPasteEvent` methods that read the element in
+   typed TypeScript and delegate. **The existing public handlers keep their exact signatures**, so the
+   published API is unchanged.
+
+`defaultTime` on the picker is declared `number[]` but defaults to `null` at runtime, and is read as
+`defaultTime()?.[i]` with a truthiness check per element. `?? []` is therefore type-correct and
+behaviour-identical; that was verified in the package's own bundle before choosing it.
+
+**Real defects this surfaced.** `strictTemplates` did not only cost work, it found bugs:
+
+| File | Defect | Now |
+| --- | --- | --- |
+| `button-toggle-field.component.html:22` | `id="mat-button-toggle-{{ elementId }}"` interpolated the **function**, not its value (`NG8109`, `NG8117`) | `{{ elementId() }}` |
+| `button-toggle-field.component.html:29` | `<lab900-icon [icon]="value.icon">` rendered with `undefined` whenever a button option had no icon, because `!value?.icon?.position` is true in that case | guarded on `@let icon` |
+| `autocomplete-multiple-field.component.html:20` | a bare `matAutocomplete` attribute sat next to the real `[matAutocomplete]="auto"` binding, typing as `string` | the redundant attribute removed |
+| `auth-image.directive.ts:15` | `httpCallback` was typed `Observable<Blob>`, but `fetchImageBase64` accepts and converts `ArrayBuffer`, and the showcase passes `responseType: 'arraybuffer'` | widened to `Observable<Blob \| ArrayBuffer>` |
+| `mat-range-slider-field.component.ts:67` | `formatValue(undefined)` fell through to `` `${value}` `` and rendered the string `"undefined"` into the input | parameter widened, returns `''` |
+| `app.component.html:29` | `[mode]="sideNavMode$ \| async"` bound `null` before the first emission | `?? 'side'` |
+
+**Public API changes, both widening only:** `AuthImageDirective.httpCallback` accepts a callback
+returning `ArrayBuffer` as well as `Blob`, and `MatRangeSliderFieldComponent.formatValue` accepts
+`number | undefined`. Neither breaks an existing caller.
+
+**Behaviour changes that need eyes.** All are in the smoke test:
+
+- `form-row` and `form-column` now render nothing when the resolved group is missing, instead of
+  rendering a field with an undefined `group`. In practice the group always resolves.
+- `search-field` renders nothing without `options`, whose `searchFn` and `labelFormatter` are required.
+- The two cases in the defect table that stop rendering something broken.
+
+**The probe.** `lib/tsconfig.lib.json` sets `skipTemplateCodegen: true`, which could have silenced the
+flag, so it was tested rather than assumed. `[max]="maxDate() ?? null"` in `date-field.component.html`
+was reverted to `[max]="maxDate()"`, the build reported exactly
+`date-field.component.html:12:8 - error TS2322: Type 'Date | undefined' is not assignable to type
+'Date | null'` and failed, and the probe was then reverted. `strictTemplates` is genuinely in effect on
+the published build path.
+
+**Formatting.** 7 templates tripped `prettier/prettier` after the edits, so prettier was run on exactly
+those 7 files. It removed the parentheses in `(a ?? '') | translate`; that is safe, because Angular's
+pipe operator has the lowest precedence, so `a ?? '' | translate` parses the same way.
+
+**Result.** 3 type checks at 0 errors, all 3 builds pass, 32 tests pass. `strictTemplates: false` is gone
+from all 3 tsconfigs, and the `extendedDiagnostics` block stayed out — the remaining `NG8107` / `NG8102`
+reports are warnings, not errors, and are listed under Follow-ups.
+
 ## Smoke test for the user
 
 _Written at step 4.8._

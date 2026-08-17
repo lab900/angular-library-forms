@@ -65,9 +65,17 @@ export class DateTimeFieldComponent extends FormComponent<FormFieldDateTimePicke
     return this._options()?.showSeconds ?? true;
   });
 
+  /**
+   * `defaultTime` on the picker is typed `number[]`, while its runtime default is null. It reads the
+   * value as `defaultTime()?.[i]` with a truthiness check per element, so an empty array behaves
+   * exactly like no value.
+   */
   public readonly defaultTime = computed(() => {
-    return this._options()?.defaultTime;
+    return this._options()?.defaultTime ?? [];
   });
+
+  /** `matDatepickerFilter` on the picker is not nullable, so fall back to a filter that allows all. */
+  protected readonly dateFilter = computed(() => this._options()?.dateFilter ?? (() => true));
 
   public readonly stepMinute = computed(() => {
     return this._options()?.stepMinute || 1;

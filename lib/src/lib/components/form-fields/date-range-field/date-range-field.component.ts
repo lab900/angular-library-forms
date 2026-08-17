@@ -1,6 +1,6 @@
 import { Component, computed, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { FormFieldDateRange } from './date-range-field.model';
 import {
   MatDatepickerToggle,
@@ -38,10 +38,13 @@ export class DateRangeFieldComponent extends FormComponent<FormFieldDateRange> {
   });
 
   public readonly startControl = computed(() => {
-    return this.dateFormGroup()?.get(this._options()?.startKey || 'start');
+    return (this.dateFormGroup()?.get(this._options()?.startKey || 'start') as FormControl | null) ?? null;
   });
 
   public readonly endControl = computed(() => {
-    return this.dateFormGroup()?.get(this._options()?.endKey || 'end');
+    return (this.dateFormGroup()?.get(this._options()?.endKey || 'end') as FormControl | null) ?? null;
   });
+
+  /** `dateClass` on MatDateRangePicker is not nullable, so fall back to a function that adds no class. */
+  protected readonly dateClass = computed(() => this._options()?.dateClass ?? (() => ''));
 }

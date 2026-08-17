@@ -14,12 +14,12 @@
       [color]="$safeNavigationMigration(_options()?.color)"
       [disabled]="fieldIsReadonly()"
       (btnClick)="handleClick($event)"
-      [label]="buttonLabel()"
-      [matTooltip]="$safeNavigationMigration(_options()?.tooltip?.text) | translate"
+      [label]="buttonLabel() ?? ''"
+      [matTooltip]="_options()?.tooltip?.text ?? '' | translate"
       [matTooltipPosition]="_options()?.tooltip?.position || 'above'"
       [prefixIcon]="prefixIcon()"
       [suffixIcon]="suffixIcon()"
-      [svgIcon]="$safeNavigationMigration(_options()?.svgIcon)"
+      [svgIcon]="_options()?.svgIcon ?? false"
       [containerClass]="$safeNavigationMigration(_options()?.containerClass)"
       [buttonId]="$safeNavigationMigration(_options()?.buttonId)" />
   </div>

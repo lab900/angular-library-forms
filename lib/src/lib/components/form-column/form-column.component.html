@@ -1,4 +1,5 @@
-@if (!fieldIsHidden()) {
+@let group = formGroup();
+@if (!fieldIsHidden() && group) {
   <div class="lab900-form-column {{ _options()?.customClass }}" id="lab900-form-column-{{ elementId() }}">
     @if (columnLabel(); as label) {
       <span class="lab900-form-field-label lab900-form-row-label {{ _options()?.customTitleClass }}">{{
@@ -13,12 +14,12 @@
           [schema]="field"
           [availableLanguages]="availableLanguages()"
           [language]="language()"
-          [group]="formGroup()"
+          [group]="group"
           [readonly]="fieldIsReadonly()">
           @if (!ref.fieldIsHidden()) {
             @if (infoTooltip(field); as tip) {
               <div class="form-col__info">
-                <mat-icon [matTooltipClass]="tip.class" [matTooltip]="tip.text | translate">{{
+                <mat-icon [matTooltipClass]="tip.class ?? ''" [matTooltip]="tip.text | translate">{{
                   tip.icon || 'info'
                 }}</mat-icon>
               </div>

@@ -16,7 +16,7 @@
               <lab900-example-viewer
                 [extensions]="example.extensions"
                 [fileDir]="$safeNavigationMigration(example?.fileFolder)"
-                [exampleTitle]="example.title">
+                [exampleTitle]="example.title ?? ''">
                 <ng-container [ngComponentOutlet]="example.component"></ng-container>
               </lab900-example-viewer>
             </div>

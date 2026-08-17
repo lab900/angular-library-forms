@@ -10,24 +10,25 @@
         </div>
       }
       <mat-button-toggle-group
-        [formControlName]="fieldAttribute"
+        [formControlName]="fieldAttribute ?? ''"
         [hideSingleSelectionIndicator]="hideSelectionIndicator()">
         @for (value of options?.buttonOptions; track value) {
           <mat-button-toggle
             [value]="value.value"
             class="{{ value?.buttonClass }}"
             (change)="onChange($event)"
-            [matTooltip]="$safeNavigationMigration(value?.tooltip?.text) | translate"
+            [matTooltip]="value?.tooltip?.text ?? '' | translate"
             [matTooltipPosition]="value?.tooltip?.position || 'above'"
-            id="mat-button-toggle-{{ elementId }}">
+            id="mat-button-toggle-{{ elementId() }}">
             @if (value?.icon?.position === 'left') {
               <lab900-icon [icon]="value.icon"></lab900-icon>
             }
             @if (value.label) {
               {{ value.label | translate }}
             }
-            @if (!value?.icon?.position || value.icon.position === 'right') {
-              <lab900-icon [icon]="value.icon"></lab900-icon>
+            @let icon = value.icon;
+            @if (icon && (!icon.position || icon.position === 'right')) {
+              <lab900-icon [icon]="icon"></lab900-icon>
             }
           </mat-button-toggle>
         }

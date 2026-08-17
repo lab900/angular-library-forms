@@ -8,7 +8,7 @@
       matInput
       placeholder="{{ placeholder() | translate }}"
       [matDatepicker]="picker"
-      [formControlName]="_fieldAttribute()"
+      [formControlName]="_fieldAttribute() ?? ''"
       [max]="maxDate()"
       [min]="minDate()" />
     <mat-datepicker-toggle matIconSuffix [for]="picker" />

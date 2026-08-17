@@ -12,7 +12,12 @@ export class AuthImageDirective {
   private renderer = inject(Renderer2);
 
   public readonly image = model.required<Lab900File>();
-  public readonly httpCallback = input<((image: Lab900File) => Observable<Blob>) | undefined>(undefined);
+  /**
+   * `fetchImageBase64` accepts and converts an `ArrayBuffer`, so the callback may return either. The
+   * showcase passes a request with `responseType: 'arraybuffer'`, which the old `Observable<Blob>` type
+   * excluded.
+   */
+  public readonly httpCallback = input<((image: Lab900File) => Observable<Blob | ArrayBuffer>) | undefined>(undefined);
   public readonly defaultImage = input<string | undefined>(undefined);
 
   public constructor() {

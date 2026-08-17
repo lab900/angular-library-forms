@@ -31,11 +31,7 @@
                 </div>
               }
             } @else {
-              <div
-                lab900AuthImage
-                class="image"
-                [image]="file"
-                [httpCallback]="$safeNavigationMigration(_options()?.httpCallback)"></div>
+              <div lab900AuthImage class="image" [image]="file" [httpCallback]="_options()?.httpCallback"></div>
             }
             <div class="file-name">
               @if (file.fileName) {

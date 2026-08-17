@@ -17,7 +17,7 @@
         <mat-label>{{ fromLabel() | translate }}</mat-label>
         <input
           matInput
-          [value]="formatValue($safeNavigationMigration(value?.[0]))"
+          [value]="formatValue(value?.[0])"
           [min]="min()"
           [max]="max()"
           (change)="updateFromValue($event)" />
@@ -29,7 +29,7 @@
         <mat-label>{{ toLabel() | translate }}</mat-label>
         <input
           matInput
-          [value]="formatValue($safeNavigationMigration(value?.[1]))"
+          [value]="formatValue(value?.[1])"
           [min]="min()"
           [max]="max()"
           (change)="updateToValue($event)" />

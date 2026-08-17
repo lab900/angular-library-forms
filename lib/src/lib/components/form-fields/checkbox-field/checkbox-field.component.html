@@ -1,6 +1,10 @@
 @if (!fieldIsHidden()) {
   <div [formGroup]="_group()" class="lab900-checkbox-field" id="lab900-checkbox-field-{{ elementId() }}">
-    <mat-checkbox #checkbox [color]="color()" [formControlName]="_fieldAttribute()" [indeterminate]="indeterminate()">
+    <mat-checkbox
+      #checkbox
+      [color]="color()"
+      [formControlName]="_fieldAttribute() ?? ''"
+      [indeterminate]="indeterminate()">
       {{ label()! | translate }}
     </mat-checkbox>
     <div

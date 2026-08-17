@@ -9,7 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
   template: `
     @if (!fieldIsHidden()) {
       <div [formGroup]="_group()" class="lab900-wysiwyg-field">
-        <angular-editor [formControlName]="_fieldAttribute()" [config]="editorConfig()" />
+        <angular-editor [formControlName]="_fieldAttribute() ?? ''" [config]="editorConfig()" />
       </div>
     }
   `,

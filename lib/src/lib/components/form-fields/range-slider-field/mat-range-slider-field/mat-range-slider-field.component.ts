@@ -64,7 +64,10 @@ export class MatRangeSliderFieldComponent extends BaseControlValueAccessorDirect
     return Number(value) || 0;
   }
 
-  public formatValue(value: number): string {
+  public formatValue(value: number | undefined): string {
+    if (value == null) {
+      return '';
+    }
     switch (this.format()) {
       case 'K-M':
         if (Math.abs(value) > 999999) {
