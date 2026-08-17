@@ -8,20 +8,20 @@ Branch: chore/angular-upgrade-v22
 
 | Check | Command | Result | Measured at | Measured by |
 | --- | --- | --- | --- | --- |
-| type check (app) | `npx tsc -p tsconfig.app.json --noEmit` | pass | `f32dcf6e` | skill |
-| type check (spec) | `npx tsc -p tsconfig.spec.json --noEmit` | pass | `f32dcf6e` | skill |
-| type check (library) | `npx tsc -p lib/tsconfig.lib.json --noEmit` | pass | `f32dcf6e` | skill |
-| build library (dev) | `npx ng build forms` | pass | `f32dcf6e` | skill |
-| build library (prod) | `npm run build:forms:prod` | pass | `f32dcf6e` | skill |
-| build application | `npx ng build lab900-forms` | pass | `f32dcf6e` | skill |
-| tests | `npm test` | pass — 4 suites, 32 tests | `f32dcf6e` | skill |
-| lint | `npm run lint` | **fail — 20 errors (kept opt-out, see Decisions)** + 1 pre-existing warning | `f32dcf6e` | skill |
-| forced rebuild | watch build, touch 1 library + 1 app file | pass — 2 rebuilds each, 0 errors | `f32dcf6e` | skill |
+| type check (app) | `npx tsc -p tsconfig.app.json --noEmit` | pass | `4a9a190f` | skill |
+| type check (spec) | `npx tsc -p tsconfig.spec.json --noEmit` | pass | `4a9a190f` | skill |
+| type check (library) | `npx tsc -p lib/tsconfig.lib.json --noEmit` | pass | `4a9a190f` | skill |
+| build library (dev) | `npx ng build forms` | pass | `4a9a190f` | skill |
+| build library (prod) | `npm run build:forms:prod` | pass | `4a9a190f` | skill |
+| build application | `npx ng build lab900-forms` | pass | `4a9a190f` | skill |
+| tests | `npm test` | pass — 4 suites, 32 tests | `4a9a190f` | skill |
+| lint | `npm run lint` | **fail — 20 errors (kept opt-out, see Decisions)** + 1 pre-existing warning | `4a9a190f` | skill |
+| forced rebuild | watch build, touch 1 library + 1 app file | pass — 2 rebuilds each, 0 errors | `4a9a190f` | skill |
 | runtime behaviour | manual click-through | not verified — handed to the user | — | user |
 
-Measured in one pass at `f32dcf6e`, the last code commit. Later commits on this branch are documentation
+Measured in one pass at `4a9a190f`, the last code commit. Later commits on this branch are documentation
 only, which does not invalidate the table, so the hash stays. No result is carried over from an earlier
-run.
+run — the whole pass was re-run when `marked` was removed, because that changed `package.json`.
 
 **About the lint failure.** All 20 errors are
 `@angular-eslint/prefer-on-push-component-change-detection`, one per component that carries the
@@ -62,7 +62,7 @@ Changed entries only. 30 of them.
 | `eslint` | `^9.8.0` | `^9.28.0` | 9.35.0 |
 | `jest` | `^29.7.0` | `^30.4.2` | 30.4.2 |
 | `jest-preset-angular` | `^14.5.3` | `^17.0.0` | 17.0.0 |
-| `marked` | *(absent)* | `^18.0.9` | 18.0.9 |
+| `marked` | *(absent)* | *(still absent — added, then removed again)* | 18.0.9, as an auto-installed peer of `ngx-markdown` |
 | `ng-mocks` | `^14.13.3` | `^14.17.1` | 14.17.1 |
 | `ng-packagr` | `^19.2.0` | `^22.1.1` | 22.1.1 |
 | `ngx-markdown` | `^19.1.0` | `^22.0.0` | 22.0.0 |
@@ -70,10 +70,13 @@ Changed entries only. 30 of them.
 | `typescript` | `~5.5.4` | `~6.0.3` | 6.0.3 |
 | `typescript-eslint` | *(absent)* | `^8.58.0` | 8.67.0 |
 
-Three entries differ from the plan in the Compatibility check, all for reasons recorded above: `marked`
-and `typescript-eslint` were added, and the picker was replaced rather than bumped. `jest` and `eslint`
-were moved by other packages' migrations, not by hand. The workspace version went from `19.1.40` to
-`22.0.0` in both `package.json` files.
+Entries that differ from the plan in the Compatibility check, all for reasons recorded above:
+`typescript-eslint` was added, the picker was replaced rather than bumped, and `marked` was added at hop 1
+and removed again at the end. `jest` and `eslint` were moved by other packages' migrations, not by hand.
+The workspace version went from `19.1.40` to `22.0.0` in both `package.json` files.
+
+The library's own changelog entry for this release is in `CHANGELOG.md` under `## 22.0.0`. It is
+repo-facing: `lib/ng-package.json` does not copy it into `dist`, so it is not published with the package.
 
 ## Decisions
 
@@ -85,6 +88,7 @@ were moved by other packages' migrations, not by hand. The workspace version wen
 | `$safeNavigationMigration()` (63 occurrences, 29 files) | Validated first, then **removed all of them**. 21 fell out with the `strictTemplates` work; the remaining 42 were removed after the analysis. 2 sites got an explicit value instead of a bare removal. | 2026-08-17 | The user asked for evidence before committing to a removal. The validation is written up under "After the checkpoint". Note the assumption behind the request turned out to be wrong in a useful way: the wrapper is invisible to the type checker, so the compiler could **not** have caught a `null` / `undefined` mismatch. The 2 real cases were found by reading what consumes each value. |
 | `ChangeDetectionStrategy.Eager` (20 components) | **Keep.** Report the 20 lint errors instead of hiding them. | 2026-08-17 | Removing it changes change detection on 19 published components. That is a runtime risk only a click-through can settle, and the skill forbids the assistant claiming a runtime pass. Lint stays red by choice, not by accident. |
 | `@angular-eslint/prefer-inject` (17 errors, 5 files) | Run `ng generate @angular/core:inject`, then review the diff and re-verify. | 2026-08-17 | Verified the rule was absent from angular-eslint 19.2.1's recommended set, so the upgrade introduced it. Angular ships the schematic, so the refactor is mechanical. |
+| The explicit `marked` dependency added at hop 1 | **Remove it.** | 2026-08-17 | The user asked whether it was still needed. It is not, and the claim was tested rather than argued: no file imports `marked`; deleting the declaration and regenerating `package-lock.json` from scratch still resolves `marked@18.0.9`; and the whole range `ngx-markdown@22.0.0` allows (`^17 \|\| ^18`) carries the generic `MarkedOptions` / `MarkedExtension` types its `.d.ts` needs, confirmed by unpacking marked 17.0.6 as well as 18.0.9. CI runs plain `npm ci` with no `.npmrc` and no `--legacy-peer-deps`, so the peer comes from the lock. The hop 1 failure was caused by a **retained** `marked@15.0.12` that still satisfied ngx-markdown 20.1.0's `^15 \|\| ^16` peer but predates the generics; that condition no longer exists. |
 
 ## Hop plan
 
@@ -582,8 +586,10 @@ Three optional migrations were offered and **not** run: `use-application-builder
 
 4. `marked` added to `dependencies` at `^16.0.0`. `ngx-markdown@20.1.0` peers `marked@^15 || ^16`,
    but its type declarations use the generic `MarkedOptions<string, string>` and
-   `MarkedExtension<string, string>` that only exist from v16. npm had resolved 15.0.12, which failed
-   the application type check with 2 `TS2315` errors. This is a real fix, not a suppression.
+   `MarkedExtension<string, string>` that only exist from v16. npm had **retained** 15.0.12, which still
+   satisfied the peer range, and the application type check failed with 2 `TS2315` errors. This is a real
+   fix, not a suppression. *(Removed again after the upgrade — see the Decisions table. `ng update` moved
+   it to 18.0.9 at hop 2, and a clean resolve now reaches that version without the declaration.)*
 
 5. `angular.json` — the dead `node_modules/marked/marked.min.js` entry removed from the `scripts`
    array. `marked@16` ships `lib/marked.umd.js` and no root `marked.min.js`, so the app build could
