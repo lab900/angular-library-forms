@@ -29,7 +29,7 @@
         placeholder="{{ placeholder() | translate }}"
         [formControlName]="_fieldAttribute()!"
         [class.readonly]="fieldIsReadonly()"
-        [mask]="$safeNavigationMigration(fieldMask()?.mask)"
+        [mask]="fieldMask()?.mask"
         [prefix]="fieldMask()?.prefix || ''"
         [suffix]="fieldMask()?.suffix || ''"
         [placeHolderCharacter]="fieldMask()?.placeHolderCharacter ?? ''"
@@ -38,7 +38,7 @@
         [showMaskTyped]="!!fieldMask()?.showMaskTyped"
         [decimalMarker]="fieldMask()?.decimalMarker ?? ['.', ',']"
         [thousandSeparator]="fieldMask()?.thousandSeparator ?? ''"
-        [patterns]="$any($safeNavigationMigration(fieldMask()?.patterns))"
+        [patterns]="$any(fieldMask()?.patterns)"
         [shownMaskExpression]="fieldMask()?.shownMaskExpression ?? null"
         [specialCharacters]="fieldMask()?.specialCharacters ?? defaultSpecialCharacters"
         lab900InputAutofocus
@@ -56,7 +56,7 @@
     @if (prefix(); as prefix) {
       <span class="lab900-input-field--prefix" matTextPrefix>{{ prefix | translate }}</span>
     }
-    @let hint = $safeNavigationMigration(_options()?.hint);
+    @let hint = _options()?.hint;
     @if (hint && !!hint?.value && !(hint?.hideHintOnValidValue && !!controlValue()?.length) && !fieldIsReadonly()) {
       <mat-hint>
         <span [innerHTML]="hint.value ?? '' | translate: hint.valueTranslateData"></span>

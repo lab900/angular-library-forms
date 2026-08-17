@@ -11,7 +11,7 @@
       [required]="fieldIsRequired()"
       [readonly]="fieldIsReadonly()"
       [label]="label() ?? ''"
-      [buttonColor]="$safeNavigationMigration(_options()?.buttonColor)"
+      [buttonColor]="_options()?.buttonColor"
       [translateLabel]="_options()?.translateLabel ?? ''"
       [stopTranslateLabel]="_options()?.stopTranslateLabel ?? ''"
       [useTextAreaField]="_options()?.useTextAreaField ?? false" />

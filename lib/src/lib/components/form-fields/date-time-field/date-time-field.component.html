@@ -20,7 +20,7 @@
       [startView]="startView()"
       [defaultTime]="defaultTime()"
       [stepMinute]="stepMinute()"
-      [dateClass]="$safeNavigationMigration(_options()?.dateClass)"
+      [dateClass]="_options()?.dateClass"
       (opened)="pickerOpened(picker)">
       <ngx-mat-datepicker-actions>
         <button mat-button ngxMatDatepickerCancel type="button">
@@ -31,7 +31,7 @@
         </button>
       </ngx-mat-datepicker-actions>
     </ngx-mat-datetime-picker>
-    @let hint = $safeNavigationMigration(_options()?.hint);
+    @let hint = _options()?.hint;
     @if (!!hint?.value && !(hint?.hideHintOnValidValue && input.value) && !fieldIsReadonly()) {
       <mat-hint>
         <span [innerHTML]="hint.value | translate: hint.valueTranslateData"></span>

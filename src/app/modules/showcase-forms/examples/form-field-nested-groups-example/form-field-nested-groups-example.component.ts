@@ -6,7 +6,7 @@ import { JsonPipe } from '@angular/common';
   selector: 'lab900-form-field-nested-groups-example',
   template: `
     <lab900-form #form [schema]="formSchema" />
-    <pre>{{ $safeNavigationMigration(form?.value) | json }}</pre>
+    <pre>{{ form?.value | json }}</pre>
   `,
   imports: [Lab900Form, JsonPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,

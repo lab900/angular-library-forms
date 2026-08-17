@@ -28,7 +28,7 @@ Filled at step 4.9. Never carried over from an earlier run.
 | Route to Angular 22, blocked by `@ngxmc/datetime-picker` | Upgrade to v20 first, then replace the package with `@ngx-mce/datetime-picker`. Assess a drop-in first; if it is not a drop-in, document every needed change. | 2026-08-17 | User choice at the gate. `@ngxmc/datetime-picker` stopped at Angular 20, so the v21 and v22 hops need a maintained replacement. |
 | `skipLibCheck` for the 2 `TS2416` errors inside `@ngxmc/datetime-picker@20.1.0` | Add `skipLibCheck: true` to `lib/tsconfig.lib.json` only, as a temporary measure. Remove it at hop 2 after the swap and prove the library build stays green without it. Report it if removal fails. | 2026-08-17 | The errors are a defect in the package, not in this project: it declares `dateFilter` as `(date: D) => boolean` while its own `NgxMatDatepickerControl` requires `(date: D \| null) => boolean`. 20.1.0 is its only Angular 20 release, and the fork declares the signature correctly. The application and spec configs keep full declaration checking. **Closed at hop 2: removed, and the library build is green without it.** |
 | `strictTemplates: false` (3 tsconfigs) | Enable it everywhere and fix all 76 errors. | 2026-08-17 | Measured cost before deciding: 67 errors in 26 library files and 9 in 6 app files. The user chose the full fix over keeping the opt-out. |
-| `$safeNavigationMigration()` (63 occurrences, 29 files) | No answer yet. First validate that removing the wrappers causes no issue, now that `?.` returns `undefined` instead of `null`. Then decide. | 2026-08-17 | The user asked for evidence before committing to a removal. Validation runs with `strictTemplates` already on, so a `null` / `undefined` mismatch that matters becomes a compile error rather than a silent runtime change. |
+| `$safeNavigationMigration()` (63 occurrences, 29 files) | Validated first, then **removed all of them**. 21 fell out with the `strictTemplates` work; the remaining 42 were removed after the analysis. 2 sites got an explicit value instead of a bare removal. | 2026-08-17 | The user asked for evidence before committing to a removal. The validation is written up under "After the checkpoint". Note the assumption behind the request turned out to be wrong in a useful way: the wrapper is invisible to the type checker, so the compiler could **not** have caught a `null` / `undefined` mismatch. The 2 real cases were found by reading what consumes each value. |
 | `ChangeDetectionStrategy.Eager` (20 components) | **Keep.** Report the 20 lint errors instead of hiding them. | 2026-08-17 | Removing it changes change detection on 19 published components. That is a runtime risk only a click-through can settle, and the skill forbids the assistant claiming a runtime pass. Lint stays red by choice, not by accident. |
 | `@angular-eslint/prefer-inject` (17 errors, 5 files) | Run `ng generate @angular/core:inject`, then review the diff and re-verify. | 2026-08-17 | Verified the rule was absent from angular-eslint 19.2.1's recommended set, so the upgrade introduced it. Angular ships the schematic, so the refactor is mechanical. |
 
@@ -867,6 +867,65 @@ pipe operator has the lowest precedence, so `a ?? '' | translate` parses the sam
 **Result.** 3 type checks at 0 errors, all 3 builds pass, 32 tests pass. `strictTemplates: false` is gone
 from all 3 tsconfigs, and the `extendedDiagnostics` block stayed out — the remaining `NG8107` / `NG8102`
 reports are warnings, not errors, and are listed under Follow-ups.
+
+### `refactor: drop the $safeNavigationMigration() wrappers`
+
+The user asked for validation before removal, rather than a removal on trust. This is what the
+validation found.
+
+**What the wrapper actually does.** Read out of `@angular/compiler`, not assumed. There are two
+handlers, and they behave differently:
+
+| Stage | Handling | Consequence |
+| --- | --- | --- |
+| Type checking | `$safeNavigationMigration(x)` is emitted into the type-check block as plain `(x)` | **The wrapper is invisible to the type checker.** It changes no type. |
+| Code generation | `convertSafeNavigationMigrationCall` rewrites it to a `SafeNavigationMigrationExpr` | The enclosed `?.` yields `null` instead of v22's `undefined`. |
+
+Two conclusions follow, and both matter:
+
+1. **Removing a wrapper can never produce a type error**, so the compiler offers no safety net here. Any
+   claim of "the build is green, so removal is safe" would be worthless.
+2. Because `strictTemplates` is now on and the checker already sees the *unwrapped*
+   `T | undefined` at all 42 sites, **`undefined` is already type-legal at every one of them**. Every
+   target input declares a type that admits `undefined`.
+
+So the only real question is runtime semantics: does any consumer distinguish `null` from `undefined`?
+Each of the 42 sites was classified by what receives the value.
+
+**Safe — 40 sites.** Nothing distinguishes the two:
+
+- 14 × `@let hint = _options()?.hint`, consumed only through `!!hint?.value` and `hint?.x` truthiness.
+- Truthiness-only inputs: `[mask]`, `[patterns]`, `[matDatepickerFilter]`, `[dateClass]`,
+  `[buttonColor]`, `[type]`, `[color]`, `[containerClass]`, `[buttonId]`, `[multiple]`, `[filePath]`,
+  `[fileDir]`.
+- `[disabled]` on `mat-option`, which runs through `booleanAttribute`; `booleanAttribute(null)` and
+  `booleanAttribute(undefined)` are both `false`.
+- `[value]` on `mat-option`, an `any` input used for identity comparison.
+- `[value]` on the two `matSliderStartThumb` / `matSliderEndThumb` inputs, which run through
+  `numberAttribute`; both nullish values give `NaN`, which Material clamps identically.
+- 3 × `(searchRef?.x$ | async) === true`. `AsyncPipe` returns `null` for a nullish input either way, and
+  the comparison is against `true`.
+- 4 × `{{ … | json }}` in showcase examples. Cosmetic only: `JSON.stringify(null)` prints `null`,
+  `JSON.stringify(undefined)` prints nothing. Showcase docs, not library behaviour.
+
+**Not safe — 2 sites. Both were given an explicit value instead of a bare removal:**
+
+| Site | Why the value matters | Fix |
+| --- | --- | --- |
+| `file-preview-field.component.html:8` `[accept]` | binds the DOM property `HTMLInputElement.accept`, a `DOMString`. A nullish value is stringified rather than ignored, so the accept filter became the literal text `"null"` before and would have become `"undefined"` after. Both are wrong. | `?? ''` — empty accept, which is the real "no filter" value. This also fixes a pre-existing bug. |
+| `select-field.component.html:50` `customerTriggerFn(...)` | the value is handed to a **consumer-supplied callback**, which may legitimately test `=== null`. Silently switching it to `undefined` would change a published contract. | `?? null`, keeping today's value explicitly and permanently. |
+
+`[multiple]` on the same file input was also made explicit (`?? false`) while it was open, since it is
+the sibling binding and `false` is its real default.
+
+**Why this is better than keeping the wrappers.** `$safeNavigationMigration()` is a temporary migration
+shim in the published templates. Replacing it with an explicit `?? null` at the one site that needs
+`null` gives the same runtime behaviour, states the intent in the code, is visible to the type checker,
+and does not depend on a shim Angular intends to remove.
+
+**Result.** 42 wrappers gone, 0 remaining anywhere in `lib/src` or `src`. 3 type checks at 0 errors, all
+3 builds pass, 32 tests pass. Lint is down to 20 problems — the 19 + 1 from the kept `Eager` opt-out and
+one pre-existing unused-`eslint-disable` warning. Prettier was run on the 3 files it flagged afterwards.
 
 ## Smoke test for the user
 

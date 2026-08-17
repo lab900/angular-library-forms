@@ -10,8 +10,8 @@
     }
 
     <lab900-button
-      [type]="$safeNavigationMigration(_options()?.type)"
-      [color]="$safeNavigationMigration(_options()?.color)"
+      [type]="_options()?.type"
+      [color]="_options()?.color"
       [disabled]="fieldIsReadonly()"
       (btnClick)="handleClick($event)"
       [label]="buttonLabel() ?? ''"
@@ -20,7 +20,7 @@
       [prefixIcon]="prefixIcon()"
       [suffixIcon]="suffixIcon()"
       [svgIcon]="_options()?.svgIcon ?? false"
-      [containerClass]="$safeNavigationMigration(_options()?.containerClass)"
-      [buttonId]="$safeNavigationMigration(_options()?.buttonId)" />
+      [containerClass]="_options()?.containerClass"
+      [buttonId]="_options()?.buttonId" />
   </div>
 }

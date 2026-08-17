@@ -15,7 +15,7 @@
     </mat-date-range-input>
     <mat-datepicker-toggle matIconSuffix [for]="picker" />
     <mat-date-range-picker [dateClass]="dateClass()" #picker />
-    @let hint = $safeNavigationMigration(_options()?.hint);
+    @let hint = _options()?.hint;
     @if (!!hint?.value && !(hint?.hideHintOnValidValue && !!groupValue()) && !fieldIsReadonly()) {
       <mat-hint>
         <span [innerHTML]="hint.value | translate: hint.valueTranslateData"></span>
