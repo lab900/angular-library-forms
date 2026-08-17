@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogContent } from '@angular/material/dialog';
 import { Lab900File } from '../../models/Lab900File';
 
@@ -7,6 +7,7 @@ import { Lab900File } from '../../models/Lab900File';
   template: ` <mat-dialog-content>
     <img style="width: 100%" class="image" [src]="image.imageBase64" [alt]="image.fileName" />
   </mat-dialog-content>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatDialogContent],
 })
 export class ImagePreviewModalComponent {

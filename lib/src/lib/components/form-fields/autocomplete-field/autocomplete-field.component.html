@@ -15,16 +15,18 @@
       placeholder="{{ placeholder() | translate }}"
       type="text" />
 
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="_options()?.displayInputFn">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="$safeNavigationMigration(_options()?.displayInputFn)">
       @if (filteredOptions) {
         @for (option of filteredOptions | async; track option) {
-          <mat-option [value]="option?.value" [disabled]="option?.disabled">
+          <mat-option
+            [value]="$safeNavigationMigration(option?.value)"
+            [disabled]="$safeNavigationMigration(option?.disabled)">
             <div [innerHTML]="option.label | translate"></div>
           </mat-option>
         }
       }
     </mat-autocomplete>
-    @let hint = _options()?.hint;
+    @let hint = $safeNavigationMigration(_options()?.hint);
     @if (!!hint?.value && !(hint?.hideHintOnValidValue && input.value) && !fieldIsReadonly()) {
       <mat-hint>
         <span [innerHTML]="hint.value | translate: hint.valueTranslateData"></span>

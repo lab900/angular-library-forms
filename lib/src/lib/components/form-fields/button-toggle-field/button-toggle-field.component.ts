@@ -1,4 +1,4 @@
-import { Component, computed, effect, HostBinding, signal } from '@angular/core';
+import { Component, computed, effect, HostBinding, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldButtonToggle, FormFieldButtonToggleOptions } from './button-toggle-field.model';
 import { MatButtonToggle, MatButtonToggleChange, MatButtonToggleGroup } from '@angular/material/button-toggle';
@@ -12,6 +12,7 @@ import { computeReactiveBooleanOption } from '../../../utils/helpers';
 @Component({
   selector: 'lab900-button-toggle-field',
   templateUrl: './button-toggle-field.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ReactiveFormsModule,
     MatLabel,

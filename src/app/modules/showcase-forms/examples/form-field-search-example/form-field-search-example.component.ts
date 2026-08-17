@@ -8,7 +8,7 @@ import { JsonPipe } from '@angular/common';
   selector: 'lab900-form-field-select-example',
   template: `<lab900-form #f [schema]="formSchema" />
     <hr style="margin-top: 30px" />
-    {{ f?.value | json }}`,
+    {{ $safeNavigationMigration(f?.value) | json }}`,
   imports: [Lab900Form, JsonPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

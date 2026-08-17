@@ -1,7 +1,7 @@
 @if (translating() && languages().length) {
   <button mat-stroked-button [matMenuTriggerFor]="langMenu" [color]="buttonColor()" type="button">
     <mat-icon>language</mat-icon>
-    {{ activeLanguage()?.label | translate }}
+    {{ $safeNavigationMigration(activeLanguage()?.label) | translate }}
   </button>
   <mat-menu #langMenu>
     @for (lang of languages(); track lang.value) {

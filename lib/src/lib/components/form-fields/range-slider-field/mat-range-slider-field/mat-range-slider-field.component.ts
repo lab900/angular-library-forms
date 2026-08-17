@@ -1,4 +1,4 @@
-import { Component, input, ViewEncapsulation } from '@angular/core';
+import { Component, input, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BaseControlValueAccessorDirective } from '../../../../models/forms/BaseControlValueAccessor';
 import { MatSliderModule } from '@angular/material/slider';
@@ -18,6 +18,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     },
   ],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatSliderModule, MatFormFieldModule, MatInputModule, TranslatePipe],
 })
 export class MatRangeSliderFieldComponent extends BaseControlValueAccessorDirective<number[]> {

@@ -7,7 +7,7 @@ import { JsonPipe } from '@angular/common';
   template: ` <div>
     <h3>Form field:</h3>
     <lab900-form #f [schema]="formSchema" [data]="data()" />
-    <code>Form control value: {{ f?.form?.value | json }}</code>
+    <code>Form control value: {{ $safeNavigationMigration(f?.form?.value) | json }}</code>
     <h3 style="margin-top: 2em">Pipe:</h3>
     <p>
       The same formatting is also available as a pipe:

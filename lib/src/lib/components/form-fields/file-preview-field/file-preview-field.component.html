@@ -4,8 +4,8 @@
       #fileField
       type="file"
       style="display: none"
-      [multiple]="_options()?.multiple"
-      [accept]="_options()?.accept"
+      [multiple]="$safeNavigationMigration(_options()?.multiple)"
+      [accept]="$safeNavigationMigration(_options()?.accept)"
       (change)="fileChange($event)" />
     @if (!fieldIsReadonly()) {
       <button mat-raised-button color="primary" (click)="fileField.click()" type="button">
@@ -26,12 +26,16 @@
                   [style.background-color]="overlay?.backgroundColor"
                   [style.color]="overlay?.textColor">
                   <span>
-                    {{ overlay?.text | translate }}
+                    {{ $safeNavigationMigration(overlay?.text) | translate }}
                   </span>
                 </div>
               }
             } @else {
-              <div lab900AuthImage class="image" [image]="file" [httpCallback]="_options()?.httpCallback"></div>
+              <div
+                lab900AuthImage
+                class="image"
+                [image]="file"
+                [httpCallback]="$safeNavigationMigration(_options()?.httpCallback)"></div>
             }
             <div class="file-name">
               @if (file.fileName) {

@@ -11,10 +11,10 @@
       [formControlName]="_fieldAttribute()"
       [max]="maxDate()"
       [min]="minDate()"
-      [matDatepickerFilter]="_options()?.dateFilter" />
+      [matDatepickerFilter]="$safeNavigationMigration(_options()?.dateFilter)" />
     <mat-datepicker-toggle matIconSuffix [for]="picker" />
-    <mat-datepicker #picker [dateClass]="_options()?.dateClass" [startView]="startView()" />
-    @let hint = _options()?.hint;
+    <mat-datepicker #picker [dateClass]="$safeNavigationMigration(_options()?.dateClass)" [startView]="startView()" />
+    @let hint = $safeNavigationMigration(_options()?.hint);
     @if (!!hint?.value && !(hint?.hideHintOnValidValue && input.value) && !fieldIsReadonly()) {
       <mat-hint>
         <span [innerHTML]="hint.value | translate: hint.valueTranslateData"></span>

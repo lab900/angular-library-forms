@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldMultiLang } from './multi-lang-input-field.model';
 import { MultiLangFieldControlComponent } from './multi-lang-field-control/multi-lang-field-control.component';
@@ -8,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 @Component({
   selector: 'lab900-multi-lang-input-field',
   templateUrl: './multi-lang-input-field.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MultiLangFieldControlComponent, MatError, ReactiveFormsModule],
 })
 export class MultiLangInputFieldComponent extends FormComponent<FormFieldMultiLang> {

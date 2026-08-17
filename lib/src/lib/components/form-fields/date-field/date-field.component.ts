@@ -1,4 +1,4 @@
-import { Component, computed, HostBinding } from '@angular/core';
+import { Component, computed, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldDatePicker } from './date-field.model';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 @Component({
   selector: 'lab900-date-field',
   templateUrl: './date-field.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule, TranslatePipe, MatDatepickerModule],
 })
 export class DateFieldComponent extends FormComponent<FormFieldDatePicker> {

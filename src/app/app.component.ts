@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Lab900NavListComponent, NavItemGroup } from '@lab900/ui';
 import { showcaseFormsNavItems } from './modules/showcase-forms/showcase-forms.nav-items';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -19,6 +19,7 @@ import { AsyncPipe, NgOptimizedImage } from '@angular/common';
   selector: 'lab900-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatToolbar,
     MatIcon,

@@ -1,4 +1,4 @@
-import { Component, computed, HostBinding } from '@angular/core';
+import { Component, computed, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { FormFieldDateRange } from './date-range-field.model';
@@ -16,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 @Component({
   selector: 'lab900-date-field',
   templateUrl: './date-range-field.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDateRangeInput,
     MatFormFieldModule,

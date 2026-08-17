@@ -3,7 +3,10 @@
     @if (label(); as label) {
       <mat-label>{{ label | translate }}</mat-label>
     }
-    <mat-date-range-input [formGroup]="dateFormGroup()" [rangePicker]="picker" [dateFilter]="_options()?.dateFilter">
+    <mat-date-range-input
+      [formGroup]="dateFormGroup()"
+      [rangePicker]="picker"
+      [dateFilter]="$safeNavigationMigration(_options()?.dateFilter)">
       <input
         matStartDate
         [formControl]="startControl()"
@@ -14,8 +17,8 @@
         placeholder="{{ _options()?.endLabel || 'End date' | translate }}" />
     </mat-date-range-input>
     <mat-datepicker-toggle matIconSuffix [for]="picker" />
-    <mat-date-range-picker [dateClass]="_options()?.dateClass" #picker />
-    @let hint = _options()?.hint;
+    <mat-date-range-picker [dateClass]="$safeNavigationMigration(_options()?.dateClass)" #picker />
+    @let hint = $safeNavigationMigration(_options()?.hint);
     @if (!!hint?.value && !(hint?.hideHintOnValidValue && !!groupValue()) && !fieldIsReadonly()) {
       <mat-hint>
         <span [innerHTML]="hint.value | translate: hint.valueTranslateData"></span>

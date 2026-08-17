@@ -47,7 +47,7 @@
         }
         @if (customerTriggerFn(); as customerTriggerFn) {
           <mat-select-trigger>
-            <div [innerHTML]="customerTriggerFn(fieldControl?.getRawValue())"></div>
+            <div [innerHTML]="customerTriggerFn($safeNavigationMigration(fieldControl?.getRawValue()))"></div>
           </mat-select-trigger>
         }
         @if (searchOptions()?.enabled) {
@@ -108,7 +108,7 @@
           <mat-icon>close</mat-icon>
         </button>
       }
-      @let hint = _options()?.hint;
+      @let hint = $safeNavigationMigration(_options()?.hint);
       @if (hint && !!hint?.value && !(hint?.hideHintOnValidValue && select.value) && !fieldIsReadonly()) {
         <mat-hint>
           <span [innerHTML]="hint.value! | translate: hint.valueTranslateData"></span>

@@ -1,4 +1,4 @@
-import { Component, computed, HostBinding } from '@angular/core';
+import { Component, computed, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { Lab900File } from '../../../models/Lab900File';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldDragNDropFilePreview } from './drag-n-drop-file-field.model';
@@ -15,6 +15,7 @@ import { transitionMessages } from '../../../utils/form-field.animations';
   templateUrl: './drag-n-drop-file-field.component.html',
   styleUrls: ['./drag-n-drop-file-field.component.scss'],
   animations: [transitionMessages],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FileDropDirective, MatIcon, TranslatePipe, MatButton, MatIconButton, MatError, FormatBytesPipe, MatHint],
 })
 export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDropFilePreview> {

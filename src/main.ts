@@ -2,7 +2,7 @@ import { enableProdMode, provideZoneChangeDetection } from '@angular/core';
 import { environment } from './environments/environment';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
-import { HttpClient, provideHttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withXhr } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { provideMarkdown } from 'ngx-markdown';
@@ -23,7 +23,7 @@ function TranslationLoaderFactory(http: HttpClient): MergingTranslateLoader {
 bootstrapApplication(AppComponent, {
   providers: [
     provideZoneChangeDetection(),
-    provideHttpClient(),
+    provideHttpClient(withXhr()),
     provideAnimations(),
     provideRouter([
       {

@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, model, untracked } from '@angular/core';
+import { Component, computed, effect, inject, input, model, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { DEFAULT_REPEATER_MIN_ROWS } from '../form-fields/repeater-field/repeater-field.component';
 import { Lab900FormConfig } from '../../models/Lab900FormConfig';
@@ -14,6 +14,7 @@ import { uniqueId } from 'lodash';
   selector: 'lab900-form',
   templateUrl: './form-container.component.html',
   styleUrls: ['./form-container.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormFieldDirective, ReactiveFormsModule],
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix

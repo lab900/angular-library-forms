@@ -16,7 +16,7 @@
       #picker
       [startView]="startView()"
       (monthSelected)="monthSelectedHandler($event, picker)"></mat-datepicker>
-    @let hint = _options()?.hint;
+    @let hint = $safeNavigationMigration(_options()?.hint);
     @if (!!hint?.value && !(hint?.hideHintOnValidValue && input.value) && !fieldIsReadonly()) {
       <mat-hint>
         <span [innerHTML]="hint.value | translate: hint.valueTranslateData"></span>

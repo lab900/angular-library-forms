@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostBinding, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldButton } from './button-field.model';
 import { Lab900ButtonComponent } from '@lab900/ui';
@@ -11,6 +11,7 @@ import { MatLabel } from '@angular/material/form-field';
 @Component({
   selector: 'lab900-button-field',
   templateUrl: './button-field.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatTooltip, ReactiveFormsModule, TranslatePipe, Lab900ButtonComponent, MatLabel],
 })
 export class ButtonFieldComponent extends FormComponent<FormFieldButton> {

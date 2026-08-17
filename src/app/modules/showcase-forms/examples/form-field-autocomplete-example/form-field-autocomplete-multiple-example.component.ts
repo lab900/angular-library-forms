@@ -5,7 +5,7 @@ import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'lab900-form-field-autocomplete-multiple-example',
-  template: '<lab900-form #form [schema]="formSchema"/><pre>{{form?.value | json }}</pre>',
+  template: '<lab900-form #form [schema]="formSchema"/><pre>{{$safeNavigationMigration(form?.value) | json }}</pre>',
   imports: [Lab900Form, JsonPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

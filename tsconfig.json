@@ -2,7 +2,6 @@
   "compileOnSave": false,
   "compilerOptions": {
     "rootDirs": ["./"],
-    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "resolveJsonModule": true,
     "esModuleInterop": true,
@@ -16,11 +15,10 @@
     "target": "ES2022",
     "useDefineForClassFields": false,
     "paths": {
-      "@lab900/forms": ["dist/@lab900/forms"]
+      "@lab900/forms": ["./dist/@lab900/forms"]
     }
   },
   "angularCompilerOptions": {
-    "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true
   }
 }

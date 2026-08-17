@@ -384,43 +384,80 @@ Nothing to do before the update.
 
 ## Update to the new version
 
-- [ ] **22.0.0_ng_update** — In the application's project directory, run `ng update @angular/core@22 @angular/cli@22` to update your application to Angular v22.
-- [ ] **update @angular/material** — Run `ng update @angular/material@22`.
-- [ ] **22.0.0-update-nodejs-version** — Angular v22 requires Node.js v22.22.3 or v24.15.0 and later. Update your Node.js version to meet this minimum requirement. You can check your current version with `node --version`.
-- [ ] **22.0.0-update-typescript-version** — Update your project to use TypeScript 6.0 or later. Versions older than 6.0 are no longer supported. Use `ng update` which will handle this automatically.
-- [ ] **22.0.0-data-attributes-input-output-binding** — Data-prefixed attributes (e.g., `data-*`) no longer bind to inputs or outputs. If you were relying on this behavior, use explicit property bindings instead (e.g., `[attr.data-value]="value"` or `[dataValue]="value"` for a component input).
-- [ ] **22.0.0-duplicate-input-output-bindings** — The compiler now throws an error when inputs, outputs, or model are binding to the same property/output. Review your component decorators and ensure no duplicate bindings exist.
-- [ ] **22.0.0-safe-navigation-nullability-narrowing** — Safe navigation (`?.`) and nullish coalescing (`??`) now correctly narrow down nullable types in templates. This may trigger `nullishCoalescingNotNullable` and `optionalChainNotNullable` diagnostics on existing projects. Either fix the diagnostics by updating your templates, or temporarily disable them in your `tsconfig.json` under `angularCompilerOptions`.
-- [ ] **22.0.0-safe-navigation-returns-undefined** — Angular expressions with optional chaining (`?.`) now return `undefined` instead of `null`. You can use the `$safeNavigationMigration()` magic function to revert to the previous behavior.
-- [ ] **22.0.0-resource-stream-synchronous-resolution** — The `stream` property on `Resource`, including `rxResource`, now resolves synchronously when the stream or observable emits synchronously. Tests that assumed asynchronous resolution may need to wait for the value immediately instead.
-- [ ] **22.0.0-remove-in-expressions** — `in` variables in template expressions now throw an error as it does in native JavaScript. If you have variables named `in` in your component or template, update your template expressions to use `this.in` or rename your variable.
-- [ ] **22.0.0-animation-callback-event-signature-change** — The `AnimationCallbackEvent.animationComplete` signature has changed. Update any code that depends on the old signature of this event. Review your animation event handlers and tests.
-- [ ] **22.0.0-http-xhr-backend-explicit-opt-in** — If your application uses upload progress reporting through `HttpXhrBackend`, explicitly opt-in by using `provideHttpClient(withXhr())`. The default HTTP client no longer includes XHR support by default.
-- [ ] **22.0.0-deprecate-report-progress-option** — The `reportProgress` option in HTTP requests is deprecated. Use `reportUploadProgress` or `reportDownloadProgress` instead for more explicit control over progress reporting.
-- [ ] **22.0.0-deprecate-server-xhr** — XHR support in `@angular/platform-server` is deprecated and is intended to be removed in Angular 23. The underlying `xhr2` library does not safely handle redirects (e.g. it can forward `Authorization` headers on cross-origin redirects and is susceptible to DoS via redirect loops). For server-side rendering, use the default `fetch` backend instead of `withXhr()`.
-- [ ] **22.0.0-provide-routes-removed** — `provideRoutes()` has been removed. Use `provideRouter()` instead, or configure routes as a multi token using `ROUTES` if necessary. Update your application bootstrap configuration.
-- [ ] **22.0.0-upgrade-angular-js-global-migration** — If using AngularJS interoperability, replace deprecated `getAngularLib()` and `setAngularLib()` with `getAngularJSGlobal()` and `setAngularJSGlobal()` respectively.
-- [ ] **22.0.0-remove-component-factory-resolver** — `ComponentFactoryResolver` and `ComponentFactory` are no longer available. Pass the component class directly to APIs like `ViewContainerRef.createComponent()` or use the standalone `createComponent()` function instead.
-- [ ] **22.0.0-remove-create-ng-module-ref** — `createNgModuleRef` has been removed. Use `createNgModule()` instead for dynamic module creation scenarios.
-- [ ] **22.0.0-compile-time-duplicate-selectors** — Elements with multiple matching selectors now throw a compile-time error. Ensure your components use unique selectors and review any directives that might have conflicting selectors.
-- [ ] **22.0.0-component-onpush-default** — Components with no `changeDetection` property defined are now `OnPush` by default. To maintain `Eager` (the previous default) change detection, explicitly set `changeDetection: ChangeDetectionStrategy.Eager` in your component decorator.
-- [ ] **22.0.0-remove-check-no-changes** — `ChangeDetectorRef.checkNoChanges()` has been removed. In tests, use `fixture.detectChanges()` instead or verify your component state through other means.
-- [ ] **22.0.0-leave-animations-scope-change** — Leave animations are no longer limited to the element being removed. They now support nested animations scoped to component boundaries. Review your animation configurations if you relied on the previous scoping behavior.
-- [ ] **22.0.0-params-inheritance-strategy-default** — `paramsInheritanceStrategy` now defaults to `"always"` instead of `"emptyOnly"`. This means route parameters are inherited from all parent routes. To restore the previous behavior, explicitly set `paramsInheritanceStrategy: "emptyOnly"` in your router configuration.
-- [ ] **22.0.0-can-match-current-snapshot-required** — The `currentSnapshot` parameter in `CanMatchFn` and the `canMatch` method of the `CanMatch` interface is now required. Update any class implementations of `CanMatch` to include this required third argument.
-- [ ] **22.0.0-hammer-js-removed** — Hammer.js integration has been removed from Angular platform-browser. If you need touch gesture support, implement your own gesture detection or use an alternative library.
-- [ ] **22.0.0-app-ref-bootstrap-typing** — The second argument of `appRef.bootstrap()` no longer accepts `any` type. Ensure the element you pass is not nullable and matches the expected type.
-- [ ] **22.0.0-platform-browser-styles-removal** — Unused styles are now automatically removed when their associated `host` is dropped. Be aware that other DOM on the page may be affected if those styles are used by elements outside of Angular or if not using `ViewEncapsulation.Emulated`.
-- [ ] **22.0.0-title-strategy-return-type** — The return type for `TitleStrategy.getResolvedTitleForRoute` has changed from `any` to a stricter type (e.g., `string | undefined`). Update your custom `TitleStrategy` implementations to match the new signature.
-- [ ] **22.0.0-incremental-hydration-default** — Incremental hydration is now the default behavior for applications using Server-Side Rendering (SSR). Review your application if you relied on the previous non-incremental hydration behavior. You can use `withNoIncrementalHydration()` to restore the previous behavior if needed.
-- [ ] **22.0.0-full-template-type-check-removed** — The `fullTemplateTypeCheck` compiler option has been removed. Use `strictTemplates` instead to enable strict template type checking in your `tsconfig.json`.
-- [ ] **22.0.0-strict-templates-default** — The `strictTemplates` compiler option now defaults to `true`. If your project was not using strict template type checking, you may see new compilation errors. Resolve these errors or explicitly set `strictTemplates: false` in your `tsconfig.json` to opt out.
-- [ ] **22.0.0-webpack-builders-deprecated** — Webpack builders (`@angular-devkit/build-angular` and `@angular-devkit/build-webpack`) are now deprecated. Migrate to the `@angular/build` builders (esbuild/application) for your application builds.
-- [ ] **22.0.0-ssr-commonengine-deprecated** — `CommonEngine` APIs from `@angular/ssr` are deprecated. Migrate to `AngularNodeAppEngine` or `AngularAppEngine` instead.
-- [ ] **22.0.0-istanbul-lib-instrument-optional** — `istanbul-lib-instrument` is now an optional peer dependency. If your project uses Karma with code coverage enabled, ensure `istanbul-lib-instrument` is explicitly installed.
-- [ ] **22.0.0-dev-server-port-env-priority** — `ng serve` now gives the highest priority to the `PORT` environment variable. This value overrides any port configured in `angular.json` or provided via the `--port` flag.
-- [ ] **22.0.0-architect-cli-removed** — The `@angular-devkit/architect-cli` package is no longer available. Use the `architect` CLI tool from the `@angular-devkit/architect` package instead.
-- [ ] **22.0.0-experimental-test-builders-removed** — The experimental `@angular-devkit/build-angular:jest` and `@angular-devkit/build-angular:web-test-runner` test builders have been removed.
+- [x] **22.0.0_ng_update** — In the application's project directory, run `ng update @angular/core@22 @angular/cli@22` to update your application to Angular v22.
+  - **Verdict:** done — one `ng update` call with every lockstep package pinned, plus `@ngx-mce/datetime-picker@22.2.3` and `@typescript-eslint/*@8.58.0`. See Changes made, hop 3.
+- [x] **update @angular/material** — Run `ng update @angular/material@22`.
+  - **Verdict:** done — `@angular/material@22.1.2` and `@angular/cdk@22.1.2` were in the same call. Both migrations reported no changes.
+- [x] **22.0.0-update-nodejs-version** — Angular v22 requires Node.js v22.22.3 or v24.15.0 and later. Update your Node.js version to meet this minimum requirement. You can check your current version with `node --version`.
+  - **Verdict:** OK — Node.js 24.15.0 satisfies the `^22.22.3 || ^24.15.0 || >=26.0.0` requirement.
+- [x] **22.0.0-update-typescript-version** — Update your project to use TypeScript 6.0 or later. Versions older than 6.0 are no longer supported. Use `ng update` which will handle this automatically.
+  - **Verdict:** done — `ng update` moved typescript to `~6.0.3`. TypeScript 6.0 also deprecated `baseUrl`, which needed a follow-on fix. See Changes made, hop 3.
+- [x] **22.0.0-data-attributes-input-output-binding** — Data-prefixed attributes (e.g., `data-*`) no longer bind to inputs or outputs. If you were relying on this behavior, use explicit property bindings instead (e.g., `[attr.data-value]="value"` or `[dataValue]="value"` for a component input).
+  - **Verdict:** N/A — no template binds a `data-*` attribute to an input or output.
+- [x] **22.0.0-duplicate-input-output-bindings** — The compiler now throws an error when inputs, outputs, or model are binding to the same property/output. Review your component decorators and ensure no duplicate bindings exist.
+  - **Verdict:** N/A — the compiler now errors on this, and every build passes, so no duplicate binding exists.
+- [x] **22.0.0-safe-navigation-nullability-narrowing** — Safe navigation (`?.`) and nullish coalescing (`??`) now correctly narrow down nullable types in templates. This may trigger `nullishCoalescingNotNullable` and `optionalChainNotNullable` diagnostics on existing projects. Either fix the diagnostics by updating your templates, or temporarily disable them in your `tsconfig.json` under `angularCompilerOptions`.
+  - **Verdict:** migration wrote an **opt-out** that the compiler rejected together with `strictTemplates: false` (NG4003). The `extendedDiagnostics` block was removed from all 4 tsconfigs. It was dead: neither diagnostic can fire while `strictTemplates` is off. See Changes made, hop 3.
+- [x] **22.0.0-safe-navigation-returns-undefined** — Angular expressions with optional chaining (`?.`) now return `undefined` instead of `null`. You can use the `$safeNavigationMigration()` magic function to revert to the previous behavior.
+  - **Verdict:** migration wrote an **opt-out**: `$safeNavigationMigration()` wrappers in 29 files, 63 occurrences. Listed in Migration opt-outs, decided at step 4.3.
+- [x] **22.0.0-resource-stream-synchronous-resolution** — The `stream` property on `Resource`, including `rxResource`, now resolves synchronously when the stream or observable emits synchronously. Tests that assumed asynchronous resolution may need to wait for the value immediately instead.
+  - **Verdict:** behaviour changed, no code change. The library uses `rxResource` at 4 sites. Verified at step 4.1, after this hop.
+- [x] **22.0.0-remove-in-expressions** — `in` variables in template expressions now throw an error as it does in native JavaScript. If you have variables named `in` in your component or template, update your template expressions to use `this.in` or rename your variable.
+  - **Verdict:** N/A — no component declares a property named `in`, checked again at this hop.
+- [x] **22.0.0-animation-callback-event-signature-change** — The `AnimationCallbackEvent.animationComplete` signature has changed. Update any code that depends on the old signature of this event. Review your animation event handlers and tests.
+  - **Verdict:** N/A — `animationComplete` appears in no file.
+- [x] **22.0.0-http-xhr-backend-explicit-opt-in** — If your application uses upload progress reporting through `HttpXhrBackend`, explicitly opt-in by using `provideHttpClient(withXhr())`. The default HTTP client no longer includes XHR support by default.
+  - **Verdict:** migration wrote an **opt-out**: `provideHttpClient(withXhr())` in `src/main.ts`. Evidence says it is not needed: `reportProgress` appears in no file and every HTTP call in the project is a `get`. Decided at step 4.3.
+- [x] **22.0.0-deprecate-report-progress-option** — The `reportProgress` option in HTTP requests is deprecated. Use `reportUploadProgress` or `reportDownloadProgress` instead for more explicit control over progress reporting.
+  - **Verdict:** N/A — `reportProgress` appears in no file.
+- [x] **22.0.0-deprecate-server-xhr** — XHR support in `@angular/platform-server` is deprecated and is intended to be removed in Angular 23. The underlying `xhr2` library does not safely handle redirects (e.g. it can forward `Authorization` headers on cross-origin redirects and is susceptible to DoS via redirect loops). For server-side rendering, use the default `fetch` backend instead of `withXhr()`.
+  - **Verdict:** N/A — the project has no SSR and does not depend on `@angular/platform-server`.
+- [x] **22.0.0-provide-routes-removed** — `provideRoutes()` has been removed. Use `provideRouter()` instead, or configure routes as a multi token using `ROUTES` if necessary. Update your application bootstrap configuration.
+  - **Verdict:** N/A — `provideRoutes` appears in no file. The application already uses `provideRouter`.
+- [x] **22.0.0-upgrade-angular-js-global-migration** — If using AngularJS interoperability, replace deprecated `getAngularLib()` and `setAngularLib()` with `getAngularJSGlobal()` and `setAngularJSGlobal()` respectively.
+  - **Verdict:** N/A — no AngularJS interoperability. `getAngularLib` and `setAngularLib` appear in no file.
+- [x] **22.0.0-remove-component-factory-resolver** — `ComponentFactoryResolver` and `ComponentFactory` are no longer available. Pass the component class directly to APIs like `ViewContainerRef.createComponent()` or use the standalone `createComponent()` function instead.
+  - **Verdict:** N/A — `ComponentFactoryResolver` appears in no file.
+- [x] **22.0.0-remove-create-ng-module-ref** — `createNgModuleRef` has been removed. Use `createNgModule()` instead for dynamic module creation scenarios.
+  - **Verdict:** N/A — `createNgModuleRef` appears in no file.
+- [x] **22.0.0-compile-time-duplicate-selectors** — Elements with multiple matching selectors now throw a compile-time error. Ensure your components use unique selectors and review any directives that might have conflicting selectors.
+  - **Verdict:** N/A — this is now a compile-time error, and every build passes.
+- [x] **22.0.0-component-onpush-default** — Components with no `changeDetection` property defined are now `OnPush` by default. To maintain `Eager` (the previous default) change detection, explicitly set `changeDetection: ChangeDetectionStrategy.Eager` in your component decorator.
+  - **Verdict:** migration wrote an **opt-out**: `changeDetection: ChangeDetectionStrategy.Eager` on 20 components, 19 in the library and 1 in the showcase app. Listed in Migration opt-outs, decided at step 4.3.
+- [x] **22.0.0-remove-check-no-changes** — `ChangeDetectorRef.checkNoChanges()` has been removed. In tests, use `fixture.detectChanges()` instead or verify your component state through other means.
+  - **Verdict:** N/A — `checkNoChanges` appears in no file.
+- [x] **22.0.0-leave-animations-scope-change** — Leave animations are no longer limited to the element being removed. They now support nested animations scoped to component boundaries. Review your animation configurations if you relied on the previous scoping behavior.
+  - **Verdict:** behaviour changed, no code change. The library has one animation trigger, `transitionMessages`, which has an enter transition only and no leave transition. In the smoke test.
+- [x] **22.0.0-params-inheritance-strategy-default** — `paramsInheritanceStrategy` now defaults to `"always"` instead of `"emptyOnly"`. This means route parameters are inherited from all parent routes. To restore the previous behavior, explicitly set `paramsInheritanceStrategy: "emptyOnly"` in your router configuration.
+  - **Verdict:** behaviour changed, no code change. The default moved to `"always"`, and no migration wrote an opt-out. The showcase app has one nested `loadChildren` route. In the smoke test.
+- [x] **22.0.0-can-match-current-snapshot-required** — The `currentSnapshot` parameter in `CanMatchFn` and the `canMatch` method of the `CanMatch` interface is now required. Update any class implementations of `CanMatch` to include this required third argument.
+  - **Verdict:** N/A — no route declares `canMatch`, and no class implements `CanMatch`.
+- [x] **22.0.0-hammer-js-removed** — Hammer.js integration has been removed from Angular platform-browser. If you need touch gesture support, implement your own gesture detection or use an alternative library.
+  - **Verdict:** N/A — no Hammer.js integration. `hammer` appears in no file.
+- [x] **22.0.0-app-ref-bootstrap-typing** — The second argument of `appRef.bootstrap()` no longer accepts `any` type. Ensure the element you pass is not nullable and matches the expected type.
+  - **Verdict:** N/A — the application uses `bootstrapApplication`, never `appRef.bootstrap`.
+- [x] **22.0.0-platform-browser-styles-removal** — Unused styles are now automatically removed when their associated `host` is dropped. Be aware that other DOM on the page may be affected if those styles are used by elements outside of Angular or if not using `ViewEncapsulation.Emulated`.
+  - **Verdict:** behaviour changed, no code change. Every component in the library uses the default `ViewEncapsulation.Emulated`. In the smoke test.
+- [x] **22.0.0-title-strategy-return-type** — The return type for `TitleStrategy.getResolvedTitleForRoute` has changed from `any` to a stricter type (e.g., `string | undefined`). Update your custom `TitleStrategy` implementations to match the new signature.
+  - **Verdict:** N/A — no custom `TitleStrategy` implementation.
+- [x] **22.0.0-incremental-hydration-default** — Incremental hydration is now the default behavior for applications using Server-Side Rendering (SSR). Review your application if you relied on the previous non-incremental hydration behavior. You can use `withNoIncrementalHydration()` to restore the previous behavior if needed.
+  - **Verdict:** N/A — the project has no SSR, so hydration does not apply.
+- [x] **22.0.0-full-template-type-check-removed** — The `fullTemplateTypeCheck` compiler option has been removed. Use `strictTemplates` instead to enable strict template type checking in your `tsconfig.json`.
+  - **Verdict:** fixed — `fullTemplateTypeCheck: true` removed from the `angularCompilerOptions` of `tsconfig.json`. The migration did not do this; the option no longer exists in v22.
+- [x] **22.0.0-strict-templates-default** — The `strictTemplates` compiler option now defaults to `true`. If your project was not using strict template type checking, you may see new compilation errors. Resolve these errors or explicitly set `strictTemplates: false` in your `tsconfig.json` to opt out.
+  - **Verdict:** migration wrote an **opt-out**: `strictTemplates: false` in `tsconfig.app.json`, `tsconfig.spec.json` and `lib/tsconfig.lib.json`. Listed in Migration opt-outs, decided at step 4.3.
+- [x] **22.0.0-webpack-builders-deprecated** — Webpack builders (`@angular-devkit/build-angular` and `@angular-devkit/build-webpack`) are now deprecated. Migrate to the `@angular/build` builders (esbuild/application) for your application builds.
+  - **Verdict:** N/A — the workspace already uses the `@angular/build` builders: `@angular/build:application`, `:dev-server`, `:extract-i18n` and `:ng-packagr`. Neither deprecated webpack package is a dependency.
+- [x] **22.0.0-ssr-commonengine-deprecated** — `CommonEngine` APIs from `@angular/ssr` are deprecated. Migrate to `AngularNodeAppEngine` or `AngularAppEngine` instead.
+  - **Verdict:** N/A — `CommonEngine` appears in no file and `@angular/ssr` is not a dependency.
+- [x] **22.0.0-istanbul-lib-instrument-optional** — `istanbul-lib-instrument` is now an optional peer dependency. If your project uses Karma with code coverage enabled, ensure `istanbul-lib-instrument` is explicitly installed.
+  - **Verdict:** N/A — the project tests with `@angular-builders/jest:run`, not Karma. The `@angular/cli` migration for this checked and made no change.
+- [x] **22.0.0-dev-server-port-env-priority** — `ng serve` now gives the highest priority to the `PORT` environment variable. This value overrides any port configured in `angular.json` or provided via the `--port` flag.
+  - **Verdict:** behaviour changed, no code change. `npm start` runs `ng serve --port 4900`. A `PORT` environment variable now outranks that flag. Noted for the user.
+- [x] **22.0.0-architect-cli-removed** — The `@angular-devkit/architect-cli` package is no longer available. Use the `architect` CLI tool from the `@angular-devkit/architect` package instead.
+  - **Verdict:** N/A — `@angular-devkit/architect-cli` is not a dependency.
+- [x] **22.0.0-experimental-test-builders-removed** — The experimental `@angular-devkit/build-angular:jest` and `@angular-devkit/build-angular:web-test-runner` test builders have been removed.
+  - **Verdict:** N/A — the test target uses `@angular-builders/jest:run`. Neither removed experimental builder is referenced in `angular.json`.
 
 ## After you update
 
@@ -590,11 +627,86 @@ animation would be a visual change nobody asked for, so it is a follow-up, not p
 | `npm run build:forms:prod` | pass |
 | `npm run build` | pass |
 
+### Hop 3 — 21.2 -> 22.1
+
+One `ng update` call. The picker only needed a version bump this time, so it went in the same call:
+
+```
+npx ng update @angular/core@22.1.2 @angular/cli@22.1.4 @angular/build@22.1.4 … \
+  @angular/material@22.1.2 @angular/cdk@22.1.2 ng-packagr@22.1.1 angular-eslint@22.1.0 \
+  @angular-builders/jest@22.0.1 ngx-markdown@22.0.0 @ngx-mce/datetime-picker@22.2.3 \
+  @typescript-eslint/eslint-plugin@8.58.0 @typescript-eslint/parser@8.58.0
+```
+
+No `--force` was needed. The call ran past the 10 minute foreground limit and finished in the
+background with exit code 0. `ng update` also bumped `jest` to `^30.4.2` on its own, pulled in by
+`@angular-builders/jest@22`.
+
+**What the migrations changed by themselves**
+
+| File(s) | Change | Class |
+| --- | --- | --- |
+| `package.json` | Angular to 22.1.x, typescript to `~6.0.3`, jest to `^30.4.2` | required |
+| 29 files, 63 occurrences | `$safeNavigationMigration()` wrappers around optional-chain expressions | **opt-out** |
+| 20 components | `changeDetection: ChangeDetectionStrategy.Eager` | **opt-out** |
+| `tsconfig.app.json`, `tsconfig.spec.json`, `lib/tsconfig.lib.json` | `strictTemplates: false` | **opt-out** |
+| all 4 tsconfigs | `extendedDiagnostics` suppressing `nullishCoalescingNotNullable` and `optionalChainNotNullable` | **opt-out**, removed — see below |
+| `src/main.ts` | `provideHttpClient()` -> `provideHttpClient(withXhr())` | **opt-out** |
+
+Two optional migrations were offered and **not** run: `migrate-karma-to-vitest` (not applicable, the
+project uses jest) and `use-application-builder`. `@angular-builders/jest` also printed three advisory
+notes; they are under Follow-ups.
+
+**A contradiction between two v22 migrations**
+
+Two migrations of the same major wrote settings that the compiler rejects together:
+
+```
+error NG4003: Angular compiler option "extendedDiagnostics" is configured, however "strictTemplates" is disabled.
+```
+
+The `extendedDiagnostics` block was the one to go, in all 4 tsconfigs. Neither
+`nullishCoalescingNotNullable` nor `optionalChainNotNullable` can fire while `strictTemplates` is off,
+so the block was dead weight as well as illegal. `lib/tsconfig.lib.prod.json` had received nothing but
+that block, so its whole `angularCompilerOptions` key is gone and the file is back to its original
+shape. The hop was **not** reverted, as the skill requires. If step 4.3 turns `strictTemplates` back
+on, that decision has to revisit these two diagnostics.
+
+**Code changes the checklist and TypeScript 6.0 required**
+
+1. `tsconfig.json` — `fullTemplateTypeCheck: true` removed from `angularCompilerOptions`. v22 removed
+   the option, and no migration cleaned it up.
+2. `tsconfig.json` — `baseUrl: "./"` removed. TypeScript 6.0 reports it as deprecated
+   (`TS5101`), and `paths` has resolved relative to the tsconfig since TypeScript 5.0. Adding
+   `ignoreDeprecations` would have been a suppression, so it was not used. Two follow-on fixes were
+   needed, because `baseUrl` had been load-bearing:
+   - `tsconfig.json` and `tsconfig.spec.json` — the `paths` value became `./dist/@lab900/forms`.
+     Without `baseUrl`, a non-relative `paths` value is an error (`TS5090`).
+   - `src/app/modules/showcase-forms/showcase-forms.constants.ts` — `import packageInfo from
+     'lib/package.json'` became `'../../../../lib/package.json'`. That import had resolved only
+     through `baseUrl`.
+
+**Verify — all green**
+
+| Check | Result |
+| --- | --- |
+| `npx tsc -p tsconfig.app.json --noEmit` | 0 errors |
+| `npx tsc -p tsconfig.spec.json --noEmit` | 0 errors |
+| `npx tsc -p lib/tsconfig.lib.json --noEmit` | 0 errors |
+| `npx ng build forms` | pass |
+| `npm run build:forms:prod` | pass |
+| `npm run build` | pass |
+
 ## Migration opt-outs
 
 | Opt-out | Class | Sites | Decision |
 | --- | --- | --- | --- |
 | `schematics` block in `angular.json` that keeps the old file-naming style (`type: "component"`, `typeSeparator: "."`) | generator defaults | 1 block, 8 schematic entries, `angular.json` | pending — asked at step 4.3 |
+| `strictTemplates: false` | strictness flag | 3 files: `tsconfig.app.json`, `tsconfig.spec.json`, `lib/tsconfig.lib.json` | pending — asked at step 4.3 |
+| `$safeNavigationMigration()` wrapper around optional-chain expressions | expression wrapper | 29 files, 63 occurrences: 23 files / 56 in `lib/src`, 6 files / 7 in `src` | pending — asked at step 4.3 |
+| `changeDetection: ChangeDetectionStrategy.Eager` | behaviour default on a class | 20 components: 19 in `lib/src`, 1 in `src` | pending — asked at step 4.3 |
+| `provideHttpClient(withXhr())` | behaviour default | 1 site, `src/main.ts` | pending — asked at step 4.3 |
+| `extendedDiagnostics` suppressing `nullishCoalescingNotNullable` and `optionalChainNotNullable` | strictness flag | 4 files | **removed at hop 3** — the compiler rejects it together with `strictTemplates: false` (NG4003), and the checks cannot fire while `strictTemplates` is off |
 
 The block is an escape hatch written by the `@angular/cli` v20 migration. It changes nothing that
 exists today; it only decides how `ng generate` names new files. It causes no lint error.
@@ -649,6 +761,18 @@ Open after hop 1:
    `form-field.directive.ts` the streams open with `defer(() => of(params.getRawValue))`, which emits
    the *function* rather than calling it. Every other line calls `getRawValue()`. Only the property
    names were renamed for v20; the behaviour was left exactly as it was.
-6. **`fullTemplateTypeCheck` is removed in v22.** `tsconfig.json` sets
+6. ~~**`fullTemplateTypeCheck` is removed in v22.** `tsconfig.json` sets
    `angularCompilerOptions.fullTemplateTypeCheck: true`. v22 removes the option and defaults
-   `strictTemplates` to `true`, so hop 3 must handle both.
+   `strictTemplates` to `true`, so hop 3 must handle both.~~ Done in the hop 3 commit. The option is
+   removed, and `strictTemplates: false` is now a recorded opt-out awaiting step 4.3.
+8. **Three advisories from `@angular-builders/jest@22`**, printed during the hop 3 migration and not
+   acted on:
+   - ts-jest `isolatedModules` now defaults to `true`. A `const enum` used across files, or a type-only
+     re-export without the `type` modifier, now errors. Step 4.1 shows whether this project trips it.
+   - a TypeScript jest config is now loaded with jiti instead of ts-node, and is no longer type-checked
+     at load time. This project uses `jest.config.js`, so it does not apply.
+   - per-project coverage now writes to `<projectRoot>/coverage` instead of `./coverage` for the `forms`
+     project. Any CI step that reads a hardcoded `./coverage/` path needs updating.
+9. **`baseUrl` is gone, so non-relative imports no longer resolve.** One import used it
+   (`showcase-forms.constants.ts`) and is now relative. Any new code must use relative paths or a
+   `paths` entry.

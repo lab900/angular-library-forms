@@ -1,4 +1,4 @@
-import { Component, Inject, signal, viewChild } from '@angular/core';
+import { Component, Inject, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -13,6 +13,7 @@ import { MatButton } from '@angular/material/button';
 @Component({
   selector: 'lab900-form-dialog',
   templateUrl: './form-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatDialogContent, Lab900Form, MatDialogActions, MatButton, MatDialogClose],
 })
 export class FormDialogComponent<T> {

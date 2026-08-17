@@ -9,7 +9,7 @@
       matInput
       placeholder="{{ placeholder() | translate }}"></textarea>
 
-    @let hint = _options()?.hint;
+    @let hint = $safeNavigationMigration(_options()?.hint);
     @if (!!hint?.value && !(hint?.hideHintOnValidValue && !!controlValue()?.length) && !fieldIsReadonly()) {
       <mat-hint>
         <span [innerHTML]="hint.value | translate: hint.valueTranslateData"></span>

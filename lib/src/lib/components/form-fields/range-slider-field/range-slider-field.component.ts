@@ -1,4 +1,4 @@
-import { Component, computed } from '@angular/core';
+import { Component, computed, ChangeDetectionStrategy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldRangeSlider } from './range-slider-field.model';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -10,6 +10,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'lab900-range-slider-field',
   templateUrl: './range-slider-field.component.html',
   imports: [ReactiveFormsModule, MatRangeSliderFieldComponent, MatError, TranslatePipe],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     class: 'lab900-form-field',
   },

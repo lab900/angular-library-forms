@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldSlideToggle } from './slide-toggle-field.model';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -18,6 +18,7 @@ import { TranslatePipe } from '@ngx-translate/core';
       }
     `,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, MatLabel, MatSlideToggle, TranslatePipe, MatError],
 })
 export class SlideToggleFieldComponent extends FormComponent<FormFieldSlideToggle> {

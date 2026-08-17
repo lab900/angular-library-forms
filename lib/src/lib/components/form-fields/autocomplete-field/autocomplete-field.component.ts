@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostBinding, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostBinding, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { BehaviorSubject, isObservable, Observable, of } from 'rxjs';
 import { debounceTime, switchMap } from 'rxjs/operators';
@@ -15,6 +15,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
   selector: 'lab900-autocomplete-field',
   templateUrl: './autocomplete-field.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatFormFieldModule,
     MatInputModule,

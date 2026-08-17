@@ -1,4 +1,4 @@
-import { Component, computed, HostBinding, inject } from '@angular/core';
+import { Component, computed, HostBinding, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldDateTimePicker } from './date-time-field.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -28,6 +28,7 @@ interface PickerSelectionModel {
 @Component({
   selector: 'lab900-date-time-field',
   templateUrl: './date-time-field.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,

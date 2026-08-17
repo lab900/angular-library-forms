@@ -9,7 +9,7 @@
       placeholder="{{ placeholder() | translate }}"
       [ngxMatDatetimePicker]="picker"
       [formControlName]="_fieldAttribute()"
-      [matDatepickerFilter]="_options()?.dateFilter"
+      [matDatepickerFilter]="$safeNavigationMigration(_options()?.dateFilter)"
       [max]="maxDate()"
       [min]="minDate()" />
     <ngx-mat-datepicker-toggle matIconSuffix [for]="picker" />
@@ -20,7 +20,7 @@
       [startView]="startView()"
       [defaultTime]="defaultTime()"
       [stepMinute]="stepMinute()"
-      [dateClass]="_options()?.dateClass"
+      [dateClass]="$safeNavigationMigration(_options()?.dateClass)"
       (opened)="pickerOpened(picker)">
       <ngx-mat-datepicker-actions>
         <button mat-button ngxMatDatepickerCancel type="button">
@@ -31,7 +31,7 @@
         </button>
       </ngx-mat-datepicker-actions>
     </ngx-mat-datetime-picker>
-    @let hint = _options()?.hint;
+    @let hint = $safeNavigationMigration(_options()?.hint);
     @if (!!hint?.value && !(hint?.hideHintOnValidValue && input.value) && !fieldIsReadonly()) {
       <mat-hint>
         <span [innerHTML]="hint.value | translate: hint.valueTranslateData"></span>

@@ -65,7 +65,7 @@
       class="mat-mdc-form-field-subscript-wrapper mat-mdc-form-field-bottom-align"
       [@transitionMessages]="controlValid() ? 'void' : 'enter'">
       @if (!fieldIsReadonly()) {
-        @let hint = _options()?.hint;
+        @let hint = $safeNavigationMigration(_options()?.hint);
         @if (hint) {
           @if (!!hint.value && !(hint.hideHintOnValidValue && filesSignal()) && !fieldIsReadonly()) {
             <mat-hint>

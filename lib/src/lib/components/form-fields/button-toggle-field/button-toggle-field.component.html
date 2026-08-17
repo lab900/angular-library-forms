@@ -17,7 +17,7 @@
             [value]="value.value"
             class="{{ value?.buttonClass }}"
             (change)="onChange($event)"
-            [matTooltip]="value?.tooltip?.text | translate"
+            [matTooltip]="$safeNavigationMigration(value?.tooltip?.text) | translate"
             [matTooltipPosition]="value?.tooltip?.position || 'above'"
             id="mat-button-toggle-{{ elementId }}">
             @if (value?.icon?.position === 'left') {

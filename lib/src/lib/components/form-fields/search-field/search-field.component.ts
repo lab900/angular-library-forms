@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldSearch } from './field-search.model';
 import { take } from 'rxjs/operators';
@@ -17,6 +17,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 @Component({
   selector: 'lab900-search-field',
   templateUrl: './search-field.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatFormFieldModule,
     MatInputModule,

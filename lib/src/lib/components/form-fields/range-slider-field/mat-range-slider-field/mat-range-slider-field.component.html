@@ -2,8 +2,14 @@
   <div>
     <div class="range-slider__slider">
       <mat-slider [min]="min()" [max]="max()" [step]="steps()">
-        <input [value]="value?.[0]" (valueChange)="updateSliderInstanceValues(0, $event)" matSliderStartThumb />
-        <input [value]="value?.[1]" (valueChange)="updateSliderInstanceValues(1, $event)" matSliderEndThumb />
+        <input
+          [value]="$safeNavigationMigration(value?.[0])"
+          (valueChange)="updateSliderInstanceValues(0, $event)"
+          matSliderStartThumb />
+        <input
+          [value]="$safeNavigationMigration(value?.[1])"
+          (valueChange)="updateSliderInstanceValues(1, $event)"
+          matSliderEndThumb />
       </mat-slider>
     </div>
     <div class="range-slider__input range-slider__input--from">
@@ -11,7 +17,7 @@
         <mat-label>{{ fromLabel() | translate }}</mat-label>
         <input
           matInput
-          [value]="formatValue(value?.[0])"
+          [value]="formatValue($safeNavigationMigration(value?.[0]))"
           [min]="min()"
           [max]="max()"
           (change)="updateFromValue($event)" />
@@ -23,7 +29,7 @@
         <mat-label>{{ toLabel() | translate }}</mat-label>
         <input
           matInput
-          [value]="formatValue(value?.[1])"
+          [value]="formatValue($safeNavigationMigration(value?.[1]))"
           [min]="min()"
           [max]="max()"
           (change)="updateToValue($event)" />

@@ -9,7 +9,7 @@
         <span class="lab900-form-field-label lab900-form-field-label--with-info">
           {{ label | translate }}
           @if (_options()?.infoTooltip; as tip) {
-            <mat-icon [matTooltip]="tip?.text | translate">
+            <mat-icon [matTooltip]="$safeNavigationMigration(tip?.text) | translate">
               {{ tip?.icon || 'info' }}
             </mat-icon>
           }
