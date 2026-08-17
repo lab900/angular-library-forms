@@ -14,7 +14,7 @@ import {
   NgxMatDatepickerInput,
   NgxMatDatepickerToggle,
   NgxMatDatetimepicker,
-} from '@ngxmc/datetime-picker';
+} from '@ngx-mce/datetime-picker';
 
 /**
  * The picker's internal selection model. Since v20 the picker package uses the Angular Material

@@ -13,7 +13,7 @@
     "@kolkov/angular-editor": "3.0.0-beta.0",
     "ngx-mask": "^19.0.6",
     "ngx-mat-select-search": "^8.0.0",
-    "@ngxmc/datetime-picker": "~19.2.2"
+    "@ngx-mce/datetime-picker": "~21.3.3"
   },
   "repository": {
     "type": "git",

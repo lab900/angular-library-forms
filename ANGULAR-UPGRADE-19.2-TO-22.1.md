@@ -26,7 +26,7 @@ Filled at step 4.9. Never carried over from an earlier run.
 | Item | Answer | Date | Reason |
 | --- | --- | --- | --- |
 | Route to Angular 22, blocked by `@ngxmc/datetime-picker` | Upgrade to v20 first, then replace the package with `@ngx-mce/datetime-picker`. Assess a drop-in first; if it is not a drop-in, document every needed change. | 2026-08-17 | User choice at the gate. `@ngxmc/datetime-picker` stopped at Angular 20, so the v21 and v22 hops need a maintained replacement. |
-| `skipLibCheck` for the 2 `TS2416` errors inside `@ngxmc/datetime-picker@20.1.0` | Add `skipLibCheck: true` to `lib/tsconfig.lib.json` only, as a temporary measure. Remove it at hop 2 after the swap and prove the library build stays green without it. Report it if removal fails. | 2026-08-17 | The errors are a defect in the package, not in this project: it declares `dateFilter` as `(date: D) => boolean` while its own `NgxMatDatepickerControl` requires `(date: D \| null) => boolean`. 20.1.0 is its only Angular 20 release, and the fork declares the signature correctly. The application and spec configs keep full declaration checking. |
+| `skipLibCheck` for the 2 `TS2416` errors inside `@ngxmc/datetime-picker@20.1.0` | Add `skipLibCheck: true` to `lib/tsconfig.lib.json` only, as a temporary measure. Remove it at hop 2 after the swap and prove the library build stays green without it. Report it if removal fails. | 2026-08-17 | The errors are a defect in the package, not in this project: it declares `dateFilter` as `(date: D) => boolean` while its own `NgxMatDatepickerControl` requires `(date: D \| null) => boolean`. 20.1.0 is its only Angular 20 release, and the fork declares the signature correctly. The application and spec configs keep full declaration checking. **Closed at hop 2: removed, and the library build is green without it.** |
 
 ## Hop plan
 
@@ -319,28 +319,50 @@ Nothing to do before the update.
 
 ## Update to the new version
 
-- [ ] **21.0.0_ng_update** — In the application's project directory, run `ng update @angular/core@21 @angular/cli@21` to update your application to Angular v21.
-- [ ] **update @angular/material** — Run `ng update @angular/material@21`.
-- [ ] **21.0.0-cdk-overlay-top-layer-stacking** — CDK overlays can now render in the browser's native top layer, causing elements that previously appeared above Material overlays via `z-index` to render beneath them. You can restore the previous behavior by providing `OVERLAY_DEFAULT_CONFIG` from `@angular/cdk/overlay` with the value `{usePopover: false}`.
-- [ ] **21.0.0-update-signal-input-access-in-custom-elements** — When using signal inputs with Angular custom elements, update property access to be direct (`elementRef.newInput`) instead of a function call (`elementRef.newInput()`) to align with the behavior of decorator-based inputs.
-- [ ] **21.0.0-zone-scheduler-behavior-change** — If using `provideZoneChangeDetection` without the ZoneJS polyfill, note that the internal scheduler is now always enabled. Review your app's timing as this may alter behavior that previously relied on the disabled scheduler.
-- [ ] **21.0.0-provide-zone-change-detection-required** — Zone-based applications should add `provideZoneChangeDetection()` to your application's root providers. For standalone apps, add it to the `bootstrapApplication` call. For NgModule-based apps, add it to your root `AppModule`'s `providers` array. An automated migration should handle this.
-- [ ] **21.0.0-remove-interpolation-option** — Remove the 'interpolation' property from your @Component decorators. Angular now only supports the default '{{' and '}}' interpolation markers.
-- [ ] **21.0.0-remove-moduleid-property** — Remove the 'moduleId' property from your @Component decorators. This property was used for resolving relative URLs for templates and styles, a functionality now handled by modern build tools.
-- [ ] **21.0.0-ng-component-outlet-content-type-change** — The `ngComponentOutletContent` input has been strictly typed from `any[][]` to `Node[][]`. Update the value you pass to this input to match the new `Node[][] | undefined` type.
-- [ ] **21.0.0-stricter-host-binding-type-checking** — Host binding type checking is now enabled by default and may surface new build errors. Resolve any new type errors or set `typeCheckHostBindings: false` in your `tsconfig.json`'s `angularCompilerOptions`.
-- [ ] **21.0.0-typescript-5.9-required** — Update your project's TypeScript version to 5.9 or later. The `ng update` command will typically handle this automatically.
-- [ ] **21.0.0-remove-application-config-from-platform-browser** — The `ApplicationConfig` export from `@angular/platform-browser` has been removed. Update your imports to use `ApplicationConfig` from `@angular/core` instead.
-- [ ] **21.0.0-remove-ignore-changes-outside-zone-option** — The `ignoreChangesOutsideZone` option for configuring ZoneJS is no longer available. Remove this option from your ZoneJS configuration in your polyfills file.
-- [ ] **21.0.0-testbed-rethrows-errors-with-provideZoneChangeDetection** — Update tests using `provideZoneChangeDetection` as TestBed now rethrows errors. Fix the underlying issues in your tests or, as a last resort, configure TestBed with `rethrowApplicationErrors: false` to disable this behavior.
-- [ ] **21.0.0-router-navigation-timing-changed** — Update tests that rely on router navigation timing. Navigations may now take additional microtasks to complete. Ensure navigations are fully completed before making assertions, for example by using `fakeAsync` with `flush` or waiting for promises/observables to resolve.
-- [ ] **21.0.0-test-bed-provides-fake-platform-location** — Tests using `TestBed` might be affected by the new fake `PlatformLocation`. If your tests fail, provide the old `MockPlatformLocation` from `@angular/common/testing` via `{provide: PlatformLocation, useClass: MockPlatformLocation}` in your `TestBed` configuration.
-- [ ] **21.0.0-remove-upgrade-adapter** — The `UpgradeAdapter` has been removed. Update your hybrid Angular/AngularJS application to use the static APIs from the `@angular/upgrade/static` package instead.
-- [ ] **21.0.0-form-array-directive-conflict** — The new standalone `formArray` directive might conflict with existing custom directives or inputs. Rename any custom directives named `FormArray` or inputs named `formArray` on elements that also use reactive forms to resolve the conflict.
-- [ ] **21.0.0-ngmodulefactory-removed** — The deprecated `NgModuleFactory` has been removed. Update any code that uses `NgModuleFactory` to use `NgModule` directly, which is common in dynamic component loading scenarios.
-- [ ] **21.0.0-emit-declaration-only-not-supported** — The `emitDeclarationOnly` TypeScript compiler option is not supported. Please disable it in your `tsconfig.json` file to allow the Angular compiler to function correctly.
-- [ ] **21.0.0-lastsuccessfulnavigation-is-a-signal** — The `lastSuccessfulNavigation` property on the Router has been converted to a signal. To get its value, you now need to invoke it as a function: `router.lastSuccessfulNavigation()`.
-- [ ] **21.0.0-configure-commonengine-allowed-hosts** — Starting `@angular/ssr` 21.1.5, if your application uses SSR with `CommonEngine`, set the `allowedHosts` option in your `server.ts` (for example, `new CommonEngine({allowedHosts: ['localhost', '*.yourdomain.com']})`). Without it, SSR silently falls back to client-side rendering. This requirement comes from security advisory [GHSA-x288-3778-4hhx](https://github.com/angular/angular-cli/security/advisories/GHSA-x288-3778-4hhx) (also backported to 20.3.17 and 19.2.21).
+- [x] **21.0.0_ng_update** — In the application's project directory, run `ng update @angular/core@21 @angular/cli@21` to update your application to Angular v21.
+  - **Verdict:** done — one `ng update` call, run with `--allow-dirty` because the picker swap was staged in the tree first. See Changes made, hop 2.
+- [x] **update @angular/material** — Run `ng update @angular/material@21`.
+  - **Verdict:** done — `@angular/material@21.2.14` and `@angular/cdk@21.2.14` were in the same call. Both migrations reported no changes.
+- [x] **21.0.0-cdk-overlay-top-layer-stacking** — CDK overlays can now render in the browser's native top layer, causing elements that previously appeared above Material overlays via `z-index` to render beneath them. You can restore the previous behavior by providing `OVERLAY_DEFAULT_CONFIG` from `@angular/cdk/overlay` with the value `{usePopover: false}`.
+  - **Verdict:** behaviour changed, no code change. The only `z-index` in the project is `10` on the showcase header (`src/app/app.component.scss:8`), which the CDK overlay container already outranked. `OVERLAY_DEFAULT_CONFIG` was **not** set. In the smoke test.
+- [x] **21.0.0-update-signal-input-access-in-custom-elements** — When using signal inputs with Angular custom elements, update property access to be direct (`elementRef.newInput`) instead of a function call (`elementRef.newInput()`) to align with the behavior of decorator-based inputs.
+  - **Verdict:** N/A — the project creates no Angular custom elements. `createCustomElement` appears in no file.
+- [x] **21.0.0-zone-scheduler-behavior-change** — If using `provideZoneChangeDetection` without the ZoneJS polyfill, note that the internal scheduler is now always enabled. Review your app's timing as this may alter behavior that previously relied on the disabled scheduler.
+  - **Verdict:** N/A — the project keeps the zone.js polyfill, so the scheduler behaviour is unchanged for it.
+- [x] **21.0.0-provide-zone-change-detection-required** — Zone-based applications should add `provideZoneChangeDetection()` to your application's root providers. For standalone apps, add it to the `bootstrapApplication` call. For NgModule-based apps, add it to your root `AppModule`'s `providers` array. An automated migration should handle this.
+  - **Verdict:** migration applied — it added `provideZoneChangeDetection()` to the providers in `src/main.ts`. v21 requires it for a zone-based application, so it is **not** an opt-out.
+- [x] **21.0.0-remove-interpolation-option** — Remove the 'interpolation' property from your @Component decorators. Angular now only supports the default '{{' and '}}' interpolation markers.
+  - **Verdict:** N/A — no `@Component` sets `interpolation`.
+- [x] **21.0.0-remove-moduleid-property** — Remove the 'moduleId' property from your @Component decorators. This property was used for resolving relative URLs for templates and styles, a functionality now handled by modern build tools.
+  - **Verdict:** N/A — no `@Component` sets `moduleId`.
+- [x] **21.0.0-ng-component-outlet-content-type-change** — The `ngComponentOutletContent` input has been strictly typed from `any[][]` to `Node[][]`. Update the value you pass to this input to match the new `Node[][] | undefined` type.
+  - **Verdict:** N/A — `ngComponentOutletContent` appears in no template.
+- [x] **21.0.0-stricter-host-binding-type-checking** — Host binding type checking is now enabled by default and may surface new build errors. Resolve any new type errors or set `typeCheckHostBindings: false` in your `tsconfig.json`'s `angularCompilerOptions`.
+  - **Verdict:** no code change needed — the option is on by default now, and every type check and build passes. `typeCheckHostBindings: false` was **not** set.
+- [x] **21.0.0-typescript-5.9-required** — Update your project's TypeScript version to 5.9 or later. The `ng update` command will typically handle this automatically.
+  - **Verdict:** OK — typescript `~5.9.3` was already installed at hop 1, and this hop kept it.
+- [x] **21.0.0-remove-application-config-from-platform-browser** — The `ApplicationConfig` export from `@angular/platform-browser` has been removed. Update your imports to use `ApplicationConfig` from `@angular/core` instead.
+  - **Verdict:** N/A — migration ran, no changes needed.
+- [x] **21.0.0-remove-ignore-changes-outside-zone-option** — The `ignoreChangesOutsideZone` option for configuring ZoneJS is no longer available. Remove this option from your ZoneJS configuration in your polyfills file.
+  - **Verdict:** N/A — `ignoreChangesOutsideZone` appears in no file.
+- [x] **21.0.0-testbed-rethrows-errors-with-provideZoneChangeDetection** — Update tests using `provideZoneChangeDetection` as TestBed now rethrows errors. Fix the underlying issues in your tests or, as a last resort, configure TestBed with `rethrowApplicationErrors: false` to disable this behavior.
+  - **Verdict:** behaviour changed, no code change — verified at step 4.1, after the last hop. `rethrowApplicationErrors: false` was **not** set.
+- [x] **21.0.0-router-navigation-timing-changed** — Update tests that rely on router navigation timing. Navigations may now take additional microtasks to complete. Ensure navigations are fully completed before making assertions, for example by using `fakeAsync` with `flush` or waiting for promises/observables to resolve.
+  - **Verdict:** behaviour changed, no code change — verified at step 4.1, after the last hop.
+- [x] **21.0.0-test-bed-provides-fake-platform-location** — Tests using `TestBed` might be affected by the new fake `PlatformLocation`. If your tests fail, provide the old `MockPlatformLocation` from `@angular/common/testing` via `{provide: PlatformLocation, useClass: MockPlatformLocation}` in your `TestBed` configuration.
+  - **Verdict:** behaviour changed, no code change — verified at step 4.1, after the last hop.
+- [x] **21.0.0-remove-upgrade-adapter** — The `UpgradeAdapter` has been removed. Update your hybrid Angular/AngularJS application to use the static APIs from the `@angular/upgrade/static` package instead.
+  - **Verdict:** N/A — no hybrid AngularJS application. `UpgradeAdapter` appears in no file.
+- [x] **21.0.0-form-array-directive-conflict** — The new standalone `formArray` directive might conflict with existing custom directives or inputs. Rename any custom directives named `FormArray` or inputs named `formArray` on elements that also use reactive forms to resolve the conflict.
+  - **Verdict:** N/A — no custom directive or input is named `formArray`. The only hits are Angular's own `[formArrayName]` in the repeater template and a local variable in `form-builder.service.ts`.
+- [x] **21.0.0-ngmodulefactory-removed** — The deprecated `NgModuleFactory` has been removed. Update any code that uses `NgModuleFactory` to use `NgModule` directly, which is common in dynamic component loading scenarios.
+  - **Verdict:** N/A — `NgModuleFactory` appears in no file.
+- [x] **21.0.0-emit-declaration-only-not-supported** — The `emitDeclarationOnly` TypeScript compiler option is not supported. Please disable it in your `tsconfig.json` file to allow the Angular compiler to function correctly.
+  - **Verdict:** N/A — no tsconfig sets `emitDeclarationOnly`.
+- [x] **21.0.0-lastsuccessfulnavigation-is-a-signal** — The `lastSuccessfulNavigation` property on the Router has been converted to a signal. To get its value, you now need to invoke it as a function: `router.lastSuccessfulNavigation()`.
+  - **Verdict:** N/A — migration ran, no changes needed.
+- [x] **21.0.0-configure-commonengine-allowed-hosts** — Starting `@angular/ssr` 21.1.5, if your application uses SSR with `CommonEngine`, set the `allowedHosts` option in your `server.ts` (for example, `new CommonEngine({allowedHosts: ['localhost', '*.yourdomain.com']})`). Without it, SSR silently falls back to client-side rendering. This requirement comes from security advisory [GHSA-x288-3778-4hhx](https://github.com/angular/angular-cli/security/advisories/GHSA-x288-3778-4hhx) (also backported to 20.3.17 and 19.2.21).
+  - **Verdict:** N/A — the project has no SSR. `@angular/ssr` is not a dependency and `CommonEngine` appears in no file.
 
 ## After you update
 
@@ -490,6 +512,84 @@ Three optional migrations were offered and **not** run: `use-application-builder
 
 Lint and tests do not run here. They run once after the last hop.
 
+### Hop 2 — 20.3 -> 21.2, with the picker swap
+
+This hop had to carry the swap. `@ngxmc/datetime-picker` has no Angular 21 release, and the fork peers
+`@angular/*@^21`, so neither package can satisfy an intermediate state. The order was:
+
+1. Point the source, the library peer and the docs at `@ngx-mce/datetime-picker`.
+2. `npm uninstall @ngxmc/datetime-picker` — removes the `@angular/core@^20` peer that would otherwise
+   block the Angular 21 install.
+3. `npx ng update --allow-dirty @angular/core@21.2.20 @angular/cli@21.2.21 @angular/build@21.2.21 …`
+   with every lockstep package pinned, plus `jest-preset-angular@17.0.0`, `ng-mocks@14.17.1`,
+   `ngx-mat-select-search@9.0.0`, `ngx-markdown@21.3.0`, `angular-eslint@21.4.0`,
+   `@angular-builders/jest@21.0.4`, `ng-packagr@21.2.7`. `--allow-dirty` was needed because step 1 and
+   step 2 had already changed the tree. No `--force` was needed.
+4. `npm install @ngx-mce/datetime-picker@21.3.3`.
+
+**What the migrations changed by themselves**
+
+| File | Change | Class |
+| --- | --- | --- |
+| `package.json` | Angular to 21.2.x, and `marked` `^16.4.2` -> `^18.0.9`. `ng update` did that bump on its own, which is what follow-up 3 of hop 1 asked for. | required |
+| `tsconfig.json`, `lib/tsconfig.lib.json` | `lib` array modernised to `es2022`. | required |
+| `src/main.ts` | `provideZoneChangeDetection()` added to the providers. v21 requires it for a zone-based application, so it is **not** an opt-out. | required |
+
+No new opt-out was written in this hop.
+
+**The picker swap**
+
+| Item | Before | After |
+| --- | --- | --- |
+| `package.json` dependency | `@ngxmc/datetime-picker: ~19.2.2` | `@ngx-mce/datetime-picker: ~21.3.3` |
+| `lib/package.json` peer | `@ngxmc/datetime-picker: ~19.2.2` | `@ngx-mce/datetime-picker: ~21.3.3` |
+| `date-time-field.component.ts` import | `@ngxmc/datetime-picker` | `@ngx-mce/datetime-picker` |
+| `src/guides/getting-started.md` | `@ngxmc/datetime-picker` | `@ngx-mce/datetime-picker` |
+
+The import specifier was the only code change. All 7 symbols, the template and the internal
+`_componentRef.instance._model` path are identical in the fork, exactly as the assessment predicted.
+npm's caret default was changed back to a tilde, to keep the operator the original author used.
+`node_modules/@ngxmc` is gone after the install.
+
+**The temporary `skipLibCheck` is removed**
+
+`lib/tsconfig.lib.json` no longer sets `skipLibCheck`, and the comment went with it. The library type
+check and both library builds pass without it, which proves the 2 `TS2416` errors came from
+`@ngxmc/datetime-picker@20.1.0` alone. The decision is closed.
+
+**Code changes the checklist required**
+
+Angular Material v21 removed the `matFormFieldAnimations` export, which broke 3 components:
+
+- `checkbox-field.component.ts`
+- `drag-n-drop-file-field.component.ts`
+- `repeater-field.component.ts`
+
+All three bind `[@transitionMessages]="controlValid() ? 'void' : 'enter'"` in their templates, so the
+animation is live and could not simply be dropped. All three also render Material's subscript wrapper
+by hand (`class="mat-mdc-form-field-subscript-wrapper"`) rather than using a `mat-form-field`, so
+Material's own styling does not cover them either.
+
+The trigger now lives in the library, in a new file `lib/src/lib/utils/form-field.animations.ts`. Its
+definition was read out of `@angular/material@20.2.14` and reproduced exactly — same trigger name, same
+states, same `300ms cubic-bezier(0.55, 0, 0.55, 0.2)` timing — so the templates and the visible
+behaviour are unchanged. It is internal and is not added to `public-api.ts`.
+
+Material had already marked that export `@deprecated No longer used` with `@breaking-change 21.0.0`, so
+Material's own form fields stopped animating their messages in v20. Matching that by dropping the
+animation would be a visual change nobody asked for, so it is a follow-up, not part of this hop.
+
+**Verify — all green**
+
+| Check | Result |
+| --- | --- |
+| `npx tsc -p tsconfig.app.json --noEmit` | 0 errors |
+| `npx tsc -p tsconfig.spec.json --noEmit` | 0 errors |
+| `npx tsc -p lib/tsconfig.lib.json --noEmit` | 0 errors, without `skipLibCheck` |
+| `npx ng build forms` | pass |
+| `npm run build:forms:prod` | pass |
+| `npm run build` | pass |
+
 ## Migration opt-outs
 
 | Opt-out | Class | Sites | Decision |
@@ -520,8 +620,10 @@ _Written at step 4.8._
 
 Open after hop 1:
 
-1. **Remove the `skipLibCheck` in `lib/tsconfig.lib.json`** at hop 2, right after the picker swap.
-   Prove the library build stays green without it.
+1. ~~**Remove the `skipLibCheck` in `lib/tsconfig.lib.json`** at hop 2, right after the picker swap.
+   Prove the library build stays green without it.~~ Done in the hop 2 commit,
+   `chore: update Angular to v21 and replace the date-time picker`. The library type check and both
+   library builds pass without it.
 2. **Three optional v20 migrations were not run.** Each is a separate piece of work, and none is
    needed for the upgrade:
    - `ng update @angular/cli --name use-application-builder` — moves the application build to the
@@ -531,8 +633,14 @@ Open after hop 1:
      already use `@if` / `@for`.
    - `ng update @angular/core --name router-current-navigation` — replaces `Router.getCurrentNavigation`
      with the signal. Verified as a no-op: `getCurrentNavigation` appears in no file.
-3. **`marked` needs another bump at hop 2.** `ngx-markdown@21.3.0` and `@22.0.0` peer
-   `marked@^17 || ^18`, so `^16` does not span the remaining hops. No single version does.
+3. ~~**`marked` needs another bump at hop 2.** `ngx-markdown@21.3.0` and `@22.0.0` peer
+   `marked@^17 || ^18`, so `^16` does not span the remaining hops. No single version does.~~ Done in the
+   hop 2 commit. `ng update` moved it to `^18.0.9` on its own, which also spans hop 3.
+7. **The message animation could follow Material instead.** `lib/src/lib/utils/form-field.animations.ts`
+   keeps the animation Material removed in v21. Material's own form fields no longer animate their
+   messages. Dropping the trigger and the 3 `[@transitionMessages]` bindings would match Material, and
+   would drop one use of `@angular/animations` from the library. It is a visual change, so it is not
+   part of this upgrade.
 4. **lodash is bundled as CommonJS.** The app build warns that `lodash` used by
    `dist/@lab900/forms/fesm2022/lab900-forms.mjs` is not ESM, and the same for `lodash/cloneDeep` in
    `@lab900/ui`. This predates the upgrade — lodash has always been CommonJS. Switching the library to

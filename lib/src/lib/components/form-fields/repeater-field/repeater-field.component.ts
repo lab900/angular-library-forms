@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, HostBinding, inject } fro
 import { FormComponent } from '../../AbstractFormComponent';
 import { ReactiveFormsModule, UntypedFormArray } from '@angular/forms';
 import { Lab900FormBuilderService } from '../../../services/form-builder.service';
-import { MatError, matFormFieldAnimations } from '@angular/material/form-field';
+import { MatError } from '@angular/material/form-field';
+import { transitionMessages } from '../../../utils/form-field.animations';
 import { FormFieldRepeater } from './repeater-field.model';
 import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -16,7 +17,7 @@ export const DEFAULT_REPEATER_MIN_ROWS = 1;
   selector: 'lab900-repeater-field',
   templateUrl: './repeater-field.component.html',
   styleUrls: ['./repeater-field.component.scss'],
-  animations: [matFormFieldAnimations.transitionMessages],
+  animations: [transitionMessages],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,

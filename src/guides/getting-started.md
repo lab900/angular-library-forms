@@ -7,7 +7,7 @@ This guide explains how to setup your Angular project to begin using Lab900 form
 Install via npm package manager.
 
 ```bash
-npm install --save @lab900/forms @kolkov/angular-editor ngx-mask @ngxmc/datetime-picker ngx-mat-select-search
+npm install --save @lab900/forms @kolkov/angular-editor ngx-mask @ngx-mce/datetime-picker ngx-mat-select-search
 ```
 
 ## How to use
@@ -83,7 +83,7 @@ The lab900-forms mixin expects a [Material theme of config](https://material.ang
 The date-time picker will require the following package to be installed.
 
 ```bash
-npm install --save  @ngxmc/datetime-picker
+npm install --save  @ngx-mce/datetime-picker
 ```
 
 Since v20 the picker uses the Angular Material `DateAdapter`. One Material date adapter now serves both
