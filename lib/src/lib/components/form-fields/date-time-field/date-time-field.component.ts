@@ -6,8 +6,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatButton } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { DateAdapter } from '@angular/material/core';
 import {
-  NgxMatDateAdapter,
   NgxMatDatepickerActions,
   NgxMatDatepickerApply,
   NgxMatDatepickerCancel,
@@ -15,7 +15,15 @@ import {
   NgxMatDatepickerToggle,
   NgxMatDatetimepicker,
 } from '@ngxmc/datetime-picker';
-import { NgxMatSingleDateSelectionModel } from '@ngxmc/datetime-picker/lib/date-selection-model';
+
+/**
+ * The picker's internal selection model. Since v20 the picker package uses the Angular Material
+ * `DateAdapter` and no longer exports the model type, so only the members used here are declared.
+ */
+interface PickerSelectionModel {
+  readonly selection: unknown;
+  add(date: unknown): void;
+}
 
 @Component({
   selector: 'lab900-date-time-field',
@@ -38,7 +46,7 @@ export class DateTimeFieldComponent extends FormComponent<FormFieldDateTimePicke
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
-  private readonly adapter = inject(NgxMatDateAdapter);
+  private readonly adapter: DateAdapter<unknown> = inject(DateAdapter);
 
   public readonly startView = computed(() => {
     return this._options()?.startView ?? 'month';
@@ -68,7 +76,7 @@ export class DateTimeFieldComponent extends FormComponent<FormFieldDateTimePicke
     /**
      * Prefill the datepicker with the current date if no date is selected
      */
-    const model = (datePicker as any)?._componentRef?.instance?._model as NgxMatSingleDateSelectionModel<any>;
+    const model = (datePicker as any)?._componentRef?.instance?._model as PickerSelectionModel | undefined;
     if (model && model.selection == null) {
       model.add(this.adapter.today());
     }

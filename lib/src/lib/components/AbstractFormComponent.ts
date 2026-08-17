@@ -52,12 +52,12 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   }
 
   public readonly controlValue = rxResource({
-    request: () => this._fieldControl(),
-    loader: ({ request }) => {
-      if (request) {
+    params: () => this._fieldControl(),
+    stream: ({ params }) => {
+      if (params) {
         return concat(
-          defer(() => of(request.getRawValue)),
-          request.valueChanges.pipe(map(() => request.getRawValue()))
+          defer(() => of(params.getRawValue)),
+          params.valueChanges.pipe(map(() => params.getRawValue()))
         );
       }
       return of(null);
@@ -65,12 +65,12 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   }).value;
 
   public readonly controlValid = rxResource({
-    request: () => this._fieldControl(),
-    loader: ({ request }) => {
-      if (request) {
+    params: () => this._fieldControl(),
+    stream: ({ params }) => {
+      if (params) {
         return concat(
-          defer(() => of(request.valid)),
-          request.statusChanges.pipe(map(status => status === 'VALID'))
+          defer(() => of(params.valid)),
+          params.statusChanges.pipe(map(status => status === 'VALID'))
         );
       }
       return of(null);
@@ -78,12 +78,12 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   }).value;
 
   public readonly groupValue = rxResource({
-    request: () => this._group(),
-    loader: ({ request }) => {
-      if (request) {
+    params: () => this._group(),
+    stream: ({ params }) => {
+      if (params) {
         return concat(
-          defer(() => of(request.getRawValue)),
-          request.valueChanges.pipe(map(() => request.getRawValue()))
+          defer(() => of(params.getRawValue)),
+          params.valueChanges.pipe(map(() => params.getRawValue()))
         );
       }
       return of(null);

@@ -2,6 +2,11 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/lib",
+    // Temporary. @ngxmc/datetime-picker@20.1.0 declares `dateFilter` as `(date: D) => boolean` while its
+    // own `NgxMatDatepickerControl` requires `(date: D | null) => boolean`, which fails the library build
+    // with TS2416. It is the only Angular 20 release of that package. Remove this once the package is
+    // replaced by @ngx-mce/datetime-picker, which declares the signature correctly.
+    "skipLibCheck": true,
     "declarationMap": true,
     "sourceMap": true,
     "declaration": true,

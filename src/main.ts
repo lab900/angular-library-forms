@@ -11,7 +11,6 @@ import { MergingTranslateLoader } from './app/utils/merging-translate-loader';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { provideLab900Forms } from '@lab900/forms';
 import { provideNgxMask } from 'ngx-mask';
-import { provideNgxMatNativeDate } from '@ngxmc/datetime-picker';
 
 if (environment.production) {
   enableProdMode();
@@ -33,7 +32,6 @@ bootstrapApplication(AppComponent, {
     ]),
     provideNgxMask(),
     provideNativeDateAdapter(),
-    provideNgxMatNativeDate(),
     provideLab900Forms({
       formField: {
         appearance: 'fill',

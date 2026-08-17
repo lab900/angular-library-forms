@@ -18,14 +18,12 @@ Add the `provideLab900Forms` app config.
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {provideLab900Forms} from '@lab900/forms';
 import {provideNgxMask} from 'ngx-mask';
-import { provideNgxMatNativeDate } from '@ngxmc/datetime-picker';
 
 bootstrapApplication(AppComponent, {
     providers: [
         ...
         provideNgxMask(), // needed for the input masks
-        provideNativeDateAdapter(), // optional for the date pickers (see below)
-        provideNgxMatNativeDate(), // optional for the date time pickers (see below)
+        provideNativeDateAdapter(), // optional for the date and date-time pickers (see below)
         provideLab900Forms({
             formField: {
                 appearance: 'fill',
@@ -88,12 +86,15 @@ The date-time picker will require the following package to be installed.
 npm install --save  @ngxmc/datetime-picker
 ```
 
+Since v20 the picker uses the Angular Material `DateAdapter`. One Material date adapter now serves both
+the date picker and the date-time picker.
+
 ### Native dates
 
 Add this before providing the `provideLab900Forms`.
 
 ```ts
-provideNativeDateAdapter(), provideNgxMatNativeDate();
+provideNativeDateAdapter();
 ```
 
 ### Moment dates
@@ -101,19 +102,16 @@ provideNativeDateAdapter(), provideNgxMatNativeDate();
 Install the following packages.
 
 ```bash
-npm install moment @angular/material-moment-adapter @ngxmc/moment-adapter --save
-
+npm install moment @angular/material-moment-adapter --save
 ```
 
-Add the imports before importing the `Lab900FormsModule.forRoot()`.
+Add this before providing the `provideLab900Forms`.
 
 ```ts
-provideMomentDateAdapter(), provideNgxMatMomentDate();
+provideMomentDateAdapter();
 ```
 
 ### Luxon dates
-
-**Unfortionally, a Luxon date adapter is not available for the dateTime picker.**
 
 ```bash
 npm install luxon @angular/material-luxon-adapter --save

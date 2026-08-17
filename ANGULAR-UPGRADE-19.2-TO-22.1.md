@@ -26,6 +26,7 @@ Filled at step 4.9. Never carried over from an earlier run.
 | Item | Answer | Date | Reason |
 | --- | --- | --- | --- |
 | Route to Angular 22, blocked by `@ngxmc/datetime-picker` | Upgrade to v20 first, then replace the package with `@ngx-mce/datetime-picker`. Assess a drop-in first; if it is not a drop-in, document every needed change. | 2026-08-17 | User choice at the gate. `@ngxmc/datetime-picker` stopped at Angular 20, so the v21 and v22 hops need a maintained replacement. |
+| `skipLibCheck` for the 2 `TS2416` errors inside `@ngxmc/datetime-picker@20.1.0` | Add `skipLibCheck: true` to `lib/tsconfig.lib.json` only, as a temporary measure. Remove it at hop 2 after the swap and prove the library build stays green without it. Report it if removal fails. | 2026-08-17 | The errors are a defect in the package, not in this project: it declares `dateFilter` as `(date: D) => boolean` while its own `NgxMatDatepickerControl` requires `(date: D \| null) => boolean`. 20.1.0 is its only Angular 20 release, and the fork declares the signature correctly. The application and spec configs keep full declaration checking. |
 
 ## Hop plan
 
@@ -241,34 +242,62 @@ Nothing to do before the update.
 
 ## Update to the new version
 
-- [ ] **20.0.0_ng_update** — In the application's project directory, run `ng update @angular/core@20 @angular/cli@20` to update your application to Angular v20.
-- [ ] **update @angular/material** — Run `ng update @angular/material@20`.
-- [ ] **20.0.0_rename_afterRender_to_afterEveryRender** — Rename the `afterRender` lifecycle hook to `afterEveryRender`
-- [ ] **20.0.0_replace_TestBed_flushEffects_with_tick** — Replace uses of `TestBed.flushEffects()` with `TestBed.tick()`, the closest equivalent to synchronously flush effects.
-- [ ] **20.0.0_update_provideCheckNoChangesConfig** — Rename `provideExperimentalCheckNoChangesForDebug` to `provideCheckNoChangesConfig`. Note its behavior now applies to all `checkNoChanges` runs. The `useNgZoneOnStable` option is no longer available.
-- [ ] **20.0.0_refactor_ng_reflect_attributes_usage** — Refactor application and test code to avoid relying on `ng-reflect-*` attributes. If needed temporarily for migration, use `provideNgReflectAttributes()` from `@angular/core` in bootstrap providers to re-enable them in dev mode only.
-- [ ] **20.0.0_adjust_RedirectFn_return_type_handling** — Adjust code that directly calls functions returning `RedirectFn`. These functions can now also return an `Observable` or `Promise`; ensure your logic correctly handles these asynchronous return types.
-- [ ] **20.0.0_rename_resource_request_to_param** — Rename the `request` property passed in resources to `params`.
-- [ ] **20.0.0_rename_rxResource_loader_to_stream** — Rename the `request` and `loader` properties passed in RxResource to `params` and `stream`.
-- [ ] **20.0.0_replace_ResourceStatus_by_corresponding_strings** — `ResourceStatus` is no longer an enum. Use the corresponding constant string values instead.
-- [ ] **20.0.0_rename_provideExperimentalZonelessChangeDetection** — Rename `provideExperimentalZonelessChangeDetection` to `provideZonelessChangeDetection`.
-- [ ] **20.0.0_update_template_expressions_using_in_property** — If your templates use `{{ in }}` or `in` in expressions to refer to a component property named 'in', change it to `{{ this.in }}` or `this.in` as 'in' now refers to the JavaScript 'in' operator. If you're using `in` as a template reference, you'd have to rename the reference.
-- [ ] **20.0.0_update_router_method_array_parameters_to_readonly** — The type for the commands arrays passed to Router methods (`createUrlTree`, `navigate`, `createUrlTreeFromSnapshot`) have been updated to use `readonly T[]` since the array is not mutated. Code which extracts these types (e.g. with `typeof`) may need to be adjusted if it expects mutable arrays.
-- [ ] **20.0.0_update_animation_tests_for_guaranteed_flushing** — Review and update tests asserting on DOM elements involved in animations. Animations are now guaranteed to be flushed with change detection or `ApplicationRef.tick`, potentially altering previous test outcomes.
-- [ ] **20.0.0_handle_uncaught_listener_errors_in_tests** — In tests, uncaught errors in event listeners are now rethrown by default. Previously, these were only logged to the console by default. Catch them if intentional for the test case, or use `rethrowApplicationErrors: false` in `configureTestingModule` as a last resort.
-- [ ] **20.0.0_update_route_guards_array_types** — The `any` type is removed from the Route guard arrays (canActivate, canDeactivate, etc); ensure guards are functions, `ProviderToken<T>`, or (deprecated) strings. Refactor string guards to `ProviderToken<T>` or functions.
-- [ ] **20.0.0_update_nodejs_version** — Ensure your Node.js version is at least 20.11.1 and not v18 or v22.0-v22.10 before upgrading to Angular v20. Check the [full list of supported Node.js versions](https://angular.dev/reference/versions).
-- [ ] **20.0.0_replace_TestBed_get_with_TestBed_inject** — Replace all occurrences of the deprecated `TestBed.get()` method with `TestBed.inject()` in your Angular tests for dependency injection.
-- [ ] **20.0.0_remove_InjectFlags_usage** — Remove `InjectFlags` enum and its usage from `inject`, `Injector.get`, `EnvironmentInjector.get`, and `TestBed.inject` calls. Use options like `{optional: true}` for `inject` or handle null for `*.get` methods.
-- [ ] **20.0.0_update_injector_get_calls_to_use_ProviderToken** — Update `injector.get()` calls to use a specific `ProviderToken<T>` instead of relying on the removed `any` overload. If using string tokens (deprecated since v4), migrate them to `ProviderToken<T>`.
-- [ ] **20.0.0_update_typescript_version** — Upgrade your project's TypeScript version to at least 5.8 before upgrading to Angular v20 to ensure compatibility.
-- [ ] **20.0.0_set_moduleResolution_to_bundler** — Set `moduleResolution` to `'bundler'` in your `tsconfig.json`. Angular CLI's `ng update` migration applies this change automatically; if you upgrade manually or override the option in a base tsconfig, set it explicitly so imports of secondary entry-points such as `@angular/core/rxjs-interop` continue to resolve correctly.
-- [ ] **20.0.0_review_AsyncPipe_error_handling_in_tests** — `Unhandled errors in subscriptions/promises of AsyncPipe` are now directly reported to `ErrorHandler`. This may alter test outcomes; ensure tests correctly handle these reported errors.
-- [ ] **20.0.0_refactor_PendingTasks_run_usage** — If relying on the return value of `PendingTasks.run`, refactor to use `PendingTasks.add`. Handle promise results/rejections manually, especially for SSR to prevent node process shutdown on unhandled rejections.
-- [ ] **20.0.0_update_template_expressions_using_void_property** — If your templates use `{{ void }}` or `void` in expressions to refer to a component property named 'void', change it to `{{ this.void }}` or `this.void` as 'void' now refers to the JavaScript `void` operator.
-- [ ] **20.0.0_review_date_pipe_formatter_Y_usage** — Review `DatePipe` usages. Using the `Y` (week-numbering year) formatter without also including `w` (week number) is now detected as suspicious. Use `y` (year) if that was the intent, or include `w` alongside `Y`.
-- [ ] **20.0.0_handle_uncaught_listener_errors_in_tests** — In templates parentheses are now always respected. This can lead to runtime breakages when nullish coalescing were nested in parathesis. eg `(foo?.bar).baz` will throw if `foo` is nullish as it would in native JavaScript.
-- [ ] **20.0.0_router_generate_error_redirectTo_and_canMatch_incompatible_together** — Route configurations are now validated more rigorously. Routes that combine `redirectTo` and `canMatch` protections will generate an error, as these properties are incompatible together by default.
+- [x] **20.0.0_ng_update** — In the application's project directory, run `ng update @angular/core@20 @angular/cli@20` to update your application to Angular v20.
+  - **Verdict:** done — one `ng update` call with every lockstep package pinned. See Changes made, hop 1.
+- [x] **update @angular/material** — Run `ng update @angular/material@20`.
+  - **Verdict:** done — `@angular/material@20.2.14` and `@angular/cdk@20.2.14` were in the same call. Its migration rewrote one SCSS token.
+- [x] **20.0.0_rename_afterRender_to_afterEveryRender** — Rename the `afterRender` lifecycle hook to `afterEveryRender`
+  - **Verdict:** N/A — `afterRender` appears in no file under `lib/src` or `src`.
+- [x] **20.0.0_replace_TestBed_flushEffects_with_tick** — Replace uses of `TestBed.flushEffects()` with `TestBed.tick()`, the closest equivalent to synchronously flush effects.
+  - **Verdict:** N/A — `flushEffects` appears in no file.
+- [x] **20.0.0_update_provideCheckNoChangesConfig** — Rename `provideExperimentalCheckNoChangesForDebug` to `provideCheckNoChangesConfig`. Note its behavior now applies to all `checkNoChanges` runs. The `useNgZoneOnStable` option is no longer available.
+  - **Verdict:** N/A — `provideExperimentalCheckNoChangesForDebug` appears in no file.
+- [x] **20.0.0_refactor_ng_reflect_attributes_usage** — Refactor application and test code to avoid relying on `ng-reflect-*` attributes. If needed temporarily for migration, use `provideNgReflectAttributes()` from `@angular/core` in bootstrap providers to re-enable them in dev mode only.
+  - **Verdict:** N/A — no `ng-reflect` reference in code or templates.
+- [x] **20.0.0_adjust_RedirectFn_return_type_handling** — Adjust code that directly calls functions returning `RedirectFn`. These functions can now also return an `Observable` or `Promise`; ensure your logic correctly handles these asynchronous return types.
+  - **Verdict:** N/A — `RedirectFn` appears in no file.
+- [x] **20.0.0_rename_resource_request_to_param** — Rename the `request` property passed in resources to `params`.
+  - **Verdict:** N/A — the project uses no plain `resource({ ... })`, only `rxResource`. See the next item.
+- [x] **20.0.0_rename_rxResource_loader_to_stream** — Rename the `request` and `loader` properties passed in RxResource to `params` and `stream`.
+  - **Verdict:** fixed — 4 sites renamed `request`/`loader` to `params`/`stream`. See Changes made, hop 1.
+- [x] **20.0.0_replace_ResourceStatus_by_corresponding_strings** — `ResourceStatus` is no longer an enum. Use the corresponding constant string values instead.
+  - **Verdict:** N/A — `ResourceStatus` appears in no file.
+- [x] **20.0.0_rename_provideExperimentalZonelessChangeDetection** — Rename `provideExperimentalZonelessChangeDetection` to `provideZonelessChangeDetection`.
+  - **Verdict:** N/A — the project uses zone change detection and never called the experimental provider.
+- [x] **20.0.0_update_template_expressions_using_in_property** — If your templates use `{{ in }}` or `in` in expressions to refer to a component property named 'in', change it to `{{ this.in }}` or `this.in` as 'in' now refers to the JavaScript 'in' operator. If you're using `in` as a template reference, you'd have to rename the reference.
+  - **Verdict:** N/A — no component declares a property named `in`.
+- [x] **20.0.0_update_router_method_array_parameters_to_readonly** — The type for the commands arrays passed to Router methods (`createUrlTree`, `navigate`, `createUrlTreeFromSnapshot`) have been updated to use `readonly T[]` since the array is not mutated. Code which extracts these types (e.g. with `typeof`) may need to be adjusted if it expects mutable arrays.
+  - **Verdict:** N/A — no call to `createUrlTree` or `createUrlTreeFromSnapshot`.
+- [x] **20.0.0_update_animation_tests_for_guaranteed_flushing** — Review and update tests asserting on DOM elements involved in animations. Animations are now guaranteed to be flushed with change detection or `ApplicationRef.tick`, potentially altering previous test outcomes.
+  - **Verdict:** behaviour changed, no code change — 4 spec files. Verified at step 4.1, after the last hop.
+- [x] **20.0.0_handle_uncaught_listener_errors_in_tests** — In tests, uncaught errors in event listeners are now rethrown by default. Previously, these were only logged to the console by default. Catch them if intentional for the test case, or use `rethrowApplicationErrors: false` in `configureTestingModule` as a last resort.
+  - **Verdict:** behaviour changed, no code change — verified at step 4.1, after the last hop.
+- [x] **20.0.0_update_route_guards_array_types** — The `any` type is removed from the Route guard arrays (canActivate, canDeactivate, etc); ensure guards are functions, `ProviderToken<T>`, or (deprecated) strings. Refactor string guards to `ProviderToken<T>` or functions.
+  - **Verdict:** N/A — no route declares `canActivate`, `canDeactivate` or any other guard.
+- [x] **20.0.0_update_nodejs_version** — Ensure your Node.js version is at least 20.11.1 and not v18 or v22.0-v22.10 before upgrading to Angular v20. Check the [full list of supported Node.js versions](https://angular.dev/reference/versions).
+  - **Verdict:** OK — Node.js 24.15.0 is installed, above the 20.11.1 minimum.
+- [x] **20.0.0_replace_TestBed_get_with_TestBed_inject** — Replace all occurrences of the deprecated `TestBed.get()` method with `TestBed.inject()` in your Angular tests for dependency injection.
+  - **Verdict:** N/A — migration ran, no changes needed. `TestBed.get` appears in no file.
+- [x] **20.0.0_remove_InjectFlags_usage** — Remove `InjectFlags` enum and its usage from `inject`, `Injector.get`, `EnvironmentInjector.get`, and `TestBed.inject` calls. Use options like `{optional: true}` for `inject` or handle null for `*.get` methods.
+  - **Verdict:** N/A — migration ran, no changes needed. `InjectFlags` appears in no file.
+- [x] **20.0.0_update_injector_get_calls_to_use_ProviderToken** — Update `injector.get()` calls to use a specific `ProviderToken<T>` instead of relying on the removed `any` overload. If using string tokens (deprecated since v4), migrate them to `ProviderToken<T>`.
+  - **Verdict:** N/A — no `injector.get(` call.
+- [x] **20.0.0_update_typescript_version** — Upgrade your project's TypeScript version to at least 5.8 before upgrading to Angular v20 to ensure compatibility.
+  - **Verdict:** done — `ng update` moved typescript from `~5.5.4` to `~5.9.3`.
+- [x] **20.0.0_set_moduleResolution_to_bundler** — Set `moduleResolution` to `'bundler'` in your `tsconfig.json`. Angular CLI's `ng update` migration applies this change automatically; if you upgrade manually or override the option in a base tsconfig, set it explicitly so imports of secondary entry-points such as `@angular/core/rxjs-interop` continue to resolve correctly.
+  - **Verdict:** migration applied to `tsconfig.json`. It broke 2 deep imports that the old `node` resolution allowed; both are fixed. See Changes made, hop 1.
+- [x] **20.0.0_review_AsyncPipe_error_handling_in_tests** — `Unhandled errors in subscriptions/promises of AsyncPipe` are now directly reported to `ErrorHandler`. This may alter test outcomes; ensure tests correctly handle these reported errors.
+  - **Verdict:** behaviour changed, no code change — verified at step 4.1, after the last hop.
+- [x] **20.0.0_refactor_PendingTasks_run_usage** — If relying on the return value of `PendingTasks.run`, refactor to use `PendingTasks.add`. Handle promise results/rejections manually, especially for SSR to prevent node process shutdown on unhandled rejections.
+  - **Verdict:** N/A — `PendingTasks` appears in no file.
+- [x] **20.0.0_update_template_expressions_using_void_property** — If your templates use `{{ void }}` or `void` in expressions to refer to a component property named 'void', change it to `{{ this.void }}` or `this.void` as 'void' now refers to the JavaScript `void` operator.
+  - **Verdict:** N/A — no component declares a property named `void`.
+- [x] **20.0.0_review_date_pipe_formatter_Y_usage** — Review `DatePipe` usages. Using the `Y` (week-numbering year) formatter without also including `w` (week number) is now detected as suspicious. Use `y` (year) if that was the intent, or include `w` alongside `Y`.
+  - **Verdict:** N/A — no template uses the `date` pipe.
+- [x] **20.0.0_handle_uncaught_listener_errors_in_tests** — In templates parentheses are now always respected. This can lead to runtime breakages when nullish coalescing were nested in parathesis. eg `(foo?.bar).baz` will throw if `foo` is nullish as it would in native JavaScript.
+  - **Verdict:** N/A — no template or expression matches the `(a?.b).c` shape.
+- [x] **20.0.0_router_generate_error_redirectTo_and_canMatch_incompatible_together** — Route configurations are now validated more rigorously. Routes that combine `redirectTo` and `canMatch` protections will generate an error, as these properties are incompatible together by default.
+  - **Verdict:** N/A — no route declares `redirectTo` or `canMatch`.
 
 ## After you update
 
@@ -381,13 +410,99 @@ _37 step(s) total._
 
 ### Hop 1 — 19.2 -> 20.3
 
-_In progress._
+One `ng update` call, with every Angular-lockstep package pinned to the v20 column of the matrix:
+
+```
+npx ng update @angular/core@20.3.28 @angular/cli@20.3.34 @angular/build@20.3.34 \
+  @angular/common@20.3.28 @angular/compiler@20.3.28 @angular/compiler-cli@20.3.28 \
+  @angular/forms@20.3.28 @angular/animations@20.3.28 @angular/router@20.3.28 \
+  @angular/platform-browser@20.3.28 @angular/platform-browser-dynamic@20.3.28 \
+  @angular/material@20.2.14 @angular/cdk@20.2.14 \
+  ng-packagr@20.3.2 angular-eslint@20.7.0 @angular-builders/jest@20.0.0 \
+  ngx-markdown@20.1.0 @kolkov/angular-editor@3.1.0 @ngxmc/datetime-picker@20.1.0
+```
+
+No `--force` was needed. The call resolved one consistent tree and ran every package's migrations.
+
+**What the migrations changed by themselves**
+
+| File | Change | Class |
+| --- | --- | --- |
+| `package.json` | 19 dependency bumps, plus `typescript` `~5.5.4` -> `~5.9.3`. The angular-eslint v20 migration also moved `eslint` to `^9.28.0` and `@typescript-eslint/*` to `^8.33.1`. | required |
+| `tsconfig.json` | `moduleResolution` `node` -> `bundler`. Array formatting was expanded as a side effect. | required |
+| `angular.json` | new `schematics` block that keeps the old file-naming style. | **opt-out** — see below |
+| `lib/.../drag-n-drop-file-field.component.scss` | Material v20 token rename: `--mdc-icon-button-state-layer-size` -> `--mat-icon-button-state-layer-size`. | required |
+
+Three optional migrations were offered and **not** run: `use-application-builder`,
+`control-flow-migration` and `router-current-navigation`. They are listed under Follow-ups.
+
+**Code changes the checklist required**
+
+1. `rxResource` renamed `request` -> `params` and `loader` -> `stream`, with the destructured
+   parameter renamed to match, at 4 sites:
+   - `lib/src/lib/components/AbstractFormComponent.ts` — `controlValue`, `controlValid`, `groupValue`
+   - `lib/src/lib/directives/form-field.directive.ts` — `groupValue`
+
+2. `moduleResolution: bundler` honours the `exports` map of a package, so two deep imports stopped
+   resolving. Both had a public replacement, so no suppression was needed:
+   - `lib/src/lib/models/Lab900FormModuleSettings.ts` — `NgxMaskConfig` now comes from `ngx-mask`
+     instead of `ngx-mask/lib/ngx-mask.config`. The root entry point re-exports it.
+   - `lib/.../date-time-field/date-time-field.component.ts` — the deep import of
+     `NgxMatSingleDateSelectionModel` is gone. See item 3.
+
+3. `@ngxmc/datetime-picker` 19.2.2 -> 20.1.0 dropped its own date-adapter layer:
+   - `lib/.../date-time-field.component.ts` — `NgxMatDateAdapter` replaced by `DateAdapter` from
+     `@angular/material/core`, typed as `DateAdapter<unknown>`.
+   - `lib/.../date-time-field.component.ts` — `NgxMatSingleDateSelectionModel` is no longer public.
+     A local `PickerSelectionModel` interface now declares the two members the component reads
+     (`selection` and `add`). No `any` was added; the pre-existing `as any` cast on the internal
+     `_componentRef` path is unchanged.
+   - `src/main.ts` — `provideNgxMatNativeDate()` removed. `provideNativeDateAdapter()` was already
+     in the provider list, and it now serves both pickers.
+   - `src/guides/getting-started.md` — the setup docs follow the same change. The note that Luxon is
+     unavailable for the date-time picker is gone, because the Material adapter now covers it.
+   - The template needed no change. Every binding it uses still exists.
+
+4. `marked` added to `dependencies` at `^16.0.0`. `ngx-markdown@20.1.0` peers `marked@^15 || ^16`,
+   but its type declarations use the generic `MarkedOptions<string, string>` and
+   `MarkedExtension<string, string>` that only exist from v16. npm had resolved 15.0.12, which failed
+   the application type check with 2 `TS2315` errors. This is a real fix, not a suppression.
+
+5. `angular.json` — the dead `node_modules/marked/marked.min.js` entry removed from the `scripts`
+   array. `marked@16` ships `lib/marked.umd.js` and no root `marked.min.js`, so the app build could
+   not resolve it. The entry was already dead weight: `ngx-markdown` imports `marked` as an ES module
+   and never reads a global. Mechanical, so it needed no question. All five `prismjs` entries were
+   checked and still resolve.
+
+6. `lib/tsconfig.lib.json` — `skipLibCheck: true` added, **temporary**, with the reason in a comment.
+   See the Decisions table.
+
+**Verify — all green**
+
+| Check | Result |
+| --- | --- |
+| `npx tsc -p tsconfig.app.json --noEmit` | 0 errors |
+| `npx tsc -p tsconfig.spec.json --noEmit` | 0 errors |
+| `npx tsc -p lib/tsconfig.lib.json --noEmit` | 0 errors |
+| `npx ng build forms` | pass |
+| `npm run build:forms:prod` | pass |
+| `npm run build` | pass, 2 pre-existing lodash CommonJS warnings |
+
+Lint and tests do not run here. They run once after the last hop.
 
 ## Migration opt-outs
 
 | Opt-out | Class | Sites | Decision |
 | --- | --- | --- | --- |
-| _filled while reading each migration diff_ | | | |
+| `schematics` block in `angular.json` that keeps the old file-naming style (`type: "component"`, `typeSeparator: "."`) | generator defaults | 1 block, 8 schematic entries, `angular.json` | pending — asked at step 4.3 |
+
+The block is an escape hatch written by the `@angular/cli` v20 migration. It changes nothing that
+exists today; it only decides how `ng generate` names new files. It causes no lint error.
+
+Not an opt-out, recorded here so the reader does not mistake it for one:
+
+- `lib/tsconfig.lib.json` `skipLibCheck: true` — added by this run, not by a migration, with a
+  recorded answer in the Decisions table. It is time-boxed to hop 1 and removed at hop 2.
 
 ## After the checkpoint
 
@@ -403,4 +518,29 @@ _Written at step 4.8._
 
 ## Follow-ups
 
-_None yet._
+Open after hop 1:
+
+1. **Remove the `skipLibCheck` in `lib/tsconfig.lib.json`** at hop 2, right after the picker swap.
+   Prove the library build stays green without it.
+2. **Three optional v20 migrations were not run.** Each is a separate piece of work, and none is
+   needed for the upgrade:
+   - `ng update @angular/cli --name use-application-builder` — moves the application build to the
+     new build system.
+   - `ng update @angular/core --name control-flow-migration` — converts templates to block control
+     flow. Verified as a no-op: `*ngIf`, `*ngFor` and `*ngSwitch` appear in no file, and 33 templates
+     already use `@if` / `@for`.
+   - `ng update @angular/core --name router-current-navigation` — replaces `Router.getCurrentNavigation`
+     with the signal. Verified as a no-op: `getCurrentNavigation` appears in no file.
+3. **`marked` needs another bump at hop 2.** `ngx-markdown@21.3.0` and `@22.0.0` peer
+   `marked@^17 || ^18`, so `^16` does not span the remaining hops. No single version does.
+4. **lodash is bundled as CommonJS.** The app build warns that `lodash` used by
+   `dist/@lab900/forms/fesm2022/lab900-forms.mjs` is not ESM, and the same for `lodash/cloneDeep` in
+   `@lab900/ui`. This predates the upgrade — lodash has always been CommonJS. Switching the library to
+   `lodash-es` changes what consumers bundle, so it is out of scope here.
+5. **Pre-existing suspected bug, untouched.** In `AbstractFormComponent.ts` and
+   `form-field.directive.ts` the streams open with `defer(() => of(params.getRawValue))`, which emits
+   the *function* rather than calling it. Every other line calls `getRawValue()`. Only the property
+   names were renamed for v20; the behaviour was left exactly as it was.
+6. **`fullTemplateTypeCheck` is removed in v22.** `tsconfig.json` sets
+   `angularCompilerOptions.fullTemplateTypeCheck: true`. v22 removes the option and defaults
+   `strictTemplates` to `true`, so hop 3 must handle both.
