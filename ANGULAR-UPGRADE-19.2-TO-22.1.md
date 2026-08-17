@@ -933,7 +933,58 @@ _Written at step 4.8._
 
 ## Impact on the published library
 
-`@lab900/forms` is published from `lib/`. Filled as the hops land.
+`@lab900/forms` is published from `lib/`. Everything a consumer sees is listed here.
+
+### Peer ranges (step 4.5)
+
+Each author's operator was kept. A peer whose major did not move was left alone.
+
+| Peer | Before | After | Why |
+| --- | --- | --- | --- |
+| `@angular/animations` | *(not declared)* | `">=22.0.0"` | **New peer.** The library now imports `trigger`, `state`, `style`, `transition` and `animate` directly, in `utils/form-field.animations.ts`. See the note below. |
+| `@angular/common` | `">=19.0.0"` | `">=22.0.0"` | major moved |
+| `@angular/core` | `">=19.0.0"` | `">=22.0.0"` | major moved |
+| `@angular/material` | `">=19.0.0"` | `">=22.0.0"` | major moved |
+| `@angular/forms` | `">=19.0.0"` | `">=22.0.0"` | major moved |
+| `@kolkov/angular-editor` | `"3.0.0-beta.0"` | `"3.1.0"` | pinned to the installed release, leaving the prerelease behind |
+| `ngx-mat-select-search` | `"^8.0.0"` | `"^9.0.0"` | major moved |
+| `@ngx-mce/datetime-picker` | `"~19.2.2"` (as `@ngxmc/…`) | `"~22.2.3"` | **package replaced**, see below |
+| `@ngx-translate/core` | `">=16.0.4"` | unchanged | still 16.0.4 |
+| `@lab900/ui` | `">=19.0.1"` | unchanged | still 19.2.3, major did not move |
+| `ngx-mask` | `"^19.0.6"` | unchanged | still 19.0.7, major did not move |
+
+**About the new `@angular/animations` peer.** The runtime requirement is not new. Three components have
+always used a `[@transitionMessages]` trigger, which has always needed the Angular animation engine and
+therefore `provideAnimations()` in the consuming application. What changed is that Angular Material
+removed `matFormFieldAnimations` in v21, so the trigger definition moved into this library and the
+`@angular/animations` import became direct instead of transitive. Declaring the peer states a
+requirement that was previously implicit. Follow-up 7 covers dropping it in favour of CSS.
+
+### The date-time picker was replaced
+
+Consumers must change their own dependency and their setup:
+
+| | Before | After |
+| --- | --- | --- |
+| Package | `@ngxmc/datetime-picker@~19.2.2` | `@ngx-mce/datetime-picker@~22.2.3` |
+| Date adapter | `provideNgxMatNativeDate()` from the picker | `provideNativeDateAdapter()` from `@angular/material/core` |
+
+`@ngxmc/datetime-picker` stopped at Angular 20. `@ngx-mce/datetime-picker` is the maintained fork of the
+same upstream project, with an identical public API. `src/guides/getting-started.md` is updated.
+
+### Behaviour and API changes a consumer sees
+
+| Change | Effect |
+| --- | --- |
+| Components are `ChangeDetectionStrategy.Eager` | explicit now, but the same behaviour as before v22. A consumer sees no change. |
+| `strictTemplates` is on for the library build | affects this library's own build, not a consumer's. |
+| `AuthImageDirective.httpCallback` | widened to `Observable<Blob \| ArrayBuffer>`. Existing callbacks still fit. |
+| `MatRangeSliderFieldComponent.formatValue` | widened to accept `number \| undefined`, and returns `''` instead of the string `"undefined"`. |
+| `AmountInputDirective`, `SearchInputDirective` | new `onInputEvent` / `onFocusEvent` / `onBlurEvent` / `onPasteEvent` host handlers. The existing public methods keep their signatures. |
+| `select-field` custom trigger callback | still receives `null`, not `undefined`, when there is no control. Made explicit rather than left to a migration shim. |
+| `file-preview-field` file input | `accept` is now `''` when unset, instead of a stringified nullish value. |
+| Empty icons no longer render | `button-toggle-field` skipped an icon element when a button option had none. |
+| `form-row`, `form-column`, `search-field` | render nothing when their required group or options are missing, instead of rendering a broken field. |
 
 ## Follow-ups
 
