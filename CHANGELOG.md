@@ -11,6 +11,8 @@ Upgrade to Angular 22. The version now follows the Angular major, so it jumps fr
 
 **`@angular/animations` is no longer needed.** The checkbox, drag-and-drop and repeater fields animate their error/hint message. That used to need the Angular animation engine, and therefore `provideAnimations()` in your application. The animation is now plain CSS, at the same timings, so you can drop `provideAnimations()` if this library was your only reason for it. This removes a requirement, so it breaks nothing.
 
+**Breaking: `@lab900/ui` must be `>=22.0.0`.** Version 19.x is compiled for Angular 19 and calls a template instruction that Angular 22 removed. On Angular 22 it throws `TypeError: (void 0) is not a function` on every change detection run, in its `alert`, `nav-item`, `tab` and `table` components. Nothing catches this at build time. Run `npm install @lab900/ui@^22.0.0`.
+
 **Breaking: two other peers moved.** `ngx-mat-select-search` to `^9.0.0` and `@kolkov/angular-editor` to `3.1.0`.
 
 - Feat: `AuthImageDirective.httpCallback` accepts a callback returning `Observable<Blob | ArrayBuffer>`, not only `Observable<Blob>`. An `arraybuffer` request now type-checks.

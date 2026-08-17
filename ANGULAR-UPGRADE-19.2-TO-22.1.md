@@ -35,7 +35,7 @@ files. They are warnings, not errors, and are under Follow-ups.
 
 ### Final dependency table
 
-Changed entries only. 30 of them.
+Changed entries only. 31 of them.
 
 | Package | Before | Now | Installed |
 | --- | --- | --- | --- |
@@ -54,6 +54,7 @@ Changed entries only. 30 of them.
 | `@angular/platform-browser-dynamic` | `^19.2.1` | `^22.1.2` | 22.1.2 |
 | `@angular/router` | `^19.2.1` | `^22.1.2` | 22.1.2 |
 | `@kolkov/angular-editor` | `^3.0.0-beta.2` | `^3.1.0` | 3.1.0 |
+| `@lab900/ui` | `^19.0.0` | `^22.0.0` | 22.0.0 — bumped after the upgrade, see Follow-up 17 |
 | `@ngx-mce/datetime-picker` | *(absent)* | `~22.2.3` | 22.2.3 |
 | `@ngxmc/datetime-picker` | `~19.2.2` | **removed** | — |
 | `@typescript-eslint/eslint-plugin` | `^8.26.0` | `^8.58.0` | 8.67.0 |
@@ -142,7 +143,7 @@ After the picker swap the only blocker is gone, so 21 and 22 become reachable.
 | @angular/router | ^19.2.1 | 19.2.14 | 20.3.28 | 21.2.20 | 22.1.2 | BUMP |
 | @eslint/js | ^9.8.0 | 9.35.0 | n/a | n/a | n/a | OK |
 | @kolkov/angular-editor | ^3.0.0-beta.2 | 3.0.0-beta.2 | 3.1.0 | 3.1.0 | 3.1.0 | BUMP |
-| @lab900/ui | ^19.0.0 | 19.2.3 | 19.2.3 | 19.2.3 | 19.2.3 | OK |
+| @lab900/ui | ^19.0.0 | 19.2.3 | 19.2.3 | 19.2.3 | 19.2.3 | ~~OK~~ **wrong — see Follow-up 17** |
 | @ngx-translate/core | ^16.0.4 | 16.0.4 | 16.0.4 | 16.0.4 | 16.0.4 | OK |
 | @ngxmc/datetime-picker | ~19.2.2 | 19.2.2 | 20.1.0 | — | — | **BLOCKER — replaced** |
 | @types/eslint__js | ^8.42.3 | 8.42.3 | n/a | n/a | n/a | OK |
@@ -1123,7 +1124,7 @@ Each author's operator was kept. A peer whose major did not move was left alone.
 | `ngx-mat-select-search` | `"^8.0.0"` | `"^9.0.0"` | major moved |
 | `@ngx-mce/datetime-picker` | `"~19.2.2"` (as `@ngxmc/…`) | `"~22.2.3"` | **package replaced**, see below |
 | `@ngx-translate/core` | `">=16.0.4"` | unchanged | still 16.0.4 |
-| `@lab900/ui` | `">=19.0.1"` | unchanged | still 19.2.3, major did not move |
+| `@lab900/ui` | `">=19.0.1"` | `">=22.0.0"` | **Breaking.** 19.x is compiled for Angular 19 and crashes at runtime on Angular 22. See Follow-up 17. |
 | `ngx-mask` | `"^19.0.6"` | unchanged | still 19.0.7, major did not move |
 
 **About the `@angular/animations` peer.** Hop 3 added it. Angular Material removed
@@ -1274,3 +1275,37 @@ Smaller items:
     `lib/src/lib/components/form-fields/icon-field/icon-field.component.scss`. Neither was touched by
     this upgrade, and prettier was already at 3.6.2 before it, so this drift predates the work. Only the
     files this upgrade edited were formatted.
+
+Found after the upgrade:
+
+17. ~~**`@lab900/ui@19.2.3` crashes at runtime on Angular 22.**~~ Fixed after the upgrade, by moving to
+    `@lab900/ui@22.0.0`.
+
+    **What it looked like.** Every showcase page logged `ERROR TypeError: (void 0) is not a function`,
+    three times per page. Angular's `ErrorHandler` printed it with no useful stack, so it was easy to
+    read as noise. It was not noise: the nav items in the sidebar were silently losing their
+    `nav-item--depth-N` class on every change detection run.
+
+    **Root cause.** `@lab900/ui@19.2.3` is compiled for Angular 19. Its templates call the compiler
+    instruction `ɵɵclassMapInterpolate1`, which `@angular/core@22` no longer exports, so the call
+    resolves to `undefined`. It is used 4 times, in the `alert`, `nav-item`, `tab` and `table`
+    components. The same package also calls `ɵɵpropertyInterpolate` once, which v22 also dropped.
+
+    **Why the dependency check missed it.** The hop table above marked `@lab900/ui` **OK** at every hop,
+    because the check asked whether the declared range still resolved. `^19.0.0` resolves fine on
+    Angular 22. It never asked whether the resolved build was *compiled* for the target Angular. A
+    package whose peers say `@angular/core: ">=19.0.0"` claims compatibility it cannot have, because
+    Angular's private instruction set is not stable across majors. **The lesson: for a package that
+    ships compiled Angular templates, a satisfied peer range proves nothing. Only a runtime check
+    does.** Nothing in the type check, the builds or the tests catches this — it only appears in a
+    browser.
+
+    **The fix.** `@lab900/ui@22.0.0` was published and peers `@angular/core: ">=22.0.0"`. Bumped the
+    dependency to `^22.0.0` and the `lib/package.json` peer to `">=22.0.0"`. The old range
+    `">=19.0.1"` allowed a combination that is known broken, so narrowing it is correct even though it
+    breaks consumers still on `@lab900/ui@19`. The upgraded package uses neither removed instruction.
+
+    **Verified.** Library build, app build and `ng test` (32 tests) pass. In the browser the console is
+    clean on the home page and on all 16 showcase routes, and the nav items now render their
+    `nav-item--depth-N` class. One unrelated error remains on the file-upload example: a `400` from a
+    dead LinkedIn image URL in the demo data.
