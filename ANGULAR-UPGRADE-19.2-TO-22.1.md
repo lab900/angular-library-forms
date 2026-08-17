@@ -927,6 +927,41 @@ and does not depend on a shim Angular intends to remove.
 3 builds pass, 32 tests pass. Lint is down to 20 problems — the 19 + 1 from the kept `Eager` opt-out and
 one pre-existing unused-`eslint-disable` warning. Prettier was run on the 3 files it flagged afterwards.
 
+### `chore: update the library peer ranges for v22`
+
+Step 4.5. `ng update` never touches these. The table is under "Impact on the published library", including
+the new `@angular/animations` peer and why it is not a new runtime requirement. The published
+`dist/@lab900/forms/package.json` was read back after the build to confirm the ranges shipped.
+
+### `chore: set the version to 22.0.0 and declare typescript-eslint`
+
+**Version fields (step 4.6).** Both `package.json` files were `19.1.40`, and the Angular major installed
+before the upgrade was 19. Equal majors mean the project follows the Angular version, so both are now
+`22.0.0`. `lib` is not an npm workspace entry — ng-packagr builds it — so only the root version appears in
+`package-lock.json`, and it agrees after the reinstall. The published
+`dist/@lab900/forms/package.json` was checked and reads `22.0.0`.
+
+**A latent break the version bump exposed.** Editing `package.json` forced npm to re-resolve, and the
+install failed:
+
+```
+npm error While resolving: typescript-eslint@8.43.0
+npm error Found: typescript@6.0.3
+npm error Could not resolve dependency:
+npm error peer typescript@">=4.8.4 <6.0.0" from typescript-eslint@8.43.0
+```
+
+This is the TypeScript peer conflict the gate predicted, in a package the gate could not see.
+`eslint.config.js` does `require('typescript-eslint')`, the **meta** package, but the project never
+declared it — it was merely hoisted out of `angular-eslint` and pinned at 8.43.0, which rejects
+TypeScript 6. Hop 3 bumped `@typescript-eslint/eslint-plugin` and `@typescript-eslint/parser` to 8.58.0,
+but those are different packages and left the meta package behind. The existing tree kept working, so
+nothing failed until a fresh resolve. Anyone deleting `node_modules` on the v22 branch would have hit it.
+
+`typescript-eslint` is now declared in `devDependencies` at `^8.58.0`, whose peer is
+`typescript >=4.8.4 <6.1.0`. That both fixes the install and declares a package the eslint config was
+already importing. npm resolved 8.67.0, and lint still reports only the kept opt-out.
+
 ## Smoke test for the user
 
 _Written at step 4.8._
