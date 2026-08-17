@@ -8,18 +8,72 @@ Branch: chore/angular-upgrade-v22
 
 | Check | Command | Result | Measured at | Measured by |
 | --- | --- | --- | --- | --- |
-| type check (app) | `npx tsc -p tsconfig.app.json --noEmit` | not measured yet | — | — |
-| type check (spec) | `npx tsc -p tsconfig.spec.json --noEmit` | not measured yet | — | — |
-| build library (dev) | `npx ng build forms` | not measured yet | — | — |
-| build library (prod) | `npm run build:forms:prod` | not measured yet | — | — |
-| build application | `npm run build` | not measured yet | — | — |
-| tests | `npm test` | not measured yet | — | — |
-| lint | `npm run lint` | not measured yet | — | — |
+| type check (app) | `npx tsc -p tsconfig.app.json --noEmit` | pass | `f32dcf6e` | skill |
+| type check (spec) | `npx tsc -p tsconfig.spec.json --noEmit` | pass | `f32dcf6e` | skill |
+| type check (library) | `npx tsc -p lib/tsconfig.lib.json --noEmit` | pass | `f32dcf6e` | skill |
+| build library (dev) | `npx ng build forms` | pass | `f32dcf6e` | skill |
+| build library (prod) | `npm run build:forms:prod` | pass | `f32dcf6e` | skill |
+| build application | `npx ng build lab900-forms` | pass | `f32dcf6e` | skill |
+| tests | `npm test` | pass — 4 suites, 32 tests | `f32dcf6e` | skill |
+| lint | `npm run lint` | **fail — 20 errors (kept opt-out, see Decisions)** + 1 pre-existing warning | `f32dcf6e` | skill |
+| forced rebuild | watch build, touch 1 library + 1 app file | pass — 2 rebuilds each, 0 errors | `f32dcf6e` | skill |
 | runtime behaviour | manual click-through | not verified — handed to the user | — | user |
 
-Filled at step 4.9. Never carried over from an earlier run.
+Measured in one pass at `f32dcf6e`, the last code commit. Later commits on this branch are documentation
+only, which does not invalidate the table, so the hash stays. No result is carried over from an earlier
+run.
 
-<!-- FINAL DEPENDENCY TABLE: filled at step 4.9 -->
+**About the lint failure.** All 20 errors are
+`@angular-eslint/prefer-on-push-component-change-detection`, one per component that carries the
+`ChangeDetectionStrategy.Eager` opt-out the user chose to keep. 19 are in the library project and 1 in the
+application project. This is the reported cost of that decision, not an accident: no `eslint-disable` was
+added and no rule was relaxed. The 1 warning is a pre-existing unused `eslint-disable` directive at
+`lib/src/lib/components/form-container/form-container.component.ts:20`, unrelated to the upgrade.
+
+The library build also emits 13 extended-diagnostic **warnings** (12 × `NG8107`, 1 × `NG8102`) across 8
+files. They are warnings, not errors, and are under Follow-ups.
+
+### Final dependency table
+
+Changed entries only. 30 of them.
+
+| Package | Before | Now | Installed |
+| --- | --- | --- | --- |
+| `@angular-builders/jest` | `^19.0.0` | `^22.0.1` | 22.0.1 |
+| `@angular/animations` | `^19.2.1` | `^22.1.2` | 22.1.2 |
+| `@angular/build` | `^19.2.1` | `^22.1.4` | 22.1.4 |
+| `@angular/cdk` | `^19.2.2` | `^22.1.2` | 22.1.2 |
+| `@angular/cli` | `^19.2.1` | `^22.1.4` | 22.1.4 |
+| `@angular/common` | `^19.2.1` | `^22.1.2` | 22.1.2 |
+| `@angular/compiler` | `^19.2.1` | `^22.1.2` | 22.1.2 |
+| `@angular/compiler-cli` | `^19.2.1` | `^22.1.2` | 22.1.2 |
+| `@angular/core` | `^19.2.1` | `^22.1.2` | 22.1.2 |
+| `@angular/forms` | `^19.2.1` | `^22.1.2` | 22.1.2 |
+| `@angular/material` | `^19.2.2` | `^22.1.2` | 22.1.2 |
+| `@angular/platform-browser` | `^19.2.1` | `^22.1.2` | 22.1.2 |
+| `@angular/platform-browser-dynamic` | `^19.2.1` | `^22.1.2` | 22.1.2 |
+| `@angular/router` | `^19.2.1` | `^22.1.2` | 22.1.2 |
+| `@kolkov/angular-editor` | `^3.0.0-beta.2` | `^3.1.0` | 3.1.0 |
+| `@ngx-mce/datetime-picker` | *(absent)* | `~22.2.3` | 22.2.3 |
+| `@ngxmc/datetime-picker` | `~19.2.2` | **removed** | — |
+| `@typescript-eslint/eslint-plugin` | `^8.26.0` | `^8.58.0` | 8.67.0 |
+| `@typescript-eslint/parser` | `^8.26.0` | `^8.58.0` | 8.67.0 |
+| `angular-eslint` | `19.2.1` | `22.1.0` | 22.1.0 |
+| `eslint` | `^9.8.0` | `^9.28.0` | 9.35.0 |
+| `jest` | `^29.7.0` | `^30.4.2` | 30.4.2 |
+| `jest-preset-angular` | `^14.5.3` | `^17.0.0` | 17.0.0 |
+| `marked` | *(absent)* | `^18.0.9` | 18.0.9 |
+| `ng-mocks` | `^14.13.3` | `^14.17.1` | 14.17.1 |
+| `ng-packagr` | `^19.2.0` | `^22.1.1` | 22.1.1 |
+| `ngx-markdown` | `^19.1.0` | `^22.0.0` | 22.0.0 |
+| `ngx-mat-select-search` | `^8.0.0` | `^9.0.0` | 9.0.0 |
+| `typescript` | `~5.5.4` | `~6.0.3` | 6.0.3 |
+| `typescript-eslint` | *(absent)* | `^8.58.0` | 8.67.0 |
+
+Three entries differ from the plan in the Compatibility check, all for reasons recorded above: `marked`
+and `typescript-eslint` were added, and the picker was replaced rather than bumped. `jest` and `eslint`
+were moved by other packages' migrations, not by hand. The workspace version went from `19.1.40` to
+`22.0.0` in both `package.json` files.
 
 ## Decisions
 
@@ -756,11 +810,11 @@ not this project. It is under Follow-ups.
 
 | Opt-out | Class | Sites | Decision |
 | --- | --- | --- | --- |
-| `schematics` block in `angular.json` that keeps the old file-naming style (`type: "component"`, `typeSeparator: "."`) | generator defaults | 1 block, 8 schematic entries, `angular.json` | pending — asked at step 4.3 |
-| `strictTemplates: false` | strictness flag | 3 files: `tsconfig.app.json`, `tsconfig.spec.json`, `lib/tsconfig.lib.json` | pending — asked at step 4.3 |
-| `$safeNavigationMigration()` wrapper around optional-chain expressions | expression wrapper | 29 files, 63 occurrences: 23 files / 56 in `lib/src`, 6 files / 7 in `src` | pending — asked at step 4.3 |
-| `changeDetection: ChangeDetectionStrategy.Eager` | behaviour default on a class | 20 components: 19 in `lib/src`, 1 in `src` | pending — asked at step 4.3 |
-| `provideHttpClient(withXhr())` | behaviour default | 1 site, `src/main.ts` | pending — asked at step 4.3 |
+| `schematics` block in `angular.json` that keeps the old file-naming style (`type: "component"`, `typeSeparator: "."`) | generator defaults | 1 block, 8 schematic entries, `angular.json` | **kept, not asked** — see Follow-up 13. Affects only future `ng generate` output. |
+| `strictTemplates: false` | strictness flag | 3 files: `tsconfig.app.json`, `tsconfig.spec.json`, `lib/tsconfig.lib.json` | **removed** — enabled everywhere, all 76 errors fixed |
+| `$safeNavigationMigration()` wrapper around optional-chain expressions | expression wrapper | 29 files, 63 occurrences: 23 files / 56 in `lib/src`, 6 files / 7 in `src` | **removed** — all 63 gone, 2 sites given an explicit value after validation |
+| `changeDetection: ChangeDetectionStrategy.Eager` | behaviour default on a class | 20 components: 19 in `lib/src`, 1 in `src` | **kept** by decision. Causes all 20 lint errors, reported not hidden. |
+| `provideHttpClient(withXhr())` | behaviour default | 1 site, `src/main.ts` | **kept, not asked** — see Follow-up 11. Evidence says it is unnecessary, but removing it changes the HTTP backend, so it was not done unasked. |
 | `extendedDiagnostics` suppressing `nullishCoalescingNotNullable` and `optionalChainNotNullable` | strictness flag | 4 files | **removed at hop 3** — the compiler rejects it together with `strictTemplates: false` (NG4003), and the checks cannot fire while `strictTemplates` is off |
 
 The block is an escape hatch written by the `@angular/cli` v20 migration. It changes nothing that
@@ -964,7 +1018,80 @@ already importing. npm resolved 8.67.0, and lint still reports only the kept opt
 
 ## Smoke test for the user
 
-_Written at step 4.8._
+**No runtime behaviour in this upgrade was verified.** No browser was driven and no runtime pass is
+claimed. Everything below needs a human. The runtime row of the Final state table stays
+`not verified — handed to the user` until you report back.
+
+Start the showcase:
+
+```bash
+npm run build:forms       # the app imports the library from dist/
+npm start                 # http://localhost:4900
+```
+
+Watch the browser console for errors throughout. Then work through the list.
+
+### A — the replaced date-time picker (highest risk)
+
+1. Open the **date-time** field example. The field must render, and the calendar must open from the
+   suffix toggle.
+2. Open the picker **with the field empty**. It must preselect today's date. This walks an internal path
+   (`_componentRef.instance._model`) that is not public API in the fork; it was verified to still exist
+   in the bundle, but only a click proves it works.
+3. Set a date **and a time**, press Save, and confirm the control value includes the time. Press Cancel
+   on a second open and confirm nothing changes.
+4. Confirm the seconds spinner appears or not, per the field's `showSeconds`, and that a configured
+   `defaultTime`, `stepMinute` and `startView` still apply.
+5. Check the **date**, **date-range** and **year-month** fields as well — all four share the Material
+   date adapter that replaced the picker's own.
+
+### B — CDK overlays now use the browser's native top layer (v21)
+
+6. Open a **select** dropdown, an **autocomplete** panel, a **tooltip** and the **form dialog**. Each
+   panel must paint above the page, and specifically above the showcase header, which carries
+   `z-index: 10`. If anything now paints *behind* an overlay, the fix is
+   `OVERLAY_DEFAULT_CONFIG` with `{usePopover: false}` — it was deliberately not set.
+7. Inside the date-time picker, confirm the Cancel and Save buttons still respond. Overlays inside
+   elements with their own click handlers are the classic regression here.
+
+### C — the message animation moved into the library
+
+8. Trigger a validation error on the **checkbox**, **drag-and-drop file** and **repeater** fields. The
+   error text must fade and slide in, not appear instantly. That trigger used to come from Angular
+   Material, which deleted it in v21; it is now defined in the library with Material's original 300 ms
+   timing.
+
+### D — things that now render nothing instead of rendering broken
+
+9. Every **form row** and **form column** in the showcase must still render its fields. They are now
+   skipped when the form group cannot be resolved.
+10. The **search** field must still render. It is now skipped when its `options` are missing.
+11. In **button-toggle**, options that have no icon must show only their label, with no empty icon gap.
+    Options that do have an icon must show it on the correct side.
+
+### E — the fields whose host listeners were rewired
+
+12. **Amount** field: type a number, confirm the decimal limit still truncates, then blur and confirm it
+    formats. Focus it again and confirm it switches to a raw number. **Paste** a formatted amount and
+    confirm it parses.
+13. **Search** field: type to search, confirm the spinner and the not-found hint appear, then **paste**
+    a term and confirm the search fires.
+
+### F — smaller behaviour changes
+
+14. **File preview / upload**: open the file picker and confirm it filters to the configured `accept`
+    types, and that multi-select matches the `multiple` option.
+15. **Authenticated image** preview: confirm images still load through the `httpCallback`, which the
+    showcase supplies with `responseType: 'arraybuffer'`.
+16. **Range slider**: confirm both thumbs move and the two number inputs show values. With no value set
+    the inputs must be **empty**, not the text `undefined`.
+17. **Sidenav**: at desktop width the drawer must be `side`; narrow the window and it must become `over`.
+18. **Nested routes**: `paramsInheritanceStrategy` now defaults to `"always"`, so a child route inherits
+    parent route params. Click through the showcase navigation and confirm the right page loads.
+19. **Autocomplete (multiple)**: confirm the panel opens and chips add and remove. A redundant bare
+    `matAutocomplete` attribute was removed; the real binding remains.
+20. **`ng serve` port**: `npm start` asks for port 4900. If a `PORT` environment variable is set, v22
+    now lets it win over the flag.
 
 ## Impact on the published library
 
@@ -1069,3 +1196,41 @@ Open after hop 1:
 9. **`baseUrl` is gone, so non-relative imports no longer resolve.** One import used it
    (`showcase-forms.constants.ts`) and is now relative. Any new code must use relative paths or a
    `paths` entry.
+
+Opened at the checkpoint, and **not** decided, because the step allows four questions at most and these
+four were the smaller items. Nothing was removed or changed for any of them:
+
+10. **The 20 `prefer-on-push` lint errors stand by decision.** Removing
+    `ChangeDetectionStrategy.Eager` from the 20 components makes lint green and adopts the v22 default,
+    but changes change detection on 19 published components. That needs the click-through in the smoke
+    test, so it belongs in its own change, not in an upgrade. The Decisions table records the choice.
+11. **`provideHttpClient(withXhr())` is very likely unnecessary.** The v22 migration added it to
+    `src/main.ts` to keep the XHR backend. The evidence says nothing needs it: `reportProgress` appears
+    in no file, and every HTTP call in the project is a `get` — the translation loader, `FileService`,
+    the file-upload example and the openlibrary lookup. Removing it would move the app to the default
+    `fetch` backend. It is a one-line change plus a smoke test of the showcase's HTTP.
+12. **`@angular/platform-browser-dynamic` looks unused.** It is declared in `dependencies` and bumped to
+    22.1.2, but no file under `lib/src` or `src` imports it, and `jest-preset-angular@17` explicitly
+    dropped it from its peers. Removing it is a change to the published dependency set, so it needs a
+    decision and a check that no installed package still requires it.
+13. **The `angular.json` `schematics` opt-out is still in place.** The `@angular/cli` v20 migration wrote
+    a block that keeps the old file-naming style (`type: "component"`, `typeSeparator: "."`). It affects
+    only what `ng generate` names new files, changes nothing that exists, and causes no lint error.
+    Removing it means new files follow the v20+ naming.
+
+Smaller items:
+
+14. **13 extended-diagnostic warnings in the library build**, 12 × `NG8107` (`?.` on a value that is not
+    nullable) and 1 × `NG8102` (`??` on a value that is not nullable), across 8 files. They are warnings
+    and do not fail the build. Each is a redundant `?.` or `??` that can simply be deleted, which is a
+    small tidy-up now that `strictTemplates` proves the operand is not nullable. The v22 migration wanted
+    to suppress these; the suppression was removed instead, because the compiler rejects it together with
+    `strictTemplates: false` and because the reports are useful.
+15. **ts-jest deprecation warning.** ts-jest reports that its own `isolatedModules` option is deprecated
+    and will be removed in its v30, and asks for `isolatedModules: true` in `tsconfig.spec.json`. The
+    option is set by `@angular-builders/jest`, not by this project. Setting it in the tsconfig would also
+    enforce the stricter TypeScript rule, so it deserves its own check.
+16. **Pre-existing prettier drift, untouched.** `prettier --check .` also flags `CHANGELOG.md` and
+    `lib/src/lib/components/form-fields/icon-field/icon-field.component.scss`. Neither was touched by
+    this upgrade, and prettier was already at 3.6.2 before it, so this drift predates the work. Only the
+    files this upgrade edited were formatted.
