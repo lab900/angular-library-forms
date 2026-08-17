@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Lab900NavListComponent, NavItemGroup } from '@lab900/ui';
 import { showcaseFormsNavItems } from './modules/showcase-forms/showcase-forms.nav-items';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -37,6 +37,12 @@ import { AsyncPipe, NgOptimizedImage } from '@angular/common';
   ],
 })
 export class AppComponent extends SubscriptionBasedDirective implements OnInit, OnDestroy {
+  private translateService = inject(TranslateService);
+  private matIconRegistry = inject(MatIconRegistry);
+  private domSanitizer = inject(DomSanitizer);
+  private router = inject(Router);
+  private breakpointObserver = inject(BreakpointObserver);
+
   private unsub = new Subject<void>();
   public readonly languages = ['en', 'nl'];
   public readonly gitUrl = packageInfo.repository;
@@ -47,13 +53,7 @@ export class AppComponent extends SubscriptionBasedDirective implements OnInit, 
   @ViewChild('drawer')
   private drawer?: MatDrawer;
 
-  public constructor(
-    private translateService: TranslateService,
-    private matIconRegistry: MatIconRegistry,
-    private domSanitizer: DomSanitizer,
-    private router: Router,
-    private breakpointObserver: BreakpointObserver
-  ) {
+  public constructor() {
     super();
 
     this.translateService.setDefaultLang('en');

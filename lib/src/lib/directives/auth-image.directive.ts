@@ -1,4 +1,4 @@
-import { Directive, effect, ElementRef, input, model, Renderer2 } from '@angular/core';
+import { Directive, effect, ElementRef, input, model, Renderer2, inject } from '@angular/core';
 import { Lab900File } from '../models/Lab900File';
 import { Observable, Subscription } from 'rxjs';
 import { fetchImageBase64 } from '../utils/image.utils';
@@ -8,14 +8,14 @@ import { take } from 'rxjs/operators';
   selector: '[lab900AuthImage]',
 })
 export class AuthImageDirective {
+  private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private renderer = inject(Renderer2);
+
   public readonly image = model.required<Lab900File>();
   public readonly httpCallback = input<((image: Lab900File) => Observable<Blob>) | undefined>(undefined);
   public readonly defaultImage = input<string | undefined>(undefined);
 
-  public constructor(
-    private elementRef: ElementRef<HTMLElement>,
-    private renderer: Renderer2
-  ) {
+  public constructor() {
     effect(() => {
       const imgSrc = this.image()?.imageSrc;
       let sub: Subscription;

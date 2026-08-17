@@ -1,4 +1,13 @@
-import { Directive, ElementRef, forwardRef, HostListener, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  forwardRef,
+  HostListener,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  inject,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BehaviorSubject, of, ReplaySubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
@@ -16,6 +25,8 @@ import { FormFieldSearchOptions } from './field-search.model';
   ],
 })
 export class SearchInputDirective<T> implements ControlValueAccessor, OnChanges {
+  private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
+
   private readonly searchQuery$ = new ReplaySubject<string>();
   public readonly searching$ = new BehaviorSubject<boolean>(false);
   public readonly noResult$ = new BehaviorSubject<boolean>(false);
@@ -25,8 +36,6 @@ export class SearchInputDirective<T> implements ControlValueAccessor, OnChanges 
 
   @Input()
   public options!: FormFieldSearchOptions<T>;
-
-  public constructor(private elementRef: ElementRef<HTMLInputElement>) {}
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes?.options && this.options) {

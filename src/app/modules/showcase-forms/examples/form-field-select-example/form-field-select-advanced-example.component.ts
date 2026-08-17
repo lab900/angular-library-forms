@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, viewChild, inject } from '@angular/core';
 import {
   EditType,
   FormFieldSelect,
@@ -36,6 +36,8 @@ const compare = (a: Book, b: Book): boolean => a?.key != undefined && b?.key != 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldSelectAdvancedExampleComponent {
+  private http = inject(HttpClient);
+
   private readonly MAX_ITEMS_FOR_SELECT_ALL = 157;
   public readonly form = viewChild<Lab900Form<any>>(Lab900Form);
 
@@ -199,7 +201,7 @@ export class FormFieldSelectAdvancedExampleComponent {
     ],
   };
 
-  public constructor(private http: HttpClient) {
+  public constructor() {
     setTimeout(() => {
       this.data.set({
         books2: tolkienBook,

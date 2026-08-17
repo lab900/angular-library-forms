@@ -773,7 +773,28 @@ Not an opt-out, recorded here so the reader does not mistake it for one:
 
 ## After the checkpoint
 
-_Not reached yet._
+### `refactor: use inject() instead of constructor injection`
+
+**Symptom.** 17 `@angular-eslint/prefer-inject` lint errors across 5 files.
+
+**Cause.** Not a code change. The rule is absent from `@angular-eslint/eslint-plugin@19.2.1`'s
+`recommended.json`, which carries only 13 rules, and `eslint.config.js` extends
+`angular.configs.tsRecommended`. The upgrade to `angular-eslint@22.1.0` therefore enabled a rule the
+existing constructor injections had never been measured against.
+
+**Fix.** `ng generate @angular/core:inject`, the schematic Angular ships for exactly this. It rewrote 10
+files, 5 in the library and 5 in the showcase app. The diff was reviewed rather than trusted:
+
+- Injected dependencies became field initializers, so they are assigned before the constructor body
+  runs. `auth-image.directive.ts` matters most here, because its constructor body creates an `effect()`
+  that reads both injected members. The order is still correct.
+- `form-dialog.component.ts` lost its `@Inject(MAT_DIALOG_DATA)` decorator in favour of
+  `inject<DialogFormData<T>>(MAT_DIALOG_DATA)`, and `MatDialogRef` likewise. Equivalent.
+- The injected fields are placed before the other instance fields, which still satisfies the project's
+  `@typescript-eslint/member-ordering` rule.
+
+**Result.** All 17 errors gone. 3 type checks at 0 errors, all 3 builds pass, 32 tests pass. Lint is
+down to the 20 errors from the kept `Eager` opt-out.
 
 ## Smoke test for the user
 

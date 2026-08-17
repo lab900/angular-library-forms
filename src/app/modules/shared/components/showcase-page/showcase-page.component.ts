@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ShowcaseRouteData } from '../../models/showcase-route.model';
 import { Lab900PageHeaderComponent, PageHeaderNavItem } from '@lab900/ui';
@@ -22,6 +22,9 @@ import { NgComponentOutlet } from '@angular/common';
   ],
 })
 export class ShowcasePageComponent extends SubscriptionBasedDirective {
+  private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
+
   private readonly guideNav: PageHeaderNavItem = {
     label: 'Guide',
     queryParams: { tab: 'guide' },
@@ -36,10 +39,7 @@ export class ShowcasePageComponent extends SubscriptionBasedDirective {
   public data?: ShowcaseRouteData;
   public navItems: PageHeaderNavItem[] = [];
 
-  public constructor(
-    private activatedRoute: ActivatedRoute,
-    private router: Router
-  ) {
+  public constructor() {
     super();
     this.addSubscription(this.activatedRoute.queryParams, queryParams => {
       this.data = this.activatedRoute.snapshot.data as ShowcaseRouteData;

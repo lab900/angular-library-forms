@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ShowcaseConfigModel } from '../../models/showcase-config.model';
@@ -16,10 +16,10 @@ import { MatButton } from '@angular/material/button';
   imports: [TranslatePipe, RouterLink, AsyncPipe, MatIcon, MatButton],
 })
 export default class ShowcaseHomeComponent {
+  private activatedRoute = inject(ActivatedRoute);
+
   public data$: Observable<{
     config: ShowcaseConfigModel;
     nav: NavItemGroup[];
   }> = this.activatedRoute.data as any;
-
-  public constructor(private activatedRoute: ActivatedRoute) {}
 }
