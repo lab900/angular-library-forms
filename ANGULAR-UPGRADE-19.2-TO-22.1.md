@@ -697,6 +697,57 @@ on, that decision has to revisit these two diagnostics.
 | `npm run build:forms:prod` | pass |
 | `npm run build` | pass |
 
+### Step 4.1 — tests
+
+`npm test` failed twice before it ran a single test. Both were runner configuration, so no test code was
+touched.
+
+**1. The builder dropped two options.**
+
+```
+● Unrecognized CLI Parameters:
+  Following options were not recognized:
+  ["polyfills", "inlineStyleLanguage"]
+```
+
+`@angular-builders/jest@22` no longer accepts `polyfills` or `inlineStyleLanguage`. It replaced them
+with a single `zoneless` option that **defaults to `true`**. This project uses zone change detection —
+hop 2's migration added `provideZoneChangeDetection()` — so the `test` target in `angular.json` now
+reads:
+
+```json
+"options": {
+  "tsConfig": "tsconfig.spec.json",
+  "zoneless": false
+}
+```
+
+The builder wires the zone test environment itself, so `setup-jest.ts` stays empty. Note the `polyfills`
+entry in the **build** target is untouched: `@angular/build:application` still accepts it.
+
+**2. The preset stopped installing the jsdom environment.**
+
+```
+● Validation Error:
+  Test environment jest-environment-jsdom cannot be found.
+```
+
+`jest-preset-angular@17` dropped `jest-environment-jsdom`. It now depends on
+`@jest/environment-jsdom-abstract`, peers `jsdom >= 26.0.0` (30.0.1 is installed) and ships its own
+environment at `environments/jest-jsdom-env`. Its base preset still asks for the `'jsdom'` shorthand,
+which Jest resolves to the package that is no longer there. `jest.config.js` now names the shipped
+environment instead, which needs no new dependency:
+
+```js
+testEnvironment: 'jest-preset-angular/environments/jest-jsdom-env',
+```
+
+**Result: 4 suites passed, 32 tests passed, 0 failed.** No test file was edited.
+
+One warning remains, and it is not a failure: ts-jest reports that its own `isolatedModules` option is
+deprecated and asks for `isolatedModules: true` in `tsconfig.spec.json`. The builder sets that option,
+not this project. It is under Follow-ups.
+
 ## Migration opt-outs
 
 | Opt-out | Class | Sites | Decision |
