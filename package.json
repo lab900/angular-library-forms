@@ -21,7 +21,6 @@
     "clean": "rm -rf node_modules/ && npm install"
   },
   "dependencies": {
-    "@angular/animations": "^22.1.2",
     "@angular/cdk": "^22.1.2",
     "@angular/common": "^22.1.2",
     "@angular/compiler": "^22.1.2",

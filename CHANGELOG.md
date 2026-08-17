@@ -9,7 +9,7 @@ Upgrade to Angular 22. The version now follows the Angular major, so it jumps fr
 - `npm uninstall @ngxmc/datetime-picker && npm install @ngx-mce/datetime-picker`
 - replace `provideNgxMatNativeDate()` with `provideNativeDateAdapter()` from `@angular/material/core`. One Material date adapter now serves both the date picker and the date-time picker, so a Luxon adapter also works for date-time now.
 
-**Breaking: `@angular/animations` is now a declared peer** (`>=22.0.0`). This is not a new runtime requirement — the checkbox, drag-and-drop and repeater fields have always used an animated error/hint message, which has always needed `provideAnimations()`. Angular Material removed the trigger in v21, so the library defines it itself and the dependency became explicit.
+**`@angular/animations` is no longer needed.** The checkbox, drag-and-drop and repeater fields animate their error/hint message. That used to need the Angular animation engine, and therefore `provideAnimations()` in your application. The animation is now plain CSS, at the same timings, so you can drop `provideAnimations()` if this library was your only reason for it. This removes a requirement, so it breaks nothing.
 
 **Breaking: two other peers moved.** `ngx-mat-select-search` to `^9.0.0` and `@kolkov/angular-editor` to `3.1.0`.
 

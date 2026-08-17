@@ -4,7 +4,6 @@
   "author": "Lab900 <info@lab900.com> (https://lab900.com)",
   "license": "MIT",
   "peerDependencies": {
-    "@angular/animations": ">=22.0.0",
     "@angular/common": ">=22.0.0",
     "@angular/core": ">=22.0.0",
     "@angular/material": ">=22.0.0",

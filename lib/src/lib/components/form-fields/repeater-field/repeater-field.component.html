@@ -69,7 +69,7 @@
         }
       }
       @if (touched && !controlValid() && !fieldIsReadonly()) {
-        <mat-error class="subscript-wrapper" [@transitionMessages]="controlValid() ? 'void' : 'enter'"
+        <mat-error class="subscript-wrapper" [class.lab900-subscript-enter]="!controlValid()"
           >{{ errorMessage() }}
         </mat-error>
       }

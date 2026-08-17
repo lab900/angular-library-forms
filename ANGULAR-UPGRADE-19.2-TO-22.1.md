@@ -40,7 +40,7 @@ Changed entries only. 30 of them.
 | Package | Before | Now | Installed |
 | --- | --- | --- | --- |
 | `@angular-builders/jest` | `^19.0.0` | `^22.0.1` | 22.0.1 |
-| `@angular/animations` | `^19.2.1` | `^22.1.2` | 22.1.2 |
+| `@angular/animations` | `^19.2.1` | **removed** — bumped to `^22.1.2`, then dropped by Follow-up 7 | — |
 | `@angular/build` | `^19.2.1` | `^22.1.4` | 22.1.4 |
 | `@angular/cdk` | `^19.2.2` | `^22.1.2` | 22.1.2 |
 | `@angular/cli` | `^19.2.1` | `^22.1.4` | 22.1.4 |
@@ -680,6 +680,11 @@ Material had already marked that export `@deprecated No longer used` with `@brea
 Material's own form fields stopped animating their messages in v20. Matching that by dropping the
 animation would be a visual change nobody asked for, so it is a follow-up, not part of this hop.
 
+**Superseded after the upgrade.** Follow-up 7 was done. The trigger is now a CSS keyframe animation in
+`lib/src/lib/styles/_form-field-subscript.scss`, and `@angular/animations` is gone from the project.
+One statement above is wrong: Material did not stop animating its messages. It replaced the trigger
+with the CSS animation `_mat-form-field-subscript-animation`, at the same timings. See Follow-up 7.
+
 **Verify — all green**
 
 | Check | Result |
@@ -1109,7 +1114,7 @@ Each author's operator was kept. A peer whose major did not move was left alone.
 
 | Peer | Before | After | Why |
 | --- | --- | --- | --- |
-| `@angular/animations` | *(not declared)* | `">=22.0.0"` | **New peer.** The library now imports `trigger`, `state`, `style`, `transition` and `animate` directly, in `utils/form-field.animations.ts`. See the note below. |
+| `@angular/animations` | *(not declared)* | *(still not declared — added, then removed again)* | Added at hop 3, then dropped after the upgrade when the trigger became CSS. See the note below. |
 | `@angular/common` | `">=19.0.0"` | `">=22.0.0"` | major moved |
 | `@angular/core` | `">=19.0.0"` | `">=22.0.0"` | major moved |
 | `@angular/material` | `">=19.0.0"` | `">=22.0.0"` | major moved |
@@ -1121,12 +1126,17 @@ Each author's operator was kept. A peer whose major did not move was left alone.
 | `@lab900/ui` | `">=19.0.1"` | unchanged | still 19.2.3, major did not move |
 | `ngx-mask` | `"^19.0.6"` | unchanged | still 19.0.7, major did not move |
 
-**About the new `@angular/animations` peer.** The runtime requirement is not new. Three components have
-always used a `[@transitionMessages]` trigger, which has always needed the Angular animation engine and
-therefore `provideAnimations()` in the consuming application. What changed is that Angular Material
-removed `matFormFieldAnimations` in v21, so the trigger definition moved into this library and the
-`@angular/animations` import became direct instead of transitive. Declaring the peer states a
-requirement that was previously implicit. Follow-up 7 covers dropping it in favour of CSS.
+**About the `@angular/animations` peer.** Hop 3 added it. Angular Material removed
+`matFormFieldAnimations` in v21, so the trigger definition moved into this library and the
+`@angular/animations` import became direct instead of transitive. The peer only stated a requirement
+that was already implicit: three components had always used a `[@transitionMessages]` trigger, which
+had always needed the animation engine and therefore `provideAnimations()` in the consuming
+application.
+
+Follow-up 7 then removed both. The trigger is now a CSS keyframe animation, so consumers no longer
+need `@angular/animations` and no longer need `provideAnimations()` for this library. The peer range
+ends where it started: not declared. **This drops a requirement, so it breaks no consumer.** A consumer
+that still calls `provideAnimations()` for its own reasons is unaffected.
 
 ### The date-time picker was replaced
 
@@ -1174,11 +1184,35 @@ Open after hop 1:
 3. ~~**`marked` needs another bump at hop 2.** `ngx-markdown@21.3.0` and `@22.0.0` peer
    `marked@^17 || ^18`, so `^16` does not span the remaining hops. No single version does.~~ Done in the
    hop 2 commit. `ng update` moved it to `^18.0.9` on its own, which also spans hop 3.
-7. **The message animation could follow Material instead.** `lib/src/lib/utils/form-field.animations.ts`
+7. ~~**The message animation could follow Material instead.** `lib/src/lib/utils/form-field.animations.ts`
    keeps the animation Material removed in v21. Material's own form fields no longer animate their
    messages. Dropping the trigger and the 3 `[@transitionMessages]` bindings would match Material, and
    would drop one use of `@angular/animations` from the library. It is a visual change, so it is not
-   part of this upgrade.
+   part of this upgrade.~~ Done after the upgrade, in the commit that removed `@angular/animations`.
+
+   **The premise was wrong, and checking it made the change safe.** Material did not stop animating its
+   messages. `@angular/material@22.1.2` ships a plain CSS keyframe animation,
+   `_mat-form-field-subscript-animation`, gated behind the class `mat-form-field-animations-enabled`,
+   with exactly the values the old trigger used: `opacity 0 -> 1`, `translateY(-5px) -> 0`, `300ms`,
+   `cubic-bezier(0.55, 0, 0.55, 0.2)`. Material converted the animation; it did not delete it.
+
+   So this was not a visual change after all. The same keyframes now live in
+   `lib/src/lib/styles/_form-field-subscript.scss`, which the 3 component stylesheets `@use`. Each
+   `[@transitionMessages]="controlValid() ? 'void' : 'enter'"` became
+   `[class.lab900-subscript-enter]="!controlValid()"`. Adding the class replays the animation, exactly
+   as re-entering the `enter` state did. `checkbox-field.component.css` became `.scss` so it could
+   `@use` the partial.
+
+   Removed with it: `lib/src/lib/utils/form-field.animations.ts` (internal, never in `public-api.ts`),
+   `provideNoopAnimations()` in `testing/testing.providers.ts`, `provideAnimations()` in `src/main.ts`,
+   the `@angular/animations` peer in `lib/package.json`, and the `@angular/animations` dependency in
+   `package.json`. Nothing else in the project or in `node_modules` imports the package;
+   `@angular/platform-browser` peers it optionally, so it is now absent from `node_modules` entirely.
+
+   Verified: library build, app build and `ng test` (32 tests, 4 suites) all pass, and `ng lint` reports
+   the same 20 pre-existing problems as before the change. The built bundle shows Angular scoping the
+   keyframes per component (`_ngcontent-%COMP%_lab900-form-field-subscript`), so the 3 copies cannot
+   collide.
 4. **lodash is bundled as CommonJS.** The app build warns that `lodash` used by
    `dist/@lab900/forms/fesm2022/lab900-forms.mjs` is not ESM, and the same for `lodash/cloneDeep` in
    `@lab900/ui`. This predates the upgrade — lodash has always been CommonJS. Switching the library to
