@@ -6,18 +6,18 @@ Branch: chore/angular-upgrade-v22
 
 ## Final state
 
-| Check | Command | Result | Measured at | Measured by |
-| --- | --- | --- | --- | --- |
-| type check (app) | `npx tsc -p tsconfig.app.json --noEmit` | pass | `4a9a190f` | skill |
-| type check (spec) | `npx tsc -p tsconfig.spec.json --noEmit` | pass | `4a9a190f` | skill |
-| type check (library) | `npx tsc -p lib/tsconfig.lib.json --noEmit` | pass | `4a9a190f` | skill |
-| build library (dev) | `npx ng build forms` | pass | `4a9a190f` | skill |
-| build library (prod) | `npm run build:forms:prod` | pass | `4a9a190f` | skill |
-| build application | `npx ng build lab900-forms` | pass | `4a9a190f` | skill |
-| tests | `npm test` | pass — 4 suites, 32 tests | `4a9a190f` | skill |
-| lint | `npm run lint` | **fail — 20 errors (kept opt-out, see Decisions)** + 1 pre-existing warning | `4a9a190f` | skill |
-| forced rebuild | watch build, touch 1 library + 1 app file | pass — 2 rebuilds each, 0 errors | `4a9a190f` | skill |
-| runtime behaviour | manual click-through | not verified — handed to the user | — | user |
+| Check                | Command                                     | Result                                                                      | Measured at | Measured by |
+| -------------------- | ------------------------------------------- | --------------------------------------------------------------------------- | ----------- | ----------- |
+| type check (app)     | `npx tsc -p tsconfig.app.json --noEmit`     | pass                                                                        | `4a9a190f`  | skill       |
+| type check (spec)    | `npx tsc -p tsconfig.spec.json --noEmit`    | pass                                                                        | `4a9a190f`  | skill       |
+| type check (library) | `npx tsc -p lib/tsconfig.lib.json --noEmit` | pass                                                                        | `4a9a190f`  | skill       |
+| build library (dev)  | `npx ng build forms`                        | pass                                                                        | `4a9a190f`  | skill       |
+| build library (prod) | `npm run build:forms:prod`                  | pass                                                                        | `4a9a190f`  | skill       |
+| build application    | `npx ng build lab900-forms`                 | pass                                                                        | `4a9a190f`  | skill       |
+| tests                | `npm test`                                  | pass — 4 suites, 32 tests                                                   | `4a9a190f`  | skill       |
+| lint                 | `npm run lint`                              | **fail — 20 errors (kept opt-out, see Decisions)** + 1 pre-existing warning | `4a9a190f`  | skill       |
+| forced rebuild       | watch build, touch 1 library + 1 app file   | pass — 2 rebuilds each, 0 errors                                            | `4a9a190f`  | skill       |
+| runtime behaviour    | manual click-through                        | not verified — handed to the user                                           | —           | user        |
 
 Measured in one pass at `4a9a190f`, the last code commit. Later commits on this branch are documentation
 only, which does not invalidate the table, so the hash stays. No result is carried over from an earlier
@@ -37,39 +37,39 @@ files. They are warnings, not errors, and are under Follow-ups.
 
 Changed entries only. 31 of them.
 
-| Package | Before | Now | Installed |
-| --- | --- | --- | --- |
-| `@angular-builders/jest` | `^19.0.0` | `^22.0.1` | 22.0.1 |
-| `@angular/animations` | `^19.2.1` | **removed** — bumped to `^22.1.2`, then dropped by Follow-up 7 | — |
-| `@angular/build` | `^19.2.1` | `^22.1.4` | 22.1.4 |
-| `@angular/cdk` | `^19.2.2` | `^22.1.2` | 22.1.2 |
-| `@angular/cli` | `^19.2.1` | `^22.1.4` | 22.1.4 |
-| `@angular/common` | `^19.2.1` | `^22.1.2` | 22.1.2 |
-| `@angular/compiler` | `^19.2.1` | `^22.1.2` | 22.1.2 |
-| `@angular/compiler-cli` | `^19.2.1` | `^22.1.2` | 22.1.2 |
-| `@angular/core` | `^19.2.1` | `^22.1.2` | 22.1.2 |
-| `@angular/forms` | `^19.2.1` | `^22.1.2` | 22.1.2 |
-| `@angular/material` | `^19.2.2` | `^22.1.2` | 22.1.2 |
-| `@angular/platform-browser` | `^19.2.1` | `^22.1.2` | 22.1.2 |
-| `@angular/platform-browser-dynamic` | `^19.2.1` | `^22.1.2` | 22.1.2 |
-| `@angular/router` | `^19.2.1` | `^22.1.2` | 22.1.2 |
-| `@kolkov/angular-editor` | `^3.0.0-beta.2` | `^3.1.0` | 3.1.0 |
-| `@lab900/ui` | `^19.0.0` | `^22.0.0` | 22.0.0 — bumped after the upgrade, see Follow-up 17 |
-| `@ngx-mce/datetime-picker` | *(absent)* | `~22.2.3` | 22.2.3 |
-| `@ngxmc/datetime-picker` | `~19.2.2` | **removed** | — |
-| `@typescript-eslint/eslint-plugin` | `^8.26.0` | `^8.58.0` | 8.67.0 |
-| `@typescript-eslint/parser` | `^8.26.0` | `^8.58.0` | 8.67.0 |
-| `angular-eslint` | `19.2.1` | `22.1.0` | 22.1.0 |
-| `eslint` | `^9.8.0` | `^9.28.0` | 9.35.0 |
-| `jest` | `^29.7.0` | `^30.4.2` | 30.4.2 |
-| `jest-preset-angular` | `^14.5.3` | `^17.0.0` | 17.0.0 |
-| `marked` | *(absent)* | *(still absent — added, then removed again)* | 18.0.9, as an auto-installed peer of `ngx-markdown` |
-| `ng-mocks` | `^14.13.3` | `^14.17.1` | 14.17.1 |
-| `ng-packagr` | `^19.2.0` | `^22.1.1` | 22.1.1 |
-| `ngx-markdown` | `^19.1.0` | `^22.0.0` | 22.0.0 |
-| `ngx-mat-select-search` | `^8.0.0` | `^9.0.0` | 9.0.0 |
-| `typescript` | `~5.5.4` | `~6.0.3` | 6.0.3 |
-| `typescript-eslint` | *(absent)* | `^8.58.0` | 8.67.0 |
+| Package                             | Before          | Now                                                            | Installed                                           |
+| ----------------------------------- | --------------- | -------------------------------------------------------------- | --------------------------------------------------- |
+| `@angular-builders/jest`            | `^19.0.0`       | `^22.0.1`                                                      | 22.0.1                                              |
+| `@angular/animations`               | `^19.2.1`       | **removed** — bumped to `^22.1.2`, then dropped by Follow-up 7 | —                                                   |
+| `@angular/build`                    | `^19.2.1`       | `^22.1.4`                                                      | 22.1.4                                              |
+| `@angular/cdk`                      | `^19.2.2`       | `^22.1.2`                                                      | 22.1.2                                              |
+| `@angular/cli`                      | `^19.2.1`       | `^22.1.4`                                                      | 22.1.4                                              |
+| `@angular/common`                   | `^19.2.1`       | `^22.1.2`                                                      | 22.1.2                                              |
+| `@angular/compiler`                 | `^19.2.1`       | `^22.1.2`                                                      | 22.1.2                                              |
+| `@angular/compiler-cli`             | `^19.2.1`       | `^22.1.2`                                                      | 22.1.2                                              |
+| `@angular/core`                     | `^19.2.1`       | `^22.1.2`                                                      | 22.1.2                                              |
+| `@angular/forms`                    | `^19.2.1`       | `^22.1.2`                                                      | 22.1.2                                              |
+| `@angular/material`                 | `^19.2.2`       | `^22.1.2`                                                      | 22.1.2                                              |
+| `@angular/platform-browser`         | `^19.2.1`       | `^22.1.2`                                                      | 22.1.2                                              |
+| `@angular/platform-browser-dynamic` | `^19.2.1`       | `^22.1.2`                                                      | 22.1.2                                              |
+| `@angular/router`                   | `^19.2.1`       | `^22.1.2`                                                      | 22.1.2                                              |
+| `@kolkov/angular-editor`            | `^3.0.0-beta.2` | `^3.1.0`                                                       | 3.1.0                                               |
+| `@lab900/ui`                        | `^19.0.0`       | `^22.0.0`                                                      | 22.0.0 — bumped after the upgrade, see Follow-up 17 |
+| `@ngx-mce/datetime-picker`          | _(absent)_      | `~22.2.3`                                                      | 22.2.3                                              |
+| `@ngxmc/datetime-picker`            | `~19.2.2`       | **removed**                                                    | —                                                   |
+| `@typescript-eslint/eslint-plugin`  | `^8.26.0`       | `^8.58.0`                                                      | 8.67.0                                              |
+| `@typescript-eslint/parser`         | `^8.26.0`       | `^8.58.0`                                                      | 8.67.0                                              |
+| `angular-eslint`                    | `19.2.1`        | `22.1.0`                                                       | 22.1.0                                              |
+| `eslint`                            | `^9.8.0`        | `^9.28.0`                                                      | 9.35.0                                              |
+| `jest`                              | `^29.7.0`       | `^30.4.2`                                                      | 30.4.2                                              |
+| `jest-preset-angular`               | `^14.5.3`       | `^17.0.0`                                                      | 17.0.0                                              |
+| `marked`                            | _(absent)_      | _(still absent — added, then removed again)_                   | 18.0.9, as an auto-installed peer of `ngx-markdown` |
+| `ng-mocks`                          | `^14.13.3`      | `^14.17.1`                                                     | 14.17.1                                             |
+| `ng-packagr`                        | `^19.2.0`       | `^22.1.1`                                                      | 22.1.1                                              |
+| `ngx-markdown`                      | `^19.1.0`       | `^22.0.0`                                                      | 22.0.0                                              |
+| `ngx-mat-select-search`             | `^8.0.0`        | `^9.0.0`                                                       | 9.0.0                                               |
+| `typescript`                        | `~5.5.4`        | `~6.0.3`                                                       | 6.0.3                                               |
+| `typescript-eslint`                 | _(absent)_      | `^8.58.0`                                                      | 8.67.0                                              |
 
 Entries that differ from the plan in the Compatibility check, all for reasons recorded above:
 `typescript-eslint` was added, the picker was replaced rather than bumped, and `marked` was added at hop 1
@@ -81,96 +81,96 @@ repo-facing: `lib/ng-package.json` does not copy it into `dist`, so it is not pu
 
 ## Decisions
 
-| Item | Answer | Date | Reason |
-| --- | --- | --- | --- |
-| Route to Angular 22, blocked by `@ngxmc/datetime-picker` | Upgrade to v20 first, then replace the package with `@ngx-mce/datetime-picker`. Assess a drop-in first; if it is not a drop-in, document every needed change. | 2026-08-17 | User choice at the gate. `@ngxmc/datetime-picker` stopped at Angular 20, so the v21 and v22 hops need a maintained replacement. |
-| `skipLibCheck` for the 2 `TS2416` errors inside `@ngxmc/datetime-picker@20.1.0` | Add `skipLibCheck: true` to `lib/tsconfig.lib.json` only, as a temporary measure. Remove it at hop 2 after the swap and prove the library build stays green without it. Report it if removal fails. | 2026-08-17 | The errors are a defect in the package, not in this project: it declares `dateFilter` as `(date: D) => boolean` while its own `NgxMatDatepickerControl` requires `(date: D \| null) => boolean`. 20.1.0 is its only Angular 20 release, and the fork declares the signature correctly. The application and spec configs keep full declaration checking. **Closed at hop 2: removed, and the library build is green without it.** |
-| `strictTemplates: false` (3 tsconfigs) | Enable it everywhere and fix all 76 errors. | 2026-08-17 | Measured cost before deciding: 67 errors in 26 library files and 9 in 6 app files. The user chose the full fix over keeping the opt-out. |
-| `$safeNavigationMigration()` (63 occurrences, 29 files) | Validated first, then **removed all of them**. 21 fell out with the `strictTemplates` work; the remaining 42 were removed after the analysis. 2 sites got an explicit value instead of a bare removal. | 2026-08-17 | The user asked for evidence before committing to a removal. The validation is written up under "After the checkpoint". Note the assumption behind the request turned out to be wrong in a useful way: the wrapper is invisible to the type checker, so the compiler could **not** have caught a `null` / `undefined` mismatch. The 2 real cases were found by reading what consumes each value. |
-| `ChangeDetectionStrategy.Eager` (20 components) | **Keep.** Report the 20 lint errors instead of hiding them. | 2026-08-17 | Removing it changes change detection on 19 published components. That is a runtime risk only a click-through can settle, and the skill forbids the assistant claiming a runtime pass. Lint stays red by choice, not by accident. |
-| `@angular-eslint/prefer-inject` (17 errors, 5 files) | Run `ng generate @angular/core:inject`, then review the diff and re-verify. | 2026-08-17 | Verified the rule was absent from angular-eslint 19.2.1's recommended set, so the upgrade introduced it. Angular ships the schematic, so the refactor is mechanical. |
-| The explicit `marked` dependency added at hop 1 | **Remove it.** | 2026-08-17 | The user asked whether it was still needed. It is not, and the claim was tested rather than argued: no file imports `marked`; deleting the declaration and regenerating `package-lock.json` from scratch still resolves `marked@18.0.9`; and the whole range `ngx-markdown@22.0.0` allows (`^17 \|\| ^18`) carries the generic `MarkedOptions` / `MarkedExtension` types its `.d.ts` needs, confirmed by unpacking marked 17.0.6 as well as 18.0.9. CI runs plain `npm ci` with no `.npmrc` and no `--legacy-peer-deps`, so the peer comes from the lock. The hop 1 failure was caused by a **retained** `marked@15.0.12` that still satisfied ngx-markdown 20.1.0's `^15 \|\| ^16` peer but predates the generics; that condition no longer exists. |
+| Item                                                                            | Answer                                                                                                                                                                                                 | Date       | Reason                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Route to Angular 22, blocked by `@ngxmc/datetime-picker`                        | Upgrade to v20 first, then replace the package with `@ngx-mce/datetime-picker`. Assess a drop-in first; if it is not a drop-in, document every needed change.                                          | 2026-08-17 | User choice at the gate. `@ngxmc/datetime-picker` stopped at Angular 20, so the v21 and v22 hops need a maintained replacement.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `skipLibCheck` for the 2 `TS2416` errors inside `@ngxmc/datetime-picker@20.1.0` | Add `skipLibCheck: true` to `lib/tsconfig.lib.json` only, as a temporary measure. Remove it at hop 2 after the swap and prove the library build stays green without it. Report it if removal fails.    | 2026-08-17 | The errors are a defect in the package, not in this project: it declares `dateFilter` as `(date: D) => boolean` while its own `NgxMatDatepickerControl` requires `(date: D \| null) => boolean`. 20.1.0 is its only Angular 20 release, and the fork declares the signature correctly. The application and spec configs keep full declaration checking. **Closed at hop 2: removed, and the library build is green without it.**                                                                                                                                                                                                                                                                                                                     |
+| `strictTemplates: false` (3 tsconfigs)                                          | Enable it everywhere and fix all 76 errors.                                                                                                                                                            | 2026-08-17 | Measured cost before deciding: 67 errors in 26 library files and 9 in 6 app files. The user chose the full fix over keeping the opt-out.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `$safeNavigationMigration()` (63 occurrences, 29 files)                         | Validated first, then **removed all of them**. 21 fell out with the `strictTemplates` work; the remaining 42 were removed after the analysis. 2 sites got an explicit value instead of a bare removal. | 2026-08-17 | The user asked for evidence before committing to a removal. The validation is written up under "After the checkpoint". Note the assumption behind the request turned out to be wrong in a useful way: the wrapper is invisible to the type checker, so the compiler could **not** have caught a `null` / `undefined` mismatch. The 2 real cases were found by reading what consumes each value.                                                                                                                                                                                                                                                                                                                                                      |
+| `ChangeDetectionStrategy.Eager` (20 components)                                 | **Keep.** Report the 20 lint errors instead of hiding them.                                                                                                                                            | 2026-08-17 | Removing it changes change detection on 19 published components. That is a runtime risk only a click-through can settle, and the skill forbids the assistant claiming a runtime pass. Lint stays red by choice, not by accident.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `@angular-eslint/prefer-inject` (17 errors, 5 files)                            | Run `ng generate @angular/core:inject`, then review the diff and re-verify.                                                                                                                            | 2026-08-17 | Verified the rule was absent from angular-eslint 19.2.1's recommended set, so the upgrade introduced it. Angular ships the schematic, so the refactor is mechanical.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| The explicit `marked` dependency added at hop 1                                 | **Remove it.**                                                                                                                                                                                         | 2026-08-17 | The user asked whether it was still needed. It is not, and the claim was tested rather than argued: no file imports `marked`; deleting the declaration and regenerating `package-lock.json` from scratch still resolves `marked@18.0.9`; and the whole range `ngx-markdown@22.0.0` allows (`^17 \|\| ^18`) carries the generic `MarkedOptions` / `MarkedExtension` types its `.d.ts` needs, confirmed by unpacking marked 17.0.6 as well as 18.0.9. CI runs plain `npm ci` with no `.npmrc` and no `--legacy-peer-deps`, so the peer comes from the lock. The hop 1 failure was caused by a **retained** `marked@15.0.12` that still satisfied ngx-markdown 20.1.0's `^15 \|\| ^16` peer but predates the generics; that condition no longer exists. |
 
 ## Hop plan
 
-| Hop | From | To | Angular release | Note |
-| --- | --- | --- | --- | --- |
-| 1 | 19.2 | 20.3 | 20.3.28 | `@ngxmc/datetime-picker` 19.2.2 -> 20.1.0 (breaking, see below) |
-| — | — | — | — | Swap the picker: `@ngxmc/datetime-picker` -> `@ngx-mce/datetime-picker@21.3.3`. This unblocks hop 2. |
-| 2 | 20.3 | 21.2 | 21.2.20 | needs the swap first |
-| 3 | 21.2 | 22.1 | 22.1.2 | `@ngx-mce/datetime-picker@22.2.3` |
+| Hop | From | To   | Angular release | Note                                                                                                 |
+| --- | ---- | ---- | --------------- | ---------------------------------------------------------------------------------------------------- |
+| 1   | 19.2 | 20.3 | 20.3.28         | `@ngxmc/datetime-picker` 19.2.2 -> 20.1.0 (breaking, see below)                                      |
+| —   | —    | —    | —               | Swap the picker: `@ngxmc/datetime-picker` -> `@ngx-mce/datetime-picker@21.3.3`. This unblocks hop 2. |
+| 2   | 20.3 | 21.2 | 21.2.20         | needs the swap first                                                                                 |
+| 3   | 21.2 | 22.1 | 22.1.2          | `@ngx-mce/datetime-picker@22.2.3`                                                                    |
 
 ## Compatibility check
 
 ### Gate verdicts
 
-| Target | Verdict | Blockers |
-| --- | --- | --- |
-| 22 | STOP | `@ngxmc/datetime-picker` (max Angular 20) |
-| 21 | STOP | `@ngxmc/datetime-picker` (max Angular 20) |
-| 20 | GO | none — 19 bumps, 0 deferred, 0 unverified |
+| Target | Verdict | Blockers                                  |
+| ------ | ------- | ----------------------------------------- |
+| 22     | STOP    | `@ngxmc/datetime-picker` (max Angular 20) |
+| 21     | STOP    | `@ngxmc/datetime-picker` (max Angular 20) |
+| 20     | GO      | none — 19 bumps, 0 deferred, 0 unverified |
 
 After the picker swap the only blocker is gone, so 21 and 22 become reachable.
 
 ### Toolchain
 
-| Item | Required | Current | Status |
-| --- | --- | --- | --- |
-| node | `^22.22.3 \|\| ^24.15.0 \|\| >=26.0.0` (at v22) | 24.15.0 | OK |
-| typescript (at v20) | `>=5.8 <6.0` | 5.5.4 -> 5.9.3 | BUMP |
-| typescript (at v21) | `>=5.9 <6.1` | 5.9.3 (kept) | OK |
-| typescript (at v22) | `>=6.0 <6.1` | 5.9.3 -> 6.0.3 | BUMP |
-| rxjs | `^6.5.3 \|\| ^7.4.0` | 7.8.2 | OK |
-| zone.js | `~0.15.0 \|\| ~0.16.0` | 0.15.1 | OK |
+| Item                | Required                                        | Current        | Status |
+| ------------------- | ----------------------------------------------- | -------------- | ------ |
+| node                | `^22.22.3 \|\| ^24.15.0 \|\| >=26.0.0` (at v22) | 24.15.0        | OK     |
+| typescript (at v20) | `>=5.8 <6.0`                                    | 5.5.4 -> 5.9.3 | BUMP   |
+| typescript (at v21) | `>=5.9 <6.1`                                    | 5.9.3 (kept)   | OK     |
+| typescript (at v22) | `>=6.0 <6.1`                                    | 5.9.3 -> 6.0.3 | BUMP   |
+| rxjs                | `^6.5.3 \|\| ^7.4.0`                            | 7.8.2          | OK     |
+| zone.js             | `~0.15.0 \|\| ~0.16.0`                          | 0.15.1         | OK     |
 
 ### Package matrix (full path to v22)
 
-| Package | Declared | Installed | v20 | v21 | v22 | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| @angular-builders/jest | ^19.0.0 | 19.0.1 | 20.0.0 | 21.0.4 | 22.0.1 | BUMP |
-| @angular/animations | ^19.2.1 | 19.2.14 | 20.3.28 | 21.2.20 | 22.1.2 | BUMP |
-| @angular/build | ^19.2.1 | 19.2.15 | 20.3.34 | 21.2.21 | 22.1.4 | BUMP |
-| @angular/cdk | ^19.2.2 | 19.2.19 | 20.2.14 | 21.2.14 | 22.1.2 | BUMP |
-| @angular/cli | ^19.2.1 | 19.2.15 | 20.3.34 | 21.2.21 | 22.1.4 | BUMP |
-| @angular/common | ^19.2.1 | 19.2.14 | 20.3.28 | 21.2.20 | 22.1.2 | BUMP |
-| @angular/compiler | ^19.2.1 | 19.2.14 | 20.3.28 | 21.2.20 | 22.1.2 | BUMP |
-| @angular/compiler-cli | ^19.2.1 | 19.2.14 | 20.3.28 | 21.2.20 | 22.1.2 | BUMP |
-| @angular/core | ^19.2.1 | 19.2.14 | 20.3.28 | 21.2.20 | 22.1.2 | BUMP |
-| @angular/forms | ^19.2.1 | 19.2.14 | 20.3.28 | 21.2.20 | 22.1.2 | BUMP |
-| @angular/material | ^19.2.2 | 19.2.19 | 20.2.14 | 21.2.14 | 22.1.2 | BUMP |
-| @angular/platform-browser | ^19.2.1 | 19.2.14 | 20.3.28 | 21.2.20 | 22.1.2 | BUMP |
-| @angular/platform-browser-dynamic | ^19.2.1 | 19.2.14 | 20.3.28 | 21.2.20 | 22.1.2 | BUMP |
-| @angular/router | ^19.2.1 | 19.2.14 | 20.3.28 | 21.2.20 | 22.1.2 | BUMP |
-| @eslint/js | ^9.8.0 | 9.35.0 | n/a | n/a | n/a | OK |
-| @kolkov/angular-editor | ^3.0.0-beta.2 | 3.0.0-beta.2 | 3.1.0 | 3.1.0 | 3.1.0 | BUMP |
-| @lab900/ui | ^19.0.0 | 19.2.3 | 19.2.3 | 19.2.3 | 19.2.3 | ~~OK~~ **wrong — see Follow-up 17** |
-| @ngx-translate/core | ^16.0.4 | 16.0.4 | 16.0.4 | 16.0.4 | 16.0.4 | OK |
-| @ngxmc/datetime-picker | ~19.2.2 | 19.2.2 | 20.1.0 | — | — | **BLOCKER — replaced** |
-| @types/eslint__js | ^8.42.3 | 8.42.3 | n/a | n/a | n/a | OK |
-| @types/jest | ^29.5.14 | 29.5.14 | n/a | n/a | n/a | OK |
-| @types/lodash | ^4.17.7 | 4.17.20 | n/a | n/a | n/a | OK |
-| @types/node | ^20.11.1 | 20.19.13 | n/a | n/a | n/a | OK |
-| @typescript-eslint/eslint-plugin | ^8.26.0 | 8.43.0 | n/a | n/a | n/a | TS-BUMP (at v22) |
-| @typescript-eslint/parser | ^8.26.0 | 8.43.0 | n/a | n/a | n/a | TS-BUMP (at v22) |
-| angular-cli-ghpages | ^2.0.3 | 2.0.3 | n/a | n/a | n/a | OK |
-| angular-eslint | 19.2.1 | 19.2.1 | 20.7.0 | 21.4.0 | 22.1.0 | BUMP |
-| eslint | ^9.8.0 | 9.35.0 | n/a | n/a | n/a | OK |
-| eslint-config-prettier | ^9.1.0 | 9.1.2 | n/a | n/a | n/a | OK |
-| eslint-plugin-prettier | ^5.2.1 | 5.5.4 | n/a | n/a | n/a | OK |
-| jest | ^29.7.0 | 29.7.0 | n/a | n/a | n/a | OK |
-| jest-preset-angular | ^14.5.3 | 14.6.1 | 14.6.1 | 17.0.0 | 17.0.0 | BUMP (hop 2) |
-| ng-mocks | ^14.13.3 | 14.13.5 | 14.13.5 | 14.17.1 | 14.17.1 | BUMP (hop 2) |
-| ng-packagr | ^19.2.0 | 19.2.2 | 20.3.2 | 21.2.7 | 22.1.1 | BUMP |
-| ngx-markdown | ^19.1.0 | 19.1.1 | 20.1.0 | 21.3.0 | 22.0.0 | BUMP |
-| ngx-mask | ^19.0.7 | 19.0.7 | 19.0.7 | 19.0.7 | 19.0.7 | OK |
-| ngx-mat-select-search | ^8.0.0 | 8.0.2 | 8.0.2 | 9.0.0 | 9.0.0 | BUMP (hop 2) |
-| prettier | ^3.3.3 | 3.6.2 | n/a | n/a | n/a | OK |
-| prettier-eslint | ^16.3.0 | 16.4.2 | n/a | n/a | n/a | OK |
-| prismjs | ^1.30.0 | 1.30.0 | n/a | n/a | n/a | OK |
-| rxjs | ~7.8.1 | 7.8.2 | n/a | n/a | n/a | OK |
-| tslib | ^2.8.1 | 2.8.1 | n/a | n/a | n/a | OK |
-| typescript | ~5.5.4 | 5.5.4 | 5.9.3 | 5.9.3 | 6.0.3 | BUMP |
-| zone.js | ~0.15.0 | 0.15.1 | n/a | n/a | n/a | OK |
+| Package                           | Declared      | Installed    | v20     | v21     | v22     | Status                              |
+| --------------------------------- | ------------- | ------------ | ------- | ------- | ------- | ----------------------------------- |
+| @angular-builders/jest            | ^19.0.0       | 19.0.1       | 20.0.0  | 21.0.4  | 22.0.1  | BUMP                                |
+| @angular/animations               | ^19.2.1       | 19.2.14      | 20.3.28 | 21.2.20 | 22.1.2  | BUMP                                |
+| @angular/build                    | ^19.2.1       | 19.2.15      | 20.3.34 | 21.2.21 | 22.1.4  | BUMP                                |
+| @angular/cdk                      | ^19.2.2       | 19.2.19      | 20.2.14 | 21.2.14 | 22.1.2  | BUMP                                |
+| @angular/cli                      | ^19.2.1       | 19.2.15      | 20.3.34 | 21.2.21 | 22.1.4  | BUMP                                |
+| @angular/common                   | ^19.2.1       | 19.2.14      | 20.3.28 | 21.2.20 | 22.1.2  | BUMP                                |
+| @angular/compiler                 | ^19.2.1       | 19.2.14      | 20.3.28 | 21.2.20 | 22.1.2  | BUMP                                |
+| @angular/compiler-cli             | ^19.2.1       | 19.2.14      | 20.3.28 | 21.2.20 | 22.1.2  | BUMP                                |
+| @angular/core                     | ^19.2.1       | 19.2.14      | 20.3.28 | 21.2.20 | 22.1.2  | BUMP                                |
+| @angular/forms                    | ^19.2.1       | 19.2.14      | 20.3.28 | 21.2.20 | 22.1.2  | BUMP                                |
+| @angular/material                 | ^19.2.2       | 19.2.19      | 20.2.14 | 21.2.14 | 22.1.2  | BUMP                                |
+| @angular/platform-browser         | ^19.2.1       | 19.2.14      | 20.3.28 | 21.2.20 | 22.1.2  | BUMP                                |
+| @angular/platform-browser-dynamic | ^19.2.1       | 19.2.14      | 20.3.28 | 21.2.20 | 22.1.2  | BUMP                                |
+| @angular/router                   | ^19.2.1       | 19.2.14      | 20.3.28 | 21.2.20 | 22.1.2  | BUMP                                |
+| @eslint/js                        | ^9.8.0        | 9.35.0       | n/a     | n/a     | n/a     | OK                                  |
+| @kolkov/angular-editor            | ^3.0.0-beta.2 | 3.0.0-beta.2 | 3.1.0   | 3.1.0   | 3.1.0   | BUMP                                |
+| @lab900/ui                        | ^19.0.0       | 19.2.3       | 19.2.3  | 19.2.3  | 19.2.3  | ~~OK~~ **wrong — see Follow-up 17** |
+| @ngx-translate/core               | ^16.0.4       | 16.0.4       | 16.0.4  | 16.0.4  | 16.0.4  | OK                                  |
+| @ngxmc/datetime-picker            | ~19.2.2       | 19.2.2       | 20.1.0  | —       | —       | **BLOCKER — replaced**              |
+| @types/eslint\_\_js               | ^8.42.3       | 8.42.3       | n/a     | n/a     | n/a     | OK                                  |
+| @types/jest                       | ^29.5.14      | 29.5.14      | n/a     | n/a     | n/a     | OK                                  |
+| @types/lodash                     | ^4.17.7       | 4.17.20      | n/a     | n/a     | n/a     | OK                                  |
+| @types/node                       | ^20.11.1      | 20.19.13     | n/a     | n/a     | n/a     | OK                                  |
+| @typescript-eslint/eslint-plugin  | ^8.26.0       | 8.43.0       | n/a     | n/a     | n/a     | TS-BUMP (at v22)                    |
+| @typescript-eslint/parser         | ^8.26.0       | 8.43.0       | n/a     | n/a     | n/a     | TS-BUMP (at v22)                    |
+| angular-cli-ghpages               | ^2.0.3        | 2.0.3        | n/a     | n/a     | n/a     | OK                                  |
+| angular-eslint                    | 19.2.1        | 19.2.1       | 20.7.0  | 21.4.0  | 22.1.0  | BUMP                                |
+| eslint                            | ^9.8.0        | 9.35.0       | n/a     | n/a     | n/a     | OK                                  |
+| eslint-config-prettier            | ^9.1.0        | 9.1.2        | n/a     | n/a     | n/a     | OK                                  |
+| eslint-plugin-prettier            | ^5.2.1        | 5.5.4        | n/a     | n/a     | n/a     | OK                                  |
+| jest                              | ^29.7.0       | 29.7.0       | n/a     | n/a     | n/a     | OK                                  |
+| jest-preset-angular               | ^14.5.3       | 14.6.1       | 14.6.1  | 17.0.0  | 17.0.0  | BUMP (hop 2)                        |
+| ng-mocks                          | ^14.13.3      | 14.13.5      | 14.13.5 | 14.17.1 | 14.17.1 | BUMP (hop 2)                        |
+| ng-packagr                        | ^19.2.0       | 19.2.2       | 20.3.2  | 21.2.7  | 22.1.1  | BUMP                                |
+| ngx-markdown                      | ^19.1.0       | 19.1.1       | 20.1.0  | 21.3.0  | 22.0.0  | BUMP                                |
+| ngx-mask                          | ^19.0.7       | 19.0.7       | 19.0.7  | 19.0.7  | 19.0.7  | OK                                  |
+| ngx-mat-select-search             | ^8.0.0        | 8.0.2        | 8.0.2   | 9.0.0   | 9.0.0   | BUMP (hop 2)                        |
+| prettier                          | ^3.3.3        | 3.6.2        | n/a     | n/a     | n/a     | OK                                  |
+| prettier-eslint                   | ^16.3.0       | 16.4.2       | n/a     | n/a     | n/a     | OK                                  |
+| prismjs                           | ^1.30.0       | 1.30.0       | n/a     | n/a     | n/a     | OK                                  |
+| rxjs                              | ~7.8.1        | 7.8.2        | n/a     | n/a     | n/a     | OK                                  |
+| tslib                             | ^2.8.1        | 2.8.1        | n/a     | n/a     | n/a     | OK                                  |
+| typescript                        | ~5.5.4        | 5.5.4        | 5.9.3   | 5.9.3   | 6.0.3   | BUMP                                |
+| zone.js                           | ~0.15.0       | 0.15.1       | n/a     | n/a     | n/a     | OK                                  |
 
 ### Version bumps per hop (plan)
 
@@ -194,13 +194,13 @@ as `TS-BLOCKER`. That verdict is wrong. The script judged only the **newest** re
 which peers `typescript >=6.0 <6.1`. All three move in Angular lockstep, so each hop installs its own
 matching version. Verified on the registry:
 
-| Package | Version at hop | typescript peer | TypeScript that hop installs | Fits |
-| --- | --- | --- | --- | --- |
-| @angular/build | 20.3.34 | `>=5.8 <6.0` | 5.9.3 | yes |
-| @angular/build | 21.2.21 | `>=5.9 <6.0` | 5.9.3 (kept) | yes |
-| @angular/compiler-cli | 20.3.28 | `>=5.8 <6.0` | 5.9.3 | yes |
-| ng-packagr | 20.3.2 | `>=5.8 <6.0` | 5.9.3 | yes |
-| ng-packagr | 21.2.7 | `>=5.9 <6.0` | 5.9.3 (kept) | yes |
+| Package               | Version at hop | typescript peer | TypeScript that hop installs | Fits |
+| --------------------- | -------------- | --------------- | ---------------------------- | ---- |
+| @angular/build        | 20.3.34        | `>=5.8 <6.0`    | 5.9.3                        | yes  |
+| @angular/build        | 21.2.21        | `>=5.9 <6.0`    | 5.9.3 (kept)                 | yes  |
+| @angular/compiler-cli | 20.3.28        | `>=5.8 <6.0`    | 5.9.3                        | yes  |
+| ng-packagr            | 20.3.2         | `>=5.8 <6.0`    | 5.9.3                        | yes  |
+| ng-packagr            | 21.2.7         | `>=5.9 <6.0`    | 5.9.3 (kept)                 | yes  |
 
 The two real TypeScript peer bumps stay: `@typescript-eslint/eslint-plugin` and
 `@typescript-eslint/parser` must reach 8.58.0 at hop 3, because TypeScript 6.0.3 arrives there.
@@ -217,27 +217,27 @@ None.
 
 ### Why `@ngxmc/datetime-picker` blocks
 
-| Fact | Value |
-| --- | --- |
-| Declared | `~19.2.2` |
-| Installed | 19.2.2 |
-| Last release | 20.1.0, published 2025-08-01 |
-| Angular peer of 20.1.0 | `@angular/core@^20.0.0` |
-| Highest Angular supported | 20 |
+| Fact                      | Value                        |
+| ------------------------- | ---------------------------- |
+| Declared                  | `~19.2.2`                    |
+| Installed                 | 19.2.2                       |
+| Last release              | 20.1.0, published 2025-08-01 |
+| Angular peer of 20.1.0    | `@angular/core@^20.0.0`      |
+| Highest Angular supported | 20                           |
 
 It is not a leaf dependency. It is a **published peer** of `@lab900/forms` (`lib/package.json`), so every
 consumer of the library installs it.
 
 ### Usage sites
 
-| File | Line | Use |
-| --- | --- | --- |
-| `lib/package.json` | 16 | peer range `~19.2.2` |
-| `package.json` | 37 | dependency |
-| `lib/src/lib/components/form-fields/date-time-field/date-time-field.component.ts` | 9-17 | 7 symbols from the main entry |
-| `lib/src/lib/components/form-fields/date-time-field/date-time-field.component.ts` | 18, 71 | deep import `@ngxmc/datetime-picker/lib/date-selection-model` |
-| `src/main.ts` | 14, 36 | `provideNgxMatNativeDate()` |
-| `src/guides/getting-started.md` | 10, 21, 88 | install and setup docs |
+| File                                                                              | Line       | Use                                                           |
+| --------------------------------------------------------------------------------- | ---------- | ------------------------------------------------------------- |
+| `lib/package.json`                                                                | 16         | peer range `~19.2.2`                                          |
+| `package.json`                                                                    | 37         | dependency                                                    |
+| `lib/src/lib/components/form-fields/date-time-field/date-time-field.component.ts` | 9-17       | 7 symbols from the main entry                                 |
+| `lib/src/lib/components/form-fields/date-time-field/date-time-field.component.ts` | 18, 71     | deep import `@ngxmc/datetime-picker/lib/date-selection-model` |
+| `src/main.ts`                                                                     | 14, 36     | `provideNgxMatNativeDate()`                                   |
+| `src/guides/getting-started.md`                                                   | 10, 21, 88 | install and setup docs                                        |
 
 ### Drop-in assessment of `@ngx-mce/datetime-picker`
 
@@ -247,14 +247,14 @@ export block of each `fesm2022` bundle and the type entry points.
 
 **Result: `@ngx-mce/datetime-picker` is an exact drop-in for `@ngxmc/datetime-picker@20.1.0`.**
 
-| Aspect | `@ngxmc@20.1.0` | `@ngx-mce@22.2.3` | Same |
-| --- | --- | --- | --- |
-| Public exports | 44 | 44 | yes — zero added, zero removed |
-| Layout | flat, one entry point | flat, one entry point | yes |
-| Bundle | `fesm2022/*.mjs` | `fesm2022/*.mjs` | yes |
-| Upstream repo | `angular-material-components` | `angular-material-components` (fork `fbf-prog64`) | same lineage |
-| Majors published | 18 -- 20 | 21 -- 22 only | no — no 20.x, so the swap belongs to hop 2 |
-| Maintenance | last release 2025-08-01 | last release 2026-08-14 | active |
+| Aspect           | `@ngxmc@20.1.0`               | `@ngx-mce@22.2.3`                                 | Same                                       |
+| ---------------- | ----------------------------- | ------------------------------------------------- | ------------------------------------------ |
+| Public exports   | 44                            | 44                                                | yes — zero added, zero removed             |
+| Layout           | flat, one entry point         | flat, one entry point                             | yes                                        |
+| Bundle           | `fesm2022/*.mjs`              | `fesm2022/*.mjs`                                  | yes                                        |
+| Upstream repo    | `angular-material-components` | `angular-material-components` (fork `fbf-prog64`) | same lineage                               |
+| Majors published | 18 -- 20                      | 21 -- 22 only                                     | no — no 20.x, so the swap belongs to hop 2 |
+| Maintenance      | last release 2025-08-01       | last release 2026-08-14                           | active                                     |
 
 The fork continues the version line: `@ngxmc` covers Angular 15--20, `@ngx-mce` covers 21+. Its README
 states the split.
@@ -264,13 +264,13 @@ states the split.
 `@ngxmc/datetime-picker` 19.2.2 -> 20.1.0 is itself a breaking change. 20.1.0 dropped the package's own
 date-adapter layer and now uses Angular Material's `DateAdapter`. Five exports disappeared:
 
-| Removed in 20.1.0 | Used here | Replacement |
-| --- | --- | --- |
-| `NgxMatDateAdapter` | yes | `DateAdapter` from `@angular/material/core` |
-| `provideNgxMatNativeDate` | yes | `provideNativeDateAdapter()` from `@angular/material/core` |
-| `NgxMatNativeDateAdapter` | no | — |
-| `NGX_MAT_DATE_FORMATS` | no | `MAT_DATE_FORMATS` |
-| `NGX_MAT_NATIVE_DATE_FORMATS` | no | — |
+| Removed in 20.1.0             | Used here | Replacement                                                |
+| ----------------------------- | --------- | ---------------------------------------------------------- |
+| `NgxMatDateAdapter`           | yes       | `DateAdapter` from `@angular/material/core`                |
+| `provideNgxMatNativeDate`     | yes       | `provideNativeDateAdapter()` from `@angular/material/core` |
+| `NgxMatNativeDateAdapter`     | no        | —                                                          |
+| `NGX_MAT_DATE_FORMATS`        | no        | `MAT_DATE_FORMATS`                                         |
+| `NGX_MAT_NATIVE_DATE_FORMATS` | no        | —                                                          |
 
 20.1.0 also flattened its types. The whole `lib/**` `.d.ts` tree is gone, and the `exports` map declares
 no subpath, so `@ngxmc/datetime-picker/lib/date-selection-model` no longer resolves.
@@ -548,12 +548,12 @@ No `--force` was needed. The call resolved one consistent tree and ran every pac
 
 **What the migrations changed by themselves**
 
-| File | Change | Class |
-| --- | --- | --- |
-| `package.json` | 19 dependency bumps, plus `typescript` `~5.5.4` -> `~5.9.3`. The angular-eslint v20 migration also moved `eslint` to `^9.28.0` and `@typescript-eslint/*` to `^8.33.1`. | required |
-| `tsconfig.json` | `moduleResolution` `node` -> `bundler`. Array formatting was expanded as a side effect. | required |
-| `angular.json` | new `schematics` block that keeps the old file-naming style. | **opt-out** — see below |
-| `lib/.../drag-n-drop-file-field.component.scss` | Material v20 token rename: `--mdc-icon-button-state-layer-size` -> `--mat-icon-button-state-layer-size`. | required |
+| File                                            | Change                                                                                                                                                                  | Class                   |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| `package.json`                                  | 19 dependency bumps, plus `typescript` `~5.5.4` -> `~5.9.3`. The angular-eslint v20 migration also moved `eslint` to `^9.28.0` and `@typescript-eslint/*` to `^8.33.1`. | required                |
+| `tsconfig.json`                                 | `moduleResolution` `node` -> `bundler`. Array formatting was expanded as a side effect.                                                                                 | required                |
+| `angular.json`                                  | new `schematics` block that keeps the old file-naming style.                                                                                                            | **opt-out** — see below |
+| `lib/.../drag-n-drop-file-field.component.scss` | Material v20 token rename: `--mdc-icon-button-state-layer-size` -> `--mat-icon-button-state-layer-size`.                                                                | required                |
 
 Three optional migrations were offered and **not** run: `use-application-builder`,
 `control-flow-migration` and `router-current-navigation`. They are listed under Follow-ups.
@@ -598,8 +598,8 @@ Three optional migrations were offered and **not** run: `use-application-builder
    but its type declarations use the generic `MarkedOptions<string, string>` and
    `MarkedExtension<string, string>` that only exist from v16. npm had **retained** 15.0.12, which still
    satisfied the peer range, and the application type check failed with 2 `TS2315` errors. This is a real
-   fix, not a suppression. *(Removed again after the upgrade — see the Decisions table. `ng update` moved
-   it to 18.0.9 at hop 2, and a clean resolve now reaches that version without the declaration.)*
+   fix, not a suppression. _(Removed again after the upgrade — see the Decisions table. `ng update` moved
+   it to 18.0.9 at hop 2, and a clean resolve now reaches that version without the declaration.)_
 
 5. `angular.json` — the dead `node_modules/marked/marked.min.js` entry removed from the `scripts`
    array. `marked@16` ships `lib/marked.umd.js` and no root `marked.min.js`, so the app build could
@@ -612,14 +612,14 @@ Three optional migrations were offered and **not** run: `use-application-builder
 
 **Verify — all green**
 
-| Check | Result |
-| --- | --- |
-| `npx tsc -p tsconfig.app.json --noEmit` | 0 errors |
-| `npx tsc -p tsconfig.spec.json --noEmit` | 0 errors |
-| `npx tsc -p lib/tsconfig.lib.json --noEmit` | 0 errors |
-| `npx ng build forms` | pass |
-| `npm run build:forms:prod` | pass |
-| `npm run build` | pass, 2 pre-existing lodash CommonJS warnings |
+| Check                                       | Result                                        |
+| ------------------------------------------- | --------------------------------------------- |
+| `npx tsc -p tsconfig.app.json --noEmit`     | 0 errors                                      |
+| `npx tsc -p tsconfig.spec.json --noEmit`    | 0 errors                                      |
+| `npx tsc -p lib/tsconfig.lib.json --noEmit` | 0 errors                                      |
+| `npx ng build forms`                        | pass                                          |
+| `npm run build:forms:prod`                  | pass                                          |
+| `npm run build`                             | pass, 2 pre-existing lodash CommonJS warnings |
 
 Lint and tests do not run here. They run once after the last hop.
 
@@ -640,22 +640,22 @@ This hop had to carry the swap. `@ngxmc/datetime-picker` has no Angular 21 relea
 
 **What the migrations changed by themselves**
 
-| File | Change | Class |
-| --- | --- | --- |
-| `package.json` | Angular to 21.2.x, and `marked` `^16.4.2` -> `^18.0.9`. `ng update` did that bump on its own, which is what follow-up 3 of hop 1 asked for. | required |
-| `tsconfig.json`, `lib/tsconfig.lib.json` | `lib` array modernised to `es2022`. | required |
-| `src/main.ts` | `provideZoneChangeDetection()` added to the providers. v21 requires it for a zone-based application, so it is **not** an opt-out. | required |
+| File                                     | Change                                                                                                                                      | Class    |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| `package.json`                           | Angular to 21.2.x, and `marked` `^16.4.2` -> `^18.0.9`. `ng update` did that bump on its own, which is what follow-up 3 of hop 1 asked for. | required |
+| `tsconfig.json`, `lib/tsconfig.lib.json` | `lib` array modernised to `es2022`.                                                                                                         | required |
+| `src/main.ts`                            | `provideZoneChangeDetection()` added to the providers. v21 requires it for a zone-based application, so it is **not** an opt-out.           | required |
 
 No new opt-out was written in this hop.
 
 **The picker swap**
 
-| Item | Before | After |
-| --- | --- | --- |
-| `package.json` dependency | `@ngxmc/datetime-picker: ~19.2.2` | `@ngx-mce/datetime-picker: ~21.3.3` |
-| `lib/package.json` peer | `@ngxmc/datetime-picker: ~19.2.2` | `@ngx-mce/datetime-picker: ~21.3.3` |
-| `date-time-field.component.ts` import | `@ngxmc/datetime-picker` | `@ngx-mce/datetime-picker` |
-| `src/guides/getting-started.md` | `@ngxmc/datetime-picker` | `@ngx-mce/datetime-picker` |
+| Item                                  | Before                            | After                               |
+| ------------------------------------- | --------------------------------- | ----------------------------------- |
+| `package.json` dependency             | `@ngxmc/datetime-picker: ~19.2.2` | `@ngx-mce/datetime-picker: ~21.3.3` |
+| `lib/package.json` peer               | `@ngxmc/datetime-picker: ~19.2.2` | `@ngx-mce/datetime-picker: ~21.3.3` |
+| `date-time-field.component.ts` import | `@ngxmc/datetime-picker`          | `@ngx-mce/datetime-picker`          |
+| `src/guides/getting-started.md`       | `@ngxmc/datetime-picker`          | `@ngx-mce/datetime-picker`          |
 
 The import specifier was the only code change. All 7 symbols, the template and the internal
 `_componentRef.instance._model` path are identical in the fork, exactly as the assessment predicted.
@@ -697,14 +697,14 @@ with the CSS animation `_mat-form-field-subscript-animation`, at the same timing
 
 **Verify — all green**
 
-| Check | Result |
-| --- | --- |
-| `npx tsc -p tsconfig.app.json --noEmit` | 0 errors |
-| `npx tsc -p tsconfig.spec.json --noEmit` | 0 errors |
+| Check                                       | Result                           |
+| ------------------------------------------- | -------------------------------- |
+| `npx tsc -p tsconfig.app.json --noEmit`     | 0 errors                         |
+| `npx tsc -p tsconfig.spec.json --noEmit`    | 0 errors                         |
 | `npx tsc -p lib/tsconfig.lib.json --noEmit` | 0 errors, without `skipLibCheck` |
-| `npx ng build forms` | pass |
-| `npm run build:forms:prod` | pass |
-| `npm run build` | pass |
+| `npx ng build forms`                        | pass                             |
+| `npm run build:forms:prod`                  | pass                             |
+| `npm run build`                             | pass                             |
 
 ### Hop 3 — 21.2 -> 22.1
 
@@ -723,14 +723,14 @@ background with exit code 0. `ng update` also bumped `jest` to `^30.4.2` on its 
 
 **What the migrations changed by themselves**
 
-| File(s) | Change | Class |
-| --- | --- | --- |
-| `package.json` | Angular to 22.1.x, typescript to `~6.0.3`, jest to `^30.4.2` | required |
-| 29 files, 63 occurrences | `$safeNavigationMigration()` wrappers around optional-chain expressions | **opt-out** |
-| 20 components | `changeDetection: ChangeDetectionStrategy.Eager` | **opt-out** |
-| `tsconfig.app.json`, `tsconfig.spec.json`, `lib/tsconfig.lib.json` | `strictTemplates: false` | **opt-out** |
-| all 4 tsconfigs | `extendedDiagnostics` suppressing `nullishCoalescingNotNullable` and `optionalChainNotNullable` | **opt-out**, removed — see below |
-| `src/main.ts` | `provideHttpClient()` -> `provideHttpClient(withXhr())` | **opt-out** |
+| File(s)                                                            | Change                                                                                          | Class                            |
+| ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------- | -------------------------------- |
+| `package.json`                                                     | Angular to 22.1.x, typescript to `~6.0.3`, jest to `^30.4.2`                                    | required                         |
+| 29 files, 63 occurrences                                           | `$safeNavigationMigration()` wrappers around optional-chain expressions                         | **opt-out**                      |
+| 20 components                                                      | `changeDetection: ChangeDetectionStrategy.Eager`                                                | **opt-out**                      |
+| `tsconfig.app.json`, `tsconfig.spec.json`, `lib/tsconfig.lib.json` | `strictTemplates: false`                                                                        | **opt-out**                      |
+| all 4 tsconfigs                                                    | `extendedDiagnostics` suppressing `nullishCoalescingNotNullable` and `optionalChainNotNullable` | **opt-out**, removed — see below |
+| `src/main.ts`                                                      | `provideHttpClient()` -> `provideHttpClient(withXhr())`                                         | **opt-out**                      |
 
 Two optional migrations were offered and **not** run: `migrate-karma-to-vitest` (not applicable, the
 project uses jest) and `use-application-builder`. `@angular-builders/jest` also printed three advisory
@@ -762,19 +762,19 @@ on, that decision has to revisit these two diagnostics.
    - `tsconfig.json` and `tsconfig.spec.json` — the `paths` value became `./dist/@lab900/forms`.
      Without `baseUrl`, a non-relative `paths` value is an error (`TS5090`).
    - `src/app/modules/showcase-forms/showcase-forms.constants.ts` — `import packageInfo from
-     'lib/package.json'` became `'../../../../lib/package.json'`. That import had resolved only
+'lib/package.json'` became `'../../../../lib/package.json'`. That import had resolved only
      through `baseUrl`.
 
 **Verify — all green**
 
-| Check | Result |
-| --- | --- |
-| `npx tsc -p tsconfig.app.json --noEmit` | 0 errors |
-| `npx tsc -p tsconfig.spec.json --noEmit` | 0 errors |
+| Check                                       | Result   |
+| ------------------------------------------- | -------- |
+| `npx tsc -p tsconfig.app.json --noEmit`     | 0 errors |
+| `npx tsc -p tsconfig.spec.json --noEmit`    | 0 errors |
 | `npx tsc -p lib/tsconfig.lib.json --noEmit` | 0 errors |
-| `npx ng build forms` | pass |
-| `npm run build:forms:prod` | pass |
-| `npm run build` | pass |
+| `npx ng build forms`                        | pass     |
+| `npm run build:forms:prod`                  | pass     |
+| `npm run build`                             | pass     |
 
 ### Step 4.1 — tests
 
@@ -818,7 +818,7 @@ which Jest resolves to the package that is no longer there. `jest.config.js` now
 environment instead, which needs no new dependency:
 
 ```js
-testEnvironment: 'jest-preset-angular/environments/jest-jsdom-env'
+testEnvironment: 'jest-preset-angular/environments/jest-jsdom-env';
 ```
 
 **Result: 4 suites passed, 32 tests passed, 0 failed.** No test file was edited.
@@ -829,14 +829,14 @@ not this project. It is under Follow-ups.
 
 ## Migration opt-outs
 
-| Opt-out | Class | Sites | Decision |
-| --- | --- | --- | --- |
-| `schematics` block in `angular.json` that keeps the old file-naming style (`type: "component"`, `typeSeparator: "."`) | generator defaults | 1 block, 8 schematic entries, `angular.json` | **kept, not asked** — see Follow-up 13. Affects only future `ng generate` output. |
-| `strictTemplates: false` | strictness flag | 3 files: `tsconfig.app.json`, `tsconfig.spec.json`, `lib/tsconfig.lib.json` | **removed** — enabled everywhere, all 76 errors fixed |
-| `$safeNavigationMigration()` wrapper around optional-chain expressions | expression wrapper | 29 files, 63 occurrences: 23 files / 56 in `lib/src`, 6 files / 7 in `src` | **removed** — all 63 gone, 2 sites given an explicit value after validation |
-| `changeDetection: ChangeDetectionStrategy.Eager` | behaviour default on a class | 20 components: 19 in `lib/src`, 1 in `src` | **kept** by decision. Causes all 20 lint errors, reported not hidden. |
-| `provideHttpClient(withXhr())` | behaviour default | 1 site, `src/main.ts` | **kept, not asked** — see Follow-up 11. Evidence says it is unnecessary, but removing it changes the HTTP backend, so it was not done unasked. |
-| `extendedDiagnostics` suppressing `nullishCoalescingNotNullable` and `optionalChainNotNullable` | strictness flag | 4 files | **removed at hop 3** — the compiler rejects it together with `strictTemplates: false` (NG4003), and the checks cannot fire while `strictTemplates` is off |
+| Opt-out                                                                                                               | Class                        | Sites                                                                       | Decision                                                                                                                                                  |
+| --------------------------------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `schematics` block in `angular.json` that keeps the old file-naming style (`type: "component"`, `typeSeparator: "."`) | generator defaults           | 1 block, 8 schematic entries, `angular.json`                                | **kept, not asked** — see Follow-up 13. Affects only future `ng generate` output.                                                                         |
+| `strictTemplates: false`                                                                                              | strictness flag              | 3 files: `tsconfig.app.json`, `tsconfig.spec.json`, `lib/tsconfig.lib.json` | **removed** — enabled everywhere, all 76 errors fixed                                                                                                     |
+| `$safeNavigationMigration()` wrapper around optional-chain expressions                                                | expression wrapper           | 29 files, 63 occurrences: 23 files / 56 in `lib/src`, 6 files / 7 in `src`  | **removed** — all 63 gone, 2 sites given an explicit value after validation                                                                               |
+| `changeDetection: ChangeDetectionStrategy.Eager`                                                                      | behaviour default on a class | 20 components: 19 in `lib/src`, 1 in `src`                                  | **kept** by decision. Causes all 20 lint errors, reported not hidden.                                                                                     |
+| `provideHttpClient(withXhr())`                                                                                        | behaviour default            | 1 site, `src/main.ts`                                                       | **kept, not asked** — see Follow-up 11. Evidence says it is unnecessary, but removing it changes the HTTP backend, so it was not done unasked.            |
+| `extendedDiagnostics` suppressing `nullishCoalescingNotNullable` and `optionalChainNotNullable`                       | strictness flag              | 4 files                                                                     | **removed at hop 3** — the compiler rejects it together with `strictTemplates: false` (NG4003), and the checks cannot fire while `strictTemplates` is off |
 
 The block is an escape hatch written by the `@angular/cli` v20 migration. It changes nothing that
 exists today; it only decides how `ng generate` names new files. It causes no lint error.
@@ -908,14 +908,14 @@ behaviour-identical; that was verified in the package's own bundle before choosi
 
 **Real defects this surfaced.** `strictTemplates` did not only cost work, it found bugs:
 
-| File | Defect | Now |
-| --- | --- | --- |
-| `button-toggle-field.component.html:22` | `id="mat-button-toggle-{{ elementId }}"` interpolated the **function**, not its value (`NG8109`, `NG8117`) | `{{ elementId() }}` |
-| `button-toggle-field.component.html:29` | `<lab900-icon [icon]="value.icon">` rendered with `undefined` whenever a button option had no icon, because `!value?.icon?.position` is true in that case | guarded on `@let icon` |
-| `autocomplete-multiple-field.component.html:20` | a bare `matAutocomplete` attribute sat next to the real `[matAutocomplete]="auto"` binding, typing as `string` | the redundant attribute removed |
-| `auth-image.directive.ts:15` | `httpCallback` was typed `Observable<Blob>`, but `fetchImageBase64` accepts and converts `ArrayBuffer`, and the showcase passes `responseType: 'arraybuffer'` | widened to `Observable<Blob \| ArrayBuffer>` |
-| `mat-range-slider-field.component.ts:67` | `formatValue(undefined)` fell through to `` `${value}` `` and rendered the string `"undefined"` into the input | parameter widened, returns `''` |
-| `app.component.html:29` | `[mode]="sideNavMode$ \| async"` bound `null` before the first emission | `?? 'side'` |
+| File                                            | Defect                                                                                                                                                        | Now                                          |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| `button-toggle-field.component.html:22`         | `id="mat-button-toggle-{{ elementId }}"` interpolated the **function**, not its value (`NG8109`, `NG8117`)                                                    | `{{ elementId() }}`                          |
+| `button-toggle-field.component.html:29`         | `<lab900-icon [icon]="value.icon">` rendered with `undefined` whenever a button option had no icon, because `!value?.icon?.position` is true in that case     | guarded on `@let icon`                       |
+| `autocomplete-multiple-field.component.html:20` | a bare `matAutocomplete` attribute sat next to the real `[matAutocomplete]="auto"` binding, typing as `string`                                                | the redundant attribute removed              |
+| `auth-image.directive.ts:15`                    | `httpCallback` was typed `Observable<Blob>`, but `fetchImageBase64` accepts and converts `ArrayBuffer`, and the showcase passes `responseType: 'arraybuffer'` | widened to `Observable<Blob \| ArrayBuffer>` |
+| `mat-range-slider-field.component.ts:67`        | `formatValue(undefined)` fell through to `` `${value}` `` and rendered the string `"undefined"` into the input                                                | parameter widened, returns `''`              |
+| `app.component.html:29`                         | `[mode]="sideNavMode$ \| async"` bound `null` before the first emission                                                                                       | `?? 'side'`                                  |
 
 **Public API changes, both widening only:** `AuthImageDirective.httpCallback` accepts a callback
 returning `ArrayBuffer` as well as `Blob`, and `MatRangeSliderFieldComponent.formatValue` accepts
@@ -951,16 +951,16 @@ validation found.
 **What the wrapper actually does.** Read out of `@angular/compiler`, not assumed. There are two
 handlers, and they behave differently:
 
-| Stage | Handling | Consequence |
-| --- | --- | --- |
-| Type checking | `$safeNavigationMigration(x)` is emitted into the type-check block as plain `(x)` | **The wrapper is invisible to the type checker.** It changes no type. |
-| Code generation | `convertSafeNavigationMigrationCall` rewrites it to a `SafeNavigationMigrationExpr` | The enclosed `?.` yields `null` instead of v22's `undefined`. |
+| Stage           | Handling                                                                            | Consequence                                                           |
+| --------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Type checking   | `$safeNavigationMigration(x)` is emitted into the type-check block as plain `(x)`   | **The wrapper is invisible to the type checker.** It changes no type. |
+| Code generation | `convertSafeNavigationMigrationCall` rewrites it to a `SafeNavigationMigrationExpr` | The enclosed `?.` yields `null` instead of v22's `undefined`.         |
 
 Two conclusions follow, and both matter:
 
 1. **Removing a wrapper can never produce a type error**, so the compiler offers no safety net here. Any
    claim of "the build is green, so removal is safe" would be worthless.
-2. Because `strictTemplates` is now on and the checker already sees the *unwrapped*
+2. Because `strictTemplates` is now on and the checker already sees the _unwrapped_
    `T | undefined` at all 42 sites, **`undefined` is already type-legal at every one of them**. Every
    target input declares a type that admits `undefined`.
 
@@ -985,10 +985,10 @@ Each of the 42 sites was classified by what receives the value.
 
 **Not safe — 2 sites. Both were given an explicit value instead of a bare removal:**
 
-| Site | Why the value matters | Fix |
-| --- | --- | --- |
-| `file-preview-field.component.html:8` `[accept]` | binds the DOM property `HTMLInputElement.accept`, a `DOMString`. A nullish value is stringified rather than ignored, so the accept filter became the literal text `"null"` before and would have become `"undefined"` after. Both are wrong. | `?? ''` — empty accept, which is the real "no filter" value. This also fixes a pre-existing bug. |
-| `select-field.component.html:50` `customerTriggerFn(...)` | the value is handed to a **consumer-supplied callback**, which may legitimately test `=== null`. Silently switching it to `undefined` would change a published contract. | `?? null`, keeping today's value explicitly and permanently. |
+| Site                                                      | Why the value matters                                                                                                                                                                                                                        | Fix                                                                                              |
+| --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `file-preview-field.component.html:8` `[accept]`          | binds the DOM property `HTMLInputElement.accept`, a `DOMString`. A nullish value is stringified rather than ignored, so the accept filter became the literal text `"null"` before and would have become `"undefined"` after. Both are wrong. | `?? ''` — empty accept, which is the real "no filter" value. This also fixes a pre-existing bug. |
+| `select-field.component.html:50` `customerTriggerFn(...)` | the value is handed to a **consumer-supplied callback**, which may legitimately test `=== null`. Silently switching it to `undefined` would change a published contract.                                                                     | `?? null`, keeping today's value explicitly and permanently.                                     |
 
 `[multiple]` on the same file input was also made explicit (`?? false`) while it was open, since it is
 the sibling binding and `false` is its real default.
@@ -1070,7 +1070,7 @@ Watch the browser console for errors throughout. Then work through the list.
 
 6. Open a **select** dropdown, an **autocomplete** panel, a **tooltip** and the **form dialog**. Each
    panel must paint above the page, and specifically above the showcase header, which carries
-   `z-index: 10`. If anything now paints *behind* an overlay, the fix is
+   `z-index: 10`. If anything now paints _behind_ an overlay, the fix is
    `OVERLAY_DEFAULT_CONFIG` with `{usePopover: false}` — it was deliberately not set.
 7. Inside the date-time picker, confirm the Cancel and Save buttons still respond. Overlays inside
    elements with their own click handlers are the classic regression here.
@@ -1122,19 +1122,19 @@ Watch the browser console for errors throughout. Then work through the list.
 
 Each author's operator was kept. A peer whose major did not move was left alone.
 
-| Peer | Before | After | Why |
-| --- | --- | --- | --- |
-| `@angular/animations` | *(not declared)* | *(still not declared — added, then removed again)* | Added at hop 3, then dropped after the upgrade when the trigger became CSS. See the note below. |
-| `@angular/common` | `">=19.0.0"` | `">=22.0.0"` | major moved |
-| `@angular/core` | `">=19.0.0"` | `">=22.0.0"` | major moved |
-| `@angular/material` | `">=19.0.0"` | `">=22.0.0"` | major moved |
-| `@angular/forms` | `">=19.0.0"` | `">=22.0.0"` | major moved |
-| `@kolkov/angular-editor` | `"3.0.0-beta.0"` | `"3.1.0"` | pinned to the installed release, leaving the prerelease behind |
-| `ngx-mat-select-search` | `"^8.0.0"` | `"^9.0.0"` | major moved |
-| `@ngx-mce/datetime-picker` | `"~19.2.2"` (as `@ngxmc/…`) | `"~22.2.3"` | **package replaced**, see below |
-| `@ngx-translate/core` | `">=16.0.4"` | unchanged | still 16.0.4 |
-| `@lab900/ui` | `">=19.0.1"` | `">=22.0.0"` | **Breaking.** 19.x is compiled for Angular 19 and crashes at runtime on Angular 22. See Follow-up 17. |
-| `ngx-mask` | `"^19.0.6"` | unchanged | still 19.0.7, major did not move |
+| Peer                       | Before                      | After                                              | Why                                                                                                   |
+| -------------------------- | --------------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `@angular/animations`      | _(not declared)_            | _(still not declared — added, then removed again)_ | Added at hop 3, then dropped after the upgrade when the trigger became CSS. See the note below.       |
+| `@angular/common`          | `">=19.0.0"`                | `">=22.0.0"`                                       | major moved                                                                                           |
+| `@angular/core`            | `">=19.0.0"`                | `">=22.0.0"`                                       | major moved                                                                                           |
+| `@angular/material`        | `">=19.0.0"`                | `">=22.0.0"`                                       | major moved                                                                                           |
+| `@angular/forms`           | `">=19.0.0"`                | `">=22.0.0"`                                       | major moved                                                                                           |
+| `@kolkov/angular-editor`   | `"3.0.0-beta.0"`            | `"3.1.0"`                                          | pinned to the installed release, leaving the prerelease behind                                        |
+| `ngx-mat-select-search`    | `"^8.0.0"`                  | `"^9.0.0"`                                         | major moved                                                                                           |
+| `@ngx-mce/datetime-picker` | `"~19.2.2"` (as `@ngxmc/…`) | `"~22.2.3"`                                        | **package replaced**, see below                                                                       |
+| `@ngx-translate/core`      | `">=16.0.4"`                | unchanged                                          | still 16.0.4                                                                                          |
+| `@lab900/ui`               | `">=19.0.1"`                | `">=22.0.0"`                                       | **Breaking.** 19.x is compiled for Angular 19 and crashes at runtime on Angular 22. See Follow-up 17. |
+| `ngx-mask`                 | `"^19.0.6"`                 | unchanged                                          | still 19.0.7, major did not move                                                                      |
 
 **About the `@angular/animations` peer.** Hop 3 added it. Angular Material removed
 `matFormFieldAnimations` in v21, so the trigger definition moved into this library and the
@@ -1152,29 +1152,29 @@ that still calls `provideAnimations()` for its own reasons is unaffected.
 
 Consumers must change their own dependency and their setup:
 
-| | Before | After |
-| --- | --- | --- |
-| Package | `@ngxmc/datetime-picker@~19.2.2` | `@ngx-mce/datetime-picker@~22.2.3` |
-| Date adapter | `provideNgxMatNativeDate()` from the picker | `provideNativeDateAdapter()` from `@angular/material/core` |
-| Date-time input format | `NGX_MAT_DATE_FORMATS` from the picker | the field provides its own, see the `displayFormat` option |
+|                        | Before                                      | After                                                      |
+| ---------------------- | ------------------------------------------- | ---------------------------------------------------------- |
+| Package                | `@ngxmc/datetime-picker@~19.2.2`            | `@ngx-mce/datetime-picker@~22.2.3`                         |
+| Date adapter           | `provideNgxMatNativeDate()` from the picker | `provideNativeDateAdapter()` from `@angular/material/core` |
+| Date-time input format | `NGX_MAT_DATE_FORMATS` from the picker      | the field provides its own, see the `displayFormat` option |
 
 `@ngxmc/datetime-picker` stopped at Angular 20. `@ngx-mce/datetime-picker` is the maintained fork of the
 same upstream project, with an identical public API. `src/guides/getting-started.md` is updated.
 
 ### Behaviour and API changes a consumer sees
 
-| Change | Effect |
-| --- | --- |
-| Components are `ChangeDetectionStrategy.Eager` | explicit now, but the same behaviour as before v22. A consumer sees no change. |
-| `strictTemplates` is on for the library build | affects this library's own build, not a consumer's. |
-| `AuthImageDirective.httpCallback` | widened to `Observable<Blob \| ArrayBuffer>`. Existing callbacks still fit. |
-| `MatRangeSliderFieldComponent.formatValue` | widened to accept `number \| undefined`, and returns `''` instead of the string `"undefined"`. |
-| `AmountInputDirective`, `SearchInputDirective` | new `onInputEvent` / `onFocusEvent` / `onBlurEvent` / `onPasteEvent` host handlers. The existing public methods keep their signatures. |
-| `select-field` custom trigger callback | still receives `null`, not `undefined`, when there is no control. Made explicit rather than left to a migration shim. |
-| `file-preview-field` file input | `accept` is now `''` when unset, instead of a stringified nullish value. |
+| Change                                         | Effect                                                                                                                                                              |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Components are `ChangeDetectionStrategy.Eager` | explicit now, but the same behaviour as before v22. A consumer sees no change.                                                                                      |
+| `strictTemplates` is on for the library build  | affects this library's own build, not a consumer's.                                                                                                                 |
+| `AuthImageDirective.httpCallback`              | widened to `Observable<Blob \| ArrayBuffer>`. Existing callbacks still fit.                                                                                         |
+| `MatRangeSliderFieldComponent.formatValue`     | widened to accept `number \| undefined`, and returns `''` instead of the string `"undefined"`.                                                                      |
+| `AmountInputDirective`, `SearchInputDirective` | new `onInputEvent` / `onFocusEvent` / `onBlurEvent` / `onPasteEvent` host handlers. The existing public methods keep their signatures.                              |
+| `select-field` custom trigger callback         | still receives `null`, not `undefined`, when there is no control. Made explicit rather than left to a migration shim.                                               |
+| `file-preview-field` file input                | `accept` is now `''` when unset, instead of a stringified nullish value.                                                                                            |
 | `FormFieldDateTimePickerOptions.displayFormat` | new, optional. Sets the format the date-time input prints. Needed only on a non-native date adapter, where the built-in `Intl.DateTimeFormat` options do not apply. |
-| Empty icons no longer render | `button-toggle-field` skipped an icon element when a button option had none. |
-| `form-row`, `form-column`, `search-field` | render nothing when their required group or options are missing, instead of rendering a broken field. |
+| Empty icons no longer render                   | `button-toggle-field` skipped an icon element when a button option had none.                                                                                        |
+| `form-row`, `form-column`, `search-field`      | render nothing when their required group or options are missing, instead of rendering a broken field.                                                               |
 
 ## Follow-ups
 
@@ -1196,7 +1196,7 @@ Open after hop 1:
 3. ~~**`marked` needs another bump at hop 2.** `ngx-markdown@21.3.0` and `@22.0.0` peer
    `marked@^17 || ^18`, so `^16` does not span the remaining hops. No single version does.~~ Done in the
    hop 2 commit. `ng update` moved it to `^18.0.9` on its own, which also spans hop 3.
-7. ~~**The message animation could follow Material instead.** `lib/src/lib/utils/form-field.animations.ts`
+4. ~~**The message animation could follow Material instead.** `lib/src/lib/utils/form-field.animations.ts`
    keeps the animation Material removed in v21. Material's own form fields no longer animate their
    messages. Dropping the trigger and the 3 `[@transitionMessages]` bindings would match Material, and
    would drop one use of `@angular/animations` from the library. It is a visual change, so it is not
@@ -1225,15 +1225,16 @@ Open after hop 1:
    the same 20 pre-existing problems as before the change. The built bundle shows Angular scoping the
    keyframes per component (`_ngcontent-%COMP%_lab900-form-field-subscript`), so the 3 copies cannot
    collide.
-4. **lodash is bundled as CommonJS.** The app build warns that `lodash` used by
+
+5. **lodash is bundled as CommonJS.** The app build warns that `lodash` used by
    `dist/@lab900/forms/fesm2022/lab900-forms.mjs` is not ESM, and the same for `lodash/cloneDeep` in
    `@lab900/ui`. This predates the upgrade — lodash has always been CommonJS. Switching the library to
    `lodash-es` changes what consumers bundle, so it is out of scope here.
-5. **Pre-existing suspected bug, untouched.** In `AbstractFormComponent.ts` and
+6. **Pre-existing suspected bug, untouched.** In `AbstractFormComponent.ts` and
    `form-field.directive.ts` the streams open with `defer(() => of(params.getRawValue))`, which emits
-   the *function* rather than calling it. Every other line calls `getRawValue()`. Only the property
+   the _function_ rather than calling it. Every other line calls `getRawValue()`. Only the property
    names were renamed for v20; the behaviour was left exactly as it was.
-6. ~~**`fullTemplateTypeCheck` is removed in v22.** `tsconfig.json` sets
+7. ~~**`fullTemplateTypeCheck` is removed in v22.** `tsconfig.json` sets
    `angularCompilerOptions.fullTemplateTypeCheck: true`. v22 removes the option and defaults
    `strictTemplates` to `true`, so hop 3 must handle both.~~ Done in the hop 3 commit. The option is
    removed, and `strictTemplates: false` is now a recorded opt-out awaiting step 4.3.
@@ -1304,7 +1305,7 @@ Found after the upgrade:
 
     **Why the dependency check missed it.** The hop table above marked `@lab900/ui` **OK** at every hop,
     because the check asked whether the declared range still resolved. `^19.0.0` resolves fine on
-    Angular 22. It never asked whether the resolved build was *compiled* for the target Angular. A
+    Angular 22. It never asked whether the resolved build was _compiled_ for the target Angular. A
     package whose peers say `@angular/core: ">=19.0.0"` claims compatibility it cannot have, because
     Angular's private instruction set is not stable across majors. **The lesson: for a package that
     ships compiled Angular templates, a satisfied peer range proves nothing. Only a runtime check
