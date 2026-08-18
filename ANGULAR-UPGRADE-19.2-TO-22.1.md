@@ -98,6 +98,8 @@ repo-facing: `lib/ng-package.json` does not copy it into `dist`, so it is not pu
 | `@lab900/ui` | Move to `^22.0.4` and set the library peer to `>=22.0.4`. | 2026-08-18 | 22.0.4 is the first partial-compiled release. The peer excludes 22.0.0, which is fully-compiled and will break on Angular 23; it stays on npm forever, so a range admitting it would be a false compatibility claim. Verified partial by unpacking the published tarball. |
 | `ChangeDetectionStrategy.Eager`, revisited | Flip the **12** components that read only reactive state to `OnPush`. Keep `Eager` on the **8** that do not, each with a `TODO(onpush)`. Downgrade the lint rule to a warning for exactly those 8 via a scoped override, and add a lint step to CI. | 2026-08-18 | CI never ran lint, so 20 red errors signalled nothing to anyone. The blocker is real but narrow: `touched` and `valid` are plain getters over `AbstractControl`, and `markAllAsTouched()` is called from outside the field components, so those 8 would stop repainting under OnPush. `mat-range-slider-field` has the same problem through `writeValue()`. The honest fix is to make that state reactive, which is now a tracked follow-up rather than a silent opt-out. |
 
+| Version and release of `22.0.0` | Keep `22.0.0`. The maintainer does the tagging, publishing and dist-tag promotion. | 2026-08-18 | The number follows the convention already recorded here: the major tracks the Angular major, and this is the first 22.x release, so there is nothing to increment from. `22.0.0` is still free on npm (`latest` is 19.1.40). Release mechanics are deliberately out of scope for this branch. |
+
 ## Hop plan
 
 | Hop | From | To   | Angular release | Note                                                                                                 |
@@ -1141,7 +1143,9 @@ reachable after a keystroke, which is a listener in their own template.
 
 **No runtime behaviour in this upgrade was verified.** No browser was driven and no runtime pass is
 claimed. Everything below needs a human. The runtime row of the Final state table stays
-`not verified — handed to the user` until you report back.
+`not verified — handed to the user` until you report back. This is not stale caution: the browser pass
+recorded on 2026-08-17 predates the OnPush flip of 2026-08-18, so **section G below is the outstanding
+gate before release.**
 
 Start the showcase:
 
