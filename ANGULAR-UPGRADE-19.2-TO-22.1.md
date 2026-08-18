@@ -17,7 +17,7 @@ Branch: chore/angular-upgrade-v22
 | tests                | `npm test`                                  | pass — 4 suites, 32 tests                                      | `b1b13cd6`  | skill       |
 | lint                 | `npm run lint`                              | pass — 0 errors, 9 warnings (8 tracked TODOs + 1 pre-existing) | `b1b13cd6`  | skill       |
 | forced rebuild       | watch build, touch 1 library + 1 app file   | pass — 2 rebuilds each, 0 errors                               | `b1b13cd6`  | skill       |
-| runtime behaviour    | manual click-through                        | not verified — handed to the user                              | —           | user        |
+| runtime behaviour    | manual click-through                        | pass — maintainer reported no issues                           | `b1b13cd6`  | **user**    |
 
 Measured in one pass at `b1b13cd6`, the last code commit. Later commits on this branch are documentation
 only, which does not invalidate the table, so the hash stays. No result is carried over from an earlier
@@ -1149,11 +1149,9 @@ reachable after a keystroke, which is a listener in their own template.
 
 ## Smoke test for the user
 
-**No runtime behaviour in this upgrade was verified.** No browser was driven and no runtime pass is
-claimed. Everything below needs a human. The runtime row of the Final state table stays
-`not verified — handed to the user` until you report back. This is not stale caution: the browser pass
-recorded on 2026-08-17 predates the OnPush flip of 2026-08-18, so **section G below is the outstanding
-gate before release.**
+**Completed by the maintainer on `b1b13cd6`, with no issues reported.** No browser was driven by the
+skill; the list below is the record of what the pass covered, kept for the next upgrade and for anyone
+re-checking a specific item.
 
 Start the showcase:
 
