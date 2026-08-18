@@ -12,7 +12,7 @@ import { IconComponent } from '@lab900/ui';
   selector: 'lab900-password-field',
   templateUrl: './password-field.component.html',
   styleUrls: ['./password-field.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule, TranslatePipe, AutofocusDirective, IconComponent],
 })
 export class PasswordFieldComponent extends FormComponent<FormFieldPassword> {

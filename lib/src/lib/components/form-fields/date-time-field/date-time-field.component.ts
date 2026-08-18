@@ -30,7 +30,7 @@ interface PickerSelectionModel {
   selector: 'lab900-date-time-field',
   templateUrl: './date-time-field.component.html',
   providers: [DATE_TIME_FIELD_DATE_FORMATS],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,

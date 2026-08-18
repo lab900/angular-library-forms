@@ -15,7 +15,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
   selector: 'lab900-autocomplete-field',
   templateUrl: './autocomplete-field.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatFormFieldModule,
     MatInputModule,

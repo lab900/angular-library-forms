@@ -11,7 +11,7 @@ import { MatLabel } from '@angular/material/form-field';
 @Component({
   selector: 'lab900-button-field',
   templateUrl: './button-field.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatTooltip, ReactiveFormsModule, TranslatePipe, Lab900ButtonComponent, MatLabel],
 })
 export class ButtonFieldComponent extends FormComponent<FormFieldButton> {

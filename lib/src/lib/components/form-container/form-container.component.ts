@@ -14,7 +14,7 @@ import { uniqueId } from 'lodash';
   selector: 'lab900-form',
   templateUrl: './form-container.component.html',
   styleUrls: ['./form-container.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormFieldDirective, ReactiveFormsModule],
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix

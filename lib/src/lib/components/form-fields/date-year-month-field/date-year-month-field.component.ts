@@ -27,7 +27,7 @@ import { MatInputModule } from '@angular/material/input';
       },
     },
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     TranslatePipe,
