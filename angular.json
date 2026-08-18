@@ -122,13 +122,6 @@
             "buildTarget": "lab900-forms:build"
           }
         },
-        "test": {
-          "builder": "@angular-builders/jest:run",
-          "options": {
-            "tsConfig": "tsconfig.spec.json",
-            "zoneless": false
-          }
-        },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {

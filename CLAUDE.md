@@ -31,19 +31,21 @@ npm start                    # serve the showcase on http://localhost:4900, libr
 npm run build:forms:prod     # production library build (what CI publishes)
 npm run lint                 # eslint over both projects (ts + html)
 npm run prettier             # write formatting over the whole repo
-npm test                     # jest through @angular-builders/jest
+npm test                     # plain jest on jest-preset-angular
 ```
 
-Run one test file or one test. The Angular CLI only accepts the dash-case form of the jest options, and
-jest 30 renamed the path flag to the plural `test-path-patterns`:
+There is no `ng test` target and no `@angular-builders/jest`. `npm test` runs the `jest` binary, so
+`jest.config.js` is the whole test configuration and every jest flag works in either case form. Note that
+jest 30 renamed the path flag to the plural `test-path-patterns`. Run one test file or one test:
 
 ```bash
-npm test -- --test-path-patterns=select-field
-npm test -- --test-path-patterns=form-container --test-name-pattern="should patch values correctly"
+npm test -- --testPathPatterns=select-field
+npm test -- --testPathPatterns=form-container --testNamePattern="should patch values correctly"
 ```
 
 Tests live next to the code in `lib/` and import by relative path. `jest.config.js` roots are `src/` and
-`lib/`.
+`lib/`. `setup-jest.ts` calls `setupZoneTestEnv()`, the zone based Angular test environment. The zoneless
+variant is `setupZonelessTestEnv()` from `jest-preset-angular/setup-env/zoneless`.
 
 ## Architecture
 

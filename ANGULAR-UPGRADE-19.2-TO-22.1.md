@@ -31,27 +31,27 @@ never did before.
 
 ### 2.1 Package changes
 
-| Package                                                                                 | Before          | Now                        |
-| --------------------------------------------------------------------------------------- | --------------- | -------------------------- |
-| all `@angular/*` (core, common, forms, router, material, cdk, cli, build, compiler-cli) | `^19.2.x`       | `^22.1.x`                  |
-| `typescript`                                                                            | `~5.5.4`        | `~6.0.3`                   |
-| `ng-packagr`                                                                            | `^19.2.0`       | `^22.1.1`                  |
-| `jest`                                                                                  | `^29.7.0`       | `^30.4.2`                  |
-| `jest-preset-angular`                                                                   | `^14.5.3`       | `^17.0.0`                  |
-| `@angular-builders/jest`                                                                | `^19.0.0`       | `^22.0.1`                  |
-| `ng-mocks`                                                                              | `^14.13.3`      | `^14.17.1`                 |
-| `angular-eslint`                                                                        | `19.2.1`        | `22.1.0`                   |
-| `eslint`                                                                                | `^9.8.0`        | `^9.28.0`                  |
-| `@typescript-eslint/eslint-plugin` / `parser`                                           | `^8.26.0`       | `^8.58.0`                  |
-| `typescript-eslint` (meta package)                                                      | _absent_        | `^8.58.0`                  |
-| `@lab900/ui`                                                                            | `^19.0.0`       | `^22.0.4`                  |
-| `ngx-markdown`                                                                          | `^19.1.0`       | `^22.0.0`                  |
-| `ngx-mat-select-search`                                                                 | `^8.0.0`        | `^9.0.0`                   |
-| `@kolkov/angular-editor`                                                                | `^3.0.0-beta.2` | `^3.1.0`                   |
-| `@ngxmc/datetime-picker`                                                                | `~19.2.2`       | **removed**                |
-| `@ngx-mce/datetime-picker`                                                              | _absent_        | `~22.2.3`                  |
-| `@angular/animations`                                                                   | `^19.2.1`       | **removed**                |
-| `@angular/platform-browser-dynamic`                                                     | `dependencies`  | moved to `devDependencies` |
+| Package                                                                                 | Before          | Now         |
+| --------------------------------------------------------------------------------------- | --------------- | ----------- |
+| all `@angular/*` (core, common, forms, router, material, cdk, cli, build, compiler-cli) | `^19.2.x`       | `^22.1.x`   |
+| `typescript`                                                                            | `~5.5.4`        | `~6.0.3`    |
+| `ng-packagr`                                                                            | `^19.2.0`       | `^22.1.1`   |
+| `jest`                                                                                  | `^29.7.0`       | `^30.4.2`   |
+| `jest-preset-angular`                                                                   | `^14.5.3`       | `^17.0.0`   |
+| `@angular-builders/jest`                                                                | `^19.0.0`       | **removed** |
+| `ng-mocks`                                                                              | `^14.13.3`      | `^14.17.1`  |
+| `angular-eslint`                                                                        | `19.2.1`        | `22.1.0`    |
+| `eslint`                                                                                | `^9.8.0`        | `^9.28.0`   |
+| `@typescript-eslint/eslint-plugin` / `parser`                                           | `^8.26.0`       | `^8.58.0`   |
+| `typescript-eslint` (meta package)                                                      | _absent_        | `^8.58.0`   |
+| `@lab900/ui`                                                                            | `^19.0.0`       | `^22.0.4`   |
+| `ngx-markdown`                                                                          | `^19.1.0`       | `^22.0.0`   |
+| `ngx-mat-select-search`                                                                 | `^8.0.0`        | `^9.0.0`    |
+| `@kolkov/angular-editor`                                                                | `^3.0.0-beta.2` | `^3.1.0`    |
+| `@ngxmc/datetime-picker`                                                                | `~19.2.2`       | **removed** |
+| `@ngx-mce/datetime-picker`                                                              | _absent_        | `~22.2.3`   |
+| `@angular/animations`                                                                   | `^19.2.1`       | **removed** |
+| `@angular/platform-browser-dynamic`                                                     | `dependencies`  | **removed** |
 
 Both `package.json` files went from version `19.1.40` to `22.0.0`.
 
@@ -63,21 +63,23 @@ Three package facts that need naming:
 - **The date-time picker was replaced, not bumped.** `@ngxmc/datetime-picker` stops at Angular 20.
   `@ngx-mce/datetime-picker` is the maintained fork of the same upstream project, with 44 identical
   public exports.
-- **`@angular/platform-browser-dynamic` stays.** It is a non-optional peer of
-  `@angular-builders/jest@22`. No source file imports it, so `dependencies` was the wrong section.
+- **`@angular/platform-browser-dynamic` and `@angular-devkit/build-angular` are gone.** Both were only
+  non-optional peers of `@angular-builders/jest@22`; no source file imports either, and no
+  `angular.json` target uses `@angular-devkit/build-angular`. Dropping the builder dropped both. See
+  section 2.4.
 
 ### 2.2 Config changes
 
-| File                    | Change                                                                                                                                                                                                                                          |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `tsconfig.json`         | `moduleResolution` `node` -> `bundler`; `lib` -> `es2022`; `fullTemplateTypeCheck` removed (gone in v22); `baseUrl` removed (deprecated in TS 6.0), so `paths` became workspace-relative. It now reads `./lib/src/public-api.ts`, see section 6 |
-| `lib/tsconfig.lib.json` | **`compilationMode: "partial"` added.** `skipTemplateCodegen`, `strictMetadataEmit` and `enableResourceInlining` removed as proven no-ops                                                                                                       |
-| all 4 tsconfigs         | the v22 `strictTemplates: false` opt-out removed. The explicit `true` was then removed as well, because it is the v22 default. The v22 `extendedDiagnostics` suppression block is gone                                                          |
-| `angular.json`          | test target: `polyfills` and `inlineStyleLanguage` replaced by `zoneless: false`; the dead `marked.min.js` script entry removed; a `schematics` block from the v20 migration keeps the old file-naming style                                    |
-| `jest.config.js`        | `testEnvironment: 'jest-preset-angular/environments/jest-jsdom-env'` — the v17 preset no longer installs `jest-environment-jsdom`. `modulePaths: ['<rootDir>/dist']` later gave way to a `moduleNameMapper`, see section 6                      |
-| `src/main.ts`           | `provideZoneChangeDetection()` added (v21 requires it for a zone app); `provideNgxMatNativeDate()`, `withXhr()` and `provideAnimations()` removed                                                                                               |
-| `eslint.config.js`      | one scoped `files:` override downgrades `prefer-on-push-component-change-detection` to `warn` for exactly the 8 named components                                                                                                                |
-| both cloudbuild files   | `--ignore-scripts` removed from the publish step; a `Lint Library` step added                                                                                                                                                                   |
+| File                    | Change                                                                                                                                                                                                                                                   |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tsconfig.json`         | `moduleResolution` `node` -> `bundler`; `lib` -> `es2022`; `fullTemplateTypeCheck` removed (gone in v22); `baseUrl` removed (deprecated in TS 6.0), so `paths` became workspace-relative. It now reads `./lib/src/public-api.ts`, see section 6          |
+| `lib/tsconfig.lib.json` | **`compilationMode: "partial"` added.** `skipTemplateCodegen`, `strictMetadataEmit` and `enableResourceInlining` removed as proven no-ops                                                                                                                |
+| all 4 tsconfigs         | the v22 `strictTemplates: false` opt-out removed. The explicit `true` was then removed as well, because it is the v22 default. The v22 `extendedDiagnostics` suppression block is gone                                                                   |
+| `angular.json`          | test target: `polyfills` and `inlineStyleLanguage` replaced by `zoneless: false`, then the whole target removed in section 7; the dead `marked.min.js` script entry removed; a `schematics` block from the v20 migration keeps the old file-naming style |
+| `jest.config.js`        | `testEnvironment: 'jest-preset-angular/environments/jest-jsdom-env'` — the v17 preset no longer installs `jest-environment-jsdom`. `modulePaths: ['<rootDir>/dist']` later gave way to a `moduleNameMapper`, see section 6                               |
+| `src/main.ts`           | `provideZoneChangeDetection()` added (v21 requires it for a zone app); `provideNgxMatNativeDate()`, `withXhr()` and `provideAnimations()` removed                                                                                                        |
+| `eslint.config.js`      | one scoped `files:` override downgrades `prefer-on-push-component-change-detection` to `warn` for exactly the 8 named components                                                                                                                         |
+| both cloudbuild files   | `--ignore-scripts` removed from the publish step; a `Lint Library` step added                                                                                                                                                                            |
 
 `--ignore-scripts` was hiding ng-packagr's `prepublishOnly` guard, which exists to block a
 fully-compiled publish. See section 4.1.
@@ -171,8 +173,10 @@ Only a browser check finds this. No type check, build or test does.
 - **`paramsInheritanceStrategy` defaults to `"always"` in v22.** A child route now inherits parent route
   params.
 - **A zone app needs `provideZoneChangeDetection()` from v21.** It is in `src/main.ts`.
-- **`@angular-builders/jest@22` defaults `zoneless` to `true`.** This project sets `zoneless: false`.
-- **Per-project jest coverage now writes to `<projectRoot>/coverage`**, not `./coverage`.
+- **The zone test environment is a choice this project now makes itself.** `setup-jest.ts` calls
+  `setupZoneTestEnv()`. It replaces the removed builder option `zoneless: false`. See section 7.
+- **Per-project jest coverage** was a `@angular-builders/jest@22` change. With plain `jest` the path is
+  the jest default `<rootDir>/coverage`, which is the same directory here.
 - **`baseUrl` is gone.** New code must use relative paths or a `paths` entry.
 - **`ng serve` lets a `PORT` environment variable win over the flag** in v22.
 
@@ -206,13 +210,12 @@ Only a browser check finds this. No type check, build or test does.
 - [ ] Check every CI step for a hardcoded `./coverage/` path. Per-project coverage moved to
       `<projectRoot>/coverage`.
 - [x] ts-jest reported its own `isolatedModules` option as deprecated. `@angular-builders/jest` v22 passes
-      that option to the transform, so the warning came from the builder, not from this project. The fix has
-      two parts. `tsconfig.json` now sets `isolatedModules: true`, which is both the form ts-jest asks for
-      and the Angular v22 default; `tsconfig.spec.json` inherits it. `jest.config.js` then repeats the
-      builder transform entry with `isolatedModules: false`, which drops the deprecated option. ts-jest
-      keeps the fast transpile-only path, because it reads the resolved tsconfig value, not the option. The
-      regular expression in that transform entry must stay identical to the builder default. A different
-      value makes it a second transform instead of an override, and the warning returns.
+      that option to the transform, so the warning came from the builder, not from this project. The first
+      fix had two parts: `tsconfig.json` sets `isolatedModules: true`, which is both the form ts-jest asks
+      for and the Angular v22 default, and `jest.config.js` repeated the builder transform entry with
+      `isolatedModules: false` to drop the deprecated option. **Section 7 then removed the builder itself**,
+      which removes the warning at its source. The `jest.config.js` transform override is gone;
+      `isolatedModules: true` in `tsconfig.json` stays, and `tsconfig.spec.json` still inherits it.
       The stricter TypeScript rule needs no code change: there is no `const enum` and no named type
       re-export. `tsc --noEmit` is clean over `tsconfig.spec.json`, `lib/tsconfig.lib.json` and
       `tsconfig.app.json`, and both builds, the lint and the 32 tests still pass.
@@ -289,3 +292,65 @@ Two scripts went with it:
 Every command in section 1 was re-run with `dist/` deleted from disk. All pass, including the production
 app build, which still reports the 2 known lodash CommonJS warnings — one of them now names
 `lib/src/lib/components/form-container/form-container.component.ts` instead of the bundled file.
+
+## 7. `ng test` replaced by plain `jest`
+
+Done on this branch, after section 6. It changes nothing about the published package. It is recorded here
+because it removes two rows of section 2.1, one row of section 2.2, and closes one follow-up in 5.3.
+
+### 7.1 Why
+
+Two deprecated packages were still installed, and both were installed for one reason only: they are
+non-optional peers of `@angular-builders/jest@22`.
+
+| Package                             | How it was declared                         |
+| ----------------------------------- | ------------------------------------------- |
+| `@angular/platform-browser-dynamic` | direct `devDependency` **and** builder peer |
+| `@angular-devkit/build-angular`     | builder peer only, never declared here      |
+
+No source file imports either one. No `angular.json` target uses `@angular-devkit/build-angular` — the app
+builds with `@angular/build:application` and the library with `@angular/build:ng-packagr`. So the packages
+could only go if the builder went, and the builder could only go if `jest` ran directly on
+`jest-preset-angular@17`.
+
+### 7.2 What the builder contributed, and where it went
+
+The builder merged its own config under `jest.config.js`. Everything it added is now either in
+`jest.config.js`, already in the preset, or dropped as not needed here.
+
+| Builder contribution                                                     | Replacement                                                             |
+| ------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
+| `preset: 'jest-preset-angular'`                                          | unchanged in `jest.config.js`                                           |
+| `setupFilesAfterEnv` -> its own `setup-zone.js`                          | `setup-jest.ts` now calls `setupZoneTestEnv()` itself                   |
+| `transform` -> `ts-jest` with `tsconfig` and `stringifyContentPathRegex` | already the preset default, pointed at `<rootDir>/tsconfig.spec.json`   |
+| `transform` -> `isolatedModules: true`                                   | dropped. See 7.3                                                        |
+| `testMatch` -> `<projectRoot>/**/*.(spec\|test).[tj]s?(x)`               | the jest default, scoped by the existing `roots: ['src', 'lib']`        |
+| `coverageDirectory` -> `<projectRoot>/coverage`                          | the jest default, `<rootDir>/coverage`. Same path: the app root is `""` |
+| `moduleNameMapper` for `jpg\|jpeg\|png`                                  | dropped. No spec and no source file imports an image                    |
+| `globalMocks` (`matchMedia`)                                             | was never enabled in `angular.json`                                     |
+| `zoneless: false`                                                        | expressed by choosing `setupZoneTestEnv` over `setupZonelessTestEnv`    |
+
+The `test` target is gone from `angular.json`; `npm test` and `npm run test:silent` call `jest` directly.
+CI is untouched, because both cloudbuild files already call `npm run test:silent`.
+
+### 7.3 The ts-jest `isolatedModules` override is no longer needed
+
+Follow-up 5.3 added a `transform` override to `jest.config.js` to silence a ts-jest deprecation warning.
+The deprecated option came from the builder, so removing the builder removes the warning at its source.
+`jest.config.js` no longer declares a `transform` at all. `isolatedModules: true` stays in `tsconfig.json`,
+which `tsconfig.spec.json` inherits, and that is the form ts-jest asks for. The fast transpile-only path is
+unchanged.
+
+### 7.4 One implicit dependency to know about
+
+`jsdom` is a non-optional peer of `jest-preset-angular@17` and is not declared in `package.json`. npm
+installs it automatically, and `jest.config.js` names the environment that needs it
+(`jest-preset-angular/environments/jest-jsdom-env`). If a future install ever leaves it out, declare it as
+a devDependency.
+
+### 7.5 Verified
+
+Every command in section 1 was re-run. 4 suites and 32 tests pass, in 4.3s against the 5.1s baseline. The
+single-file and single-test filters work in both case forms. `tsc --noEmit -p tsconfig.spec.json` is clean.
+`npm run lint` reports 0 errors and only the 9 known `OnPush` warnings. Both builds pass, the app build
+still with the 2 known lodash CommonJS warnings.

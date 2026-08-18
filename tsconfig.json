@@ -9,8 +9,9 @@
     "declaration": false,
     "strict": true,
     /**
-     * Also the Angular v22 default. ts-jest needs the flag here, not as a transform option: the
-     * option form is deprecated. See the transform override in jest.config.js.
+     * Also the Angular v22 default. ts-jest reads the flag here, and only here: its own
+     * `isolatedModules` transform option is deprecated. tsconfig.spec.json inherits this, so
+     * ts-jest keeps the fast transpile-only path without any option in jest.config.js.
      */
     "isolatedModules": true,
     "experimentalDecorators": true,
