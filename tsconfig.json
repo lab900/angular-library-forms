@@ -16,7 +16,7 @@
     "useDefineForClassFields": false,
     "types": ["jest", "node"],
     "paths": {
-      "@lab900/forms": ["./dist/@lab900/forms"]
+      "@lab900/forms": ["./lib/src/public-api.ts"]
     }
   },
   "angularCompilerOptions": {

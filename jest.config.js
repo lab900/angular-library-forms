@@ -5,5 +5,9 @@ module.exports = {
   testEnvironment: 'jest-preset-angular/environments/jest-jsdom-env',
   setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
   roots: ['<rootDir>/src', '<rootDir>/lib'],
-  modulePaths: ['<rootDir>/dist'],
+  // The showcase app imports the library by its package name, but resolves it from source.
+  // Keep this in sync with the `paths` entry in tsconfig.json.
+  moduleNameMapper: {
+    '^@lab900/forms$': '<rootDir>/lib/src/public-api.ts',
+  },
 };

@@ -2,7 +2,7 @@
 // For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
 @use '@lab900/ui/theming' as ui;
-@use '../dist/@lab900/forms/theming' as forms;
+@use '../lib/theming' as forms;
 
 @use 'green.palette' as *;
 @use 'grey.palette' as *;

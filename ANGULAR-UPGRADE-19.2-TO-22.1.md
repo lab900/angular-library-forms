@@ -19,6 +19,7 @@ steps.
 | build application    | `npx ng build lab900-forms`                 | pass — 2 pre-existing lodash CommonJS warnings                 |
 | tests                | `npm test`                                  | pass — 4 suites, 32 tests                                      |
 | lint                 | `npm run lint`                              | pass — 0 errors, 9 warnings (8 tracked TODOs + 1 pre-existing) |
+| serve application    | `npm start`                                 | pass — an edit in `lib/` rebuilds the showcase in ~1 s         |
 | runtime behaviour    | manual click-through, all 16 routes         | pass — maintainer reported no issues                           |
 
 The 9 lint warnings are the 8 components that keep `ChangeDetectionStrategy.Eager` (section 5.1) plus one
@@ -67,16 +68,16 @@ Three package facts that need naming:
 
 ### 2.2 Config changes
 
-| File                    | Change                                                                                                                                                                                                       |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `tsconfig.json`         | `moduleResolution` `node` -> `bundler`; `lib` -> `es2022`; `fullTemplateTypeCheck` removed (gone in v22); `baseUrl` removed (deprecated in TS 6.0), so `paths` became `./dist/@lab900/forms`                 |
-| `lib/tsconfig.lib.json` | **`compilationMode: "partial"` added.** `skipTemplateCodegen`, `strictMetadataEmit` and `enableResourceInlining` removed as proven no-ops                                                                    |
-| all 4 tsconfigs         | the v22 `strictTemplates: false` opt-out removed. The explicit `true` was then removed as well, because it is the v22 default. The v22 `extendedDiagnostics` suppression block is gone                       |
-| `angular.json`          | test target: `polyfills` and `inlineStyleLanguage` replaced by `zoneless: false`; the dead `marked.min.js` script entry removed; a `schematics` block from the v20 migration keeps the old file-naming style |
-| `jest.config.js`        | `testEnvironment: 'jest-preset-angular/environments/jest-jsdom-env'` — the v17 preset no longer installs `jest-environment-jsdom`                                                                            |
-| `src/main.ts`           | `provideZoneChangeDetection()` added (v21 requires it for a zone app); `provideNgxMatNativeDate()`, `withXhr()` and `provideAnimations()` removed                                                            |
-| `eslint.config.js`      | one scoped `files:` override downgrades `prefer-on-push-component-change-detection` to `warn` for exactly the 8 named components                                                                             |
-| both cloudbuild files   | `--ignore-scripts` removed from the publish step; a `Lint Library` step added                                                                                                                                |
+| File                    | Change                                                                                                                                                                                                                                          |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tsconfig.json`         | `moduleResolution` `node` -> `bundler`; `lib` -> `es2022`; `fullTemplateTypeCheck` removed (gone in v22); `baseUrl` removed (deprecated in TS 6.0), so `paths` became workspace-relative. It now reads `./lib/src/public-api.ts`, see section 6 |
+| `lib/tsconfig.lib.json` | **`compilationMode: "partial"` added.** `skipTemplateCodegen`, `strictMetadataEmit` and `enableResourceInlining` removed as proven no-ops                                                                                                       |
+| all 4 tsconfigs         | the v22 `strictTemplates: false` opt-out removed. The explicit `true` was then removed as well, because it is the v22 default. The v22 `extendedDiagnostics` suppression block is gone                                                          |
+| `angular.json`          | test target: `polyfills` and `inlineStyleLanguage` replaced by `zoneless: false`; the dead `marked.min.js` script entry removed; a `schematics` block from the v20 migration keeps the old file-naming style                                    |
+| `jest.config.js`        | `testEnvironment: 'jest-preset-angular/environments/jest-jsdom-env'` — the v17 preset no longer installs `jest-environment-jsdom`. `modulePaths: ['<rootDir>/dist']` later gave way to a `moduleNameMapper`, see section 6                      |
+| `src/main.ts`           | `provideZoneChangeDetection()` added (v21 requires it for a zone app); `provideNgxMatNativeDate()`, `withXhr()` and `provideAnimations()` removed                                                                                               |
+| `eslint.config.js`      | one scoped `files:` override downgrades `prefer-on-push-component-change-detection` to `warn` for exactly the 8 named components                                                                                                                |
+| both cloudbuild files   | `--ignore-scripts` removed from the publish step; a `Lint Library` step added                                                                                                                                                                   |
 
 `--ignore-scripts` was hiding ng-packagr's `prepublishOnly` guard, which exists to block a
 fully-compiled publish. See section 4.1.
@@ -128,9 +129,10 @@ ng-packagr treat that file as its **entire** config. Its own `tsconfig.ngc.json`
 
 From 22.0.0 the package ships `ɵɵngDeclare*` data, which the Angular linker recompiles at the consumer's
 build. Nothing changes in how it is consumed — the Angular CLI runs the linker automatically. A consumer
-that builds **without** the Angular CLI must make sure the linker babel plugin runs over `node_modules`;
-jest via `jest-preset-angular` handles it, which the 32 tests prove, because they import the built package
-from `dist/`.
+that builds **without** the Angular CLI must make sure the linker babel plugin runs over `node_modules`.
+**Nothing in this repo proves that path.** All 4 spec files compile the library from source, and since
+section 6 the showcase app does too, so no check here ever runs the linker over the published bundle.
+Only a real consumer app, or an install of the tarball, tests it.
 
 **The lesson for the next upgrade:** for a package that ships compiled Angular templates, a satisfied peer
 range proves nothing. `@lab900/ui@19` resolved cleanly under `^19.0.0` on Angular 22 and still crashed.
@@ -196,8 +198,8 @@ Only a browser check finds this. No type check, build or test does.
       other line calls `getRawValue()`. Only the property names were renamed for v20.
 - [ ] lodash is bundled as CommonJS, which the app build warns about for both this library and
       `@lab900/ui`. Moving to `lodash-es` changes what consumers bundle.
-- [ ] `prettier --check .` flags `CHANGELOG.md` and `icon-field.component.scss`. Only the files this
-      upgrade edited were formatted.
+- [ ] `prettier --check .` flags `icon-field.component.scss`. Only the files this upgrade edited were
+      formatted. `CHANGELOG.md` was on this list too and is now clean.
 
 ### 5.3 Toolchain
 
@@ -227,3 +229,57 @@ All were enumerated from the installed v22 collections and dry-run. None is requ
       of scope for this branch. `latest` on npm is still 19.1.40. The changelog entry is in
       `CHANGELOG.md` under `## 22.0.0`, and is repo-facing only — `lib/ng-package.json` does not copy it
       into `dist`.
+
+## 6. The showcase app builds from library source
+
+Done on this branch, after the upgrade itself. It changes nothing about the published package. It is
+recorded here because it rewrites two rows of section 2.2 and voids one claim in section 4.1.
+
+### 6.1 What it fixes
+
+The showcase app used to import the **built** library from `dist/@lab900/forms`. That cost a second
+terminal running `npm run watch:forms`, and it put a full ng-packagr cycle between every library edit and
+the browser. Worse for this upgrade: `dist/` is a stale artefact by default, so a source change that broke
+the app stayed invisible until someone rebuilt.
+
+The app now compiles `lib/src` as part of its own build. One `npm start` serves everything, an edit in
+`lib/` rebuilds in about a second, and `dist/` is only ever a release artefact.
+
+### 6.2 The four sync points
+
+`@lab900/forms` stays the import specifier everywhere, so no source file changed. Only the resolution
+changed, and it is declared in four places. Change them together.
+
+| File                 | Before                                 | After                                    |
+| -------------------- | -------------------------------------- | ---------------------------------------- |
+| `tsconfig.json`      | `paths` -> `./dist/@lab900/forms`      | `paths` -> `./lib/src/public-api.ts`     |
+| `tsconfig.spec.json` | `paths` -> `./dist/@lab900/forms`      | `paths` -> `./lib/src/public-api.ts`     |
+| `jest.config.js`     | `modulePaths: ['<rootDir>/dist']`      | `moduleNameMapper` for `^@lab900/forms$` |
+| `src/styles.scss`    | `@use '../dist/@lab900/forms/theming'` | `@use '../lib/theming'`                  |
+
+`jest.config.js` needs a `moduleNameMapper` rather than the tsconfig `paths` entry, because `paths` only
+steers the type checker. Jest resolves modules itself. The default (non-ESM) `jest-preset-angular` preset
+sets no `moduleNameMapper` of its own, so nothing is overridden.
+
+Two scripts went with it:
+
+- `watch:forms` — deleted. Nothing consumes `dist/` during development any more.
+- `predeploy:showcase` — deleted. It ran `build:forms:prod` before `deploy:showcase`, only because the
+  GitHub Pages build read `dist/`. `ng deploy` now builds the app straight from source. CI still calls
+  `build:forms:prod` itself, in `cloudbuild.yaml` and `cloudbuild-alpha.yaml`, so publishing is untouched.
+
+### 6.3 Two consequences to keep in mind
+
+- **The library is now type checked twice, under two configs.** `tsconfig.lib.json` still governs the
+  ng-packagr build, but the app build now compiles the same files under `tsconfig.app.json`. The two agree
+  today, because both extend the root `tsconfig.json` and neither opts out of `strictTemplates`. Any
+  future compiler option added to one and not the other splits them.
+- **No check in this repo touches the published bundle any more.** See section 4.1. A partial-compilation
+  regression, or a broken `public-api.ts` export list, would pass every command in section 1. Only
+  `npm run build:forms:prod` plus an install of the tarball finds it.
+
+### 6.4 Verified
+
+Every command in section 1 was re-run with `dist/` deleted from disk. All pass, including the production
+app build, which still reports the 2 known lodash CommonJS warnings — one of them now names
+`lib/src/lib/components/form-container/form-container.component.ts` instead of the bundled file.

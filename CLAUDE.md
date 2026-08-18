@@ -9,15 +9,24 @@ One Angular CLI workspace with two projects (see `angular.json`):
 - **`forms`** — the published library, root `lib/`, built with ng-packagr, released as `@lab900/forms`.
 - **`lab900-forms`** — the showcase application, root `src/`, deployed to GitHub Pages.
 
-`tsconfig.json` maps `@lab900/forms` to `./dist/@lab900/forms`. The showcase app consumes the **built**
-library, not the source. Build or watch the library before you serve the app.
+`tsconfig.json` maps `@lab900/forms` to `./lib/src/public-api.ts`. The showcase app consumes the library
+**source**, not `dist/`. One `npm start` is enough: the dev server watches `lib/` too, and a change in a
+library file rebuilds and reloads the showcase. You never need `dist/` to develop or to test.
+
+Three places hold that source mapping. Change them together:
+
+- `tsconfig.json` -> `paths` (the app build and the IDE).
+- `tsconfig.spec.json` -> `paths` (type checking of the specs).
+- `jest.config.js` -> `moduleNameMapper` (module resolution at test run time).
+
+`src/styles.scss` uses `../lib/theming` for the same reason. `dist/@lab900/forms` is now only a release
+artefact: `npm run build:forms:prod` produces it and CI publishes it.
 
 ## Commands
 
 ```bash
 npm i
-npm run watch:forms          # terminal 1: rebuild lib/ into dist/@lab900/forms on change
-npm start                    # terminal 2: serve the showcase on http://localhost:4900
+npm start                    # serve the showcase on http://localhost:4900, library source included
 
 npm run build:forms:prod     # production library build (what CI publishes)
 npm run lint                 # eslint over both projects (ts + html)
@@ -33,8 +42,8 @@ npm test -- --test-path-patterns=select-field
 npm test -- --test-path-patterns=form-container --test-name-pattern="should patch values correctly"
 ```
 
-Tests live next to the code in `lib/` and import by relative path, so they do not need `dist/`.
-`jest.config.js` roots are `src/` and `lib/`.
+Tests live next to the code in `lib/` and import by relative path. `jest.config.js` roots are `src/` and
+`lib/`.
 
 ## Architecture
 

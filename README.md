@@ -17,9 +17,12 @@ View the [showcase](https://lab900.github.io/angular-library-forms) for guides &
 
 ```bash
 $ npm i
-$ npm run watch:forms # in a separate terminal
-$ npm run start
+$ npm start
 ```
+
+The showcase app imports the library from its source (`lib/src/public-api.ts`), not from `dist/`.
+One dev server is enough: a change in `lib/` rebuilds and reloads the showcase.
+You only build the library to publish it (`npm run build:forms:prod`).
 
 ## Developing new features or fixing bugs
 
