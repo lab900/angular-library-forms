@@ -64,7 +64,7 @@
             </ngx-mat-select-search>
           </mat-option>
         }
-        @if (multiple() && selectAllOptions()?.enabled && selectOptions()?.length) {
+        @if (multiple() && selectAllOptions()?.enabled && selectOptions().length) {
           <div
             class="mat-mdc-option mdc-list-item mat-mdc-option-multiple select-all"
             (click)="handleToggleAllSelection()">

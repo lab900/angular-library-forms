@@ -1,29 +1,16 @@
 # Changelog
 
 ## 22.0.0
-Upgrade to Angular 22. The version now follows the Angular major, so it jumps from 19.1.x to 22.0.0.
+Upgrade to Angular 22. See [angular upgrade document](ANGULAR-UPGRADE-19.2-TO-22.1.md) for all changes done
 
-**Breaking: Angular 22 is required.** The `@angular/common`, `@angular/core`, `@angular/forms` and `@angular/material` peers moved to `>=22.0.0`.
+**Breaking: the date-time picker package changed.** `@ngxmc/datetime-picker` stopped releasing after Angular 20, so it is replaced by `@ngx-mce/datetime-picker` (`~22.2.3`), the maintained fork of the same project. Its public API is identical.
 
-**Breaking: the date-time picker package changed.** `@ngxmc/datetime-picker` stopped releasing after Angular 20, so it is replaced by `@ngx-mce/datetime-picker` (`~22.2.3`), the maintained fork of the same project. Its public API is identical. In your own app:
-- `npm uninstall @ngxmc/datetime-picker && npm install @ngx-mce/datetime-picker`
-- replace `provideNgxMatNativeDate()` with `provideNativeDateAdapter()` from `@angular/material/core`. One Material date adapter now serves both the date picker and the date-time picker, so a Luxon adapter also works for date-time now.
-
-**`@angular/animations` is no longer needed.** The checkbox, drag-and-drop and repeater fields animate their error/hint message. That used to need the Angular animation engine, and therefore `provideAnimations()` in your application. The animation is now plain CSS, at the same timings, so you can drop `provideAnimations()` if this library was your only reason for it. This removes a requirement, so it breaks nothing.
-
-**Breaking: `@lab900/ui` must be `>=22.0.0`.** Version 19.x is compiled for Angular 19 and calls a template instruction that Angular 22 removed. On Angular 22 it throws `TypeError: (void 0) is not a function` on every change detection run, in its `alert`, `nav-item`, `tab` and `table` components. Nothing catches this at build time. Run `npm install @lab900/ui@^22.0.0`.
-
-**Breaking: two other peers moved.** `ngx-mat-select-search` to `^9.0.0` and `@kolkov/angular-editor` to `3.1.0`.
-
-- Feat: `AuthImageDirective.httpCallback` accepts a callback returning `Observable<Blob | ArrayBuffer>`, not only `Observable<Blob>`. An `arraybuffer` request now type-checks.
-- Feat: `MatRangeSliderFieldComponent.formatValue` accepts `number | undefined`.
-- Feat: `AmountInputDirective` and `SearchInputDirective` gained `onInputEvent`, `onFocusEvent`, `onBlurEvent` and `onPasteEvent` host handlers. The existing public methods keep their signatures.
 - Fix: button toggle no longer renders an empty icon element for options without an icon.
 - Fix: button toggle element id rendered the `elementId` function instead of its value.
 - Fix: range slider inputs show an empty value instead of the text `undefined` when no value is set.
 - Fix: the file upload input sets an empty `accept` when no `accept` option is given, instead of a stringified empty value.
 - Fix: form rows, form columns and the search field no longer render when the form group or the field options they need are missing, instead of rendering a broken field.
-- Chore: `strictTemplates` is enabled for the library build, so every template binding is type-checked.
+- updated the [cloudbuild.yaml](cloudbuild.yaml) file to use `npm stage publish` instead of `npm publish`
 
 ## 19.1.38, 19.1.39, 19.1.40
 - Fix: error alignment issue
