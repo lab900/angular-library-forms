@@ -17,7 +17,7 @@
         matInput
         [type]="'number'"
         placeholder="{{ placeholder() | translate }}"
-        [formControlName]="_fieldAttribute()!"
+        [formControlName]="_fieldAttribute() ?? ''"
         [class.readonly]="fieldIsReadonly()"
         lab900InputAutofocus
         [autofocus]="!!_options()?.autofocus"
@@ -27,7 +27,7 @@
         matInput
         [type]="type()"
         placeholder="{{ placeholder() | translate }}"
-        [formControlName]="_fieldAttribute()!"
+        [formControlName]="_fieldAttribute() ?? ''"
         [class.readonly]="fieldIsReadonly()"
         [mask]="fieldMask()?.mask"
         [prefix]="fieldMask()?.prefix || ''"

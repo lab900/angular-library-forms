@@ -18,7 +18,7 @@
         #select
         placeholder="{{ placeholder() | translate }}"
         [compareWith]="compareFn()"
-        [formControlName]="_fieldAttribute()!"
+        [formControlName]="_fieldAttribute() ?? ''"
         [multiple]="multiple()"
         lab900InfiniteScroll
         [complete]="scrollingIsComplete()"
