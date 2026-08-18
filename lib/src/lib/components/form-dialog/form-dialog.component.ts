@@ -13,6 +13,9 @@ import { MatButton } from '@angular/material/button';
 @Component({
   selector: 'lab900-form-dialog',
   templateUrl: './form-dialog.component.html',
+  // TODO(onpush): the template reads the non-reactive 'valid' getter of the form container.
+  // A parent calling markAllAsTouched() would not repaint this field under OnPush.
+  // Make it reactive, then switch to OnPush and remove this file from the eslint override.
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatDialogContent, Lab900Form, MatDialogActions, MatButton, MatDialogClose],
 })

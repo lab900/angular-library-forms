@@ -50,5 +50,29 @@ module.exports = tseslint.config(
       '@angular-eslint/template/no-autofocus': 'off',
     },
   },
-  eslintPluginPrettierRecommended
+  eslintPluginPrettierRecommended,
+  {
+    /**
+     * TODO(onpush): each file below keeps `ChangeDetectionStrategy.Eager` because its template reads
+     * state that Angular does not signal: the non-reactive `touched` / `valid` getters of
+     * `AbstractFormComponent`, or a plain field written by `writeValue()`. A parent calling
+     * `markAllAsTouched()` or `patchValue()` would not repaint them under OnPush.
+     *
+     * Fix per file: derive that state from `AbstractControl.events` (or a signal), switch the component
+     * to OnPush, and delete its entry here. Delete this whole block once the list is empty.
+     */
+    files: [
+      '**/button-toggle-field.component.ts',
+      '**/slide-toggle-field.component.ts',
+      '**/multi-lang-input-field.component.ts',
+      '**/drag-n-drop-file-field.component.ts',
+      '**/range-slider-field.component.ts',
+      '**/mat-range-slider-field.component.ts',
+      '**/search-field.component.ts',
+      '**/form-dialog.component.ts',
+    ],
+    rules: {
+      '@angular-eslint/prefer-on-push-component-change-detection': 'warn',
+    },
+  }
 );

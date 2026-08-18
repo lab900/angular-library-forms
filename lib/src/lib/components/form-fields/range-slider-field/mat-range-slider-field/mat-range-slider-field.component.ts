@@ -18,6 +18,9 @@ import { TranslatePipe } from '@ngx-translate/core';
     },
   ],
   encapsulation: ViewEncapsulation.None,
+  // TODO(onpush): writeValue() mutates the plain 'value' field that the template reads.
+  // writeValue is called by the parent form, so OnPush would not repaint on a programmatic patchValue.
+  // Make it reactive, then switch to OnPush and remove this file from the eslint override.
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatSliderModule, MatFormFieldModule, MatInputModule, TranslatePipe],
 })

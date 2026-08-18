@@ -5,6 +5,10 @@ steps:
     args: ['ci']
   - name: 'node:24'
     entrypoint: 'npm'
+    id: Lint Library
+    args: ['run', 'lint']
+  - name: 'node:24'
+    entrypoint: 'npm'
     id: Test Library
     args: ['run', 'test:silent']
   - name: 'node:24'

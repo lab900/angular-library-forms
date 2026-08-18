@@ -18,6 +18,9 @@ import { TranslatePipe } from '@ngx-translate/core';
       }
     `,
   ],
+  // TODO(onpush): the template reads the non-reactive 'touched' and 'valid' getters of AbstractFormComponent.
+  // A parent calling markAllAsTouched() would not repaint this field under OnPush.
+  // Make it reactive, then switch to OnPush and remove this file from the eslint override.
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, MatLabel, MatSlideToggle, TranslatePipe, MatError],
 })
