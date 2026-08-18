@@ -583,6 +583,15 @@ Three optional migrations were offered and **not** run: `use-application-builder
      in the provider list, and it now serves both pickers.
    - `src/guides/getting-started.md` — the setup docs follow the same change. The note that Luxon is
      unavailable for the date-time picker is gone, because the Material adapter now covers it.
+   - **Regression found after the upgrade, and fixed:** the two adapters are not equivalent for the
+     input display. The removed `provideNgxMatNativeDate()` also supplied `NGX_MAT_DATE_FORMATS`, whose
+     `display.dateInput` held a **date-time** format. `MAT_NATIVE_DATE_FORMATS.display.dateInput` holds
+     a **date-only** format, so the picker input printed `8/20/2026` and dropped the time. The control
+     value always kept the time, which is why verification step A3 passed.
+     `lib/.../date-time-field/date-time-field.formats.ts` now provides `MAT_DATE_FORMATS` for the
+     date-time field alone: it overrides `display.dateInput` with a date-time format and inherits every
+     other format from the application. The format is read through a getter, so it follows `showSeconds`
+     and the new `displayFormat` option, which the field options cannot do at injector build time.
    - The template needed no change. Every binding it uses still exists.
 
 4. `marked` added to `dependencies` at `^16.0.0`. `ngx-markdown@20.1.0` peers `marked@^15 || ^16`,
@@ -809,7 +818,7 @@ which Jest resolves to the package that is no longer there. `jest.config.js` now
 environment instead, which needs no new dependency:
 
 ```js
-testEnvironment: 'jest-preset-angular/environments/jest-jsdom-env',
+testEnvironment: 'jest-preset-angular/environments/jest-jsdom-env'
 ```
 
 **Result: 4 suites passed, 32 tests passed, 0 failed.** No test file was edited.
@@ -1147,6 +1156,7 @@ Consumers must change their own dependency and their setup:
 | --- | --- | --- |
 | Package | `@ngxmc/datetime-picker@~19.2.2` | `@ngx-mce/datetime-picker@~22.2.3` |
 | Date adapter | `provideNgxMatNativeDate()` from the picker | `provideNativeDateAdapter()` from `@angular/material/core` |
+| Date-time input format | `NGX_MAT_DATE_FORMATS` from the picker | the field provides its own, see the `displayFormat` option |
 
 `@ngxmc/datetime-picker` stopped at Angular 20. `@ngx-mce/datetime-picker` is the maintained fork of the
 same upstream project, with an identical public API. `src/guides/getting-started.md` is updated.
@@ -1162,6 +1172,7 @@ same upstream project, with an identical public API. `src/guides/getting-started
 | `AmountInputDirective`, `SearchInputDirective` | new `onInputEvent` / `onFocusEvent` / `onBlurEvent` / `onPasteEvent` host handlers. The existing public methods keep their signatures. |
 | `select-field` custom trigger callback | still receives `null`, not `undefined`, when there is no control. Made explicit rather than left to a migration shim. |
 | `file-preview-field` file input | `accept` is now `''` when unset, instead of a stringified nullish value. |
+| `FormFieldDateTimePickerOptions.displayFormat` | new, optional. Sets the format the date-time input prints. Needed only on a non-native date adapter, where the built-in `Intl.DateTimeFormat` options do not apply. |
 | Empty icons no longer render | `button-toggle-field` skipped an icon element when a button option had none. |
 | `form-row`, `form-column`, `search-field` | render nothing when their required group or options are missing, instead of rendering a broken field. |
 

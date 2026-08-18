@@ -15,6 +15,7 @@ import {
   NgxMatDatepickerToggle,
   NgxMatDatetimepicker,
 } from '@ngx-mce/datetime-picker';
+import { DATE_TIME_FIELD_DATE_FORMATS, DateTimeFieldDateFormats } from './date-time-field.formats';
 
 /**
  * The picker's internal selection model. Since v20 the picker package uses the Angular Material
@@ -28,6 +29,7 @@ interface PickerSelectionModel {
 @Component({
   selector: 'lab900-date-time-field',
   templateUrl: './date-time-field.component.html',
+  providers: [DATE_TIME_FIELD_DATE_FORMATS],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ReactiveFormsModule,
@@ -80,6 +82,15 @@ export class DateTimeFieldComponent extends FormComponent<FormFieldDateTimePicke
   public readonly stepMinute = computed(() => {
     return this._options()?.stepMinute || 1;
   });
+
+  public constructor() {
+    super();
+    /** Let the field's own `MAT_DATE_FORMATS` follow the options of this field. */
+    inject(DateTimeFieldDateFormats).followField(
+      () => this.showSeconds(),
+      () => this._options()?.displayFormat
+    );
+  }
 
   public pickerOpened(datePicker: NgxMatDatetimepicker<any>): void {
     /**

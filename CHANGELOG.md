@@ -5,6 +5,7 @@ Upgrade to Angular 22. See [angular upgrade document](ANGULAR-UPGRADE-19.2-TO-22
 
 **Breaking: the date-time picker package changed.** `@ngxmc/datetime-picker` stopped releasing after Angular 20, so it is replaced by `@ngx-mce/datetime-picker` (`~22.2.3`), the maintained fork of the same project. Its public API is identical.
 
+- Fix: the date-time field shows the selected time in the input again.
 - Fix: button toggle no longer renders an empty icon element for options without an icon.
 - Fix: button toggle element id rendered the `elementId` function instead of its value.
 - Fix: range slider inputs show an empty value instead of the text `undefined` when no value is set.
