@@ -37,7 +37,7 @@ export class FormReactiveOptionsExampleComponent {
       {
         attribute: 'reactiveSelect',
         editType: EditType.Select,
-        title: 'Reactive select',
+        title: 'Reactive select - no options',
         options: {
           required: this.required,
           hide: this.hidden,
