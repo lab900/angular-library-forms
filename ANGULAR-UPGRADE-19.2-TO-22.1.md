@@ -8,18 +8,18 @@ Branch: chore/angular-upgrade-v22
 
 | Check                | Command                                     | Result                                                         | Measured at | Measured by |
 | -------------------- | ------------------------------------------- | -------------------------------------------------------------- | ----------- | ----------- |
-| type check (app)     | `npx tsc -p tsconfig.app.json --noEmit`     | pass                                                           | `83ad8349`  | skill       |
-| type check (spec)    | `npx tsc -p tsconfig.spec.json --noEmit`    | pass                                                           | `83ad8349`  | skill       |
-| type check (library) | `npx tsc -p lib/tsconfig.lib.json --noEmit` | pass                                                           | `83ad8349`  | skill       |
-| build library (dev)  | `npx ng build forms`                        | pass                                                           | `83ad8349`  | skill       |
-| build library (prod) | `npm run build:forms:prod`                  | pass                                                           | `83ad8349`  | skill       |
-| build application    | `npx ng build lab900-forms`                 | pass                                                           | `83ad8349`  | skill       |
-| tests                | `npm test`                                  | pass — 4 suites, 32 tests                                      | `83ad8349`  | skill       |
-| lint                 | `npm run lint`                              | pass — 0 errors, 9 warnings (8 tracked TODOs + 1 pre-existing) | `83ad8349`  | skill       |
-| forced rebuild       | watch build, touch 1 library + 1 app file   | pass — 2 rebuilds each, 0 errors                               | `83ad8349`  | skill       |
+| type check (app)     | `npx tsc -p tsconfig.app.json --noEmit`     | pass                                                           | `21022315`  | skill       |
+| type check (spec)    | `npx tsc -p tsconfig.spec.json --noEmit`    | pass                                                           | `21022315`  | skill       |
+| type check (library) | `npx tsc -p lib/tsconfig.lib.json --noEmit` | pass                                                           | `21022315`  | skill       |
+| build library (dev)  | `npx ng build forms`                        | pass                                                           | `21022315`  | skill       |
+| build library (prod) | `npm run build:forms:prod`                  | pass                                                           | `21022315`  | skill       |
+| build application    | `npx ng build lab900-forms`                 | pass                                                           | `21022315`  | skill       |
+| tests                | `npm test`                                  | pass — 4 suites, 32 tests                                      | `21022315`  | skill       |
+| lint                 | `npm run lint`                              | pass — 0 errors, 9 warnings (8 tracked TODOs + 1 pre-existing) | `21022315`  | skill       |
+| forced rebuild       | watch build, touch 1 library + 1 app file   | pass — 2 rebuilds each, 0 errors                               | `21022315`  | skill       |
 | runtime behaviour    | manual click-through                        | not verified — handed to the user                              | —           | user        |
 
-Measured in one pass at `83ad8349`, the last code commit. Later commits on this branch are documentation
+Measured in one pass at `21022315`, the last code commit. Later commits on this branch are documentation
 only, which does not invalidate the table, so the hash stays. No result is carried over from an earlier
 run — the whole pass was re-run when `marked` was removed, because that changed `package.json`.
 
@@ -99,6 +99,11 @@ repo-facing: `lib/ng-package.json` does not copy it into `dist`, so it is not pu
 | `ChangeDetectionStrategy.Eager`, revisited | Flip the **12** components that read only reactive state to `OnPush`. Keep `Eager` on the **8** that do not, each with a `TODO(onpush)`. Downgrade the lint rule to a warning for exactly those 8 via a scoped override, and add a lint step to CI. | 2026-08-18 | CI never ran lint, so 20 red errors signalled nothing to anyone. The blocker is real but narrow: `touched` and `valid` are plain getters over `AbstractControl`, and `markAllAsTouched()` is called from outside the field components, so those 8 would stop repainting under OnPush. `mat-range-slider-field` has the same problem through `writeValue()`. The honest fix is to make that state reactive, which is now a tracked follow-up rather than a silent opt-out. |
 
 | Version and release of `22.0.0` | Keep `22.0.0`. The maintainer does the tagging, publishing and dist-tag promotion. | 2026-08-18 | The number follows the convention already recorded here: the major tracks the Angular major, and this is the first 22.x release, so there is nothing to increment from. `22.0.0` is still free on npm (`latest` is 19.1.40). Release mechanics are deliberately out of scope for this branch. |
+
+| `_fieldAttribute()` binding style | Unify on `?? ''`. The 3 pre-existing `!` assertions in `input-field` and `select-field` are gone. | 2026-08-18 | 14 bindings, 11 already `?? ''`. Runtime is identical — `formControlName` accepts `string \| number \| null`, and a missing control throws `Cannot find control with …` either way — so this is type honesty and consistency. `!` asserted non-null on an input declared `string \| undefined`, which the schema's optional `attribute?` contradicts. A blanket render-guard was rejected: `button-field` binds no control and must still render. |
+| `provideHttpClient(withXhr())` | **Remove it.** | 2026-08-18 | Nothing needs the XHR backend: `reportProgress` appears in no file and every HTTP call is a `get`. (An earlier note claimed a non-GET call existed; that was a false positive on `Set.delete`.) Showcase app only, no consumer impact. |
+| `@angular/platform-browser-dynamic` | **Keep it, but move it to `devDependencies`.** | 2026-08-18 | An earlier follow-up wrongly suggested it might be removable. It is a **non-optional peer of `@angular-builders/jest@22`**, so removing it breaks the install. No source file imports it and only the test builder needs it, so `dependencies` was the wrong section. |
+| The `angular.json` `schematics` block | **Keep it.** | 2026-08-18 | Every existing file is named `x.component.ts`. The v20+ default drops that suffix, so removing the block would make newly generated files inconsistent with the whole repo. |
 
 ## Hop plan
 
@@ -1415,12 +1420,12 @@ four were the smaller items. Nothing was removed or changed for any of them:
     - Each of the 8 carries a `TODO(onpush)` naming its own blocker, and `eslint.config.js` lists them in
       one override block to delete when the list empties.
 
-11. **`provideHttpClient(withXhr())` is very likely unnecessary.** The v22 migration added it to
+11. ~~**`provideHttpClient(withXhr())` is very likely unnecessary.**~~ Confirmed and removed. Original note: The v22 migration added it to
     `src/main.ts` to keep the XHR backend. The evidence says nothing needs it: `reportProgress` appears
     in no file, and every HTTP call in the project is a `get` — the translation loader, `FileService`,
     the file-upload example and the openlibrary lookup. Removing it would move the app to the default
     `fetch` backend. It is a one-line change plus a smoke test of the showcase's HTTP.
-12. **`@angular/platform-browser-dynamic` looks unused.** It is declared in `dependencies` and bumped to
+12. ~~**`@angular/platform-browser-dynamic` looks unused.**~~ **Wrong, and corrected.** It is a non-optional peer of `@angular-builders/jest@22`, so it cannot be removed; it was moved to `devDependencies` instead. Original note: It is declared in `dependencies` and bumped to
     22.1.2, but no file under `lib/src` or `src` imports it, and `jest-preset-angular@17` explicitly
     dropped it from its peers. Removing it is a change to the published dependency set, so it needs a
     decision and a check that no installed package still requires it.
@@ -1431,7 +1436,7 @@ four were the smaller items. Nothing was removed or changed for any of them:
 
 Smaller items:
 
-14. **13 extended-diagnostic warnings in the library build**, 12 × `NG8107` (`?.` on a value that is not
+14. ~~**13 extended-diagnostic warnings in the library build**~~ **Already gone.** Template cleanups on this branch removed every one; the library build is now warning-free. Original note:, 12 × `NG8107` (`?.` on a value that is not
     nullable) and 1 × `NG8102` (`??` on a value that is not nullable), across 8 files. They are warnings
     and do not fail the build. Each is a redundant `?.` or `??` that can simply be deleted, which is a
     small tidy-up now that `strictTemplates` proves the operand is not nullable. The v22 migration wanted
