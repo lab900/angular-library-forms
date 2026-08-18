@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 
 @Component({
@@ -9,7 +8,7 @@ import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldSelectExampleComponent {
-  public readonly formGroup = new UntypedFormGroup({});
+  public readonly form = viewChild<Lab900Form<any>>(Lab900Form);
   public readonly formSchema: Lab900FormConfig = {
     fields: [
       {
@@ -201,12 +200,7 @@ export class FormFieldSelectExampleComponent {
     },
   };
 
-  public constructor() {
-    const control = new UntypedFormControl();
-    this.formGroup.addControl('example-select', control);
-  }
-
   public clearSelect(): void {
-    this.formGroup.get('example-select')?.setValue(null);
+    this.form()?.form.reset();
   }
 }
