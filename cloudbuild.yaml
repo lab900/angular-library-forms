@@ -30,7 +30,7 @@ steps:
         npm install -g npm@latest
         npm config set -- '//registry.npmjs.org/:_authToken' "$$NPM_TOKEN"
         cd dist/@lab900/forms
-        npm stage publish --ignore-scripts
+        npm stage publish
         # Print the stage id, so the maintainer can approve the version.
         npm stage list @lab900/forms || true
 availableSecrets:

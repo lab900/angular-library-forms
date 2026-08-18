@@ -8,9 +8,12 @@
     "inlineSources": true
   },
   "angularCompilerOptions": {
-    "skipTemplateCodegen": true,
-    "strictMetadataEmit": true,
-    "enableResourceInlining": true,
+    /**
+     * Publish a partial-compiled package. Without this, ng-packagr falls back to `full`, which bakes
+     * Angular's private instruction calls into the output and breaks on the next Angular major.
+     * ng-packagr's own default is never applied, because the builder passes this file as its whole config.
+     */
+    "compilationMode": "partial",
     "strictTemplates": true
   },
   "exclude": ["**/*.spec.ts"]
