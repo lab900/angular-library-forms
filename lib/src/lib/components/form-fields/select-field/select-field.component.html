@@ -60,8 +60,7 @@
               [placeholderLabel]="searchOptions()?.placeholder ?? 'form.field.search' | translate"
               [disableScrollToActiveOnOptionsChanged]="!!infiniteScrollOptions()?.enabled"
               [clearSearchInput]="searchOptions()?.clearOnClose ?? false"
-              [noEntriesFoundLabel]="''">
-            </ngx-mat-select-search>
+              [noEntriesFoundLabel]="''" />
           </mat-option>
         }
         @if (multiple() && selectAllOptions()?.enabled && selectOptions().length) {

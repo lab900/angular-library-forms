@@ -21,14 +21,14 @@
             [matTooltipPosition]="value?.tooltip?.position || 'above'"
             id="mat-button-toggle-{{ elementId() }}">
             @if (value?.icon?.position === 'left') {
-              <lab900-icon [icon]="value.icon"></lab900-icon>
+              <lab900-icon [icon]="value.icon" />
             }
             @if (value.label) {
               {{ value.label | translate }}
             }
             @let icon = value.icon;
             @if (icon && (!icon.position || icon.position === 'right')) {
-              <lab900-icon [icon]="icon"></lab900-icon>
+              <lab900-icon [icon]="icon" />
             }
           </mat-button-toggle>
         }

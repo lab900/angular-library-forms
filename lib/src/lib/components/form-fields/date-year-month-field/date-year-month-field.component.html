@@ -12,10 +12,7 @@
       [max]="maxDate()"
       [min]="minDate()" />
     <mat-datepicker-toggle matIconSuffix [for]="picker" />
-    <mat-datepicker
-      #picker
-      [startView]="startView()"
-      (monthSelected)="monthSelectedHandler($event, picker)"></mat-datepicker>
+    <mat-datepicker #picker [startView]="startView()" (monthSelected)="monthSelectedHandler($event, picker)" />
     @let hint = _options()?.hint;
     @if (!!hint?.value && !(hint?.hideHintOnValidValue && input.value) && !fieldIsReadonly()) {
       <mat-hint>
