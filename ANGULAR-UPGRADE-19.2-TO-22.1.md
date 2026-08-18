@@ -8,18 +8,18 @@ Branch: chore/angular-upgrade-v22
 
 | Check                | Command                                     | Result                                                         | Measured at | Measured by |
 | -------------------- | ------------------------------------------- | -------------------------------------------------------------- | ----------- | ----------- |
-| type check (app)     | `npx tsc -p tsconfig.app.json --noEmit`     | pass                                                           | `21022315`  | skill       |
-| type check (spec)    | `npx tsc -p tsconfig.spec.json --noEmit`    | pass                                                           | `21022315`  | skill       |
-| type check (library) | `npx tsc -p lib/tsconfig.lib.json --noEmit` | pass                                                           | `21022315`  | skill       |
-| build library (dev)  | `npx ng build forms`                        | pass                                                           | `21022315`  | skill       |
-| build library (prod) | `npm run build:forms:prod`                  | pass                                                           | `21022315`  | skill       |
-| build application    | `npx ng build lab900-forms`                 | pass                                                           | `21022315`  | skill       |
-| tests                | `npm test`                                  | pass — 4 suites, 32 tests                                      | `21022315`  | skill       |
-| lint                 | `npm run lint`                              | pass — 0 errors, 9 warnings (8 tracked TODOs + 1 pre-existing) | `21022315`  | skill       |
-| forced rebuild       | watch build, touch 1 library + 1 app file   | pass — 2 rebuilds each, 0 errors                               | `21022315`  | skill       |
+| type check (app)     | `npx tsc -p tsconfig.app.json --noEmit`     | pass                                                           | `3029ff0b`  | skill       |
+| type check (spec)    | `npx tsc -p tsconfig.spec.json --noEmit`    | pass                                                           | `3029ff0b`  | skill       |
+| type check (library) | `npx tsc -p lib/tsconfig.lib.json --noEmit` | pass                                                           | `3029ff0b`  | skill       |
+| build library (dev)  | `npx ng build forms`                        | pass                                                           | `3029ff0b`  | skill       |
+| build library (prod) | `npm run build:forms:prod`                  | pass                                                           | `3029ff0b`  | skill       |
+| build application    | `npx ng build lab900-forms`                 | pass                                                           | `3029ff0b`  | skill       |
+| tests                | `npm test`                                  | pass — 4 suites, 32 tests                                      | `3029ff0b`  | skill       |
+| lint                 | `npm run lint`                              | pass — 0 errors, 9 warnings (8 tracked TODOs + 1 pre-existing) | `3029ff0b`  | skill       |
+| forced rebuild       | watch build, touch 1 library + 1 app file   | pass — 2 rebuilds each, 0 errors                               | `3029ff0b`  | skill       |
 | runtime behaviour    | manual click-through                        | not verified — handed to the user                              | —           | user        |
 
-Measured in one pass at `21022315`, the last code commit. Later commits on this branch are documentation
+Measured in one pass at `3029ff0b`, the last code commit. Later commits on this branch are documentation
 only, which does not invalidate the table, so the hash stays. No result is carried over from an earlier
 run — the whole pass was re-run when `marked` was removed, because that changed `package.json`.
 
@@ -104,6 +104,8 @@ repo-facing: `lib/ng-package.json` does not copy it into `dist`, so it is not pu
 | `provideHttpClient(withXhr())` | **Remove it.** | 2026-08-18 | Nothing needs the XHR backend: `reportProgress` appears in no file and every HTTP call is a `get`. (An earlier note claimed a non-GET call existed; that was a false positive on `Set.delete`.) Showcase app only, no consumer impact. |
 | `@angular/platform-browser-dynamic` | **Keep it, but move it to `devDependencies`.** | 2026-08-18 | An earlier follow-up wrongly suggested it might be removable. It is a **non-optional peer of `@angular-builders/jest@22`**, so removing it breaks the install. No source file imports it and only the test builder needs it, so `dependencies` was the wrong section. |
 | The `angular.json` `schematics` block | **Keep it.** | 2026-08-18 | Every existing file is named `x.component.ts`. The v20+ default drops that suffix, so removing the block would make newly generated files inconsistent with the whole repo. |
+
+| The explicit `strictTemplates: true` | **Remove it** from all three tsconfigs. Strict template checking stays on. | 2026-08-18 | It is the v22 default, so the flag changed nothing. The declaration documents _"Defaults to `true`"_, and the compiler tests `strictTemplates !== false`. Proven by probe on both paths with the option absent: `[max]="maxDate()"` still fails in the library build and `[exampleTitle]="example.title"` still fails in the app build. Setting it to `true` when removing the migration's `false` was one step more than necessary. The now-empty `angularCompilerOptions` blocks in the app and spec configs were deleted too. |
 
 ## Hop plan
 
@@ -954,7 +956,8 @@ those 7 files. It removed the parentheses in `(a ?? '') | translate`; that is sa
 pipe operator has the lowest precedence, so `a ?? '' | translate` parses the same way.
 
 **Result.** 3 type checks at 0 errors, all 3 builds pass, 32 tests pass. `strictTemplates: false` is gone
-from all 3 tsconfigs, and the `extendedDiagnostics` block stayed out — the remaining `NG8107` / `NG8102`
+from all 3 tsconfigs _(and the explicit `true` was later dropped as redundant — see the Decisions table; the
+checking itself is unchanged, it is simply the v22 default)_, and the `extendedDiagnostics` block stayed out — the remaining `NG8107` / `NG8102`
 reports are warnings, not errors, and are listed under Follow-ups.
 
 ### `refactor: drop the $safeNavigationMigration() wrappers`
