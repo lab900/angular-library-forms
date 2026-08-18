@@ -4,9 +4,14 @@
 
 Upgrade to Angular 22. See [angular upgrade document](ANGULAR-UPGRADE-19.2-TO-22.1.md) for all changes done
 
+**Breaking: the package is now published in partial compilation mode.** Every release up to 19.1.40 was published fully compiled, which bakes Angular's private instruction calls into the output and only runs on the Angular major it was built against. From 22.0.0 the package ships partial declarations, which the Angular linker recompiles during your own build. Nothing changes if you build with the Angular CLI. If you build without it, make sure the Angular linker runs over `node_modules`.
+
+**Breaking: `@lab900/ui` must be `>=22.0.4`.** 22.0.0 is fully compiled and crashes on a newer Angular major with `TypeError: (void 0) is not a function`, so the peer range excludes it.
+
 **Breaking: the date-time picker package changed.** `@ngxmc/datetime-picker` stopped releasing after Angular 20, so it is replaced by `@ngx-mce/datetime-picker` (`~22.2.3`), the maintained fork of the same project. Its public API is identical.
 
 - Fix: the date-time field shows the selected time in the input again.
+- Chore: 12 components moved to `OnPush` change detection, the Angular 22 default. 8 keep the eager strategy for now, each with a `TODO` explaining why.
 - Fix: button toggle no longer renders an empty icon element for options without an icon.
 - Fix: button toggle element id rendered the `elementId` function instead of its value.
 - Fix: range slider inputs show an empty value instead of the text `undefined` when no value is set.

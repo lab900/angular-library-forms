@@ -6,29 +6,31 @@ Branch: chore/angular-upgrade-v22
 
 ## Final state
 
-| Check                | Command                                     | Result                                                                      | Measured at | Measured by |
-| -------------------- | ------------------------------------------- | --------------------------------------------------------------------------- | ----------- | ----------- |
-| type check (app)     | `npx tsc -p tsconfig.app.json --noEmit`     | pass                                                                        | `4a9a190f`  | skill       |
-| type check (spec)    | `npx tsc -p tsconfig.spec.json --noEmit`    | pass                                                                        | `4a9a190f`  | skill       |
-| type check (library) | `npx tsc -p lib/tsconfig.lib.json --noEmit` | pass                                                                        | `4a9a190f`  | skill       |
-| build library (dev)  | `npx ng build forms`                        | pass                                                                        | `4a9a190f`  | skill       |
-| build library (prod) | `npm run build:forms:prod`                  | pass                                                                        | `4a9a190f`  | skill       |
-| build application    | `npx ng build lab900-forms`                 | pass                                                                        | `4a9a190f`  | skill       |
-| tests                | `npm test`                                  | pass — 4 suites, 32 tests                                                   | `4a9a190f`  | skill       |
-| lint                 | `npm run lint`                              | **fail — 20 errors (kept opt-out, see Decisions)** + 1 pre-existing warning | `4a9a190f`  | skill       |
-| forced rebuild       | watch build, touch 1 library + 1 app file   | pass — 2 rebuilds each, 0 errors                                            | `4a9a190f`  | skill       |
-| runtime behaviour    | manual click-through                        | not verified — handed to the user                                           | —           | user        |
+| Check                | Command                                     | Result                                                         | Measured at | Measured by |
+| -------------------- | ------------------------------------------- | -------------------------------------------------------------- | ----------- | ----------- |
+| type check (app)     | `npx tsc -p tsconfig.app.json --noEmit`     | pass                                                           | `83ad8349`  | skill       |
+| type check (spec)    | `npx tsc -p tsconfig.spec.json --noEmit`    | pass                                                           | `83ad8349`  | skill       |
+| type check (library) | `npx tsc -p lib/tsconfig.lib.json --noEmit` | pass                                                           | `83ad8349`  | skill       |
+| build library (dev)  | `npx ng build forms`                        | pass                                                           | `83ad8349`  | skill       |
+| build library (prod) | `npm run build:forms:prod`                  | pass                                                           | `83ad8349`  | skill       |
+| build application    | `npx ng build lab900-forms`                 | pass                                                           | `83ad8349`  | skill       |
+| tests                | `npm test`                                  | pass — 4 suites, 32 tests                                      | `83ad8349`  | skill       |
+| lint                 | `npm run lint`                              | pass — 0 errors, 9 warnings (8 tracked TODOs + 1 pre-existing) | `83ad8349`  | skill       |
+| forced rebuild       | watch build, touch 1 library + 1 app file   | pass — 2 rebuilds each, 0 errors                               | `83ad8349`  | skill       |
+| runtime behaviour    | manual click-through                        | not verified — handed to the user                              | —           | user        |
 
-Measured in one pass at `4a9a190f`, the last code commit. Later commits on this branch are documentation
+Measured in one pass at `83ad8349`, the last code commit. Later commits on this branch are documentation
 only, which does not invalidate the table, so the hash stays. No result is carried over from an earlier
 run — the whole pass was re-run when `marked` was removed, because that changed `package.json`.
 
-**About the lint failure.** All 20 errors are
-`@angular-eslint/prefer-on-push-component-change-detection`, one per component that carries the
-`ChangeDetectionStrategy.Eager` opt-out the user chose to keep. 19 are in the library project and 1 in the
-application project. This is the reported cost of that decision, not an accident: no `eslint-disable` was
-added and no rule was relaxed. The 1 warning is a pre-existing unused `eslint-disable` directive at
-`lib/src/lib/components/form-container/form-container.component.ts:20`, unrelated to the upgrade.
+**About lint.** It passes now, with warnings. After the grilling review, 12 of the 20 components moved
+to `OnPush`; the remaining 8 keep `ChangeDetectionStrategy.Eager` because their templates read state that
+Angular does not signal. For those 8, `@angular-eslint/prefer-on-push-component-change-detection` is
+downgraded to a **warning** by a scoped `files:` override in `eslint.config.js`, and each component carries
+a `TODO(onpush)` naming its specific blocker. The rule stays an **error** everywhere else, so a new
+component cannot silently opt out. The 9th warning is a pre-existing unused `eslint-disable` directive at
+`lib/src/lib/components/form-container/form-container.component.ts:20`, unrelated to the upgrade. `npm run
+lint` now runs in CI, which it never did before.
 
 The library build also emits 13 extended-diagnostic **warnings** (12 × `NG8107`, 1 × `NG8102`) across 8
 files. They are warnings, not errors, and are under Follow-ups.
@@ -87,9 +89,14 @@ repo-facing: `lib/ng-package.json` does not copy it into `dist`, so it is not pu
 | `skipLibCheck` for the 2 `TS2416` errors inside `@ngxmc/datetime-picker@20.1.0` | Add `skipLibCheck: true` to `lib/tsconfig.lib.json` only, as a temporary measure. Remove it at hop 2 after the swap and prove the library build stays green without it. Report it if removal fails.    | 2026-08-17 | The errors are a defect in the package, not in this project: it declares `dateFilter` as `(date: D) => boolean` while its own `NgxMatDatepickerControl` requires `(date: D \| null) => boolean`. 20.1.0 is its only Angular 20 release, and the fork declares the signature correctly. The application and spec configs keep full declaration checking. **Closed at hop 2: removed, and the library build is green without it.**                                                                                                                                                                                                                                                                                                                     |
 | `strictTemplates: false` (3 tsconfigs)                                          | Enable it everywhere and fix all 76 errors.                                                                                                                                                            | 2026-08-17 | Measured cost before deciding: 67 errors in 26 library files and 9 in 6 app files. The user chose the full fix over keeping the opt-out.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | `$safeNavigationMigration()` (63 occurrences, 29 files)                         | Validated first, then **removed all of them**. 21 fell out with the `strictTemplates` work; the remaining 42 were removed after the analysis. 2 sites got an explicit value instead of a bare removal. | 2026-08-17 | The user asked for evidence before committing to a removal. The validation is written up under "After the checkpoint". Note the assumption behind the request turned out to be wrong in a useful way: the wrapper is invisible to the type checker, so the compiler could **not** have caught a `null` / `undefined` mismatch. The 2 real cases were found by reading what consumes each value.                                                                                                                                                                                                                                                                                                                                                      |
-| `ChangeDetectionStrategy.Eager` (20 components)                                 | **Keep.** Report the 20 lint errors instead of hiding them.                                                                                                                                            | 2026-08-17 | Removing it changes change detection on 19 published components. That is a runtime risk only a click-through can settle, and the skill forbids the assistant claiming a runtime pass. Lint stays red by choice, not by accident.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `ChangeDetectionStrategy.Eager` (20 components)                                 | **Keep.** Report the 20 lint errors instead of hiding them. _Superseded by the grilling review — 12 of the 20 were flipped after a per-component safety analysis._                                     | 2026-08-17 | Removing it changes change detection on 19 published components. That is a runtime risk only a click-through can settle, and the skill forbids the assistant claiming a runtime pass. Lint stays red by choice, not by accident.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `@angular-eslint/prefer-inject` (17 errors, 5 files)                            | Run `ng generate @angular/core:inject`, then review the diff and re-verify.                                                                                                                            | 2026-08-17 | Verified the rule was absent from angular-eslint 19.2.1's recommended set, so the upgrade introduced it. Angular ships the schematic, so the refactor is mechanical.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | The explicit `marked` dependency added at hop 1                                 | **Remove it.**                                                                                                                                                                                         | 2026-08-17 | The user asked whether it was still needed. It is not, and the claim was tested rather than argued: no file imports `marked`; deleting the declaration and regenerating `package-lock.json` from scratch still resolves `marked@18.0.9`; and the whole range `ngx-markdown@22.0.0` allows (`^17 \|\| ^18`) carries the generic `MarkedOptions` / `MarkedExtension` types its `.d.ts` needs, confirmed by unpacking marked 17.0.6 as well as 18.0.9. CI runs plain `npm ci` with no `.npmrc` and no `--legacy-peer-deps`, so the peer comes from the lock. The hop 1 failure was caused by a **retained** `marked@15.0.12` that still satisfied ngx-markdown 20.1.0's `^15 \|\| ^16` peer but predates the generics; that condition no longer exists. |
+
+| Full compilation mode of the published package | Publish in **partial** mode: add `compilationMode: "partial"` to `lib/tsconfig.lib.json`, and drop `--ignore-scripts` from both cloudbuild files. | 2026-08-18 | `@lab900/ui@19.2.3` crashed at runtime on Angular 22 because it shipped fully-compiled. The same defect was found in this library: `@lab900/forms@19.1.40` on npm is fully-compiled, and its dist carried ng-packagr's `prepublishOnly` guard, which `--ignore-scripts` had been bypassing. Partial output is re-compiled by the Angular linker at the consumer's build, so it survives the next Angular major. |
+| The three legacy options beside it | Remove `skipTemplateCodegen`, `strictMetadataEmit` and `enableResourceInlining`. | 2026-08-18 | Proven inert for this package: with `compilationMode` held constant, all 8 emitted files are byte-identical without them, and a probe shows `strictTemplates` still fires. The first two govern View Engine artefacts the build no longer produces (0 `*.metadata.json`, 0 `*ngfactory*`); the third is forced by ng-packagr regardless (`tsconfig.js:64`). |
+| `@lab900/ui` | Move to `^22.0.4` and set the library peer to `>=22.0.4`. | 2026-08-18 | 22.0.4 is the first partial-compiled release. The peer excludes 22.0.0, which is fully-compiled and will break on Angular 23; it stays on npm forever, so a range admitting it would be a false compatibility claim. Verified partial by unpacking the published tarball. |
+| `ChangeDetectionStrategy.Eager`, revisited | Flip the **12** components that read only reactive state to `OnPush`. Keep `Eager` on the **8** that do not, each with a `TODO(onpush)`. Downgrade the lint rule to a warning for exactly those 8 via a scoped override, and add a lint step to CI. | 2026-08-18 | CI never ran lint, so 20 red errors signalled nothing to anyone. The blocker is real but narrow: `touched` and `valid` are plain getters over `AbstractControl`, and `markAllAsTouched()` is called from outside the field components, so those 8 would stop repainting under OnPush. `mat-range-slider-field` has the same problem through `writeValue()`. The honest fix is to make that state reactive, which is now a tracked follow-up rather than a silent opt-out. |
 
 ## Hop plan
 
@@ -727,7 +734,7 @@ background with exit code 0. `ng update` also bumped `jest` to `^30.4.2` on its 
 | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------- | -------------------------------- |
 | `package.json`                                                     | Angular to 22.1.x, typescript to `~6.0.3`, jest to `^30.4.2`                                    | required                         |
 | 29 files, 63 occurrences                                           | `$safeNavigationMigration()` wrappers around optional-chain expressions                         | **opt-out**                      |
-| 20 components                                                      | `changeDetection: ChangeDetectionStrategy.Eager`                                                | **opt-out**                      |
+| 20 components → **12 flipped, 8 kept**                             | `changeDetection: ChangeDetectionStrategy.Eager`                                                | **opt-out**                      |
 | `tsconfig.app.json`, `tsconfig.spec.json`, `lib/tsconfig.lib.json` | `strictTemplates: false`                                                                        | **opt-out**                      |
 | all 4 tsconfigs                                                    | `extendedDiagnostics` suppressing `nullishCoalescingNotNullable` and `optionalChainNotNullable` | **opt-out**, removed — see below |
 | `src/main.ts`                                                      | `provideHttpClient()` -> `provideHttpClient(withXhr())`                                         | **opt-out**                      |
@@ -1037,6 +1044,99 @@ nothing failed until a fresh resolve. Anyone deleting `node_modules` on the v22 
 `typescript >=4.8.4 <6.1.0`. That both fixes the install and declares a package the eslint config was
 already importing. npm resolved 8.67.0, and lint still reports only the kept opt-out.
 
+## After the grilling review
+
+A `/grilling` pass over the finished branch, on 2026-08-18. It found one defect that predates the upgrade
+and would have shipped, and it reopened one decision on better evidence.
+
+### `chore: publish the library in partial compilation mode`
+
+**Symptom.** None visible. Every check was green and the package worked on Angular 22.
+
+**How it surfaced.** `@lab900/ui@19.2.3` had crashed at runtime on Angular 22 with
+`TypeError: (void 0) is not a function`, because it shipped **fully-compiled** template code calling
+`ɵɵclassMapInterpolate1`, which v22 no longer exports. Asking which other packages were in that class
+turned up this library itself.
+
+**What compilation mode means.** The Angular compiler turns a component into a static `ɵcmp` definition.
+`compilationMode` decides when the final lowering happens:
+
+|                              | `full`                                                              | `partial`                                                        |
+| ---------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Emits                        | final template function calling Angular's private `ɵɵ` instructions | a data-only `ɵɵngDeclareComponent({minVersion, version, …})`     |
+| Compiled against             | **the author's** Angular                                            | **the consumer's** Angular, by the Angular linker at their build |
+| Survives a new Angular major | no                                                                  | yes                                                              |
+| Correct for                  | applications                                                        | **libraries**                                                    |
+
+That is why `ngx-mask@19.0.7` is fine on Angular 22 despite peering `>=14.0.0` — it is partial, and the
+linker recompiles it. `@lab900/ui` was the exception, and so were we.
+
+**Evidence gathered.**
+
+| Fact                                            | Value                                                                      |
+| ----------------------------------------------- | -------------------------------------------------------------------------- |
+| Our build reported                              | `Compiling with Angular sources in full compilation mode.`                 |
+| `dist/@lab900/forms`                            | 0 partial declarations, 1 fully-compiled file                              |
+| `@lab900/forms@19.1.40` **as published on npm** | 0 partial, 1 fully-compiled — the defect was already live                  |
+| ng-packagr's reaction                           | injects `prepublishOnly` into the dist `package.json` to block the publish |
+| That guard in our published 19.1.40             | **present** — proof it had been bypassed                                   |
+| The pipeline                                    | `npm stage publish --ignore-scripts`, which bypasses it                    |
+
+**Root cause.** `angular.json` points the builder at `lib/tsconfig.lib.json`, and
+`packager.withTsConfig(...)` makes ng-packagr treat that file as its **entire** config — its own
+`tsconfig.ngc.json`, which sets `compilationMode: "partial"`, is never consulted. Angular then defaults to
+full (`let compilationMode = CompilationMode.FULL;`, flipped only by an explicit `"partial"`). Deleting our
+`angularCompilerOptions` block would **not** have helped. Note the current `ng generate library` template
+ships no `compilationMode` either, so any CLI library can fall into this.
+
+**Fix.** `compilationMode: "partial"` in `lib/tsconfig.lib.json`, and `--ignore-scripts` removed from both
+cloudbuild files so the guard can never be silently bypassed again. The three legacy options next to it
+were removed as proven no-ops.
+
+**Verified.** Build reports partial; dist emits `ngDeclare*` and 0 fully-compiled files; the
+`prepublishOnly` guard is gone; app build and all 32 tests pass against the partial dist, exercising the
+linker path; and a probe confirms `strictTemplates` still fires.
+
+### `refactor: move the safe components to OnPush change detection`
+
+The earlier decision kept `Eager` on all 20 components and accepted red lint as its cost. The grilling
+found that **CI never ran lint**, so that cost was invisible and the signal worthless.
+
+A per-component analysis then showed the blocker is narrow. Across the 20: no `ChangeDetectorRef`, no
+`markForCheck`, no `detectChanges`, and no decorator `@Input()` — all signal inputs. The real hazard is
+that `touched` and `valid` are plain getters over `AbstractControl`, and `markAllAsTouched()` is called
+from **outside** the field components (the standard validate-on-submit flow). A component reading those
+getters would stop repainting under OnPush.
+
+| Kept `Eager` (8)                                                      | Blocker                                                     |
+| --------------------------------------------------------------------- | ----------------------------------------------------------- |
+| `button-toggle-field`, `slide-toggle-field`, `multi-lang-input-field` | template reads `touched` **and** `valid`                    |
+| `drag-n-drop-file-field`, `range-slider-field`                        | reads `touched`                                             |
+| `search-field`, `form-dialog`                                         | reads `valid`                                               |
+| `mat-range-slider-field`                                              | `writeValue()` mutates the plain `value` the template reads |
+
+The other **12** were flipped: `form-column`, `form-container`, `autocomplete-field`,
+`autocomplete-multiple-field`, `button-field`, `date-field`, `date-range-field`, `date-time-field`,
+`date-year-month-field`, `password-field`, `image-preview-modal` and the showcase `app.component`.
+
+Two borderline cases were checked and cleared: `app.component` assigns `language` in `ngOnInit`, before the
+first paint; the two autocompletes assign `filteredOptions` in `ngAfterViewInit`, but their panel is only
+reachable after a keystroke, which is a listener in their own template.
+
+**OnPush is a runtime change that no build or test can prove.** See the smoke test.
+
+### `chore: gate the pipeline on lint and track the remaining Eager components`
+
+- A `Lint Library` step now runs in both pipelines, after install and before the tests. It never ran before.
+- The 8 remaining components each carry a `TODO(onpush)` naming their own blocker.
+- `eslint.config.js` gained one scoped `files:` override that downgrades
+  `@angular-eslint/prefer-on-push-component-change-detection` to `warn` for exactly those 8. The rule stays
+  an **error** everywhere else, so a new component cannot silently opt out. The block is meant to shrink to
+  nothing and then be deleted.
+
+`npm run lint` now exits 0 with 9 warnings: the 8 tracked ones plus one pre-existing unused
+`eslint-disable`.
+
 ## Smoke test for the user
 
 **No runtime behaviour in this upgrade was verified.** No browser was driven and no runtime pass is
@@ -1114,6 +1214,31 @@ Watch the browser console for errors throughout. Then work through the list.
 20. **`ng serve` port**: `npm start` asks for port 4900. If a `PORT` environment variable is set, v22
     now lets it win over the flag.
 
+### G — the 12 components moved to OnPush (new, and unprovable by any build)
+
+`OnPush` means a component repaints only when its own signals or inputs change, or when an event fires in
+its own template. Builds and tests cannot detect a missed repaint. Check each of these renders **and
+updates**:
+
+21. **Date, date-range, date-time and year-month** fields: open each picker, choose a value, and confirm
+    the input text updates. Then set the value **programmatically** if an example offers it, and confirm
+    the field still updates.
+22. **Autocomplete** and **autocomplete (multiple)**: type to filter, pick an option, and confirm the panel
+    and the chips update. These assign `filteredOptions` after the first render, so specifically confirm the
+    panel appears on the **first** keystroke.
+23. **Password** field: toggle visibility and confirm the icon and input type both change.
+24. **Button** field: confirm the label, icons and tooltip render, and that the click still fires.
+25. **Form rows and form columns**: confirm conditional fields still appear and disappear as other fields
+    change — these drive the whole layout and are now OnPush.
+26. **Form container**: confirm a conditional/reactive-options example still reacts to input, and that
+    submit still validates.
+27. **Image preview modal**: open it from the file preview and confirm the image and controls render.
+28. **The showcase shell** (`app.component`): confirm the sidenav, language picker and route changes still
+    work, and that the drawer closes on navigation.
+
+If any of these updates late or not at all, the fix is to make the state it reads reactive — not to put
+`Eager` back.
+
 ## Impact on the published library
 
 `@lab900/forms` is published from `lib/`. Everything a consumer sees is listed here.
@@ -1147,6 +1272,24 @@ Follow-up 7 then removed both. The trigger is now a CSS keyframe animation, so c
 need `@angular/animations` and no longer need `provideAnimations()` for this library. The peer range
 ends where it started: not declared. **This drops a requirement, so it breaks no consumer.** A consumer
 that still calls `provideAnimations()` for its own reasons is unaffected.
+
+### The package is now partial-compiled (most important change for consumers)
+
+`@lab900/forms` up to and including 19.1.40 was published in **full** compilation mode, which bakes
+Angular's private instruction calls into the output. Such a package only runs on the Angular major it was
+built against — this is exactly why `@lab900/ui@19.2.3` threw `(void 0) is not a function` on Angular 22.
+
+From 22.0.0 the package ships **partial** declarations, which the Angular linker recompiles at the
+consumer's own build. Consequences for a consumer:
+
+- The package no longer breaks on the next Angular major purely because of the instruction set, so the
+  `">=22.0.0"` peer ranges are now a claim the artefact can actually honour.
+- Nothing changes in how it is consumed. The Angular CLI runs the linker automatically.
+- A consumer building **without** the Angular CLI must ensure the Angular linker babel plugin runs over
+  `node_modules`. This is standard, and jest via `jest-preset-angular` handles it — verified here, since our
+  own 32 tests import the built package from `dist/`.
+- `@lab900/ui` must be `>=22.0.4`. 22.0.0 is full-compiled and would reintroduce the same crash on the next
+  major.
 
 ### The date-time picker was replaced
 
@@ -1253,10 +1396,21 @@ Open after hop 1:
 Opened at the checkpoint, and **not** decided, because the step allows four questions at most and these
 four were the smaller items. Nothing was removed or changed for any of them:
 
-10. **The 20 `prefer-on-push` lint errors stand by decision.** Removing
-    `ChangeDetectionStrategy.Eager` from the 20 components makes lint green and adopts the v22 default,
-    but changes change detection on 19 published components. That needs the click-through in the smoke
-    test, so it belongs in its own change, not in an upgrade. The Decisions table records the choice.
+10. ~~**The 20 `prefer-on-push` lint errors stand by decision.**~~ Revisited in the grilling review.
+    12 components moved to `OnPush`; 8 keep `Eager`. **What remains:** make the state those 8 read
+    reactive, then flip them and delete the scoped eslint override.
+    - `touched` and `valid` on `AbstractFormComponent` are plain getters over `AbstractControl`. Derive
+      them from `AbstractControl.events` instead — it emits `TouchedChangeEvent` and `StatusChangeEvent`
+      in v22, and the class already uses `rxResource` over `valueChanges` / `statusChanges` for exactly
+      this. That covers 7 of the 8.
+    - `mat-range-slider-field` is the 8th: `writeValue()` mutates the plain `value` field its template
+      reads. Move `value` to a signal.
+    - **This also fixes a pre-existing bug.** `repeater-field` is already `OnPush` _and_ reads `touched`,
+      so on the shipped library its error message can fail to appear when a parent calls
+      `markAllAsTouched()`. That predates this upgrade.
+    - Each of the 8 carries a `TODO(onpush)` naming its own blocker, and `eslint.config.js` lists them in
+      one override block to delete when the list empties.
+
 11. **`provideHttpClient(withXhr())` is very likely unnecessary.** The v22 migration added it to
     `src/main.ts` to keep the XHR backend. The evidence says nothing needs it: `reportProgress` appears
     in no file, and every HTTP call in the project is a `get` — the translation loader, `FileService`,
