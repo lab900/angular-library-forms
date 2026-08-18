@@ -205,9 +205,17 @@ Only a browser check finds this. No type check, build or test does.
 
 - [ ] Check every CI step for a hardcoded `./coverage/` path. Per-project coverage moved to
       `<projectRoot>/coverage`.
-- [ ] ts-jest reports its own `isolatedModules` option as deprecated and asks for `isolatedModules: true`
-      in `tsconfig.spec.json`. `@angular-builders/jest` sets that option, not this project. Setting it in
-      the tsconfig also enforces the stricter TypeScript rule, so it needs its own check.
+- [x] ts-jest reported its own `isolatedModules` option as deprecated. `@angular-builders/jest` v22 passes
+      that option to the transform, so the warning came from the builder, not from this project. The fix has
+      two parts. `tsconfig.json` now sets `isolatedModules: true`, which is both the form ts-jest asks for
+      and the Angular v22 default; `tsconfig.spec.json` inherits it. `jest.config.js` then repeats the
+      builder transform entry with `isolatedModules: false`, which drops the deprecated option. ts-jest
+      keeps the fast transpile-only path, because it reads the resolved tsconfig value, not the option. The
+      regular expression in that transform entry must stay identical to the builder default. A different
+      value makes it a second transform instead of an override, and the warning returns.
+      The stricter TypeScript rule needs no code change: there is no `const enum` and no named type
+      re-export. `tsc --noEmit` is clean over `tsconfig.spec.json`, `lib/tsconfig.lib.json` and
+      `tsconfig.app.json`, and both builds, the lint and the 32 tests still pass.
 - [x] Decide on the `angular.json` `schematics` block. It keeps the old `x.component.ts` naming for
       `ng generate`. Every existing file uses that style, so removing it makes new files inconsistent.
 
@@ -220,8 +228,6 @@ All were enumerated from the installed v22 collections and dry-run. None is requ
 - [ ] `signal-input-migration` (4 files, 3 inputs cannot migrate), `signal-queries-migration` (3 files,
       1 query cannot migrate) and `output-migration` (1 file). All three change the published API, all
       leave the code half-converted, and all touch the same base class as the `OnPush` follow-up above.
-- [ ] `service-migration` (`@Injectable` -> `@Service`, new in v22), 3 files. A new decorator, with no
-      upgrade need.
 
 ### 5.5 Release
 
