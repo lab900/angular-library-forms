@@ -8,18 +8,18 @@ Branch: chore/angular-upgrade-v22
 
 | Check                | Command                                     | Result                                                         | Measured at | Measured by |
 | -------------------- | ------------------------------------------- | -------------------------------------------------------------- | ----------- | ----------- |
-| type check (app)     | `npx tsc -p tsconfig.app.json --noEmit`     | pass                                                           | `3029ff0b`  | skill       |
-| type check (spec)    | `npx tsc -p tsconfig.spec.json --noEmit`    | pass                                                           | `3029ff0b`  | skill       |
-| type check (library) | `npx tsc -p lib/tsconfig.lib.json --noEmit` | pass                                                           | `3029ff0b`  | skill       |
-| build library (dev)  | `npx ng build forms`                        | pass                                                           | `3029ff0b`  | skill       |
-| build library (prod) | `npm run build:forms:prod`                  | pass                                                           | `3029ff0b`  | skill       |
-| build application    | `npx ng build lab900-forms`                 | pass                                                           | `3029ff0b`  | skill       |
-| tests                | `npm test`                                  | pass — 4 suites, 32 tests                                      | `3029ff0b`  | skill       |
-| lint                 | `npm run lint`                              | pass — 0 errors, 9 warnings (8 tracked TODOs + 1 pre-existing) | `3029ff0b`  | skill       |
-| forced rebuild       | watch build, touch 1 library + 1 app file   | pass — 2 rebuilds each, 0 errors                               | `3029ff0b`  | skill       |
+| type check (app)     | `npx tsc -p tsconfig.app.json --noEmit`     | pass                                                           | `b1b13cd6`  | skill       |
+| type check (spec)    | `npx tsc -p tsconfig.spec.json --noEmit`    | pass                                                           | `b1b13cd6`  | skill       |
+| type check (library) | `npx tsc -p lib/tsconfig.lib.json --noEmit` | pass                                                           | `b1b13cd6`  | skill       |
+| build library (dev)  | `npx ng build forms`                        | pass                                                           | `b1b13cd6`  | skill       |
+| build library (prod) | `npm run build:forms:prod`                  | pass                                                           | `b1b13cd6`  | skill       |
+| build application    | `npx ng build lab900-forms`                 | pass                                                           | `b1b13cd6`  | skill       |
+| tests                | `npm test`                                  | pass — 4 suites, 32 tests                                      | `b1b13cd6`  | skill       |
+| lint                 | `npm run lint`                              | pass — 0 errors, 9 warnings (8 tracked TODOs + 1 pre-existing) | `b1b13cd6`  | skill       |
+| forced rebuild       | watch build, touch 1 library + 1 app file   | pass — 2 rebuilds each, 0 errors                               | `b1b13cd6`  | skill       |
 | runtime behaviour    | manual click-through                        | not verified — handed to the user                              | —           | user        |
 
-Measured in one pass at `3029ff0b`, the last code commit. Later commits on this branch are documentation
+Measured in one pass at `b1b13cd6`, the last code commit. Later commits on this branch are documentation
 only, which does not invalidate the table, so the hash stays. No result is carried over from an earlier
 run — the whole pass was re-run when `marked` was removed, because that changed `package.json`.
 
@@ -1330,6 +1330,49 @@ same upstream project, with an identical public API. `src/guides/getting-started
 | `FormFieldDateTimePickerOptions.displayFormat` | new, optional. Sets the format the date-time input prints. Needed only on a non-native date adapter, where the built-in `Intl.DateTimeFormat` options do not apply. |
 | Empty icons no longer render                   | `button-toggle-field` skipped an icon element when a button option had none.                                                                                        |
 | `form-row`, `form-column`, `search-field`      | render nothing when their required group or options are missing, instead of rendering a broken field.                                                               |
+
+## Optional migrations
+
+Every optional migration and codemod was enumerated from the **installed** v22 collections and
+dry-run, rather than taken from the release notes.
+
+**Optional `ng update` migrations: 2, both no-ops here.** Run and confirmed:
+
+| Migration                 | Result                                                                      |
+| ------------------------- | --------------------------------------------------------------------------- |
+| `use-application-builder` | `No changes made` — the workspace already uses `@angular/build:application` |
+| `migrate-karma-to-vitest` | 0 migrated, 1 skipped as non-application; the project tests with jest       |
+
+`@angular/core`, `@angular/cdk` and `@angular/material` ship **no** optional migrations at v22.
+Note that the optional migrations offered at v20 and v21 are **gone** from the installed
+collection: `router-current-navigation` is no longer available at all, and
+`control-flow-migration` survives only as an `ng generate` codemod. Both were verified no-ops
+when they were offered.
+
+**Optional `ng generate` codemods: 15 exist, 6 would change code.** Dry-run counts:
+
+| Codemod                                                                                                                     | Dry run                                   | Decision                                 |
+| --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- | ---------------------------------------- |
+| `self-closing-tags-migration`                                                                                               | 8 components in 7 files                   | **run** — see below                      |
+| `cleanup-unused-imports`                                                                                                    | nothing found                             | nothing to do                            |
+| `control-flow-migration`                                                                                                    | no-op, templates already use block syntax | nothing to do                            |
+| `signal-input-migration`                                                                                                    | 4 files, **3 inputs cannot migrate**      | not run — changes the published API      |
+| `signal-queries-migration`                                                                                                  | 3 files, **1 query cannot migrate**       | not run — changes the published API      |
+| `output-migration`                                                                                                          | 1 file                                    | not run — changes the published API      |
+| `service-migration` (`@Injectable` -> `@Service`, **new in v22**)                                                           | 3 files                                   | not run — new decorator, no upgrade need |
+| `standalone`, `common-to-standalone`, `ngclass-to-class`, `ngstyle-to-style`, `route-lazy-loading`, `router-testing-module` | not applicable, 0 usages                  | nothing to do                            |
+
+None of these is required by the upgrade: v22 supports decorator inputs, outputs and queries.
+The three signal codemods were declined for this branch because they change `@lab900/forms`'
+public API, they leave the codebase half-converted (3 inputs and 1 query cannot be migrated),
+and they touch the same base class as the outstanding OnPush follow-up.
+
+### `style: use self-closing tags in templates`
+
+The one codemod that was run, because it has no API surface. 8 conversions across 7 files, all on
+Angular components, `ng-content` or `ng-container` — never a native HTML element, where
+self-closing syntax would be invalid. Every converted element genuinely had no content. Prettier
+reported no reformatting, and the full verify stayed green.
 
 ## Follow-ups
 
