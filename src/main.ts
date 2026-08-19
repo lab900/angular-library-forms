@@ -46,7 +46,8 @@ bootstrapApplication(AppComponent, {
         useFactory: TranslationLoaderFactory,
         deps: [HttpClient],
       },
-      defaultLanguage: 'en',
+      lang: 'en',
+      fallbackLang: 'en',
     }),
   ],
 }).catch(err => console.error(err));

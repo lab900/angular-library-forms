@@ -57,9 +57,6 @@ export class AppComponent extends SubscriptionBasedDirective implements OnInit, 
   public constructor() {
     super();
 
-    this.translateService.setDefaultLang('en');
-    this.translateService.use('en');
-
     this.matIconRegistry.addSvgIcon(
       'github',
       this.domSanitizer.bypassSecurityTrustResourceUrl('assets/images/github-logo.svg')
@@ -86,7 +83,7 @@ export class AppComponent extends SubscriptionBasedDirective implements OnInit, 
   }
 
   public ngOnInit(): void {
-    this.language = this.translateService.currentLang;
+    this.language = this.translateService.getCurrentLang() ?? 'en';
   }
 
   public ngOnDestroy(): void {

@@ -1,13 +1,13 @@
 {
   "name": "@lab900/forms",
-  "version": "22.0.2",
+  "version": "22.0.3",
   "author": "Lab900 <info@lab900.com> (https://lab900.com)",
   "license": "MIT",
   "peerDependencies": {
     "@angular/common": ">=22.0.0",
     "@angular/core": ">=22.0.0",
     "@angular/material": ">=22.0.0",
-    "@ngx-translate/core": ">=16.0.4",
+    "@ngx-translate/core": ">=18.0.0",
     "@angular/forms": ">=22.0.0",
     "@lab900/ui": ">=22.0.4",
     "@kolkov/angular-editor": "3.1.0",
