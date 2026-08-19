@@ -104,7 +104,8 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "options": {
-            "buildTarget": "lab900-forms:build"
+            "buildTarget": "lab900-forms:build",
+            "port": 4900
           },
           "configurations": {
             "production": {
