@@ -52,24 +52,31 @@ module.exports = tseslint.config(
   },
   eslintPluginPrettierRecommended,
   {
-    /**
-     * TODO(onpush): each file below keeps `ChangeDetectionStrategy.Eager` because its template reads
-     * state that Angular does not signal: the non-reactive `touched` / `valid` getters of
-     * `AbstractFormComponent`, or a plain field written by `writeValue()`. A parent calling
-     * `markAllAsTouched()` or `patchValue()` would not repaint them under OnPush.
-     *
-     * Fix per file: derive that state from `AbstractControl.events` (or a signal), switch the component
-     * to OnPush, and delete its entry here. Delete this whole block once the list is empty.
-     */
+    // TODO(onpush): the components below keep `ChangeDetectionStrategy.Eager`. The rule is a warning here
+    // and stays an error everywhere else. See the change detection follow-up in
+    // ANGULAR-UPGRADE-19.2-TO-22.1.md. Delete an entry when its component moves to OnPush, and delete this
+    // whole block once the list is empty.
     files: [
+      '**/app.component.ts',
+      '**/autocomplete-field.component.ts',
+      '**/autocomplete-multiple-field.component.ts',
+      '**/button-field.component.ts',
       '**/button-toggle-field.component.ts',
-      '**/slide-toggle-field.component.ts',
-      '**/multi-lang-input-field.component.ts',
+      '**/date-field.component.ts',
+      '**/date-range-field.component.ts',
+      '**/date-time-field.component.ts',
+      '**/date-year-month-field.component.ts',
       '**/drag-n-drop-file-field.component.ts',
-      '**/range-slider-field.component.ts',
-      '**/mat-range-slider-field.component.ts',
-      '**/search-field.component.ts',
+      '**/form-column.component.ts',
+      '**/form-container.component.ts',
       '**/form-dialog.component.ts',
+      '**/image-preview-modal.component.ts',
+      '**/mat-range-slider-field.component.ts',
+      '**/multi-lang-input-field.component.ts',
+      '**/password-field.component.ts',
+      '**/range-slider-field.component.ts',
+      '**/search-field.component.ts',
+      '**/slide-toggle-field.component.ts',
     ],
     rules: {
       '@angular-eslint/prefer-on-push-component-change-detection': 'warn',

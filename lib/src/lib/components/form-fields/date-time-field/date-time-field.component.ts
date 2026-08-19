@@ -30,7 +30,8 @@ interface PickerSelectionModel {
   selector: 'lab900-date-time-field',
   templateUrl: './date-time-field.component.html',
   providers: [DATE_TIME_FIELD_DATE_FORMATS],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,

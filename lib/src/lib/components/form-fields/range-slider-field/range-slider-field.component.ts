@@ -10,9 +10,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   selector: 'lab900-range-slider-field',
   templateUrl: './range-slider-field.component.html',
   imports: [ReactiveFormsModule, MatRangeSliderFieldComponent, MatError, TranslatePipe],
-  // TODO(onpush): the template reads the non-reactive 'touched' getter of AbstractFormComponent.
-  // A parent calling markAllAsTouched() would not repaint this field under OnPush.
-  // Make it reactive, then switch to OnPush and remove this file from the eslint override.
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
   changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     class: 'lab900-form-field',

@@ -9,23 +9,23 @@ steps.
 
 ## 1. Final state
 
-| Check                | Command                                     | Result                                                         |
-| -------------------- | ------------------------------------------- | -------------------------------------------------------------- |
-| type check (app)     | `npx tsc -p tsconfig.app.json --noEmit`     | pass                                                           |
-| type check (spec)    | `npx tsc -p tsconfig.spec.json --noEmit`    | pass                                                           |
-| type check (library) | `npx tsc -p lib/tsconfig.lib.json --noEmit` | pass                                                           |
-| build library (dev)  | `npx ng build forms`                        | pass — partial compilation mode, 0 warnings                    |
-| build library (prod) | `npm run build:forms:prod`                  | pass                                                           |
-| build application    | `npx ng build lab900-forms`                 | pass — 2 pre-existing lodash CommonJS warnings                 |
-| tests                | `npm test`                                  | pass — 4 suites, 32 tests                                      |
-| lint                 | `npm run lint`                              | pass — 0 errors, 9 warnings (8 tracked TODOs + 1 pre-existing) |
-| serve application    | `npm start`                                 | pass — an edit in `lib/` rebuilds the showcase in ~1 s         |
-| runtime behaviour    | manual click-through, all 16 routes         | pass — maintainer reported no issues                           |
+| Check                | Command                                     | Result                                                           |
+| -------------------- | ------------------------------------------- | ---------------------------------------------------------------- |
+| type check (app)     | `npx tsc -p tsconfig.app.json --noEmit`     | pass                                                             |
+| type check (spec)    | `npx tsc -p tsconfig.spec.json --noEmit`    | pass                                                             |
+| type check (library) | `npx tsc -p lib/tsconfig.lib.json --noEmit` | pass                                                             |
+| build library (dev)  | `npx ng build forms`                        | pass — partial compilation mode, 0 warnings                      |
+| build library (prod) | `npm run build:forms:prod`                  | pass                                                             |
+| build application    | `npx ng build lab900-forms`                 | pass — 2 pre-existing lodash CommonJS warnings                   |
+| tests                | `npm test`                                  | pass — 4 suites, 32 tests                                        |
+| lint                 | `npm run lint`                              | pass — 0 errors, 21 warnings (20 tracked TODOs + 1 pre-existing) |
+| serve application    | `npm start`                                 | pass — an edit in `lib/` rebuilds the showcase in ~1 s           |
+| runtime behaviour    | manual click-through, all 16 routes         | pass — maintainer reported no issues                             |
 
-The 9 lint warnings are the 8 components that keep `ChangeDetectionStrategy.Eager` (section 5.1) plus one
-pre-existing unused `eslint-disable` in `form-container.component.ts:20`. The rule stays an **error**
-everywhere else, so a new component cannot opt out in silence. `npm run lint` now runs in CI, which it
-never did before.
+The 21 lint warnings are the 20 components that keep `ChangeDetectionStrategy.Eager` (section 5.1) plus one
+pre-existing unused `eslint-disable` in `form-container.component.ts:21`. The rule stays
+an **error** everywhere else, so a new component cannot opt out in silence. `npm run lint` now runs in CI,
+which it never did before.
 
 ## 2. Migrations done
 
@@ -78,7 +78,7 @@ Three package facts that need naming:
 | `angular.json`          | test target: `polyfills` and `inlineStyleLanguage` replaced by `zoneless: false`, then the whole target removed in section 7; the dead `marked.min.js` script entry removed; a `schematics` block from the v20 migration keeps the old file-naming style; the showcase `serve` target now holds `port: 4900`, moved out of the `npm start` script |
 | `jest.config.js`        | `testEnvironment: 'jest-preset-angular/environments/jest-jsdom-env'` — the v17 preset no longer installs `jest-environment-jsdom`. `modulePaths: ['<rootDir>/dist']` later gave way to a `moduleNameMapper`, see section 6                                                                                                                        |
 | `src/main.ts`           | `provideZoneChangeDetection()` added (v21 requires it for a zone app); `provideNgxMatNativeDate()`, `withXhr()` and `provideAnimations()` removed                                                                                                                                                                                                 |
-| `eslint.config.js`      | one scoped `files:` override downgrades `prefer-on-push-component-change-detection` to `warn` for exactly the 8 named components                                                                                                                                                                                                                  |
+| `eslint.config.js`      | one scoped `files:` override downgrades `prefer-on-push-component-change-detection` to `warn` for exactly the 20 named components                                                                                                                                                                                                                 |
 | both cloudbuild files   | `--ignore-scripts` removed from the publish step; a `Lint Library` step added                                                                                                                                                                                                                                                                     |
 
 `--ignore-scripts` was hiding ng-packagr's `prepublishOnly` guard, which exists to block a
@@ -94,7 +94,7 @@ fully-compiled publish. See section 4.1.
 | `$safeNavigationMigration()` | all **63** wrappers in 29 files removed. 2 sites got an explicit value instead: `[accept]` uses `?? ''`, and `select-field`'s consumer callback uses `?? null` to keep its published contract                                                                                                                                          |
 | `strictTemplates`            | **76** template type errors fixed with no `any`, no `$any()`, no `!` and no suppression. Patterns used: `?? null` where the target accepts null, `?? <neutral default>` where it does not, non-null function defaults, `@let` before `@if` so narrowing sticks, typed casts in the component, and typed host-listener wrappers         |
 | dependency injection         | `ng generate @angular/core:inject` rewrote 10 files. `@Inject(MAT_DIALOG_DATA)` became `inject<DialogFormData<T>>(...)`                                                                                                                                                                                                                |
-| change detection             | 12 of the 20 components moved to `OnPush`; 8 keep `Eager` with a `TODO(onpush)` naming their blocker                                                                                                                                                                                                                                   |
+| change detection             | the 20 components that had no explicit strategy now declare `ChangeDetectionStrategy.Eager`, each with a `TODO(onpush)`. See section 5.1                                                                                                                                                                                               |
 | form-field message animation | Material v21 removed the `matFormFieldAnimations` trigger and replaced it with a CSS keyframe animation. This library follows: `lib/src/lib/styles/_form-field-subscript.scss` holds the same keyframes, and `[@transitionMessages]` became `[class.lab900-subscript-enter]`. `@angular/animations` is therefore gone from the project |
 | `_fieldAttribute()` bindings | unified on `?? ''`; the 3 pre-existing `!` assertions removed                                                                                                                                                                                                                                                                          |
 | templates                    | `self-closing-tags-migration` codemod: 8 conversions in 7 files, all on Angular components / `ng-content` / `ng-container`                                                                                                                                                                                                             |
@@ -153,17 +153,16 @@ Only a browser check finds this. No type check, build or test does.
 
 ### 4.3 Behaviour changes a consumer sees
 
-| Change                                         | Effect                                                                                                                                                                                                                                        |
-| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 12 components are now `OnPush`                 | they repaint only on their own signals, inputs or template events. No build or test can prove this; the maintainer's click-through is the only evidence. If one ever updates late, make the state it reads reactive — do not put `Eager` back |
-| `form-row`, `form-column`, `search-field`      | render nothing when their required group or options are missing, instead of rendering a broken field                                                                                                                                          |
-| `button-toggle-field`                          | an option without an icon no longer renders an empty icon element                                                                                                                                                                             |
-| `file-preview-field`                           | `accept` is `''` when unset, instead of the string `"null"`                                                                                                                                                                                   |
-| `select-field` custom trigger callback         | still receives `null`, not `undefined`. Now explicit rather than left to a migration shim                                                                                                                                                     |
-| `AuthImageDirective.httpCallback`              | widened to `Observable<Blob \| ArrayBuffer>`. Existing callbacks still fit                                                                                                                                                                    |
-| `MatRangeSliderFieldComponent.formatValue`     | accepts `number \| undefined` and returns `''`                                                                                                                                                                                                |
-| `AmountInputDirective`, `SearchInputDirective` | new `onInputEvent` / `onFocusEvent` / `onBlurEvent` / `onPasteEvent` host handlers. The existing public methods keep their signatures                                                                                                         |
-| `FormFieldDateTimePickerOptions.displayFormat` | new and optional. Sets the format the date-time input prints                                                                                                                                                                                  |
+| Change                                         | Effect                                                                                                                                |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `form-row`, `form-column`, `search-field`      | render nothing when their required group or options are missing, instead of rendering a broken field                                  |
+| `button-toggle-field`                          | an option without an icon no longer renders an empty icon element                                                                     |
+| `file-preview-field`                           | `accept` is `''` when unset, instead of the string `"null"`                                                                           |
+| `select-field` custom trigger callback         | still receives `null`, not `undefined`. Now explicit rather than left to a migration shim                                             |
+| `AuthImageDirective.httpCallback`              | widened to `Observable<Blob \| ArrayBuffer>`. Existing callbacks still fit                                                            |
+| `MatRangeSliderFieldComponent.formatValue`     | accepts `number \| undefined` and returns `''`                                                                                        |
+| `AmountInputDirective`, `SearchInputDirective` | new `onInputEvent` / `onFocusEvent` / `onBlurEvent` / `onPasteEvent` host handlers. The existing public methods keep their signatures |
+| `FormFieldDateTimePickerOptions.displayFormat` | new and optional. Sets the format the date-time input prints                                                                          |
 
 ### 4.4 Angular behaviour changes to watch in this repo
 
@@ -184,12 +183,16 @@ Only a browser check finds this. No type check, build or test does.
 
 ### 5.1 Change detection
 
-- [ ] Make the state the 8 remaining `Eager` components read reactive, then flip them to `OnPush` and
-      delete the scoped `eslint.config.js` override. `touched` and `valid` are plain getters over
-      `AbstractControl`, and `markAllAsTouched()` is called from outside the field components. Derive both
-      from `AbstractControl.events`, which emits `TouchedChangeEvent` and `StatusChangeEvent` in v22. That
-      covers 7 of the 8: `button-toggle-field`, `slide-toggle-field`, `multi-lang-input-field`,
-      `drag-n-drop-file-field`, `range-slider-field`, `search-field`, `form-dialog`.
+All 20 components keep `Eager`. `eslint.config.js` lists them.
+
+- [ ] Move them to `OnPush`, one at a time, and delete each entry from `eslint.config.js`. `OnPush` is a
+      runtime behaviour change that no build, test or type check in this repo can prove, so each component
+      needs a click-through of its showcase example.
+- [ ] 8 of them need a code change first, because the template reads state Angular does not signal: `touched`
+      and `valid` are plain getters over `AbstractControl`, and `markAllAsTouched()` is called from outside
+      the field components. Derive both from `AbstractControl.events`, which emits `TouchedChangeEvent` and
+      `StatusChangeEvent` in v22. That covers 7 of the 8: `button-toggle-field`, `slide-toggle-field`,
+      `multi-lang-input-field`, `drag-n-drop-file-field`, `range-slider-field`, `search-field`, `form-dialog`.
 - [ ] `mat-range-slider-field` is the 8th: `writeValue()` mutates the plain `value` field its template
       reads. Move `value` to a signal.
 - [ ] The same work fixes a **pre-existing shipped bug**: `repeater-field` is already `OnPush` and reads
@@ -347,5 +350,5 @@ a devDependency.
 
 Every command in section 1 was re-run. 4 suites and 32 tests pass, in 4.3s against the 5.1s baseline. The
 single-file and single-test filters work in both case forms. `tsc --noEmit -p tsconfig.spec.json` is clean.
-`npm run lint` reports 0 errors and only the 9 known `OnPush` warnings. Both builds pass, the app build
+`npm run lint` reports 0 errors and only the 21 known warnings. Both builds pass, the app build
 still with the 2 known lodash CommonJS warnings.

@@ -15,7 +15,8 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
   selector: 'lab900-autocomplete-field',
   templateUrl: './autocomplete-field.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatFormFieldModule,
     MatInputModule,

@@ -19,7 +19,8 @@ import { AsyncPipe, NgOptimizedImage } from '@angular/common';
   selector: 'lab900-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatToolbar,
     MatIcon,

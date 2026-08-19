@@ -135,8 +135,9 @@ Touch every one of these, in order:
   typed forms in the field pipeline; the schema is dynamic.
 - **Signals over getters.** The `schema`, `options`, `fieldControl` getters on `FormComponent` are
   deprecated compatibility shims; new code reads `_schema()`, `_options()`, `_fieldControl()`.
-- **`OnPush` is the default.** Eight components still use eager change detection because their templates
-  read non-reactive state; `eslint.config.js` lists them with the reason and the fix.
+- **`OnPush` is the default.** Twenty components still use eager change detection; `eslint.config.js` lists
+  them. Moving one to `OnPush` needs a browser check, and eight of them need a code change first because
+  their template reads non-reactive state.
 - Selectors use the `lab900` prefix: elements kebab-case, attributes camelCase (enforced by eslint).
 - Prettier: 120 columns, single quotes, `arrowParens: avoid`, `bracketSameLine: true`.
   `@typescript-eslint/member-ordering` is enforced: static field, instance field, constructor, static

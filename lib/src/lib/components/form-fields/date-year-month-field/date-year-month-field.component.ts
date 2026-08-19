@@ -27,7 +27,8 @@ import { MatInputModule } from '@angular/material/input';
       },
     },
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ReactiveFormsModule,
     TranslatePipe,

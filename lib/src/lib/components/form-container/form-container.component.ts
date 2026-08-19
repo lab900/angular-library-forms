@@ -14,7 +14,8 @@ import { uniqueId } from '../../utils/unique-id.utils';
   selector: 'lab900-form',
   templateUrl: './form-container.component.html',
   styleUrls: ['./form-container.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormFieldDirective, ReactiveFormsModule],
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix

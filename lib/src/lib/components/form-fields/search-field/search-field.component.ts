@@ -17,9 +17,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 @Component({
   selector: 'lab900-search-field',
   templateUrl: './search-field.component.html',
-  // TODO(onpush): the template reads the non-reactive 'valid' getter of AbstractFormComponent.
-  // A parent calling markAllAsTouched() would not repaint this field under OnPush.
-  // Make it reactive, then switch to OnPush and remove this file from the eslint override.
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatFormFieldModule,

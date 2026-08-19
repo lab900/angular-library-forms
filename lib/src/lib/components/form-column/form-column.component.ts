@@ -14,7 +14,8 @@ import { FormGroup } from '@angular/forms';
   selector: 'lab900-form-column',
   templateUrl: './form-column.component.html',
   styleUrls: ['./form-column.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TranslatePipe, FormFieldDirective, MatIcon, MatTooltip],
 })
 export class FormColumnComponent extends FormComponent<FormColumn> {

@@ -7,7 +7,8 @@ import { Lab900File } from '../../models/Lab900File';
   template: ` <mat-dialog-content>
     <img style="width: 100%" class="image" [src]="image.imageBase64" [alt]="image.fileName" />
   </mat-dialog-content>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatDialogContent],
 })
 export class ImagePreviewModalComponent {
