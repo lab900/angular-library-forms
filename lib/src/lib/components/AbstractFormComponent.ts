@@ -14,7 +14,7 @@ import {
 import { LAB900_FORM_MODULE_SETTINGS, Lab900FormModuleSettings } from '../models/Lab900FormModuleSettings';
 import { rxResource, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs/operators';
-import { uniqueId } from 'lodash';
+import { uniqueId } from '../utils/unique-id.utils';
 import {
   computeReactiveBooleanOption,
   computeReactiveNumberOption,

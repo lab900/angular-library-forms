@@ -8,7 +8,7 @@ import { Lab900FormField } from '../../models/lab900-form-field.type';
 import { EditType } from '../../models/editType';
 import { LAB900_FORM_MODULE_SETTINGS } from '../../models/Lab900FormModuleSettings';
 import { FormFieldDirective } from '../../directives/form-field.directive';
-import { uniqueId } from 'lodash';
+import { uniqueId } from '../../utils/unique-id.utils';
 
 @Component({
   selector: 'lab900-form',
