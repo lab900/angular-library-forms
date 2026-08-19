@@ -1,5 +1,15 @@
 # Changelog
 
+## 22.0.1
+
+- Fix: the package now exports every field model type. `public-api.ts` exported only 3 of the 24 field model
+  files, so types such as `FormFieldDatePicker`, `FormFieldDateTimePicker`, `CheckboxFieldModel`,
+  `FormFieldCheckboxOptions`, `FormFieldDragNDropFileOptions` and `FormFieldButton` were part of the
+  `Lab900FormField` union but could not be imported from `@lab900/forms`. The showcase app did not show this,
+  because it maps `@lab900/forms` to the library source.
+- Fix: `Lab900FormModuleSettings`, `Lab900FormFieldOptions` and `Lab900AmountFieldOptions` are exported.
+  `provideLab900Forms()` takes a `Lab900FormModuleSettings` argument, so consumers need that type.
+
 ## 22.0.0
 
 Upgrade to Angular 22. See [angular upgrade document](ANGULAR-UPGRADE-19.2-TO-22.1.md) for all changes done
