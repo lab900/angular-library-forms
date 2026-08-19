@@ -195,20 +195,15 @@ Only a browser check finds this. No type check, build or test does.
 - [ ] The same work fixes a **pre-existing shipped bug**: `repeater-field` is already `OnPush` and reads
       `touched`, so its error message can fail to appear when a parent calls `markAllAsTouched()`.
 
-### 5.2 Pre-existing defects, left untouched
+### 5.2 Toolchain
 
-- [ ] `AbstractFormComponent.ts` and `form-field.directive.ts` open their streams with
-      `defer(() => of(params.getRawValue))`, which emits the **function** rather than calling it. Every
-      other line calls `getRawValue()`. Only the property names were renamed for v20.
-- [ ] lodash is bundled as CommonJS, which the app build warns about for both this library and
-      `@lab900/ui`. Moving to `lodash-es` changes what consumers bundle.
-- [ ] `prettier --check .` flags `icon-field.component.scss`. Only the files this upgrade edited were
-      formatted. `CHANGELOG.md` was on this list too and is now clean.
-
-### 5.3 Toolchain
-
-- [ ] Check every CI step for a hardcoded `./coverage/` path. Per-project coverage moved to
-      `<projectRoot>/coverage`.
+- [x] Check every CI step for a hardcoded `./coverage/` path. Per-project coverage moved to
+      `<projectRoot>/coverage`. Nothing in this repo is affected. `angular.json` declares no `test` target
+      for either project, so no Angular builder computes a coverage path. `npm test` runs the `jest` binary
+      and `jest.config.js` sets no `coverageDirectory`, so `jest --showConfig` resolves the jest default:
+      `<rootDir>/coverage`, and `rootDir` is the repo root. `cloudbuild.yaml` and `cloudbuild-alpha.yaml`
+      both run `npm run test:silent` (`jest --silent`) without `--coverage`, and there is no other CI.
+      `.gitignore` and `.prettierignore` already ignore `/coverage` at the root.
 - [x] ts-jest reported its own `isolatedModules` option as deprecated. `@angular-builders/jest` v22 passes
       that option to the transform, so the warning came from the builder, not from this project. The first
       fix had two parts: `tsconfig.json` sets `isolatedModules: true`, which is both the form ts-jest asks
@@ -222,7 +217,7 @@ Only a browser check finds this. No type check, build or test does.
 - [x] Decide on the `angular.json` `schematics` block. It keeps the old `x.component.ts` naming for
       `ng generate`. Every existing file uses that style, so removing it makes new files inconsistent.
 
-### 5.4 Optional migrations that were declined
+### 5.3 Optional migrations that were declined
 
 All were enumerated from the installed v22 collections and dry-run. None is required by the upgrade.
 
@@ -232,7 +227,7 @@ All were enumerated from the installed v22 collections and dry-run. None is requ
       1 query cannot migrate) and `output-migration` (1 file). All three change the published API, all
       leave the code half-converted, and all touch the same base class as the `OnPush` follow-up above.
 
-### 5.5 Release
+### 5.4 Release
 
 - [x] Tag, publish and promote the `22.0.0` dist-tag. The maintainer does this; it was deliberately out
       of scope for this branch. `latest` on npm is still 19.1.40. The changelog entry is in
