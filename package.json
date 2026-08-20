@@ -18,6 +18,10 @@
     "prettier": "prettier --write .",
     "clean": "rm -rf node_modules/ && npm install"
   },
+  "engines": {
+    "node": ">=24",
+    "npm": ">=12"
+  },
   "dependencies": {
     "@angular/cdk": "^22.1.2",
     "@angular/common": "^22.1.2",
