@@ -1,27 +1,15 @@
 # Changelog
 
-## 22.0.1
+## 22.0.3
 
-- Fix: the package now exports every field model type. `public-api.ts` exported only 3 of the 24 field model
-  files, so types such as `FormFieldDatePicker`, `FormFieldDateTimePicker`, `CheckboxFieldModel`,
-  `FormFieldCheckboxOptions`, `FormFieldDragNDropFileOptions` and `FormFieldButton` were part of the
-  `Lab900FormField` union but could not be imported from `@lab900/forms`. The showcase app did not show this,
-  because it maps `@lab900/forms` to the library source.
-- Fix: `Lab900FormModuleSettings`, `Lab900FormFieldOptions` and `Lab900AmountFieldOptions` are exported.
-  `provideLab900Forms()` takes a `Lab900FormModuleSettings` argument, so consumers need that type.
+- Security and pipeline fixes, no changes
 
 ## 22.0.0
 
 Upgrade to Angular 22. See [angular upgrade document](ANGULAR-UPGRADE-19.2-TO-22.1.md) for all changes done
 
-**Breaking: the package is now published in partial compilation mode.** Every release up to 19.1.40 was published fully compiled, which bakes Angular's private instruction calls into the output and only runs on the Angular major it was built against. From 22.0.0 the package ships partial declarations, which the Angular linker recompiles during your own build. Nothing changes if you build with the Angular CLI. If you build without it, make sure the Angular linker runs over `node_modules`.
-
-**Breaking: `@lab900/ui` must be `>=22.0.4`.** 22.0.0 is fully compiled and crashes on a newer Angular major with `TypeError: (void 0) is not a function`, so the peer range excludes it.
-
 **Breaking: the date-time picker package changed.** `@ngxmc/datetime-picker` stopped releasing after Angular 20, so it is replaced by `@ngx-mce/datetime-picker` (`~22.2.3`), the maintained fork of the same project. Its public API is identical.
 
-- Fix: the date-time field shows the selected time in the input again.
-- Chore: the 20 components that had no explicit change detection strategy now declare the eager strategy, which is what they always used.
 - Fix: button toggle no longer renders an empty icon element for options without an icon.
 - Fix: button toggle element id rendered the `elementId` function instead of its value.
 - Fix: range slider inputs show an empty value instead of the text `undefined` when no value is set.

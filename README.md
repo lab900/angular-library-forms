@@ -43,7 +43,7 @@ Create a patch version of the fix and release it. Don't forget to apply the fix 
 2. Bump the lib version. See [Versioning](#versioning) for more information
 3. Tag the commit with the version number
 4. Push the tag to the repository
-5. The deployment will be triggered automatically
+5. The deployment will be triggered automatically because of the tag
 
 ```bash
 $ cd lib
@@ -51,6 +51,9 @@ $ npm version YOUR_VERSION -m "chore: release %s"
 $ git tag YOUR_VERSION
 $ git push origin YOUR_VERSION
 ```
+
+6. ⚠️ The staged build needs to be manually approved on npm by a project admin. (currently Gino, Senn or Johan)
+   (npmjs.com → user settings → staged packages)
 
 ## Versioning
 
