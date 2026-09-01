@@ -74,10 +74,6 @@ export class AmountInputDirective implements ControlValueAccessor {
     this.renderer.setProperty(this.elementRef.nativeElement, 'disabled', isDisabled);
   }
 
-  /**
-   * Angular v21 type-checks host listener arguments, and `$event.target` is `EventTarget | null`, so the
-   * input element is read here instead of in the binding. The public handlers keep their signatures.
-   */
   @HostListener('input', ['$event'])
   public onInputEvent(event: Event): void {
     const target = event.target as HTMLInputElement;

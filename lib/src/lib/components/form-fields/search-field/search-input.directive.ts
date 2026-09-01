@@ -87,10 +87,6 @@ export class SearchInputDirective<T> implements ControlValueAccessor, OnChanges 
     this.elementRef.nativeElement.disabled = isDisabled;
   }
 
-  /**
-   * Angular v21 type-checks host listener arguments, and `$event.target` is `EventTarget | null`, so the
-   * input element is read here instead of in the binding. The public handlers keep their signatures.
-   */
   @HostListener('input', ['$event'])
   public onInputEvent(event: Event): void {
     this.onInput((event.target as HTMLInputElement).value);
