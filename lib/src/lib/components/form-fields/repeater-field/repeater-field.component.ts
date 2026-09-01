@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, HostBinding, inject } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { ReactiveFormsModule, UntypedFormArray } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
+import { FormFieldUtils } from '../../../utils/form-field.utils';
 import { Lab900FormBuilderService } from '../../../services/form-builder.service';
-import { MatError, matFormFieldAnimations } from '@angular/material/form-field';
+import { MatError } from '@angular/material/form-field';
 import { FormFieldRepeater } from './repeater-field.model';
 import { MatIcon } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -16,7 +17,6 @@ export const DEFAULT_REPEATER_MIN_ROWS = 1;
   selector: 'lab900-repeater-field',
   templateUrl: './repeater-field.component.html',
   styleUrls: ['./repeater-field.component.scss'],
-  animations: [matFormFieldAnimations.transitionMessages],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
@@ -37,6 +37,18 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
   public classList = 'lab900-form-field';
 
   protected readonly nestedFields = computed(() => this._schema().nestedFields);
+
+  /**
+   * `infoTooltip` is a reactive option, so it can also be a function. Resolve it here, the same way
+   * `FormRowComponent` does, instead of reading `.text` off a union in the template.
+   */
+  protected readonly infoTooltip = computed(() => {
+    const options = this._options();
+    return options ? FormFieldUtils.infoTooltip(options, this._group()) : null;
+  });
+
+  /** The rows of the array are always groups built by `Lab900FormBuilderService`. */
+  protected readonly repeaterRows = computed(() => (this.repeaterArray()?.controls ?? []) as UntypedFormGroup[]);
 
   public readonly addLabel = computed(() => {
     return this._options()?.addLabel ?? 'Add new';

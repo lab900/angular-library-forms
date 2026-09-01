@@ -12,7 +12,7 @@
       #input
       type="text"
       placeholder="{{ placeholder() | translate }}"
-      [formControlName]="_fieldAttribute()"
+      [formControlName]="_fieldAttribute() ?? ''"
       [class.readonly]="fieldIsReadonly()"
       lab900InputAutofocus
       lab900AmountInput

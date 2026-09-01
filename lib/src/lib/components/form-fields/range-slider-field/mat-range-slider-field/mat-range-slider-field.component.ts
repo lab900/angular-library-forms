@@ -1,4 +1,4 @@
-import { Component, input, ViewEncapsulation } from '@angular/core';
+import { Component, input, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BaseControlValueAccessorDirective } from '../../../../models/forms/BaseControlValueAccessor';
 import { MatSliderModule } from '@angular/material/slider';
@@ -18,6 +18,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     },
   ],
   encapsulation: ViewEncapsulation.None,
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatSliderModule, MatFormFieldModule, MatInputModule, TranslatePipe],
 })
 export class MatRangeSliderFieldComponent extends BaseControlValueAccessorDirective<number[]> {
@@ -63,7 +65,10 @@ export class MatRangeSliderFieldComponent extends BaseControlValueAccessorDirect
     return Number(value) || 0;
   }
 
-  public formatValue(value: number): string {
+  public formatValue(value: number | undefined): string {
+    if (value == null) {
+      return '';
+    }
     switch (this.format()) {
       case 'K-M':
         if (Math.abs(value) > 999999) {

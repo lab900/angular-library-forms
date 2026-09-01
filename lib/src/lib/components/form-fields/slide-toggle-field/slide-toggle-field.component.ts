@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldSlideToggle } from './slide-toggle-field.model';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -18,6 +18,8 @@ import { TranslatePipe } from '@ngx-translate/core';
       }
     `,
   ],
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, MatLabel, MatSlideToggle, TranslatePipe, MatError],
 })
 export class SlideToggleFieldComponent extends FormComponent<FormFieldSlideToggle> {

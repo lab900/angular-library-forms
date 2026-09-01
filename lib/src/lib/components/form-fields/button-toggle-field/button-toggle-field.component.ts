@@ -1,4 +1,4 @@
-import { Component, computed, effect, HostBinding, signal } from '@angular/core';
+import { Component, computed, effect, HostBinding, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldButtonToggle, FormFieldButtonToggleOptions } from './button-toggle-field.model';
 import { MatButtonToggle, MatButtonToggleChange, MatButtonToggleGroup } from '@angular/material/button-toggle';
@@ -12,6 +12,8 @@ import { computeReactiveBooleanOption } from '../../../utils/helpers';
 @Component({
   selector: 'lab900-button-toggle-field',
   templateUrl: './button-toggle-field.component.html',
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ReactiveFormsModule,
     MatLabel,

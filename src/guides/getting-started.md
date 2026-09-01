@@ -7,7 +7,7 @@ This guide explains how to setup your Angular project to begin using Lab900 form
 Install via npm package manager.
 
 ```bash
-npm install --save @lab900/forms @kolkov/angular-editor ngx-mask @ngxmc/datetime-picker ngx-mat-select-search
+npm install --save @lab900/forms @kolkov/angular-editor ngx-mask @ngx-mce/datetime-picker ngx-mat-select-search
 ```
 
 ## How to use
@@ -18,14 +18,12 @@ Add the `provideLab900Forms` app config.
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {provideLab900Forms} from '@lab900/forms';
 import {provideNgxMask} from 'ngx-mask';
-import { provideNgxMatNativeDate } from '@ngxmc/datetime-picker';
 
 bootstrapApplication(AppComponent, {
     providers: [
         ...
         provideNgxMask(), // needed for the input masks
-        provideNativeDateAdapter(), // optional for the date pickers (see below)
-        provideNgxMatNativeDate(), // optional for the date time pickers (see below)
+        provideNativeDateAdapter(), // optional for the date and date-time pickers (see below)
         provideLab900Forms({
             formField: {
                 appearance: 'fill',
@@ -85,15 +83,18 @@ The lab900-forms mixin expects a [Material theme of config](https://material.ang
 The date-time picker will require the following package to be installed.
 
 ```bash
-npm install --save  @ngxmc/datetime-picker
+npm install --save  @ngx-mce/datetime-picker
 ```
+
+Since v20 the picker uses the Angular Material `DateAdapter`. One Material date adapter now serves both
+the date picker and the date-time picker.
 
 ### Native dates
 
 Add this before providing the `provideLab900Forms`.
 
 ```ts
-provideNativeDateAdapter(), provideNgxMatNativeDate();
+provideNativeDateAdapter();
 ```
 
 ### Moment dates
@@ -101,19 +102,16 @@ provideNativeDateAdapter(), provideNgxMatNativeDate();
 Install the following packages.
 
 ```bash
-npm install moment @angular/material-moment-adapter @ngxmc/moment-adapter --save
-
+npm install moment @angular/material-moment-adapter --save
 ```
 
-Add the imports before importing the `Lab900FormsModule.forRoot()`.
+Add this before providing the `provideLab900Forms`.
 
 ```ts
-provideMomentDateAdapter(), provideNgxMatMomentDate();
+provideMomentDateAdapter();
 ```
 
 ### Luxon dates
-
-**Unfortionally, a Luxon date adapter is not available for the dateTime picker.**
 
 ```bash
 npm install luxon @angular/material-luxon-adapter --save
@@ -126,12 +124,14 @@ provideLuxonDateAdapter();
 More info on date adapters. [Angular Material Date Adapter](https://material.angular.io/components/datepicker/overview#choosing-a-date-implementation-and-date-adapter)
 
 ## Wysiwyg editor
+
 The library uses [@kolkov/angular-editor](https://www.npmjs.com/package/@kolkov/angular-editor) for the editor.
 To serve the icons file, ensure that your angular.json contains the following asset configuration:
+
 ```json lines
 {
-    "glob": "**/*",
-    "input": "node_modules/@kolkov/angular-editor/assets/icons",
-    "output": "assets/ae-icons/"
+  "glob": "**/*",
+  "input": "node_modules/@kolkov/angular-editor/assets/icons",
+  "output": "assets/ae-icons/"
 }
 ```

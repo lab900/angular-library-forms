@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { MatError, matFormFieldAnimations, MatFormFieldModule, MatHint } from '@angular/material/form-field';
+import { MatError, MatFormFieldModule, MatHint } from '@angular/material/form-field';
 import { CheckboxFieldModel } from './checkbox-field.model';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -9,8 +9,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
   selector: 'lab900-checkbox-field',
   templateUrl: './checkbox-field.component.html',
-  styleUrls: ['./checkbox-field.component.css'],
-  animations: [matFormFieldAnimations.transitionMessages],
+  styleUrls: ['./checkbox-field.component.scss'],
   imports: [MatCheckbox, ReactiveFormsModule, TranslatePipe, MatHint, MatError, MatFormFieldModule],
   host: { class: 'lab900-form-field' },
   changeDetection: ChangeDetectionStrategy.OnPush,

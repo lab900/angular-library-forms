@@ -3,7 +3,7 @@
     <div [formGroup]="_group()" class="lab900-range-slider-field" id="lab900-range-slider-field-{{ elementId() }}">
       @if (label(); as label) {
         <span class="lab900-form-field-label" [class.invalid]="!controlValid() && _fieldControl()?.touched">
-          @if (fieldIsRequired() && !setting?.formField?.hideRequiredMarker) {
+          @if (fieldIsRequired() && !setting.formField?.hideRequiredMarker) {
             {{ label | translate }}*
           } @else {
             {{ label | translate }}

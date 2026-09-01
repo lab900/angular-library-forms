@@ -4,8 +4,8 @@
       #fileField
       type="file"
       style="display: none"
-      [multiple]="_options()?.multiple"
-      [accept]="_options()?.accept"
+      [multiple]="_options()?.multiple ?? false"
+      [accept]="_options()?.accept ?? ''"
       (change)="fileChange($event)" />
     @if (!fieldIsReadonly()) {
       <button mat-raised-button color="primary" (click)="fileField.click()" type="button">

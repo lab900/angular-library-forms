@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldSearch } from './field-search.model';
 import { take } from 'rxjs/operators';
@@ -17,6 +17,8 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 @Component({
   selector: 'lab900-search-field',
   templateUrl: './search-field.component.html',
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatFormFieldModule,
     MatInputModule,

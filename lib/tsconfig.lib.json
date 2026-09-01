@@ -5,13 +5,17 @@
     "declarationMap": true,
     "sourceMap": true,
     "declaration": true,
-    "inlineSources": true,
-    "lib": ["dom", "es2022"]
+    "inlineSources": true
   },
   "angularCompilerOptions": {
-    "skipTemplateCodegen": true,
-    "strictMetadataEmit": true,
-    "enableResourceInlining": true
+    /**
+     * Publish a partial-compiled package. Without this, ng-packagr falls back to `full`, which bakes
+     * Angular's private instruction calls into the output and breaks on the next Angular major.
+     * ng-packagr's own default never applies: the builder passes this file as its whole config.
+     *
+     * `strictTemplates` is not set on purpose. It defaults to true since v22.
+     */
+    "compilationMode": "partial"
   },
   "exclude": ["**/*.spec.ts"]
 }

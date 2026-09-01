@@ -26,6 +26,8 @@ import { MatInputModule } from '@angular/material/input';
   imports: [LanguagePickerComponent, MatFormFieldModule, MatInputModule, TranslatePipe, FormsModule],
 })
 export class MultiLangFieldControlComponent implements ControlValueAccessor {
+  readonly control? = inject(NgControl);
+
   private readonly cdr = inject(ChangeDetectorRef);
   public readonly appearance = inject(LAB900_FORM_MODULE_SETTINGS)?.formField?.appearance ?? 'standard';
 
@@ -46,7 +48,7 @@ export class MultiLangFieldControlComponent implements ControlValueAccessor {
   protected value?: Record<string, string>;
   protected globalTranslation?: string;
 
-  public constructor(public readonly control?: NgControl) {
+  public constructor() {
     if (this.control) {
       this.control.valueAccessor = this;
     }

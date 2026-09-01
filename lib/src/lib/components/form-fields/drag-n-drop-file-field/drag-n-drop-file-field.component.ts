@@ -1,4 +1,4 @@
-import { Component, computed, HostBinding } from '@angular/core';
+import { Component, computed, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { Lab900File } from '../../../models/Lab900File';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldDragNDropFilePreview } from './drag-n-drop-file-field.model';
@@ -8,13 +8,13 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatError, MatHint } from '@angular/material/input';
 import { FormatBytesPipe } from '../../../pipes/format-bytes.pipe';
-import { matFormFieldAnimations } from '@angular/material/form-field';
 
 @Component({
   selector: 'lab900-drag-n-drop-file-field',
   templateUrl: './drag-n-drop-file-field.component.html',
   styleUrls: ['./drag-n-drop-file-field.component.scss'],
-  animations: [matFormFieldAnimations.transitionMessages],
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FileDropDirective, MatIcon, TranslatePipe, MatButton, MatIconButton, MatError, FormatBytesPipe, MatHint],
 })
 export class DragNDropFileFieldComponent extends FormComponent<FormFieldDragNDropFilePreview> {

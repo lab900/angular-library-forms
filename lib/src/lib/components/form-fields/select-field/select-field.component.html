@@ -18,7 +18,7 @@
         #select
         placeholder="{{ placeholder() | translate }}"
         [compareWith]="compareFn()"
-        [formControlName]="_fieldAttribute()!"
+        [formControlName]="_fieldAttribute() ?? ''"
         [multiple]="multiple()"
         lab900InfiniteScroll
         [complete]="scrollingIsComplete()"
@@ -47,7 +47,7 @@
         }
         @if (customerTriggerFn(); as customerTriggerFn) {
           <mat-select-trigger>
-            <div [innerHTML]="customerTriggerFn(fieldControl?.getRawValue())"></div>
+            <div [innerHTML]="customerTriggerFn(fieldControl?.getRawValue() ?? null)"></div>
           </mat-select-trigger>
         }
         @if (searchOptions()?.enabled) {
@@ -60,11 +60,10 @@
               [placeholderLabel]="searchOptions()?.placeholder ?? 'form.field.search' | translate"
               [disableScrollToActiveOnOptionsChanged]="!!infiniteScrollOptions()?.enabled"
               [clearSearchInput]="searchOptions()?.clearOnClose ?? false"
-              [noEntriesFoundLabel]="''">
-            </ngx-mat-select-search>
+              [noEntriesFoundLabel]="''" />
           </mat-option>
         }
-        @if (multiple() && selectAllOptions()?.enabled && selectOptions()?.length) {
+        @if (multiple() && selectAllOptions()?.enabled && selectOptions().length) {
           <div
             class="mat-mdc-option mdc-list-item mat-mdc-option-multiple select-all"
             (click)="handleToggleAllSelection()">

@@ -1,11 +1,15 @@
 @if (!fieldIsHidden()) {
   <div [formGroup]="_group()" class="lab900-checkbox-field" id="lab900-checkbox-field-{{ elementId() }}">
-    <mat-checkbox #checkbox [color]="color()" [formControlName]="_fieldAttribute()" [indeterminate]="indeterminate()">
+    <mat-checkbox
+      #checkbox
+      [color]="color()"
+      [formControlName]="_fieldAttribute() ?? ''"
+      [indeterminate]="indeterminate()">
       {{ label()! | translate }}
     </mat-checkbox>
     <div
       class="mat-mdc-form-field-subscript-wrapper mat-mdc-form-field-bottom-align"
-      [@transitionMessages]="controlValid() ? 'void' : 'enter'">
+      [class.lab900-subscript-enter]="!controlValid()">
       @if (!fieldIsReadonly()) {
         @let hint = _options()?.hint;
         @if (hint) {

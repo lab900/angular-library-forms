@@ -1,4 +1,4 @@
-import { Component, computed, HostBinding, signal } from '@angular/core';
+import { Component, computed, HostBinding, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldPassword } from './password-field.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,6 +12,8 @@ import { IconComponent } from '@lab900/ui';
   selector: 'lab900-password-field',
   templateUrl: './password-field.component.html',
   styleUrls: ['./password-field.component.scss'],
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule, TranslatePipe, AutofocusDirective, IconComponent],
 })
 export class PasswordFieldComponent extends FormComponent<FormFieldPassword> {

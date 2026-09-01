@@ -6,7 +6,7 @@
     @if (label(); as label) {
       <mat-label>{{ label | translate }}</mat-label>
     }
-    <mat-chip-grid #chipList [formControlName]="fieldAttribute">
+    <mat-chip-grid #chipList [formControlName]="fieldAttribute ?? ''">
       @for (opt of selectedOptions; track opt; let i = $index) {
         <mat-chip-row [removable]="!fieldIsReadonly()" (removed)="remove(i)" [value]="opt">
           <div [innerHTML]="options?.displayInputFn?.(opt) ?? '' | translate"></div>
@@ -17,7 +17,6 @@
       }
       <input
         #input
-        matAutocomplete
         (input)="inputChanged($event)"
         placeholder="{{ placeholder() | translate }}"
         [matAutocomplete]="auto"

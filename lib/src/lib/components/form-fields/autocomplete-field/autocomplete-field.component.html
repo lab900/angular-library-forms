@@ -9,13 +9,13 @@
     <input
       #input
       (input)="inputChanged($event)"
-      [formControlName]="_fieldAttribute()"
+      [formControlName]="_fieldAttribute() ?? ''"
       [matAutocomplete]="auto"
       matInput
       placeholder="{{ placeholder() | translate }}"
       type="text" />
 
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="_options()?.displayInputFn">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="_options()?.displayInputFn ?? null">
       @if (filteredOptions) {
         @for (option of filteredOptions | async; track option) {
           <mat-option [value]="option?.value" [disabled]="option?.disabled">

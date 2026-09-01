@@ -1,6 +1,6 @@
 import { MatFormFieldDefaultOptions } from '@angular/material/form-field';
 import { InjectionToken, Type } from '@angular/core';
-import { NgxMaskConfig } from 'ngx-mask/lib/ngx-mask.config';
+import { NgxMaskConfig } from 'ngx-mask';
 import { FormComponent } from '../components/AbstractFormComponent';
 
 export const LAB900_FORM_MODULE_SETTINGS = new InjectionToken<Lab900FormModuleSettings>('lab900FormModuleSetting');

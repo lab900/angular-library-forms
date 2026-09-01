@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { filter, take } from 'rxjs/operators';
 import { SubscriptionBasedDirective } from '../../directives/subscription-based.directive';
@@ -12,10 +12,12 @@ import { MarkdownModule } from 'ngx-markdown';
   imports: [MarkdownModule],
 })
 export default class MarkdownPageComponent extends SubscriptionBasedDirective {
+  private activatedRoute = inject(ActivatedRoute);
+
   @Input()
   public filePath?: string;
 
-  public constructor(private activatedRoute: ActivatedRoute) {
+  public constructor() {
     super();
     this.addSubscription(
       this.activatedRoute.data.pipe(

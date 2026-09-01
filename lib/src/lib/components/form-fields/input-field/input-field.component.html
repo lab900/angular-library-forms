@@ -17,7 +17,7 @@
         matInput
         [type]="'number'"
         placeholder="{{ placeholder() | translate }}"
-        [formControlName]="_fieldAttribute()!"
+        [formControlName]="_fieldAttribute() ?? ''"
         [class.readonly]="fieldIsReadonly()"
         lab900InputAutofocus
         [autofocus]="!!_options()?.autofocus"
@@ -27,7 +27,7 @@
         matInput
         [type]="type()"
         placeholder="{{ placeholder() | translate }}"
-        [formControlName]="_fieldAttribute()!"
+        [formControlName]="_fieldAttribute() ?? ''"
         [class.readonly]="fieldIsReadonly()"
         [mask]="fieldMask()?.mask"
         [prefix]="fieldMask()?.prefix || ''"
@@ -57,9 +57,9 @@
       <span class="lab900-input-field--prefix" matTextPrefix>{{ prefix | translate }}</span>
     }
     @let hint = _options()?.hint;
-    @if (hint && !!hint?.value && !(hint?.hideHintOnValidValue && !!controlValue()?.length) && !fieldIsReadonly()) {
+    @if (hint && !!hint.value && !(hint.hideHintOnValidValue && !!controlValue()?.length) && !fieldIsReadonly()) {
       <mat-hint>
-        <span [innerHTML]="hint.value ?? '' | translate: hint.valueTranslateData"></span>
+        <span [innerHTML]="hint.value | translate: hint.valueTranslateData"></span>
       </mat-hint>
     }
     @if (showLengthIndicator() && !fieldIsReadonly()) {

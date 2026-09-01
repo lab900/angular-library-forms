@@ -4,20 +4,20 @@
     class="lab900-repeater-field repeater-field"
     id="lab900-repeater-field-{{ elementId() }}"
     [class.fixed-list]="fixedList()">
-    <div [formArrayName]="_fieldAttribute()">
+    <div [formArrayName]="_fieldAttribute() ?? ''">
       @if (label(); as label) {
         <span class="lab900-form-field-label lab900-form-field-label--with-info">
           {{ label | translate }}
-          @if (_options()?.infoTooltip; as tip) {
-            <mat-icon [matTooltip]="tip?.text | translate">
-              {{ tip?.icon || 'info' }}
+          @if (infoTooltip(); as tip) {
+            <mat-icon [matTooltip]="tip.text | translate">
+              {{ tip.icon || 'info' }}
             </mat-icon>
           }
         </span>
       }
       @if (repeaterArray(); as repeater) {
         @if (repeater && repeater.controls) {
-          @for (control of repeater.controls; track control; let i = $index) {
+          @for (control of repeaterRows(); track control; let i = $index) {
             <div class="repeater-row">
               <div class="repeater-row__fields">
                 @for (field of nestedFields(); track field) {
@@ -69,7 +69,7 @@
         }
       }
       @if (touched && !controlValid() && !fieldIsReadonly()) {
-        <mat-error class="subscript-wrapper" [@transitionMessages]="controlValid() ? 'void' : 'enter'"
+        <mat-error class="subscript-wrapper" [class.lab900-subscript-enter]="!controlValid()"
           >{{ errorMessage() }}
         </mat-error>
       }

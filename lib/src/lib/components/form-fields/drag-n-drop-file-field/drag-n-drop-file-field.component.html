@@ -1,7 +1,7 @@
 @if (!fieldIsReadonly() && !fieldIsHidden()) {
   @if (label(); as label) {
     <span class="lab900-form-field-label" [class.invalid]="!controlValid() && _fieldControl()?.touched">
-      @if (fieldIsRequired() && !setting?.formField?.hideRequiredMarker) {
+      @if (fieldIsRequired() && !setting.formField?.hideRequiredMarker) {
         {{ label | translate }}*
       } @else {
         {{ label | translate }}
@@ -16,7 +16,7 @@
     <div
       lab900DropFile
       class="upload-file__container"
-      [class.upload-file__container--compact]="compact() && !!filesSignal()?.length"
+      [class.upload-file__container--compact]="compact() && !!filesSignal().length"
       (fileDropped)="handleFileList($event)"
       tabindex="0"
       (keydown.enter)="fileField.click()"
@@ -43,7 +43,7 @@
       <input #fileField (change)="handleInput($event.target)" hidden type="file" [multiple]="multiple()" />
     </div>
 
-    @if (!!filesSignal()?.length) {
+    @if (!!filesSignal().length) {
       <div class="file-list" [class.file-list--compact]="compact()" [class.file-list--full]="!compact()">
         @for (file of filesSignal(); track file) {
           <div class="file" [class.only-item]="maxFiles() === 1">
@@ -63,7 +63,7 @@
     }
     <div
       class="mat-mdc-form-field-subscript-wrapper mat-mdc-form-field-bottom-align"
-      [@transitionMessages]="controlValid() ? 'void' : 'enter'">
+      [class.lab900-subscript-enter]="!controlValid()">
       @if (!fieldIsReadonly()) {
         @let hint = _options()?.hint;
         @if (hint) {

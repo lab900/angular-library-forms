@@ -33,12 +33,12 @@ export class FormFieldDirective {
   });
 
   public readonly groupValue = rxResource({
-    request: () => this.fieldGroup(),
-    loader: ({ request }) => {
-      if (request) {
+    params: () => this.fieldGroup(),
+    stream: ({ params }) => {
+      if (params) {
         return concat(
-          defer(() => of(request.getRawValue)),
-          request.valueChanges.pipe(map(() => request.getRawValue()))
+          defer(() => of(params.getRawValue)),
+          params.valueChanges.pipe(map(() => params.getRawValue()))
         );
       }
       return of(null);

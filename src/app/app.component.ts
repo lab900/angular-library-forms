@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Lab900NavListComponent, NavItemGroup } from '@lab900/ui';
 import { showcaseFormsNavItems } from './modules/showcase-forms/showcase-forms.nav-items';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -19,6 +19,8 @@ import { AsyncPipe, NgOptimizedImage } from '@angular/common';
   selector: 'lab900-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatToolbar,
     MatIcon,
@@ -36,6 +38,12 @@ import { AsyncPipe, NgOptimizedImage } from '@angular/common';
   ],
 })
 export class AppComponent extends SubscriptionBasedDirective implements OnInit, OnDestroy {
+  private translateService = inject(TranslateService);
+  private matIconRegistry = inject(MatIconRegistry);
+  private domSanitizer = inject(DomSanitizer);
+  private router = inject(Router);
+  private breakpointObserver = inject(BreakpointObserver);
+
   private unsub = new Subject<void>();
   public readonly languages = ['en', 'nl'];
   public readonly gitUrl = packageInfo.repository;
@@ -46,17 +54,8 @@ export class AppComponent extends SubscriptionBasedDirective implements OnInit, 
   @ViewChild('drawer')
   private drawer?: MatDrawer;
 
-  public constructor(
-    private translateService: TranslateService,
-    private matIconRegistry: MatIconRegistry,
-    private domSanitizer: DomSanitizer,
-    private router: Router,
-    private breakpointObserver: BreakpointObserver
-  ) {
+  public constructor() {
     super();
-
-    this.translateService.setDefaultLang('en');
-    this.translateService.use('en');
 
     this.matIconRegistry.addSvgIcon(
       'github',
@@ -84,7 +83,7 @@ export class AppComponent extends SubscriptionBasedDirective implements OnInit, 
   }
 
   public ngOnInit(): void {
-    this.language = this.translateService.currentLang;
+    this.language = this.translateService.getCurrentLang() ?? 'en';
   }
 
   public ngOnDestroy(): void {

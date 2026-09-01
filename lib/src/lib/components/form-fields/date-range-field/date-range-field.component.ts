@@ -1,6 +1,6 @@
-import { Component, computed, HostBinding } from '@angular/core';
+import { Component, computed, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
-import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { FormFieldDateRange } from './date-range-field.model';
 import {
   MatDatepickerToggle,
@@ -16,6 +16,8 @@ import { MatInputModule } from '@angular/material/input';
 @Component({
   selector: 'lab900-date-field',
   templateUrl: './date-range-field.component.html',
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatDateRangeInput,
     MatFormFieldModule,
@@ -37,10 +39,13 @@ export class DateRangeFieldComponent extends FormComponent<FormFieldDateRange> {
   });
 
   public readonly startControl = computed(() => {
-    return this.dateFormGroup()?.get(this._options()?.startKey || 'start');
+    return (this.dateFormGroup()?.get(this._options()?.startKey || 'start') as FormControl | null) ?? null;
   });
 
   public readonly endControl = computed(() => {
-    return this.dateFormGroup()?.get(this._options()?.endKey || 'end');
+    return (this.dateFormGroup()?.get(this._options()?.endKey || 'end') as FormControl | null) ?? null;
   });
+
+  /** `dateClass` on MatDateRangePicker is not nullable, so fall back to a function that adds no class. */
+  protected readonly dateClass = computed(() => this._options()?.dateClass ?? (() => ''));
 }

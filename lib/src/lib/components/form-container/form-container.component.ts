@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, model, untracked } from '@angular/core';
+import { Component, computed, effect, inject, input, model, untracked, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { DEFAULT_REPEATER_MIN_ROWS } from '../form-fields/repeater-field/repeater-field.component';
 import { Lab900FormConfig } from '../../models/Lab900FormConfig';
@@ -8,12 +8,14 @@ import { Lab900FormField } from '../../models/lab900-form-field.type';
 import { EditType } from '../../models/editType';
 import { LAB900_FORM_MODULE_SETTINGS } from '../../models/Lab900FormModuleSettings';
 import { FormFieldDirective } from '../../directives/form-field.directive';
-import { uniqueId } from 'lodash';
+import { uniqueId } from '../../utils/unique-id.utils';
 
 @Component({
   selector: 'lab900-form',
   templateUrl: './form-container.component.html',
   styleUrls: ['./form-container.component.scss'],
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormFieldDirective, ReactiveFormsModule],
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix

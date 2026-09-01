@@ -1,49 +1,76 @@
 # Changelog
 
+## 22.0.4
+
+- Security and pipeline fixes, no changes
+- Upgrade to Angular 22. See [angular upgrade document](ANGULAR-UPGRADE-19.2-TO-22.1.md) for all changes done
+  - **Breaking: the date-time picker package changed.** `@ngxmc/datetime-picker` stopped releasing after Angular 20, so it is replaced by `@ngx-mce/datetime-picker` (`~22.2.3`), the maintained fork of the same project. Its public API is identical.
+  - Fix: button toggle no longer renders an empty icon element for options without an icon.
+  - Fix: button toggle element id rendered the `elementId` function instead of its value.
+  - Fix: range slider inputs show an empty value instead of the text `undefined` when no value is set.
+  - Fix: the file upload input sets an empty `accept` when no `accept` option is given, instead of a stringified empty value.
+  - Fix: form rows, form columns and the search field no longer render when the form group or the field options they need are missing, instead of rendering a broken field.
+  - updated the [cloudbuild.yaml](cloudbuild.yaml) file to use `npm stage publish` instead of `npm publish`
+
 ## 19.1.38, 19.1.39, 19.1.40
+
 - Fix: error alignment issue
 
 ## 19.1.37
+
 - Fix: Drag&Drop not showing validation errors
 
 ## 19.1.36
+
 - Feat: add reordering option in repeater field
 
 ## 19.1.35
+
 - Fix: selected option showing empty when searching and option not in search results
 
 ## 19.1.34 - Broken
+
 - Broken due to new version of @kolkov/angular-editor which is only supported from Angular 20.
 
 ## 19.1.33
+
 - Fix: file preview opening file select when hitting enter
-- 
+
 ## 19.1.32
+
 - Fix: remove chip on autocomplete multiselect not working
 - Feat: add option to show selected options as chips in multiselect
 
 ## 19.1.31
+
 - Fix: hide checkbox in no options indicator for multiselects.
 
 ## 19.1.30
+
 - Feat: support a no options indicator when a select has no initial options to show.
 
 ## 19.1.29
+
 - Chore: update vulnerable package, still one left (angular-cli-ghpages, waiting on an update)
 
 ## 19.1.28
+
 - Fix: make edit metadata of file preview reactive
 
 ## 19.1.27
+
 - Fix: repeater dirty/touched state
 
 ## 19.1.26
+
 - Fix: form dialog loading signal
 
 ## 19.1.25
+
 - Fix: file preview not showing files correctly
 
 ## 19.1.24
+
 - Fix: fix visibility check for button toggle
 
 ## 19.1.23
@@ -62,7 +89,6 @@
 ## 19.1.20
 
 - Fix: conditionals on rows not working
-
 
 ## 19.1.19
 
@@ -204,7 +230,6 @@ Since `@angular-material-components/datetime-picker` has not been updated the la
 ## 18.0.0
 
 - Angular 18 update
--
 
 ## 17.0.4
 

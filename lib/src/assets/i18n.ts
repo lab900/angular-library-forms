@@ -15,6 +15,8 @@ export const formsTranslations: Record<string, Record<string, string>> = {
     'form.button.upload': 'Upload',
     'forms.error.image.load': `Couldn't load image`,
     'forms.select-field.selectAllLabel': `Select All`,
+    'GENERAL.SAVE': `Save`,
+    'GENERAL.CANCEL': `Cancel`,
   },
   nl: {
     'forms.error.number-required': 'Een geldig getal is verplicht.',
@@ -31,5 +33,7 @@ export const formsTranslations: Record<string, Record<string, string>> = {
     'form.field.search': 'Zoek...',
     'form.field.no_options_found': 'Geen opties gevonden',
     'forms.select-field.selectAllLabel': `Selecteer alles`,
+    'GENERAL.SAVE': `Opslaan`,
+    'GENERAL.CANCEL': `Annuleren`,
   },
 };

@@ -1,30 +1,42 @@
 steps:
-  - name: 'node'
-    entrypoint: 'npm'
-    id: Install CLI
-    args: ['install', '-g', '@angular/cli']
-  - name: 'node'
+  - name: 'node:24'
     entrypoint: 'npm'
     id: Install Dependencies
     args: ['ci']
-  - name: 'node'
+  - name: 'node:24'
+    entrypoint: 'npm'
+    id: Lint Library
+    args: ['run', 'lint']
+  - name: 'node:24'
     entrypoint: 'npm'
     id: Test Library
     args: ['run', 'test:silent']
-  - name: 'node'
+  - name: 'node:24'
     entrypoint: 'npm'
     id: Build Library
     args: ['run', 'build:forms:prod']
-  - name: 'node'
-    id: Publish to NPM
+  # Staged publishing: the build only submits the package for review.
+  # A maintainer must then approve it with 2FA, in the CLI or on npmjs.com:
+  #   npm stage list @lab900/forms
+  #   npm stage view <stage-id>
+  #   npm stage download <stage-id>   # optional: inspect the tarball
+  #   npm stage approve <stage-id>    # publishes the version under the alpha tag
+  #   npm stage reject <stage-id>     # discards the version
+  - name: 'node:24'
+    id: Stage Publish to NPM
     secretEnv: ['NPM_TOKEN']
     entrypoint: bash
     args:
       - -c
       - |
+        set -e
+        # npm stage needs npm 12 or later; the node:24 image ships an older npm.
+        npm install -g npm@12.0.2
         npm config set -- '//registry.npmjs.org/:_authToken' "$$NPM_TOKEN"
         cd dist/@lab900/forms
-        npm publish --ignore-scripts --tag alpha
+        npm stage publish --tag alpha
+        # Print the stage id, so the maintainer can approve the version.
+        npm stage list @lab900/forms || true
 availableSecrets:
   secretManager:
     - versionName: projects/18279890124/secrets/npm-access-key/versions/latest

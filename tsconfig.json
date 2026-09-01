@@ -2,26 +2,30 @@
   "compileOnSave": false,
   "compilerOptions": {
     "rootDirs": ["./"],
-    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "sourceMap": true,
     "declaration": false,
     "strict": true,
+    /**
+     * Also the Angular v22 default. ts-jest reads the flag here, and only here: its own
+     * `isolatedModules` transform option is deprecated. tsconfig.spec.json inherits this, so
+     * ts-jest keeps the fast transpile-only path without any option in jest.config.js.
+     */
+    "isolatedModules": true,
     "experimentalDecorators": true,
     "module": "ES2022",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
-    "lib": ["ES2022", "dom"],
     "useDefineForClassFields": false,
+    "types": ["jest", "node"],
     "paths": {
-      "@lab900/forms": ["dist/@lab900/forms"]
+      "@lab900/forms": ["./lib/src/public-api.ts"]
     }
   },
   "angularCompilerOptions": {
-    "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true
   }
 }

@@ -1,4 +1,4 @@
-import { Component, computed, HostBinding, inject } from '@angular/core';
+import { Component, computed, HostBinding, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldDateTimePicker } from './date-time-field.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -6,20 +6,32 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatButton } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { DateAdapter } from '@angular/material/core';
 import {
-  NgxMatDateAdapter,
   NgxMatDatepickerActions,
   NgxMatDatepickerApply,
   NgxMatDatepickerCancel,
   NgxMatDatepickerInput,
   NgxMatDatepickerToggle,
   NgxMatDatetimepicker,
-} from '@ngxmc/datetime-picker';
-import { NgxMatSingleDateSelectionModel } from '@ngxmc/datetime-picker/lib/date-selection-model';
+} from '@ngx-mce/datetime-picker';
+import { DATE_TIME_FIELD_DATE_FORMATS, DateTimeFieldDateFormats } from './date-time-field.formats';
+
+/**
+ * The picker's internal selection model. Since v20 the picker package uses the Angular Material
+ * `DateAdapter` and no longer exports the model type, so only the members used here are declared.
+ */
+interface PickerSelectionModel {
+  readonly selection: unknown;
+  add(date: unknown): void;
+}
 
 @Component({
   selector: 'lab900-date-time-field',
   templateUrl: './date-time-field.component.html',
+  providers: [DATE_TIME_FIELD_DATE_FORMATS],
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -38,7 +50,7 @@ export class DateTimeFieldComponent extends FormComponent<FormFieldDateTimePicke
   @HostBinding('class')
   public classList = 'lab900-form-field';
 
-  private readonly adapter = inject(NgxMatDateAdapter);
+  private readonly adapter: DateAdapter<unknown> = inject(DateAdapter);
 
   public readonly startView = computed(() => {
     return this._options()?.startView ?? 'month';
@@ -56,19 +68,36 @@ export class DateTimeFieldComponent extends FormComponent<FormFieldDateTimePicke
     return this._options()?.showSeconds ?? true;
   });
 
+  /**
+   * `defaultTime` on the picker is typed `number[]`, while its runtime default is null. It reads the
+   * value as `defaultTime()?.[i]` with a truthiness check per element, so an empty array behaves
+   * exactly like no value.
+   */
   public readonly defaultTime = computed(() => {
-    return this._options()?.defaultTime;
+    return this._options()?.defaultTime ?? [];
   });
+
+  /** `matDatepickerFilter` on the picker is not nullable, so fall back to a filter that allows all. */
+  protected readonly dateFilter = computed(() => this._options()?.dateFilter ?? (() => true));
 
   public readonly stepMinute = computed(() => {
     return this._options()?.stepMinute || 1;
   });
 
+  public constructor() {
+    super();
+    /** Let the field's own `MAT_DATE_FORMATS` follow the options of this field. */
+    inject(DateTimeFieldDateFormats).followField(
+      () => this.showSeconds(),
+      () => this._options()?.displayFormat
+    );
+  }
+
   public pickerOpened(datePicker: NgxMatDatetimepicker<any>): void {
     /**
      * Prefill the datepicker with the current date if no date is selected
      */
-    const model = (datePicker as any)?._componentRef?.instance?._model as NgxMatSingleDateSelectionModel<any>;
+    const model = (datePicker as any)?._componentRef?.instance?._model as PickerSelectionModel | undefined;
     if (model && model.selection == null) {
       model.add(this.adapter.today());
     }

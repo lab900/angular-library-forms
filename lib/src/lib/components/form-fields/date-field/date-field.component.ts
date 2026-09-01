@@ -1,4 +1,4 @@
-import { Component, computed, HostBinding } from '@angular/core';
+import { Component, computed, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldDatePicker } from './date-field.model';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -10,6 +10,8 @@ import { MatInputModule } from '@angular/material/input';
 @Component({
   selector: 'lab900-date-field',
   templateUrl: './date-field.component.html',
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule, TranslatePipe, MatDatepickerModule],
 })
 export class DateFieldComponent extends FormComponent<FormFieldDatePicker> {
@@ -27,4 +29,9 @@ export class DateFieldComponent extends FormComponent<FormFieldDatePicker> {
   public readonly minDate = computed(() => {
     return this._options()?.minDate;
   });
+
+  /**
+   * `dateClass` on MatDatepicker is not nullable, so fall back to a function that adds no class.
+   */
+  protected readonly dateClass = computed(() => this._options()?.dateClass ?? (() => ''));
 }

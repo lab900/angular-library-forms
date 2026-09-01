@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostBinding, viewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostBinding, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { BehaviorSubject, isObservable, Observable, of } from 'rxjs';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
@@ -21,6 +21,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 @Component({
   selector: 'lab900-autocomplete-multiple-field',
   templateUrl: './autocomplete-multiple-field.component.html',
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,

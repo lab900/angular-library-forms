@@ -74,7 +74,22 @@ export class AmountInputDirective implements ControlValueAccessor {
     this.renderer.setProperty(this.elementRef.nativeElement, 'disabled', isDisabled);
   }
 
-  @HostListener('input', ['$event.target.value', '$event.target'])
+  @HostListener('input', ['$event'])
+  public onInputEvent(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.onInput(target.value, target);
+  }
+
+  @HostListener('focus', ['$event'])
+  public onFocusEvent(event: Event): void {
+    this.onFocus((event.target as HTMLInputElement).value);
+  }
+
+  @HostListener('blur', ['$event'])
+  public onBlurEvent(event: Event): void {
+    this.onBlur((event.target as HTMLInputElement).valueAsNumber);
+  }
+
   public onInput(v: string, target: HTMLInputElement): void {
     let validateValue = v;
     if (validateValue?.length) {
@@ -102,7 +117,6 @@ export class AmountInputDirective implements ControlValueAccessor {
     }
   }
 
-  @HostListener('focus', ['$event.target.value'])
   public onFocus(value: string): void {
     if (!this.focused() && this.canUpdate()) {
       this.focused.set(true);
@@ -116,7 +130,6 @@ export class AmountInputDirective implements ControlValueAccessor {
     }
   }
 
-  @HostListener('blur', ['$event.target.valueAsNumber'])
   public onBlur(value: number): void {
     if (this.focused() && this.canUpdate()) {
       this.focused.set(false);

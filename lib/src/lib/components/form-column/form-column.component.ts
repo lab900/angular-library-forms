@@ -1,4 +1,4 @@
-import { Component, computed, HostBinding } from '@angular/core';
+import { Component, computed, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { FormComponent } from '../AbstractFormComponent';
 import { FormFieldUtils } from '../../utils/form-field.utils';
 import { FormColumn } from './form-column.model';
@@ -14,6 +14,8 @@ import { FormGroup } from '@angular/forms';
   selector: 'lab900-form-column',
   templateUrl: './form-column.component.html',
   styleUrls: ['./form-column.component.scss'],
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TranslatePipe, FormFieldDirective, MatIcon, MatTooltip],
 })
 export class FormColumnComponent extends FormComponent<FormColumn> {

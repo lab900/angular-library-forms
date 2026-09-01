@@ -8,10 +8,10 @@
       matInput
       placeholder="{{ placeholder() | translate }}"
       [ngxMatDatetimePicker]="picker"
-      [formControlName]="_fieldAttribute()"
-      [matDatepickerFilter]="_options()?.dateFilter"
-      [max]="maxDate()"
-      [min]="minDate()" />
+      [formControlName]="_fieldAttribute() ?? ''"
+      [matDatepickerFilter]="dateFilter()"
+      [max]="maxDate() ?? null"
+      [min]="minDate() ?? null" />
     <ngx-mat-datepicker-toggle matIconSuffix [for]="picker" />
     <ngx-mat-datetime-picker
       #picker

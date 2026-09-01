@@ -50,5 +50,36 @@ module.exports = tseslint.config(
       '@angular-eslint/template/no-autofocus': 'off',
     },
   },
-  eslintPluginPrettierRecommended
+  eslintPluginPrettierRecommended,
+  {
+    // TODO(onpush): the components below keep `ChangeDetectionStrategy.Eager`. The rule is a warning here
+    // and stays an error everywhere else. See the change detection follow-up in
+    // ANGULAR-UPGRADE-19.2-TO-22.1.md. Delete an entry when its component moves to OnPush, and delete this
+    // whole block once the list is empty.
+    files: [
+      '**/app.component.ts',
+      '**/autocomplete-field.component.ts',
+      '**/autocomplete-multiple-field.component.ts',
+      '**/button-field.component.ts',
+      '**/button-toggle-field.component.ts',
+      '**/date-field.component.ts',
+      '**/date-range-field.component.ts',
+      '**/date-time-field.component.ts',
+      '**/date-year-month-field.component.ts',
+      '**/drag-n-drop-file-field.component.ts',
+      '**/form-column.component.ts',
+      '**/form-container.component.ts',
+      '**/form-dialog.component.ts',
+      '**/image-preview-modal.component.ts',
+      '**/mat-range-slider-field.component.ts',
+      '**/multi-lang-input-field.component.ts',
+      '**/password-field.component.ts',
+      '**/range-slider-field.component.ts',
+      '**/search-field.component.ts',
+      '**/slide-toggle-field.component.ts',
+    ],
+    rules: {
+      '@angular-eslint/prefer-on-push-component-change-detection': 'warn',
+    },
+  }
 );

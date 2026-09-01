@@ -17,9 +17,12 @@ View the [showcase](https://lab900.github.io/angular-library-forms) for guides &
 
 ```bash
 $ npm i
-$ npm run watch:forms # in a separate terminal
-$ npm run start
+$ npm start
 ```
+
+The showcase app imports the library from its source (`lib/src/public-api.ts`), not from `dist/`.
+One dev server is enough: a change in `lib/` rebuilds and reloads the showcase.
+You only build the library to publish it (`npm run build:forms:prod`).
 
 ## Developing new features or fixing bugs
 
@@ -40,7 +43,7 @@ Create a patch version of the fix and release it. Don't forget to apply the fix 
 2. Bump the lib version. See [Versioning](#versioning) for more information
 3. Tag the commit with the version number
 4. Push the tag to the repository
-5. The deployment will be triggered automatically
+5. The deployment will be triggered automatically because of the tag
 
 ```bash
 $ cd lib
@@ -48,6 +51,9 @@ $ npm version YOUR_VERSION -m "chore: release %s"
 $ git tag YOUR_VERSION
 $ git push origin YOUR_VERSION
 ```
+
+6. ⚠️ The staged build needs to be manually approved on npm by a project admin. (currently Gino, Senn or Johan)
+   (npmjs.com → user settings → staged packages)
 
 ## Versioning
 

@@ -10,10 +10,10 @@
     }
     <mat-slide-toggle
       [class.readonly]="fieldIsReadonly()"
-      [formControlName]="fieldAttribute"
+      [formControlName]="fieldAttribute ?? ''"
       [color]="options?.color || 'primary'"
-      [labelPosition]="options?.labelPosition">
-      {{ options?.label | translate }}
+      [labelPosition]="options?.labelPosition ?? 'after'">
+      {{ options?.label ?? '' | translate }}
     </mat-slide-toggle>
     @if (touched && !valid && !fieldIsReadonly()) {
       <mat-error class="lab900-slide-toggle-field__error">{{ errorMessage() }}</mat-error>

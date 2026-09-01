@@ -1,0 +1,23 @@
+/**
+ * Fade-and-slide transition for the error and hint messages of a form field.
+ *
+ * Angular Material exported this as `matFormFieldAnimations.transitionMessages` and removed it in v21.
+ * Material now uses a plain CSS keyframe animation for the same effect. The form fields in this library
+ * render their own subscript wrapper instead of a `mat-form-field`, so Material's own styling does not
+ * cover them. The keyframes and the timings below are the ones Material uses, which keeps the behaviour
+ * unchanged and removes the need for the `@angular/animations` package.
+ */
+@keyframes lab900-form-field-subscript {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.lab900-subscript-enter {
+  animation: lab900-form-field-subscript 300ms cubic-bezier(0.55, 0, 0.55, 0.2);
+}

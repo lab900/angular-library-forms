@@ -1,4 +1,4 @@
-import { Component, computed, HostBinding } from '@angular/core';
+import { Component, computed, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { FormComponent } from '../../AbstractFormComponent';
 import { FormFieldDateYearMonthPicker } from './date-year-month-field.model';
 import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
@@ -27,6 +27,8 @@ import { MatInputModule } from '@angular/material/input';
       },
     },
   ],
+  // TODO(onpush): eager on purpose. See the change detection follow-up in ANGULAR-UPGRADE-19.2-TO-22.1.md.
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ReactiveFormsModule,
     TranslatePipe,
