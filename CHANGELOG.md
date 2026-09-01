@@ -1,21 +1,16 @@
 # Changelog
 
-## 22.0.3
+## 22.0.4
 
 - Security and pipeline fixes, no changes
-
-## 22.0.0
-
-Upgrade to Angular 22. See [angular upgrade document](ANGULAR-UPGRADE-19.2-TO-22.1.md) for all changes done
-
-**Breaking: the date-time picker package changed.** `@ngxmc/datetime-picker` stopped releasing after Angular 20, so it is replaced by `@ngx-mce/datetime-picker` (`~22.2.3`), the maintained fork of the same project. Its public API is identical.
-
-- Fix: button toggle no longer renders an empty icon element for options without an icon.
-- Fix: button toggle element id rendered the `elementId` function instead of its value.
-- Fix: range slider inputs show an empty value instead of the text `undefined` when no value is set.
-- Fix: the file upload input sets an empty `accept` when no `accept` option is given, instead of a stringified empty value.
-- Fix: form rows, form columns and the search field no longer render when the form group or the field options they need are missing, instead of rendering a broken field.
-- updated the [cloudbuild.yaml](cloudbuild.yaml) file to use `npm stage publish` instead of `npm publish`
+- Upgrade to Angular 22. See [angular upgrade document](ANGULAR-UPGRADE-19.2-TO-22.1.md) for all changes done
+  - **Breaking: the date-time picker package changed.** `@ngxmc/datetime-picker` stopped releasing after Angular 20, so it is replaced by `@ngx-mce/datetime-picker` (`~22.2.3`), the maintained fork of the same project. Its public API is identical.
+  - Fix: button toggle no longer renders an empty icon element for options without an icon.
+  - Fix: button toggle element id rendered the `elementId` function instead of its value.
+  - Fix: range slider inputs show an empty value instead of the text `undefined` when no value is set.
+  - Fix: the file upload input sets an empty `accept` when no `accept` option is given, instead of a stringified empty value.
+  - Fix: form rows, form columns and the search field no longer render when the form group or the field options they need are missing, instead of rendering a broken field.
+  - updated the [cloudbuild.yaml](cloudbuild.yaml) file to use `npm stage publish` instead of `npm publish`
 
 ## 19.1.38, 19.1.39, 19.1.40
 
