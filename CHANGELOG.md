@@ -1,5 +1,36 @@
 # Changelog
 
+## 22.0.5-alpha.0
+
+- **Fix: a readonly form containing a repeater no longer crashes with `TypeError: key.split is not a function`.**
+  Two defects combined.
+  - `FormFieldDirective.componentType` did not exclude `EditType.Repeater`, so a readonly repeater collapsed
+    into a single `ReadonlyFieldComponent`, which handed the raw `FormArray` value to the ngx-translate pipe.
+    `TranslatePipe` only guards on `!query || !query.length`, so a non-empty array reaches
+    `TranslateService.instant()`, which calls `key.split('.')` on every item and throws on the first item that
+    is not a string. Note that the crash needs form-level readonly: a repeater could not opt out with its own
+    `options.readonly`, because `fieldIsReadonly` returns `true` as soon as the parent binding is set.
+  - `ReadonlyFieldComponent` passed the control value to the translate pipe unchecked.
+- Fix: a readonly `EditType.Repeater` now keeps its own component, renders every row, and renders those rows
+  readonly. Add, remove and reorder are suppressed without the consumer setting `fixedList`.
+- Fix: `EditType.AutocompleteMultiple` and `EditType.MultiLangInput` also render their own readonly state now,
+  instead of collapsing into one readonly field. Both hold a non-primitive value, so both crashed or rendered
+  `[object Object]` in a readonly form.
+- Fix: `ReadonlyFieldComponent` never hands a non-string to the translate pipe. Values are reduced with the new
+  `toReadonlyDisplayString()` helper: a string still resolves as a translation key, an array is joined with
+  `, `, and anything else is stringified. Set `readonlyDisplay` on fields holding plain objects, which still
+  render as `[object Object]`.
+- `options.readonlyDisplay` keeps winning over the default rendering of a readonly `Repeater`,
+  `AutocompleteMultiple` or `MultiLangInput`: the field renders through `ReadonlyFieldComponent` after all. The
+  workaround of setting `readonlyDisplay` on every repeater to work around the crash on 22.0.4 therefore keeps
+  working, and is no longer needed. `Select` and `ButtonToggle` are unchanged: they read the option in their
+  own readonly template and pass the field value to it, not the group value.
+- Fix: a readonly repeater shows `options.readonlyLabel` when it is set, the same way a form row does.
+- **Breaking for TypeScript consumers:** `readonlyDisplay` is typed
+  `(data?: any) => string | number | boolean | null | undefined` (`ReadonlyDisplayFn`) instead of
+  `(data?: any) => any`, so returning an array or an object is a compile error instead of a crash at runtime.
+- Added a `Repeater readonly` showcase example.
+
 ## 22.0.4
 
 - Security and pipeline fixes, no changes

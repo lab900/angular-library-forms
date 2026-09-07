@@ -62,3 +62,28 @@ export function computeReactiveNumberOption(option: ReactiveNumberOption, groupV
 export function computeReactiveStrictStringOption(option: ReactiveStringOption, groupValue: Signal<any>): string {
   return computeReactiveStringOption(option, groupValue) ?? '';
 }
+
+/**
+ * Reduce any control value to something the translate pipe accepts.
+ *
+ * `TranslatePipe` only guards on `!query || !query.length`, so a non-empty array reaches
+ * `TranslateService.instant()`, which calls `key.split('.')` on every item and throws on the first item
+ * that is not a string. A readonly field can hold any control value, so it stringifies the value first.
+ *
+ * Empty values return `undefined`, so the caller can fall back to a placeholder. Arrays are joined with
+ * `, `; objects without a `toString()` of their own render as `[object Object]`, the same as before, so
+ * set `readonlyDisplay` on those fields.
+ */
+export function toReadonlyDisplayString(value: unknown): string | undefined {
+  if (value == null || value === '') {
+    return undefined;
+  }
+  if (typeof value === 'string') {
+    return value;
+  }
+  if (Array.isArray(value)) {
+    const items = value.map(item => toReadonlyDisplayString(item)).filter((item): item is string => item !== undefined);
+    return items.length ? items.join(', ') : undefined;
+  }
+  return String(value);
+}

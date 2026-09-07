@@ -7,7 +7,7 @@ import { MatError, MatLabel } from '@angular/material/form-field';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatTooltip } from '@angular/material/tooltip';
 import { IconComponent } from '@lab900/ui';
-import { computeReactiveBooleanOption } from '../../../utils/helpers';
+import { computeReactiveBooleanOption, toReadonlyDisplayString } from '../../../utils/helpers';
 
 @Component({
   selector: 'lab900-button-toggle-field',
@@ -34,13 +34,12 @@ export class ButtonToggleFieldComponent extends FormComponent<FormFieldButtonTog
   protected readonly value = signal<unknown | undefined>(undefined);
   // This calculates the readonly label. If the readonlyDisplay() function is set, this is used.
   // Otherwise the button label is displayed
-  protected readonly readonlyButtonLabel = computed(() => {
+  protected readonly readonlyButtonLabel = computed<string>(() => {
     const options = this._options();
-    return (
-      (options?.readonlyDisplay
-        ? options?.readonlyDisplay(this.groupValue())
-        : options?.buttonOptions.find(o => o.value === this.controlValue())?.label) ?? '-'
-    );
+    const label = options?.readonlyDisplay
+      ? options.readonlyDisplay(this.groupValue())
+      : options?.buttonOptions.find(o => o.value === this.controlValue())?.label;
+    return toReadonlyDisplayString(label) ?? '-';
   });
   public readonly hideSelectionIndicator = computed(() => {
     return this.getReactiveBooleanOption('hideSelection');

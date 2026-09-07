@@ -11,6 +11,47 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { concat, defer, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+/**
+ * Edit types that render their own readonly state, so they keep their own component when the field or the
+ * whole form is readonly, instead of collapsing into a {@link ReadonlyFieldComponent}.
+ *
+ * Two kinds of field belong here:
+ * - containers that hold `nestedFields` (`Row`, `Column`, `Repeater`). A single readonly field cannot
+ *   render their children.
+ * - fields whose control value is not one primitive (`Repeater`, `Select` with `multiple`,
+ *   `AutocompleteMultiple`, `MultiLangInput`, `FilePreview`), or that stay interactive on purpose
+ *   (`ButtonToggle`, `SlideToggle`, `Button`).
+ *
+ * A `ReadonlyFieldComponent` renders one value through the translate pipe, which throws on an array
+ * value, so a multi-value type that is missing here crashes a readonly form.
+ */
+const EDIT_TYPES_WITH_OWN_READONLY_STATE: readonly EditType[] = [
+  EditType.Row,
+  EditType.Column,
+  EditType.Repeater,
+  EditType.FilePreview,
+  EditType.ButtonToggle,
+  EditType.SlideToggle,
+  EditType.Button,
+  EditType.Select,
+  EditType.AutocompleteMultiple,
+  EditType.MultiLangInput,
+];
+
+/**
+ * The subset of {@link EDIT_TYPES_WITH_OWN_READONLY_STATE} that does not read `options.readonlyDisplay`
+ * itself. That option reduces the field to one string, so for these types it wins and the field renders
+ * through a {@link ReadonlyFieldComponent} after all.
+ *
+ * `Select` and `ButtonToggle` read the option in their own readonly template, and pass the field value
+ * instead of the group value to it, so they are not in this list.
+ */
+const EDIT_TYPES_YIELDING_TO_READONLY_DISPLAY: readonly EditType[] = [
+  EditType.Repeater,
+  EditType.AutocompleteMultiple,
+  EditType.MultiLangInput,
+];
+
 @Directive({
   selector: '[lab900FormField]',
   exportAs: 'lab900FormField',
@@ -69,18 +110,11 @@ export class FormFieldDirective {
   public readonly externalForms = input<Record<string, UntypedFormGroup> | undefined>(undefined);
   public readonly componentType = computed(() => {
     this.validateType();
-    return this.fieldIsReadonly() &&
-      ![
-        EditType.Row,
-        EditType.Column,
-        EditType.FilePreview,
-        EditType.ButtonToggle,
-        EditType.SlideToggle,
-        EditType.Button,
-        EditType.Select,
-      ].includes(this.schema().editType)
-      ? ReadonlyFieldComponent
-      : this.formFieldMappingService.mapToComponent(this.schema());
+    const schema = this.schema();
+    if (this.fieldIsReadonly() && !this.rendersOwnReadonlyState(schema)) {
+      return ReadonlyFieldComponent;
+    }
+    return this.formFieldMappingService.mapToComponent(schema);
   });
   public readonly component = signal<ComponentRef<FormComponent> | undefined>(undefined);
 
@@ -178,6 +212,14 @@ export class FormFieldDirective {
         Supported types: ${supportedTypes}`
       );
     }
+  }
+
+  private rendersOwnReadonlyState(schema: Lab900FormField): boolean {
+    const editType = schema.editType;
+    if (schema.options?.readonlyDisplay && EDIT_TYPES_YIELDING_TO_READONLY_DISPLAY.includes(editType)) {
+      return false;
+    }
+    return EDIT_TYPES_WITH_OWN_READONLY_STATE.includes(editType);
   }
 
   private getReactiveBooleanOption(key: keyof Pick<FormFieldBaseOptions, 'hide' | 'required' | 'readonly'>): boolean {
