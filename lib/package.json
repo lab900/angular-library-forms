@@ -1,6 +1,6 @@
 {
   "name": "@lab900/forms",
-  "version": "22.0.5-alpha.0",
+  "version": "22.1.0",
   "author": "Lab900 <info@lab900.com> (https://lab900.com)",
   "license": "MIT",
   "peerDependencies": {
