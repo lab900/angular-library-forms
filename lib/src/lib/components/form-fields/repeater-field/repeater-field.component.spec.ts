@@ -1,18 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UntypedFormArray } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { provideNgxMask } from 'ngx-mask';
 import { Lab900Form } from '../../form-container/form-container.component';
 import { EditType } from '../../../models/editType';
 import { Lab900FormConfig } from '../../../models/Lab900FormConfig';
-import { LAB900_FORM_FIELD_TYPES } from '../../../models/Lab900FormModuleSettings';
-import { FormFieldMappingService } from '../../../services/form-field-mapping.service';
-import { TESTING_PROVIDERS } from '../../../testing/testing.providers';
-import { FormRowComponent } from '../../form-row/form-row.component';
-import { InputFieldComponent } from '../input-field/input-field.component';
-import { ReadonlyFieldComponent } from '../readonly-field/readonly-field.component';
-import { UnknownFieldComponent } from '../unknown-field/unknown-field.component';
-import { RepeaterFieldComponent } from './repeater-field.component';
+import { RENDER_TESTING_PROVIDERS } from '../../../testing/testing.providers';
 
 interface TransportIdentity {
   transportUnitCode: string;
@@ -61,22 +53,7 @@ describe('RepeaterFieldComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        ...TESTING_PROVIDERS,
-        provideNgxMask(),
-        FormFieldMappingService,
-        {
-          // Only the field types this spec renders, so it does not pull in every field component.
-          provide: LAB900_FORM_FIELD_TYPES,
-          useValue: {
-            RepeaterFieldComponent,
-            FormRowComponent,
-            InputFieldComponent,
-            ReadonlyFieldComponent,
-            UnknownFieldComponent,
-          },
-        },
-      ],
+      providers: RENDER_TESTING_PROVIDERS,
     }).compileComponents();
 
     fixture = TestBed.createComponent(Lab900Form);

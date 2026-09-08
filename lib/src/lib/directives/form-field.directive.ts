@@ -78,7 +78,7 @@ export class FormFieldDirective {
     stream: ({ params }) => {
       if (params) {
         return concat(
-          defer(() => of(params.getRawValue)),
+          defer(() => of(params.getRawValue())),
           params.valueChanges.pipe(map(() => params.getRawValue()))
         );
       }

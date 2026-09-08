@@ -64,26 +64,37 @@ export function computeReactiveStrictStringOption(option: ReactiveStringOption, 
 }
 
 /**
- * Reduce any control value to something the translate pipe accepts.
+ * One display string per value: an array yields one string per item, anything else yields at most one.
+ * Empty items are dropped, so an empty result means there is nothing to show.
  *
- * `TranslatePipe` only guards on `!query || !query.length`, so a non-empty array reaches
- * `TranslateService.instant()`, which calls `key.split('.')` on every item and throws on the first item
- * that is not a string. A readonly field can hold any control value, so it stringifies the value first.
+ * A readonly field can hold any control value, and `TranslatePipe` only guards on
+ * `!query || !query.length`: a non-empty array reaches `TranslateService.instant()`, which calls
+ * `key.split('.')` on every item and throws on the first item that is not a string. Splitting the value
+ * into keys here lets the caller translate each one and keeps that crash out of the pipe.
  *
- * Empty values return `undefined`, so the caller can fall back to a placeholder. Arrays are joined with
- * `, `; objects without a `toString()` of their own render as `[object Object]`, the same as before, so
- * set `readonlyDisplay` on those fields.
+ * A value whose `String()` is `[object ...]` has no rendering of its own, so it is dropped rather than
+ * printed: a plain object, a `File`, a `Date` range. Set `readonlyDisplay` on those fields.
  */
-export function toReadonlyDisplayString(value: unknown): string | undefined {
+export function toReadonlyDisplayStrings(value: unknown): string[] {
   if (value == null || value === '') {
-    return undefined;
+    return [];
   }
   if (typeof value === 'string') {
-    return value;
+    return [value];
   }
   if (Array.isArray(value)) {
-    const items = value.map(item => toReadonlyDisplayString(item)).filter((item): item is string => item !== undefined);
-    return items.length ? items.join(', ') : undefined;
+    return value.flatMap(item => toReadonlyDisplayStrings(item));
   }
-  return String(value);
+  const asString = String(value);
+  return asString.startsWith('[object ') ? [] : [asString];
+}
+
+/**
+ * The display strings of {@link toReadonlyDisplayStrings} joined with `, `, or `undefined` when there is
+ * nothing to show. Use this where a single string is needed and the items do not have to be translated
+ * one by one.
+ */
+export function toReadonlyDisplayString(value: unknown): string | undefined {
+  const items = toReadonlyDisplayStrings(value);
+  return items.length ? items.join(', ') : undefined;
 }

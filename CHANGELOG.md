@@ -1,5 +1,32 @@
 # Changelog
 
+## 22.2.0
+
+Only the changes that need action from a consumer are listed. Shipped first as `22.2.0-alpha.0` for testing.
+
+- **Breaking: reactive options are evaluated against the real form value from the first pass.** `groupValue`
+  and `controlValue` seeded their stream with the `getRawValue` **method** instead of its result, so the first
+  evaluation of a reactive `hide`, `readonly`, `required`, `title` or `placeholder` handed your function the
+  method. A function such as `data => data.type === 'B'` silently returned the wrong answer and the field was
+  rendered hidden or readonly before correcting itself; a function such as `data => data.items.length === 0`
+  threw `Cannot read properties of undefined`. Both are fixed. If one of your option functions was quietly
+  returning the wrong value on that first pass, it now returns the right one, so a field can start out hidden,
+  readonly or required where it previously did not. Present since `19.1.10`; unrelated to the Angular upgrade.
+- **Breaking: a readonly field renders `-` instead of `[object Object]`.** A value that has no string form of
+  its own is no longer printed: a plain object, a `Date` range, a `File`. Set `readonlyDisplay` on those
+  fields. This supersedes the note in `22.1.0` that said such values keep rendering `[object Object]`.
+- **Breaking: each item of an array value is translated on its own and the items are joined with `, `.** A
+  readonly field holding `['PENDING', 'DONE']` renders both translations, where 22.0.4 rendered
+  `[object Object]` and 22.1.0 rendered the raw keys joined. The value is translated in TypeScript now instead
+  of through `TranslatePipe` in the template, so a language change still updates the field.
+- **Breaking: `readonlyDisplay` recomputes when any control in its form group changes,** not only when the
+  field's own control changes. It receives the raw group value, so it was under-reacting. A function that
+  reads sibling attributes updates now, and one with a side effect runs more often.
+- A repeater passes `language` and `availableLanguages` to its nested fields, the same way a form row does. A
+  multi language field nested in a repeater renders its value instead of nothing.
+- `ReadonlyDisplayFn` documents that `data` is not the same for every edit type: most fields pass the raw group
+  value, `EditType.Select` passes the value of the field itself.
+
 ## 22.1.0
 
 Only the changes that need action from a consumer are listed. They all come out of the fix for the

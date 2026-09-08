@@ -28,8 +28,13 @@ export type ReactiveNumberOption = ReactiveOption<number>;
 export type ReadonlyDisplayValue = string | number | boolean | null | undefined;
 
 /**
- * Renders a readonly field from the raw value of its form group. The result is treated as a translation
- * key first, and rendered as is when no translation matches.
+ * Renders a readonly field. The result is treated as a translation key first, and rendered as is when no
+ * translation matches.
+ *
+ * **`data` is not the same value for every edit type.** Most fields pass the raw value of the whole form
+ * group, so read the attribute you need off it. `EditType.Select` passes the value of the field itself,
+ * because it resolves the option labels on its own. Check which one you are writing for; the parameter is
+ * `any`, so a mismatch fails at runtime and not at compile time.
  */
 export type ReadonlyDisplayFn = (data?: any) => ReadonlyDisplayValue;
 

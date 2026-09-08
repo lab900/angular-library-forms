@@ -3,6 +3,6 @@
     @if (readonlyLabel(); as label) {
       <span class="lab900-readonly-field__label">{{ label | translate }}</span>
     }
-    <div [innerHTML]="value() || '-' | translate"></div>
+    <div [innerHTML]="value() || '-'"></div>
   </div>
 }
