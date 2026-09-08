@@ -1,8 +1,6 @@
 # Changelog
 
-## 22.2.0
-
-Only the changes that need action from a consumer are listed. Shipped first as `22.2.0-alpha.0` for testing.
+## 22.2.1
 
 - **Breaking: reactive options are evaluated against the real form value from the first pass.** `groupValue`
   and `controlValue` seeded their stream with the `getRawValue` **method** instead of its result, so the first
@@ -22,10 +20,16 @@ Only the changes that need action from a consumer are listed. Shipped first as `
 - **Breaking: `readonlyDisplay` recomputes when any control in its form group changes,** not only when the
   field's own control changes. It receives the raw group value, so it was under-reacting. A function that
   reads sibling attributes updates now, and one with a side effect runs more often.
-- A repeater passes `language` and `availableLanguages` to its nested fields, the same way a form row does. A
-  multi language field nested in a repeater renders its value instead of nothing.
-- `ReadonlyDisplayFn` documents that `data` is not the same for every edit type: most fields pass the raw group
-  value, `EditType.Select` passes the value of the field itself.
+- Fix: `EditType.DateTime` shows the selected time on every date adapter without setting `displayFormat`. The
+  default format was always `Intl.DateTimeFormat` options, which only the native adapter reads, so on the
+  Luxon, Moment and date-fns adapters the input printed a date without a time until you set `displayFormat`
+  yourself. The field now derives the format from the date format of your own application and adds the time in
+  the shape that your adapter reads: the time parts merged in for the native adapter, ` HH:mm:ss` appended for
+  the three that take a format string. `displayFormat` keeps working and still wins, so it is optional now.
+  Two knock-on effects: the input follows the date style of your application instead of always printing
+  `9/8/2026`, so an application that customised `MAT_DATE_FORMATS.display.dateInput` sees its own style in the
+  date-time field; and an application whose `dateInput` already prints a time gets it twice on a string
+  adapter, which `displayFormat` fixes.
 
 ## 22.1.0
 
