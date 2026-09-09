@@ -31,6 +31,9 @@ export type ReadonlyDisplayValue = string | number | boolean | null | undefined;
  * Renders a readonly field. The result is treated as a translation key first, and rendered as is when no
  * translation matches.
  *
+ * The result reaches the template through `[innerHTML]`, so basic formatting tags such as `<br>` work.
+ * Angular sanitizes the result and strips scripts and event handlers.
+ *
  * **`data` is not the same value for every edit type.** Most fields pass the raw value of the whole form
  * group, so read the attribute you need off it. `EditType.Select` passes the value of the field itself,
  * because it resolves the option labels on its own. Check which one you are writing for; the parameter is

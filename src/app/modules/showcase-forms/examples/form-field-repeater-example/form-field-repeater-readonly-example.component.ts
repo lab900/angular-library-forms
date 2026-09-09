@@ -62,7 +62,10 @@ export class FormFieldRepeaterReadonlyExampleComponent {
     ],
   };
 
-  /** `readonlyDisplay` reduces the whole repeater to one string, and still wins over the rows. */
+  /**
+   * `readonlyDisplay` reduces the whole repeater to one string, and still wins over the rows. That string
+   * reaches the template through `[innerHTML]`, so the `<br>` tags below render as line breaks.
+   */
   public readonlyDisplaySchema: Lab900FormConfig = {
     readonly: true,
     fields: [

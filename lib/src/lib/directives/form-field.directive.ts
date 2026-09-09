@@ -43,8 +43,8 @@ const EDIT_TYPES_WITH_OWN_READONLY_STATE: readonly EditType[] = [
  * itself. That option reduces the field to one string, so for these types it wins and the field renders
  * through a {@link ReadonlyFieldComponent} after all.
  *
- * `Select` and `ButtonToggle` read the option in their own readonly template, and pass the field value
- * instead of the group value to it, so they are not in this list.
+ * `Select` and `ButtonToggle` read the option in their own readonly template, so they are not in this
+ * list. `Select` passes the value of the field to it, `ButtonToggle` passes the group value.
  */
 const EDIT_TYPES_YIELDING_TO_READONLY_DISPLAY: readonly EditType[] = [
   EditType.Repeater,
