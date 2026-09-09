@@ -38,6 +38,14 @@ export class RepeaterFieldComponent extends FormComponent<FormFieldRepeater> {
 
   protected readonly nestedFields = computed(() => this._schema().nestedFields);
 
+  /** A readonly repeater shows `readonlyLabel` when it is set, the same way a form row does. */
+  protected readonly repeaterLabel = computed(() => {
+    if (this.fieldIsReadonly() && this.readonlyLabel()) {
+      return this.readonlyLabel();
+    }
+    return this.label();
+  });
+
   /**
    * `infoTooltip` is a reactive option, so it can also be a function. Resolve it here, the same way
    * `FormRowComponent` does, instead of reading `.text` off a union in the template.

@@ -15,7 +15,11 @@ export interface FormFieldDateTimePickerOptions<T = Date> extends FormFieldDateP
   /**
    * Format that the input uses to show the selected date and time. Give a value that the
    * `DateAdapter` of the application accepts.
-   * Default: a date-time format for the native adapter, with seconds when `showSeconds` is true.
+   *
+   * Optional. By default the field takes the date format of the application and adds the time to it,
+   * in the shape that the application's own `DateAdapter` reads, with seconds when `showSeconds` is
+   * true. Set this option to print a different format, or when the application's own date format
+   * already contains a time.
    */
   displayFormat?: DateAdapterDisplayFormat;
 }

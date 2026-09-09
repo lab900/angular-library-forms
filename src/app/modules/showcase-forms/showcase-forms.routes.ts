@@ -24,6 +24,7 @@ import { FormFieldRangeSliderExampleComponent } from './examples/form-field-rang
 import { FormFieldRepeaterAdvancedExampleComponent } from './examples/form-field-repeater-advanced-example/form-field-repeater-advanced-example.component';
 import { FormFieldRepeaterExampleComponent } from './examples/form-field-repeater-example/form-field-repeater-example.component';
 import { FormFieldRepeaterFixedExampleComponent } from './examples/form-field-repeater-fixed-example/form-field-repeater-fixed-example.component';
+import { FormFieldRepeaterReadonlyExampleComponent } from './examples/form-field-repeater-example/form-field-repeater-readonly-example.component';
 import { FormFieldSelectAdvancedExampleComponent } from './examples/form-field-select-example/form-field-select-advanced-example.component';
 import { FormFieldSelectExampleComponent } from './examples/form-field-select-example/form-field-select-example.component';
 import { FormFieldSlideToggleExampleComponent } from './examples/form-field-slide-toggle-example/form-field-slide-toggle-example.component';
@@ -77,6 +78,7 @@ export default [
     new ShowcaseExample(FormFieldRepeaterExampleComponent, 'Repeater'),
     new ShowcaseExample(FormFieldRepeaterFixedExampleComponent, 'Repeater fixed'),
     new ShowcaseExample(FormFieldRepeaterReorderExampleComponent, 'Repeater (reorder)'),
+    new ShowcaseExample(FormFieldRepeaterReadonlyExampleComponent, 'Repeater readonly', 'form-field-repeater-example'),
   ]),
   new ShowcaseRoute('form-field-datepicker', 'Form Fields: Datepicker', [
     new ShowcaseExample(FormFieldDatePickerExampleComponent, 'Date picker'),

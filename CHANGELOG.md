@@ -1,5 +1,59 @@
 # Changelog
 
+## 22.2.1
+
+- **Breaking: reactive options are evaluated against the real form value from the first pass.** `groupValue`
+  and `controlValue` seeded their stream with the `getRawValue` **method** instead of its result, so the first
+  evaluation of a reactive `hide`, `readonly`, `required`, `title` or `placeholder` handed your function the
+  method. A function such as `data => data.type === 'B'` silently returned the wrong answer and the field was
+  rendered hidden or readonly before correcting itself; a function such as `data => data.items.length === 0`
+  threw `Cannot read properties of undefined`. Both are fixed. If one of your option functions was quietly
+  returning the wrong value on that first pass, it now returns the right one, so a field can start out hidden,
+  readonly or required where it previously did not. Present since `19.1.10`; unrelated to the Angular upgrade.
+- **Breaking: a readonly field renders `-` instead of `[object Object]`.** A value that has no string form of
+  its own is no longer printed: a plain object, a `Date` range, a `File`. Set `readonlyDisplay` on those
+  fields. This supersedes the note in `22.1.0` that said such values keep rendering `[object Object]`.
+- **Breaking: each item of an array value is translated on its own and the items are joined with `, `.** A
+  readonly field holding `['PENDING', 'DONE']` renders both translations, where 22.0.4 rendered
+  `[object Object]` and 22.1.0 rendered the raw keys joined. The value is translated in TypeScript now instead
+  of through `TranslatePipe` in the template, so a language change still updates the field.
+- **Breaking: `readonlyDisplay` recomputes when any control in its form group changes,** not only when the
+  field's own control changes. It receives the raw group value, so it was under-reacting. A function that
+  reads sibling attributes updates now, and one with a side effect runs more often.
+- Fix: `EditType.DateTime` shows the selected time on every date adapter without setting `displayFormat`. The
+  default format was always `Intl.DateTimeFormat` options, which only the native adapter reads, so on the
+  Luxon, Moment and date-fns adapters the input printed a date without a time until you set `displayFormat`
+  yourself. The field now derives the format from the date format of your own application and adds the time in
+  the shape that your adapter reads: the time parts merged in for the native adapter, ` HH:mm:ss` appended for
+  the three that take a format string. `displayFormat` keeps working and still wins, so it is optional now.
+  Two knock-on effects: the input follows the date style of your application instead of always printing
+  `9/8/2026`, so an application that customised `MAT_DATE_FORMATS.display.dateInput` sees its own style in the
+  date-time field; and an application whose `dateInput` already prints a time gets it twice on a string
+  adapter, which `displayFormat` fixes.
+
+## 22.1.0
+
+Only the changes that need action from a consumer are listed. They all come out of the fix for the
+`TypeError: key.split is not a function` crash in a readonly form containing a repeater.
+
+- **Breaking: `options.readonlyDisplay` is typed `ReadonlyDisplayFn`**, which is
+  `(data?: any) => string | number | boolean | null | undefined` instead of `(data?: any) => any`. Returning an
+  array or an object is a compile error now, so reduce the value to one primitive inside the function.
+- **Breaking: a readonly `EditType.Repeater` renders its own rows** instead of collapsing into one
+  `ReadonlyFieldComponent`. Its rows render readonly, and add, remove and reorder are suppressed without
+  setting `fixedList`. Two consequences: the markup of a readonly repeater changes from a single
+  `.lab900-readonly-field` to the repeater with its rows, so adjust any CSS or DOM test that relied on the old
+  output; and a readonly repeater shows `options.readonlyLabel` when it is set, instead of `title`.
+  `readonlyDisplay` still wins over the rows, so the 22.0.4 workaround of setting it on every repeater keeps
+  working and can be dropped.
+- **Breaking: a readonly `EditType.AutocompleteMultiple` or `EditType.MultiLangInput` renders its own readonly
+  state** instead of collapsing into a `ReadonlyFieldComponent`, with the same markup consequence as the
+  repeater.
+- **Breaking: a readonly field stringifies its value before it reaches the translate pipe.** An array value
+  renders as its items joined with `, `, where it used to throw or render `[object Object]`. A plain object
+  still renders `[object Object]`; set `readonlyDisplay` on those fields. Use the exported
+  `toReadonlyDisplayString()` helper to get the same conversion elsewhere.
+
 ## 22.0.4
 
 - Security and pipeline fixes, no changes

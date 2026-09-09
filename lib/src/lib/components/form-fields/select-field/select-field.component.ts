@@ -8,7 +8,7 @@ import { ValueLabel } from '../../../models/form-field-base';
 import { MatPseudoCheckbox, MatPseudoCheckboxState } from '@angular/material/core';
 import { coerceArray } from '@angular/cdk/coercion';
 import { isDifferent } from '@lab900/ui';
-import { debounceTimeAfterFirst } from '../../../utils/helpers';
+import { debounceTimeAfterFirst, toReadonlyDisplayString } from '../../../utils/helpers';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { _, TranslatePipe } from '@ngx-translate/core';
 import { SelectInfiniteScrollDirective } from './select-field-infinite-scroll.directive';
@@ -107,7 +107,8 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
     // if a custom display function is set, use that
     const readonlyDisplay = this._options()?.readonlyDisplay;
     if (readonlyDisplay) {
-      return this.translateService.instant(readonlyDisplay(this.fieldValue()));
+      const display = toReadonlyDisplayString(readonlyDisplay(this.fieldValue()));
+      return display ? this.translateService.instant(display) : '-';
     }
     // otherwise wait until the options are loaded and display the selected options labels
     if (this.loading()) {

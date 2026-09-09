@@ -56,7 +56,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     stream: ({ params }) => {
       if (params) {
         return concat(
-          defer(() => of(params.getRawValue)),
+          defer(() => of(params.getRawValue())),
           params.valueChanges.pipe(map(() => params.getRawValue()))
         );
       }
@@ -82,7 +82,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     stream: ({ params }) => {
       if (params) {
         return concat(
-          defer(() => of(params.getRawValue)),
+          defer(() => of(params.getRawValue())),
           params.valueChanges.pipe(map(() => params.getRawValue()))
         );
       }
