@@ -1,4 +1,14 @@
-import { ComponentRef, computed, Directive, effect, inject, input, signal, ViewContainerRef } from '@angular/core';
+import {
+  ComponentRef,
+  computed,
+  Directive,
+  effect,
+  inject,
+  input,
+  Signal,
+  signal,
+  ViewContainerRef,
+} from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { FormComponent } from '../components/AbstractFormComponent';
 import { ReadonlyFieldComponent } from '../components/form-fields/readonly-field/readonly-field.component';
@@ -7,9 +17,7 @@ import { FormFieldBaseOptions, ValueLabel } from '../models/form-field-base';
 import { Lab900FormField } from '../models/lab900-form-field.type';
 import { FormFieldMappingService } from '../services/form-field-mapping.service';
 import { computeReactiveBooleanOption } from '../utils/helpers';
-import { rxResource } from '@angular/core/rxjs-interop';
-import { concat, defer, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { sharedGroupValue } from '../utils/group-value.utils';
 
 /**
  * Edit types that render their own readonly state, so they keep their own component when the field or the
@@ -73,18 +81,10 @@ export class FormFieldDirective {
     return this.group();
   });
 
-  public readonly groupValue = rxResource({
-    params: () => this.fieldGroup(),
-    stream: ({ params }) => {
-      if (params) {
-        return concat(
-          defer(() => of(params.getRawValue())),
-          params.valueChanges.pipe(map(() => params.getRawValue()))
-        );
-      }
-      return of(null);
-    },
-  }).value;
+  public readonly groupValue: Signal<any> = computed(() => {
+    const group = this.fieldGroup();
+    return group ? sharedGroupValue(group)() : null;
+  });
 
   public readonly language = input<string | undefined>(undefined);
   public readonly availableLanguages = input<ValueLabel[]>([]);

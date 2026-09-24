@@ -2,6 +2,26 @@
 
 ## Unreleased
 
+- **Performance: the cost of a keystroke no longer grows with the number of fields.** Every field kept its own
+  subscription on the value of its group and called `getRawValue()` - a walk of the whole control tree - on
+  every change, so a form of N fields did N walks of N controls per change. The group value is now one shared,
+  lazily computed signal per group: one subscription per group instead of three per field, and the tree is
+  walked at most once per change, only if a reactive option actually reads it. A form whose options are all
+  static never walks it at all.
+- Performance: a field without an `options.onChangeFn` no longer subscribes to its group at all. The
+  subscription was created for every field and was never released, not even on destroy.
+- Fix: the subscriptions of `schema.conditions` are released when the field is destroyed. They never were, so a
+  condition on an `externalFormId` kept running against the other form for the rest of the session.
+- **Fix: a field with `validators` but no `options` keeps its validators.** They were dropped entirely.
+- **Fix: a repeater no longer multiplies the validators of its rows.** The validators derived from `options`
+  (`minLength`, `max`, `pattern`, ...) were pushed onto the `validators` array of the field schema itself,
+  which every row shares, so row N ran N copies of each and the schema kept them for the next form built from
+  it.
+- Performance: the chip trigger of a multi select filters its options once per value change instead of on every
+  change detection pass, and a select no longer adds a `selectionChange` listener on every option load.
+- Performance: an `EditType.Select` deduplicates its options in linear time when it has no `compareWith`,
+  instead of comparing every option against every other. A list of a few thousand options - an infinite scroll
+  select that has loaded every page - no longer freezes on each load.
 - Docs: `AGENTS.md` with instructions for AI coding agents. It ships in the package at
   `node_modules/@lab900/forms/AGENTS.md` and is shown on the new AI agents page of the showcase.
 - Docs: the showcase serves `llms.txt` and `llms-full.txt` (the agent guide plus the full API reference) at its root.

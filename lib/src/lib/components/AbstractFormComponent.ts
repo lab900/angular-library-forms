@@ -1,7 +1,7 @@
 import { AbstractControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { computed, Directive, effect, inject, input, model, Signal, untracked } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { concat, defer, EMPTY, Observable, of, switchMap } from 'rxjs';
+import { concat, defer, EMPTY, Observable, of, Subscription, switchMap } from 'rxjs';
 import { FieldConditions } from '../models/IFieldConditions';
 import { SubscriptionBasedDirective } from '../directives/subscription-based.directive';
 import { Lab900FormField } from '../models/lab900-form-field.type';
@@ -21,6 +21,7 @@ import {
   computeReactiveStrictStringOption,
   computeReactiveStringOption,
 } from '../utils/helpers';
+import { sharedGroupValue } from '../utils/group-value.utils';
 import { EditType } from '../models/editType';
 
 @Directive()
@@ -77,18 +78,10 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     },
   }).value;
 
-  public readonly groupValue = rxResource({
-    params: () => this._group(),
-    stream: ({ params }) => {
-      if (params) {
-        return concat(
-          defer(() => of(params.getRawValue())),
-          params.valueChanges.pipe(map(() => params.getRawValue()))
-        );
-      }
-      return of(null);
-    },
-  }).value;
+  public readonly groupValue: Signal<any> = computed(() => {
+    const group = this._group();
+    return group ? sharedGroupValue(group)() : null;
+  });
 
   public readonly _schema = input.required<S>({ alias: 'schema' });
   public readonly _options = computed<S['options']>(() => this._schema().options);
@@ -188,23 +181,27 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
 
   public constructor() {
     super();
-    effect(() => {
+    effect(onCleanup => {
+      // Read the option first: a field without an `onChangeFn` - nearly every field - never subscribes.
+      const onChangeFn = this._options()?.onChangeFn;
+      if (!onChangeFn) {
+        return;
+      }
       const group = this._group();
-      const options = this._options();
       const fieldControl = this._fieldControl();
       if (group && fieldControl) {
-        group.valueChanges.subscribe(() => {
-          if (options?.onChangeFn) {
-            options.onChangeFn(group.getRawValue(), fieldControl);
-          }
-        });
+        const sub = group.valueChanges.subscribe(() => onChangeFn(group.getRawValue(), fieldControl));
+        onCleanup(() => sub.unsubscribe());
       }
     });
-    effect(() => {
+    effect(onCleanup => {
       const editType = untracked(this._schema).editType;
       const fieldControl = editType === EditType.Row ? this._group() : this._fieldControl();
       if (fieldControl && this.conditions()?.length) {
-        this.createConditions();
+        const subs = this.createConditions();
+        // Also covers destruction: without it the conditions keep running, which matters for a condition on
+        // an `externalFormId`, where the control it watches outlives this field.
+        onCleanup(() => subs.forEach(sub => sub.unsubscribe()));
       }
     });
     effect(() => {
@@ -284,20 +281,17 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     }
   }
 
-  private createConditions(): void {
-    (this.conditions() ?? [])
+  private createConditions(): Subscription[] {
+    return (this.conditions() ?? [])
       .filter(c => c.dependOn)
       .map(c => new FieldConditions(this, c))
-      .forEach((conditions: FieldConditions) => {
-        const subs = conditions.start((dependOn: string, value: any, firstRun: boolean | undefined) => {
+      .flatMap((conditions: FieldConditions) =>
+        conditions.start((dependOn: string, value: any, firstRun: boolean | undefined) => {
           if (this.onConditionalChange) {
             this.onConditionalChange(dependOn, value, firstRun);
           }
-        });
-        if (subs?.length) {
-          this.subscriptions.concat(subs);
-        }
-      });
+        })
+      );
   }
 
   protected computeReactiveBooleanOption<O = S['options']>(key: keyof O): Signal<boolean> {

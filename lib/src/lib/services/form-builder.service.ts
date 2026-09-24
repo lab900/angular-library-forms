@@ -20,9 +20,11 @@ export class Lab900FormBuilderService {
   private readonly fb = inject(UntypedFormBuilder);
 
   public static addValidators(field: Lab900FormField): ValidatorFn[] {
-    const validators: ValidatorFn[] = field?.validators ?? [];
+    // A copy, never the array on the schema: the same field object builds every row of a repeater, so
+    // pushing onto it would give row N the option validators of every row before it.
+    const validators: ValidatorFn[] = [...(field?.validators ?? [])];
     if (!field.options) {
-      return [];
+      return validators;
     }
     if (field.options?.minLength) {
       validators.push(Validators.minLength(field.options.minLength));
