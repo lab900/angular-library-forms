@@ -38,6 +38,8 @@ import { FormConditionalValidationExampleComponent } from './examples/form-condi
 import { FormReactiveOptionsExampleComponent } from './examples/form-reactive-options-example/form-reactive-options-example.component';
 import { FormFieldEditorExampleComponent } from './examples/form-field-editor-example/form-field-editor-example.component';
 import { FormFieldRepeaterReorderExampleComponent } from './examples/form-field-repeater-reorder-example/form-field-repeater-reorder-example.component';
+import { FormFieldCheckboxExampleComponent } from './examples/form-field-checkbox-example/form-field-checkbox-example.component';
+import { FormFieldIconExampleComponent } from './examples/form-field-icon-example/form-field-icon-example.component';
 import {
   amountFieldApi,
   autocompleteFieldApi,
@@ -55,6 +57,7 @@ import {
   radioButtonsFieldApi,
   rangeSliderFieldApi,
   repeaterFieldApi,
+  iconFieldApi,
   searchFieldApi,
   selectFieldApi,
   slideToggleFieldApi,
@@ -262,16 +265,34 @@ export default [
   ),
   new ShowcaseRoute(
     'form-field-slide-toggle',
-    'Form Fields: Slide Toggle',
+    'Form Fields: Slide Toggle & Checkbox',
     [
       new ShowcaseExample(
         FormFieldSlideToggleExampleComponent,
         'Slide toggle',
         'A boolean field. It renders its own readonly state.'
       ),
+      new ShowcaseExample(
+        FormFieldCheckboxExampleComponent,
+        'Checkbox',
+        'The same boolean, as a checkbox. A null value renders indeterminate unless disabledIndeterminate is set.'
+      ),
     ],
     undefined,
     slideToggleFieldApi
+  ),
+  new ShowcaseRoute(
+    'form-field-icon',
+    'Form Fields: Icon',
+    [
+      new ShowcaseExample(
+        FormFieldIconExampleComponent,
+        'Icon',
+        'A read-only icon with an optional text. Both options are reactive, so they can follow the form value.'
+      ),
+    ],
+    undefined,
+    iconFieldApi
   ),
   new ShowcaseRoute(
     'form-field-range-slider',

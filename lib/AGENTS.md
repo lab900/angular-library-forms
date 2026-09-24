@@ -201,7 +201,7 @@ shrinks a repeater's `FormArray`; `setValues(data, emitEvent?)` rebuilds a repea
 | `Wysiwyg`         | rich text editor             | `FormFieldWysiwgOptions`          |
 | `Repeater`        | repeated group of fields     | `FormFieldRepeaterOptions`        |
 | `Row` / `Column`  | layout, holds `nestedFields` | `FormRowOptions` / `FormColumnOptions` |
-| `Icon`            | icon picker                  | `FormFieldIconOptions`            |
+| `Icon`            | a read-only icon and text    | `FormFieldIconOptions`            |
 | `Button`          | button inside the schema     | `FormFieldButtonOptions`          |
 
 Deprecated: `Autocomplete` and `AutocompleteMultiple` (use `Select` with `search.enabled`), and

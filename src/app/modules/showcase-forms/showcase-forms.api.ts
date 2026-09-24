@@ -42,12 +42,6 @@ export const formContainerApi: ShowcaseApiSection[] = [
     symbols: ['FormDialogDirective', 'AutofocusDirective'],
   },
   {
-    title: 'Fields without their own page',
-    description: 'The remaining members of the union. Every other edit type has its own page.',
-    fieldUsage: true,
-    symbols: ['FormFieldIcon'],
-  },
-  {
     title: 'Writing a field component',
     description: 'Every field component extends FormComponent. It owns the per-field contract: state, value, errors.',
     symbols: ['FormComponent'],
@@ -179,6 +173,19 @@ export const slideToggleFieldApi: ShowcaseApiSection[] = [
     description: 'A slide toggle, or a plain checkbox.',
     fieldUsage: true,
     symbols: ['FormFieldSlideToggle', 'CheckboxFieldModel'],
+  },
+];
+
+export const iconFieldApi: ShowcaseApiSection[] = [
+  {
+    title: 'Field model',
+    description: 'An icon, with an optional text. The field holds no control of its own.',
+    fieldUsage: true,
+    symbols: ['FormFieldIcon'],
+  },
+  {
+    title: 'Shared types',
+    symbols: ['Icon'],
   },
 ];
 

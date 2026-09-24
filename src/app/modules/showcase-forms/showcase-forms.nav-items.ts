@@ -62,8 +62,12 @@ export const showcaseFormsNavItems: NavItemGroup[] = [
             route: 'form-field-button',
           },
           {
-            label: 'Slide Toggle',
+            label: 'Slide Toggle & Checkbox',
             route: 'form-field-slide-toggle',
+          },
+          {
+            label: 'Icon',
+            route: 'form-field-icon',
           },
           {
             label: 'Search',
