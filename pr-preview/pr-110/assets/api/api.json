@@ -59,12 +59,14 @@
           "name": "minDecimals",
           "type": "number",
           "optional": true,
+          "description": "The fewest decimals an amount is padded to.",
           "default": "0"
         },
         {
           "name": "maxDecimals",
           "type": "number",
           "optional": true,
+          "description": "The most decimals an amount is formatted to.",
           "default": "2"
         },
         {
@@ -78,7 +80,7 @@
     "Lab900FormModuleSettings": {
       "name": "Lab900FormModuleSettings",
       "kind": "interface",
-      "source": "lib/src/lib/models/Lab900FormModuleSettings.ts#L32",
+      "source": "lib/src/lib/models/Lab900FormModuleSettings.ts#L38",
       "description": "The application-wide defaults of the library. Pass them to `provideLab900Forms()`.\n\n`provideLab900Forms()` is required: besides these settings it registers `LAB900_FORM_FIELD_TYPES`,\nthe map from `EditType` to component. Without it every field renders as `UnknownFieldComponent`.",
       "members": [
         {
@@ -105,6 +107,13 @@
           "optional": true,
           "description": "Sets `autocomplete=\"off\"` on the inputs, so the browser does not offer its own suggestions.",
           "default": "false"
+        },
+        {
+          "name": "devWarnings",
+          "type": "boolean",
+          "optional": true,
+          "description": "Warns in the console about the schema mistakes the library otherwise fails silently on: an\nunknown `editType`, a select whose object value never matches its options because `compareWith`\nis missing, a `readonlyDisplay` that returns something other than a primitive, and a schema that\nis rebuilt on every change detection run.\n\nDevelopment only, and each message is logged once. Set it to `false` when the warnings are noise.",
+          "default": "true"
         }
       ]
     },
@@ -126,7 +135,8 @@
       "members": [
         {
           "name": "value",
-          "type": "T"
+          "type": "T",
+          "description": "What the control holds once this option is picked. Set `compareWith` when it is an object."
         },
         {
           "name": "label",
@@ -144,18 +154,20 @@
     "Icon": {
       "name": "Icon",
       "kind": "interface",
-      "source": "lib/src/lib/models/form-field-base.ts#L22",
+      "source": "lib/src/lib/models/form-field-base.ts#L23",
       "description": "An icon. Use `name` for a Material Icons ligature, or `svgName` for an svg you registered in\n`MatIconRegistry` yourself.",
       "members": [
         {
           "name": "name",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "A Material Icons ligature, for example `'search'`. Needs the Material Icons font."
         },
         {
           "name": "svgName",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "The name of an svg registered in `MatIconRegistry`. Takes precedence over `name`."
         }
       ]
     },
@@ -163,42 +175,42 @@
       "name": "ReactiveOption",
       "kind": "type",
       "typeParameters": "T",
-      "source": "lib/src/lib/models/form-field-base.ts#L40",
+      "source": "lib/src/lib/models/form-field-base.ts#L43",
       "description": "An option that may change while the form is in use. It accepts three forms:\n\n- a plain value: `readonly: true`\n- a function of the raw value of the form group: `hide: data => data.type !== 'company'`\n- a signal: `required: this.vatRequired`\n\nThe function may also return a signal. Prefer a signal for state that changes over time: the field\nreads it inside a `computed`, so the view follows without a new schema object.\n\nInside a field component, resolve these with the `computeReactive*Option()` helpers, never by\nreading the raw option.",
       "type": "T | ((data?: any) => T | Signal<T>) | Signal<T>"
     },
     "ReactiveBooleanOption": {
       "name": "ReactiveBooleanOption",
       "kind": "type",
-      "source": "lib/src/lib/models/form-field-base.ts#L42",
+      "source": "lib/src/lib/models/form-field-base.ts#L45",
       "description": "A {@link ReactiveOption} that resolves to a boolean.",
       "type": "ReactiveOption<boolean>"
     },
     "ReactiveStringOption": {
       "name": "ReactiveStringOption",
       "kind": "type",
-      "source": "lib/src/lib/models/form-field-base.ts#L44",
+      "source": "lib/src/lib/models/form-field-base.ts#L47",
       "description": "A {@link ReactiveOption} that resolves to a string.",
       "type": "ReactiveOption<string>"
     },
     "ReactiveNumberOption": {
       "name": "ReactiveNumberOption",
       "kind": "type",
-      "source": "lib/src/lib/models/form-field-base.ts#L46",
+      "source": "lib/src/lib/models/form-field-base.ts#L49",
       "description": "A {@link ReactiveOption} that resolves to a number.",
       "type": "ReactiveOption<number>"
     },
     "ReadonlyDisplayValue": {
       "name": "ReadonlyDisplayValue",
       "kind": "type",
-      "source": "lib/src/lib/models/form-field-base.ts#L54",
+      "source": "lib/src/lib/models/form-field-base.ts#L57",
       "description": "What a readonly field is able to render. A readonly value ends up in the translate pipe, and that pipe\nonly guards on `!query || !query.length`: an array reaches `TranslateService.instant()`, which calls\n`key.split('.')` on every item and throws on the first item that is not a string. So `readonlyDisplay`\nhas to reduce the field to a single primitive; use {@link toReadonlyDisplayString } to render anything else.",
       "type": "string | number | boolean | null | undefined"
     },
     "ReadonlyDisplayFn": {
       "name": "ReadonlyDisplayFn",
       "kind": "type",
-      "source": "lib/src/lib/models/form-field-base.ts#L68",
+      "source": "lib/src/lib/models/form-field-base.ts#L71",
       "description": "Renders a readonly field. The result is treated as a translation key first, and rendered as is when no\ntranslation matches.\n\nThe result reaches the template through `[innerHTML]`, so basic formatting tags such as `<br>` work.\nAngular sanitizes the result and strips scripts and event handlers.\n\n**`data` is not the same value for every edit type.** Most fields pass the raw value of the whole form\ngroup, so read the attribute you need off it. `EditType.Select` passes the value of the field itself,\nbecause it resolves the option labels on its own. Check which one you are writing for; the parameter is\n`any`, so a mismatch fails at runtime and not at compile time.",
       "type": "(data?: any) => ReadonlyDisplayValue"
     },
@@ -206,7 +218,7 @@
       "name": "FormFieldBase",
       "kind": "interface",
       "typeParameters": "T extends string | number = string, O extends FormFieldBaseOptions = FormFieldBaseOptions",
-      "source": "lib/src/lib/models/form-field-base.ts#L74",
+      "source": "lib/src/lib/models/form-field-base.ts#L77",
       "description": "What every field of the `Lab900FormField` union has in common. A concrete field adds its\n`editType` and narrows `options` to its own options interface.",
       "members": [
         {
@@ -257,7 +269,7 @@
     "FormFieldBaseOptions": {
       "name": "FormFieldBaseOptions",
       "kind": "interface",
-      "source": "lib/src/lib/models/form-field-base.ts#L107",
+      "source": "lib/src/lib/models/form-field-base.ts#L110",
       "description": "The options every field accepts. Each edit type extends this with its own.\n\nDo not disable a control yourself to lock or hide a field: set `readonly` or `hide` and the\nlibrary disables it for you.",
       "members": [
         {
@@ -291,7 +303,8 @@
           "name": "placeholder",
           "type": "ReactiveStringOption",
           "optional": true,
-          "reactive": "signal"
+          "reactive": "signal",
+          "description": "The text shown in an empty field. A translation key."
         },
         {
           "name": "colspan",
@@ -490,24 +503,28 @@
     "Lab900File": {
       "name": "Lab900File",
       "kind": "interface",
-      "source": "lib/src/lib/models/Lab900File.ts#L1",
+      "source": "lib/src/lib/models/Lab900File.ts#L9",
+      "description": "A `File` with what `EditType.FilePreview` needs to render it: a name to show, and the image data\nonce it is loaded.\n\nA file the user just picked is a real `File` with `fileName` added. A file that already exists on\nthe server usually is not: build the object yourself with the fields below, and let\n`options.httpCallback` fetch the bytes when the preview needs them.",
       "extends": [
         "File"
       ],
       "members": [
         {
           "name": "fileName",
-          "type": "string"
+          "type": "string",
+          "description": "The name shown under the thumbnail. `File.name` is readonly, so the display name lives here."
         },
         {
           "name": "imageSrc",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "The URL the thumbnail loads from. Without it the field shows the overlay or nothing."
         },
         {
           "name": "imageBase64",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "The image as a data URL, which the preview dialog renders. `options.httpCallback` fills it in on\nfirst open, so a file behind an authenticated URL never has to be public."
         }
       ]
     },
@@ -522,12 +539,14 @@
         {
           "name": "customClass",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "An extra class on the row element, next to `lab900-form-row`."
         },
         {
           "name": "customTitleClass",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "An extra class on the row's title, next to `lab900-form-field-label lab900-form-row-label`."
         }
       ]
     },
@@ -535,7 +554,9 @@
       "name": "FormRow",
       "kind": "interface",
       "typeParameters": "T extends number | string = string",
-      "source": "lib/src/lib/components/form-row/form-row.model.ts#L9",
+      "source": "lib/src/lib/components/form-row/form-row.model.ts#L32",
+      "description": "A row of the 12 column grid, holding its children in `nestedFields`. It holds no value of its own.\n\n**The `attribute` decides the shape of the data.** With one, the row creates a nested `FormGroup`\nand its children live under that key; without one, the children are flattened into the parent\ngroup and the row is layout only. A dotted attribute on a field (`address.street`) creates the\nsame nesting without a row, so reach for a row when you want the grouping *and* the layout.\n\nIt renders its own readonly state, since a single readonly field cannot render children.",
+      "example": "{\n  editType: EditType.Row,\n  attribute: 'address', // -> { address: { street, city } }\n  title: 'label.address',\n  nestedFields: [\n    { attribute: 'street', title: 'label.street', editType: EditType.Input, options: { colspan: 8 } },\n    { attribute: 'city', title: 'label.city', editType: EditType.Input, options: { colspan: 4 } },\n  ],\n}",
       "extends": [
         "FormFieldBase<T, FormRowOptions>"
       ],
@@ -557,12 +578,14 @@
         {
           "name": "customClass",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "An extra class on the column element, next to `lab900-form-column`."
         },
         {
           "name": "customTitleClass",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "An extra class on the column's title, next to `lab900-form-field-label lab900-form-row-label`."
         }
       ]
     },
@@ -570,7 +593,9 @@
       "name": "FormColumn",
       "kind": "interface",
       "typeParameters": "T extends number | string = string",
-      "source": "lib/src/lib/components/form-column/form-column.model.ts#L9",
+      "source": "lib/src/lib/components/form-column/form-column.model.ts#L44",
+      "description": "A column that stacks its `nestedFields` vertically, where a `FormRow` lays them out across the 12\ncolumn grid. Use `options.colspan` to say how wide the column itself is. It holds no value of its\nown.\n\nLike a row, an `attribute` makes it a nested `FormGroup` and no attribute flattens the children\ninto the parent group. It renders its own readonly state.",
+      "example": "{\n  editType: EditType.Row,\n  nestedFields: [\n    {\n      editType: EditType.Column,\n      title: 'label.billing',\n      options: { colspan: 6 },\n      nestedFields: [\n        { attribute: 'billingStreet', title: 'label.street', editType: EditType.Input },\n        { attribute: 'billingCity', title: 'label.city', editType: EditType.Input },\n      ],\n    },\n    {\n      editType: EditType.Column,\n      title: 'label.shipping',\n      options: { colspan: 6 },\n      nestedFields: [\n        { attribute: 'shippingStreet', title: 'label.street', editType: EditType.Input },\n        { attribute: 'shippingCity', title: 'label.city', editType: EditType.Input },\n      ],\n    },\n  ],\n}",
       "extends": [
         "FormFieldBase<T, FormColumnOptions>"
       ],
@@ -584,7 +609,9 @@
     "AmountOptions": {
       "name": "AmountOptions",
       "kind": "interface",
-      "source": "lib/src/lib/components/form-fields/amount-field/amount-field.model.ts#L10",
+      "source": "lib/src/lib/components/form-fields/amount-field/amount-field.model.ts#L17",
+      "description": "The decimal settings on their own, for formatting an amount outside a form: `getAmountFormatter()`\nand the `amount` pipe take these. A field takes {@link AmountFieldInputOptions} instead.",
+      "example": "{{ order.total | amount: { minDecimals: 2, maxDecimals: 2 } }}",
       "extends": [
         "FormFieldBaseOptions"
       ],
@@ -592,19 +619,23 @@
         {
           "name": "maxDecimals",
           "type": "number",
-          "optional": true
+          "optional": true,
+          "description": "The most decimals to print.",
+          "default": "2"
         },
         {
           "name": "minDecimals",
           "type": "number",
-          "optional": true
+          "optional": true,
+          "description": "The fewest decimals to print, padding with zeroes.",
+          "default": "0"
         }
       ]
     },
     "AmountFieldInputOptions": {
       "name": "AmountFieldInputOptions",
       "kind": "interface",
-      "source": "lib/src/lib/components/form-fields/amount-field/amount-field.model.ts#L15",
+      "source": "lib/src/lib/components/form-fields/amount-field/amount-field.model.ts#L30",
       "extends": [
         "FormFieldBaseOptions"
       ],
@@ -612,41 +643,52 @@
         {
           "name": "autofocus",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Focuses the input once it renders.",
+          "default": "false"
         },
         {
           "name": "maxDecimals",
           "type": "ReactiveNumberOption",
           "optional": true,
-          "reactive": "signal"
+          "reactive": "signal",
+          "description": "The most decimals the value is formatted to. Overrides\n`provideLab900Forms({ amountField: { maxDecimals } })` for this field.",
+          "default": "2"
         },
         {
           "name": "minDecimals",
           "type": "ReactiveNumberOption",
           "optional": true,
-          "reactive": "signal"
+          "reactive": "signal",
+          "description": "The fewest decimals the value is padded to. Overrides\n`provideLab900Forms({ amountField: { minDecimals } })` for this field.",
+          "default": "0"
         },
         {
           "name": "suffix",
           "type": "ReactiveStringOption",
           "optional": true,
-          "reactive": "signal"
+          "reactive": "signal",
+          "description": "Text after the input, typically a currency. A translation key."
         },
         {
           "name": "prefix",
           "type": "ReactiveStringOption",
           "optional": true,
-          "reactive": "signal"
+          "reactive": "signal",
+          "description": "Text before the input, typically a currency. A translation key."
         },
         {
           "name": "align",
           "type": "'left' | 'right'",
-          "optional": true
+          "optional": true,
+          "description": "Which way the number is aligned. Amounts usually read better on the right.",
+          "default": "'left'"
         },
         {
           "name": "style",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "Inline CSS on the input element itself."
         }
       ]
     },
@@ -654,7 +696,9 @@
       "name": "FormFieldAmount",
       "kind": "interface",
       "typeParameters": "T extends string | number = string",
-      "source": "lib/src/lib/components/form-fields/amount-field/amount-field.model.ts#L25",
+      "source": "lib/src/lib/components/form-fields/amount-field/amount-field.model.ts#L75",
+      "description": "A number input that formats as the user types: thousand separators and a fixed number of decimals,\nin the locale of `provideLab900Forms({ amountField: { locale } })` or of the application.\n\nThe control value stays a `number`, so nothing has to be parsed back.",
+      "example": "{\n  attribute: 'price',\n  title: 'label.price',\n  editType: EditType.Amount,\n  options: { prefix: '€', minDecimals: 2, maxDecimals: 2, align: 'right' },\n}",
       "extends": [
         "FormFieldBase<T, AmountFieldInputOptions>"
       ],
@@ -666,7 +710,8 @@
         {
           "name": "icon",
           "type": "Icon & { position?: 'left' | 'right' }",
-          "optional": true
+          "optional": true,
+          "description": "An icon inside the form field, before or after the input."
         }
       ]
     },
@@ -683,31 +728,38 @@
           "name": "displayOptionFn",
           "type": "(option: ValueLabel<T>) => string",
           "optional": true,
+          "description": "Renders the label of an option.",
           "deprecated": "Labels are set in the autocompleteOptions"
         },
         {
           "name": "displayInputFn",
-          "type": "(option: T) => string"
+          "type": "(option: T) => string",
+          "description": "Turns the picked value into the text shown in the input. Required."
         },
         {
           "name": "disabledOptionFn",
           "type": "(option: T) => boolean",
-          "optional": true
+          "optional": true,
+          "description": "Shows an option but blocks it from being picked."
         },
         {
           "name": "autocompleteOptions",
           "type": "( searchTerm: string, currentControl: AbstractControl ) => ValueLabel<T>[] | Observable<ValueLabel<T>[]>",
-          "optional": true
+          "optional": true,
+          "description": "Loads the options for what the user has typed so far. May return an array or an `Observable`."
         },
         {
           "name": "debounceTime",
           "type": "number",
-          "optional": true
+          "optional": true,
+          "description": "How long typing pauses before the options are loaded again."
         },
         {
           "name": "requireMatch",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Adds a validator that rejects text the user typed but never picked from the list, so the control\ncannot hold a value that is not one of the options. It reports `requireMatch`.",
+          "default": "false"
         }
       ]
     },
@@ -715,7 +767,8 @@
       "name": "FormFieldAutocomplete",
       "kind": "interface",
       "typeParameters": "T, R extends string | number = string",
-      "source": "lib/src/lib/components/form-fields/autocomplete-field/autocomplete-field.model.ts#L22",
+      "source": "lib/src/lib/components/form-fields/autocomplete-field/autocomplete-field.model.ts#L36",
+      "deprecated": "Use `EditType.Select` with `options.search.enabled`. The select does the same thing and\nalso handles multiple values, paging and \"select all\".",
       "extends": [
         "FormFieldBase<R, FormFieldAutocompleteOptions<T>>"
       ],
@@ -730,7 +783,9 @@
       "name": "FormFieldAutocompleteMulti",
       "kind": "interface",
       "typeParameters": "T, R extends string | number",
-      "source": "lib/src/lib/components/form-fields/autocomplete-multiple-field/autocomplete-multiple-field.model.ts#L5",
+      "source": "lib/src/lib/components/form-fields/autocomplete-multiple-field/autocomplete-multiple-field.model.ts#L10",
+      "description": "The same options as `EditType.Autocomplete`, over an array value.",
+      "deprecated": "Use `EditType.Select` with `options.search.enabled` and `options.multiple`.",
       "extends": [
         "FormFieldBase<R, FormFieldAutocompleteOptions<T>>"
       ],
@@ -751,55 +806,67 @@
       "members": [
         {
           "name": "type",
-          "type": "Lab900ButtonType"
+          "type": "Lab900ButtonType",
+          "description": "Which `@lab900/ui` button to render: filled, stroked, icon-only and so on. Required."
         },
         {
           "name": "color",
           "type": "ThemePalette",
-          "optional": true
+          "optional": true,
+          "description": "The Material palette of the button.",
+          "default": "'accent'"
         },
         {
           "name": "onClick",
           "type": "(formGroup: UntypedFormGroup, currentScheme: Readonly<Lab900FormField>, event: Event) => any",
-          "optional": true
+          "optional": true,
+          "description": "Runs on click, with the group this button sits in, its own schema, and the DOM event. It is not\na submit: the form has no submit of its own, so do the work here."
         },
         {
           "name": "label",
           "type": "ReactiveStringOption",
           "optional": true,
-          "reactive": "signal"
+          "reactive": "signal",
+          "description": "The text on the button. A translation key."
         },
         {
           "name": "tooltip",
-          "type": "{ text: string; position?: TooltipPosition }",
-          "optional": true
+          "type": "{ /** A translation key. */ text: string; position?: TooltipPosition }",
+          "optional": true,
+          "description": "A tooltip, which is also the only description an icon-only button has."
         },
         {
           "name": "prefixIcon",
           "type": "ReactiveStringOption",
           "optional": true,
-          "reactive": "signal"
+          "reactive": "signal",
+          "description": "An icon before the label. A Material ligature, or an svg name when `svgIcon` is set."
         },
         {
           "name": "suffixIcon",
           "type": "ReactiveStringOption",
           "optional": true,
-          "reactive": "signal"
+          "reactive": "signal",
+          "description": "An icon after the label. A Material ligature, or an svg name when `svgIcon` is set."
         },
         {
           "name": "svgIcon",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Reads `prefixIcon` and `suffixIcon` as svg names registered in `MatIconRegistry` instead of as\nMaterial ligatures.",
+          "default": "false"
         },
         {
           "name": "containerClass",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "An extra class on the element around the button, for spacing it inside the layout."
         },
         {
           "name": "buttonId",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "The `id` of the button element, for a test hook or an anchor."
         }
       ]
     },
@@ -807,7 +874,9 @@
       "name": "FormFieldButton",
       "kind": "interface",
       "typeParameters": "T extends string | number = string",
-      "source": "lib/src/lib/components/form-fields/button-field/button-field.model.ts#L25",
+      "source": "lib/src/lib/components/form-fields/button-field/button-field.model.ts#L66",
+      "description": "A button inside the schema, so an action can sit between the fields instead of outside the form.\n\nIt holds no value: leave out `attribute`, or the group gains a control that stays empty. It keeps\nrendering when the field is readonly, so guard the action with `options.hide` or `options.readonly`\non its own terms.",
+      "example": "{\n  editType: EditType.Button,\n  options: {\n    type: 'stroked',\n    label: 'label.check-vat',\n    prefixIcon: 'search',\n    colspan: 3,\n    hide: data => !data?.vatNumber,\n    onClick: group => this.vatService.check(group.getRawValue().vatNumber),\n  },\n}",
       "extends": [
         "FormFieldBase<T, FormFieldButtonOptions>"
       ],
@@ -828,23 +897,30 @@
       "members": [
         {
           "name": "buttonOptions",
-          "type": "{ value: any; label?: string; icon?: Icon & { position?: 'left' | 'right' }; buttonClass?: string; tooltip?: { text: string; position?: TooltipPosition } }[]"
+          "type": "{ /** What the control holds once this button is picked. */ value: any; /** The text on the button. A translation key. Leave it out for an icon-only button. */ label?: string; icon?: Icon & { position?: 'left' | 'right' }; /** An extra class on this one button, to colour or size it apart from the others. */ buttonClass?: string; /** A tooltip, which is also the only description an icon-only button has. */ tooltip?: { /** A translation key. */ text: string; position?: TooltipPosition } }[]",
+          "description": "The buttons to pick from. Required: without them the field renders an empty row."
         },
         {
           "name": "color",
           "type": "ThemePalette",
-          "optional": true
+          "optional": true,
+          "description": "The Material palette of the toggle group.",
+          "default": "'accent'"
         },
         {
           "name": "hideSelection",
           "type": "ReactiveBooleanOption",
           "optional": true,
-          "reactive": "signal"
+          "reactive": "signal",
+          "description": "Hides the checkmark on the picked button, leaving only its highlight.",
+          "default": "false"
         },
         {
           "name": "deselectOnClick",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Clicking the picked button clears the control instead of leaving it as it is, so the field can\ngo back to having no answer.",
+          "default": "false"
         }
       ]
     },
@@ -852,7 +928,9 @@
       "name": "FormFieldButtonToggle",
       "kind": "interface",
       "typeParameters": "T extends string | number = string",
-      "source": "lib/src/lib/components/form-fields/button-toggle-field/button-toggle-field.model.ts#L22",
+      "source": "lib/src/lib/components/form-fields/button-toggle-field/button-toggle-field.model.ts#L60",
+      "description": "A row of connected buttons, one of which is picked: a compact alternative to a radio group for a\nhandful of short options. It keeps rendering its buttons when the field is readonly, rather than\ncollapsing into text.",
+      "example": "{\n  attribute: 'view',\n  title: 'label.view',\n  editType: EditType.ButtonToggle,\n  options: {\n    deselectOnClick: true,\n    buttonOptions: [\n      { value: 'list', icon: { name: 'view_list' }, tooltip: { text: 'label.list-view' } },\n      { value: 'grid', icon: { name: 'grid_view' }, tooltip: { text: 'label.grid-view' } },\n    ],\n  },\n}",
       "extends": [
         "FormFieldBase<T, FormFieldButtonToggleOptions>"
       ],
@@ -874,12 +952,16 @@
         {
           "name": "disabledIndeterminate",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Renders a `null` value as unchecked instead of indeterminate. By default a checkbox has three\nvisible states, because a control that was never answered holds `null` rather than `false`.",
+          "default": "false"
         },
         {
           "name": "color",
           "type": "ThemePalette",
-          "optional": true
+          "optional": true,
+          "description": "The Material palette of the checkbox.",
+          "default": "'accent'"
         }
       ]
     },
@@ -887,7 +969,9 @@
       "name": "CheckboxFieldModel",
       "kind": "interface",
       "typeParameters": "T extends string | number = string",
-      "source": "lib/src/lib/components/form-fields/checkbox-field/checkbox-field.model.ts#L10",
+      "source": "lib/src/lib/components/form-fields/checkbox-field/checkbox-field.model.ts#L33",
+      "description": "A single checkbox. The control value is `true`, `false`, or `null` while it has never been\nanswered - which renders as indeterminate unless `disabledIndeterminate` is set.\n\n`options.required` demands a truthy value, so it makes the checkbox one that has to be ticked.",
+      "example": "{\n  attribute: 'acceptsTerms',\n  title: 'label.accept-terms',\n  editType: EditType.Checkbox,\n  options: { required: true, disabledIndeterminate: true },\n}",
       "extends": [
         "FormFieldBase<T, FormFieldCheckboxOptions>"
       ],
@@ -902,7 +986,8 @@
       "name": "FormFieldDatePickerOptions",
       "kind": "interface",
       "typeParameters": "T = Date",
-      "source": "lib/src/lib/components/form-fields/date-field/date-field.model.ts#L5",
+      "source": "lib/src/lib/components/form-fields/date-field/date-field.model.ts#L9",
+      "description": "The options every date field shares. `T` is the date type of the application's `DateAdapter`:\n`Date` with `provideNativeDateAdapter()`, or a Luxon, Moment or date-fns type with theirs.",
       "extends": [
         "FormFieldBaseOptions"
       ],
@@ -910,17 +995,21 @@
         {
           "name": "startView",
           "type": "'month' | 'year' | 'multi-year'",
-          "optional": true
+          "optional": true,
+          "description": "Which panel the calendar opens on.",
+          "default": "'month'"
         },
         {
           "name": "maxDate",
           "type": "T",
-          "optional": true
+          "optional": true,
+          "description": "The latest date that can be picked. It also blocks a later date typed into the input."
         },
         {
           "name": "minDate",
           "type": "T",
-          "optional": true
+          "optional": true,
+          "description": "The earliest date that can be picked. It also blocks an earlier date typed into the input."
         },
         {
           "name": "dateFilter",
@@ -940,7 +1029,9 @@
       "name": "FormFieldDatePicker",
       "kind": "interface",
       "typeParameters": "T extends string | number = string, D = Date",
-      "source": "lib/src/lib/components/form-fields/date-field/date-field.model.ts#L19",
+      "source": "lib/src/lib/components/form-fields/date-field/date-field.model.ts#L41",
+      "description": "A date picker. The control value is whatever the application's `DateAdapter` produces, so the form\nneeds `provideNativeDateAdapter()` or another adapter.",
+      "example": "{\n  attribute: 'birthDate',\n  title: 'label.birth-date',\n  editType: EditType.Date,\n  options: { maxDate: new Date(), startView: 'multi-year' },\n}",
       "extends": [
         "FormFieldBase<T, FormFieldDatePickerOptions<D>>"
       ],
@@ -963,22 +1054,30 @@
         {
           "name": "startLabel",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "The placeholder of the start input. A translation key.",
+          "default": "'Start date'"
         },
         {
           "name": "endLabel",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "The placeholder of the end input. A translation key.",
+          "default": "'End date'"
         },
         {
           "name": "startKey",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "The name of the control that holds the start date inside the field's group.",
+          "default": "'start'"
         },
         {
           "name": "endKey",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "The name of the control that holds the end date inside the field's group.",
+          "default": "'end'"
         }
       ]
     },
@@ -986,7 +1085,9 @@
       "name": "FormFieldDateRange",
       "kind": "interface",
       "typeParameters": "T extends string | number = string, D = Date",
-      "source": "lib/src/lib/components/form-fields/date-range-field/date-range-field.model.ts#L12",
+      "source": "lib/src/lib/components/form-fields/date-range-field/date-range-field.model.ts#L46",
+      "description": "A start and an end date in one field. Unlike the other date fields it holds a **group** of two\ncontrols, not one value, so the data for it is an object:\n\n```ts\n{ holiday: { start: new Date('2026-07-01'), end: new Date('2026-07-15') } }\n```\n\nRename those two keys with `startKey` and `endKey` when the data already uses other names.",
+      "example": "{\n  attribute: 'holiday',\n  title: 'label.holiday',\n  editType: EditType.DateRange,\n  options: { minDate: new Date(), startKey: 'from', endKey: 'until' },\n}",
       "extends": [
         "FormFieldBase<T, FormFieldDateRangeOptions<D>>"
       ],
@@ -1016,17 +1117,22 @@
         {
           "name": "showSeconds",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Adds seconds to the time picker and to the default display format.",
+          "default": "false"
         },
         {
           "name": "defaultTime",
           "type": "[number, number, number]",
-          "optional": true
+          "optional": true,
+          "description": "The time a freshly picked date starts at, as `[hours, minutes, seconds]`. Midnight when unset."
         },
         {
           "name": "stepMinute",
           "type": "number",
-          "optional": true
+          "optional": true,
+          "description": "How many minutes one step of the minute picker moves.",
+          "default": "1"
         },
         {
           "name": "displayFormat",
@@ -1040,7 +1146,9 @@
       "name": "FormFieldDateTimePicker",
       "kind": "interface",
       "typeParameters": "T extends string | number = string, D = Date",
-      "source": "lib/src/lib/components/form-fields/date-time-field/date-time-field.model.ts#L27",
+      "source": "lib/src/lib/components/form-fields/date-time-field/date-time-field.model.ts#L48",
+      "description": "A date with a time, from `@ngx-mce/datetime-picker`. The control value is one date, with the time\nset on it.",
+      "example": "{\n  attribute: 'appointment',\n  title: 'label.appointment',\n  editType: EditType.DateTime,\n  options: { minDate: new Date(), stepMinute: 15, defaultTime: [9, 0, 0] },\n}",
       "extends": [
         "FormFieldBase<T, FormFieldDateTimePickerOptions<D>>"
       ],
@@ -1063,7 +1171,9 @@
         {
           "name": "startView",
           "type": "'year' | 'multi-year'",
-          "optional": true
+          "optional": true,
+          "description": "Which panel the calendar opens on. The month panel is not offered here: picking a month closes\nthe calendar.",
+          "default": "'multi-year'"
         }
       ]
     },
@@ -1071,7 +1181,9 @@
       "name": "FormFieldDateYearMonthPicker",
       "kind": "interface",
       "typeParameters": "T extends string | number = string, D = Date",
-      "source": "lib/src/lib/components/form-fields/date-year-month-field/date-year-month-field.model.ts#L9",
+      "source": "lib/src/lib/components/form-fields/date-year-month-field/date-year-month-field.model.ts#L26",
+      "description": "A picker that stops at the month: the calendar closes once a month is chosen and never shows days.\nThe control value is still a full date, on the first day of that month.",
+      "example": "{\n  attribute: 'expiresOn',\n  title: 'label.expires-on',\n  editType: EditType.DateYearMonth,\n  options: { minDate: new Date(), startView: 'year' },\n}",
       "extends": [
         "FormFieldBase<T, FormFieldDateYearMonthPickerOptions<D>>"
       ],
@@ -1092,22 +1204,29 @@
       "members": [
         {
           "name": "maxFiles",
-          "type": "number"
+          "type": "number",
+          "description": "How many files the field accepts. It also adds a validator, so more than this many files makes\nthe control invalid rather than dropping the extras. `1` renders the field as a single file\npicker; anything else, or nothing, allows a multiple selection."
         },
         {
           "name": "compact",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Renders the drop zone at a reduced height once a file has been picked, for a form where the field\nis not the main subject.",
+          "default": "false"
         },
         {
           "name": "dropFilesText",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "The instruction in the drop zone, which is also its accessible name. A translation key.",
+          "default": "'Drop Files'"
         },
         {
           "name": "dropFilesButton",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "The label of the button that opens the file picker. A translation key.",
+          "default": "'Upload Files'"
         }
       ]
     },
@@ -1115,7 +1234,9 @@
       "name": "FormFieldDragNDropFilePreview",
       "kind": "interface",
       "typeParameters": "T extends string | number = string",
-      "source": "lib/src/lib/components/form-fields/drag-n-drop-file-field/drag-n-drop-file-field.model.ts#L11",
+      "source": "lib/src/lib/components/form-fields/drag-n-drop-file-field/drag-n-drop-file-field.model.ts#L44",
+      "description": "A drop zone that takes files by drag and drop or through a file picker. The control value is a\n`File[]`; use `EditType.FilePreview` for files that are already stored and have a preview.\n\n`options.maxFiles` and `options.required` both become validators, so the form is invalid while the\nfile count is wrong.",
+      "example": "{\n  attribute: 'attachments',\n  title: 'label.attachments',\n  editType: EditType.DragNDrop,\n  options: { maxFiles: 3, required: true, dropFilesText: 'label.drop-files' },\n}",
       "extends": [
         "FormFieldBase<T, FormFieldDragNDropFileOptions>"
       ],
@@ -1137,41 +1258,52 @@
         {
           "name": "fileUploadButtonText",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "The label of the upload button. A translation key.",
+          "default": "'form.button.upload'"
         },
         {
           "name": "canEditFileMetaData",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Clicking a file opens `fileMetaDataConfig` in a dialog instead of the image preview, and adds a\nseparate preview icon next to the file name.",
+          "default": "false"
         },
         {
           "name": "fileMetaDataConfig",
           "type": "Lab900FormConfig",
-          "optional": true
+          "optional": true,
+          "description": "The schema of the metadata dialog. The file itself is the data, so the attributes are its keys."
         },
         {
           "name": "httpCallback",
           "type": "(image: Lab900File) => Observable<Blob | ArrayBuffer>",
-          "optional": true
+          "optional": true,
+          "description": "Fetches the bytes of a file that the browser cannot load on its own, typically because the URL\nneeds an Authorization header. The thumbnail and the preview both go through it."
         },
         {
           "name": "showOverlay",
-          "type": "boolean | ((data?: any) => boolean)"
+          "type": "boolean | ((data?: any) => boolean)",
+          "description": "Covers the thumbnail with `overlay` instead of the image. Use the function form to cover only\nsome of the files, for example the ones that are still being processed."
         },
         {
           "name": "multiple",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Allows more than one file. The control value is an array either way.",
+          "default": "false"
         },
         {
           "name": "accept",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "The `accept` attribute of the file input, for example `'image/*'` or `'.pdf,.docx'`."
         },
         {
           "name": "overlay",
-          "type": "{ backgroundColor: string; textColor: string; text: string }",
-          "optional": true
+          "type": "{ backgroundColor: string; textColor: string; /** A translation key. */ text: string }",
+          "optional": true,
+          "description": "What `showOverlay` puts over the thumbnail."
         }
       ]
     },
@@ -1179,7 +1311,9 @@
       "name": "FormFieldFilePreview",
       "kind": "interface",
       "typeParameters": "T extends string | number = string",
-      "source": "lib/src/lib/components/form-fields/file-preview-field/file-preview-field.model.ts#L22",
+      "source": "lib/src/lib/components/form-fields/file-preview-field/file-preview-field.model.ts#L70",
+      "description": "A list of files with a thumbnail each, an upload button, and a preview or metadata dialog per file.\nThe control value is a `Lab900File[]`.\n\nUse `EditType.DragNDrop` for files the user is about to upload, and this for files that already\nexist and have to be shown.\n\nIt renders its own readonly state, so a readonly field still shows the thumbnails rather than text.",
+      "example": "{\n  attribute: 'documents',\n  title: 'label.documents',\n  editType: EditType.FilePreview,\n  options: {\n    multiple: true,\n    accept: 'image/*',\n    showOverlay: file => !file.imageSrc,\n    overlay: { backgroundColor: '#eee', textColor: '#333', text: 'label.processing' },\n    httpCallback: file => this.fileService.download(file),\n  },\n}",
       "extends": [
         "FormFieldBase<T, FormFieldFilePreviewOptions>"
       ],
@@ -1202,13 +1336,15 @@
           "name": "icon",
           "type": "ReactiveOption<Icon>",
           "optional": true,
-          "reactive": "signal"
+          "reactive": "signal",
+          "description": "The icon to show. Reactive, so it may follow the form value or a signal."
         },
         {
           "name": "text",
           "type": "ReactiveOption<string>",
           "optional": true,
-          "reactive": "signal"
+          "reactive": "signal",
+          "description": "The text next to the icon. A translation key. Reactive, like `icon`."
         }
       ]
     },
@@ -1216,7 +1352,9 @@
       "name": "FormFieldIcon",
       "kind": "interface",
       "typeParameters": "T extends string | number = string",
-      "source": "lib/src/lib/components/form-fields/icon-field/icon-field.model.ts#L9",
+      "source": "lib/src/lib/components/form-fields/icon-field/icon-field.model.ts#L27",
+      "description": "An icon with a line of text. It reads the form and renders; it holds no value and takes no input,\nso use it for a status or a hint inside the layout rather than for something to fill in.\n\nAn `attribute` is not needed. Give it one only when the icon depends on that control's own value.",
+      "example": "{\n  editType: EditType.Icon,\n  options: {\n    colspan: 12,\n    icon: data => (data?.status === 'blocked' ? { name: 'block' } : { name: 'check_circle' }),\n    text: data => (data?.status === 'blocked' ? 'label.account-blocked' : 'label.account-active'),\n  },\n}",
       "extends": [
         "FormFieldBase<T, FormFieldIconOptions>"
       ],
@@ -1230,27 +1368,30 @@
     "FieldMask": {
       "name": "FieldMask",
       "kind": "interface",
-      "source": "lib/src/lib/components/form-fields/input-field/input-field.model.ts#L5",
+      "source": "lib/src/lib/components/form-fields/input-field/input-field.model.ts#L12",
+      "description": "An `ngx-mask` configuration. Only `mask` is required; the rest of `NgxMaskConfig` overrides the\napplication defaults from `provideLab900Forms({ fieldMask })` for this one field.",
+      "example": "fieldMask: { mask: '000/0000/0000' } // a Belgian company number",
       "extends": [
         "Partial<NgxMaskConfig>"
       ],
       "members": [
         {
           "name": "mask",
-          "type": "string"
+          "type": "string",
+          "description": "The mask pattern, for example `'000.000-00'`. See the ngx-mask documentation for the tokens."
         }
       ]
     },
     "InputType": {
       "name": "InputType",
       "kind": "type",
-      "source": "lib/src/lib/components/form-fields/input-field/input-field.model.ts#L12",
+      "source": "lib/src/lib/components/form-fields/input-field/input-field.model.ts#L20",
       "type": "| 'color' | 'date' | 'datetime-local' | 'email' | 'month' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'time' | 'url' | 'week'"
     },
     "FormFieldInputOptions": {
       "name": "FormFieldInputOptions",
       "kind": "interface",
-      "source": "lib/src/lib/components/form-fields/input-field/input-field.model.ts#L27",
+      "source": "lib/src/lib/components/form-fields/input-field/input-field.model.ts#L35",
       "extends": [
         "FormFieldBaseOptions"
       ],
@@ -1258,42 +1399,53 @@
         {
           "name": "type",
           "type": "InputType",
-          "optional": true
+          "optional": true,
+          "description": "The `type` of the native input. `'number'` also makes the control validate as a number.",
+          "default": "'text'"
         },
         {
           "name": "autofocus",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Focuses the input once it renders. With more than one on a page the last one wins.",
+          "default": "false"
         },
         {
           "name": "suffix",
           "type": "string | ((data?: any) => string)",
-          "optional": true
+          "optional": true,
+          "description": "Text after the input, inside the form field. A translation key, or a function of the form value."
         },
         {
           "name": "prefix",
           "type": "string | ((data?: any) => string)",
-          "optional": true
+          "optional": true,
+          "description": "Text before the input, inside the form field. A translation key, or a function of the form value."
         },
         {
           "name": "align",
           "type": "'left' | 'right'",
-          "optional": true
+          "optional": true,
+          "description": "Which way the text in the input is aligned.",
+          "default": "'left'"
         },
         {
           "name": "fieldMask",
           "type": "FieldMask",
-          "optional": true
+          "optional": true,
+          "description": "Formats what is typed through `ngx-mask`. Requires `provideNgxMask()` in the application."
         },
         {
           "name": "showLengthIndicator",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Shows a character counter under the field. It needs a `maxLength` to count against. The\napplication-wide default is `provideLab900Forms({ formField: { showLengthIndicator } })`; this\noption turns it on for one field."
         },
         {
           "name": "style",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "Inline CSS on the input element itself."
         }
       ]
     },
@@ -1301,7 +1453,9 @@
       "name": "FormFieldInput",
       "kind": "interface",
       "typeParameters": "T extends string | number = string",
-      "source": "lib/src/lib/components/form-fields/input-field/input-field.model.ts#L38",
+      "source": "lib/src/lib/components/form-fields/input-field/input-field.model.ts#L80",
+      "description": "A single line text input, the default field type.",
+      "example": "{\n  attribute: 'email',\n  title: 'label.email',\n  editType: EditType.Input,\n  validators: [Validators.email],\n  errorMessages: { email: 'label.email-error' },\n  options: { type: 'email', colspan: 6, required: true },\n}",
       "extends": [
         "FormFieldBase<T, FormFieldInputOptions>"
       ],
@@ -1313,14 +1467,16 @@
         {
           "name": "icon",
           "type": "Icon & { position?: 'left' | 'right' }",
-          "optional": true
+          "optional": true,
+          "description": "An icon inside the form field, before or after the input."
         }
       ]
     },
     "FormFieldMultiLangOptions": {
       "name": "FormFieldMultiLangOptions",
       "kind": "interface",
-      "source": "lib/src/lib/components/form-fields/multi-lang-input/multi-lang-input-field.model.ts#L6",
+      "source": "lib/src/lib/components/form-fields/multi-lang-input/multi-lang-input-field.model.ts#L7",
+      "description": "Every option of {@link FormFieldInputOptions}, plus the ones for the language switch.",
       "extends": [
         "FormFieldInputOptions"
       ],
@@ -1328,22 +1484,30 @@
         {
           "name": "buttonColor",
           "type": "ThemePalette",
-          "optional": true
+          "optional": true,
+          "description": "The Material palette of the translate button.",
+          "default": "'accent'"
         },
         {
           "name": "translateLabel",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "The label of the button that opens an input per language. A translation key.",
+          "default": "'Translate'"
         },
         {
           "name": "stopTranslateLabel",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "The label of the button that closes them again. A translation key.",
+          "default": "'Stop translating'"
         },
         {
           "name": "useTextAreaField",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Renders a textarea per language instead of a single line input.",
+          "default": "false"
         }
       ]
     },
@@ -1351,7 +1515,9 @@
       "name": "FormFieldMultiLang",
       "kind": "interface",
       "typeParameters": "T extends string | number = string",
-      "source": "lib/src/lib/components/form-fields/multi-lang-input/multi-lang-input-field.model.ts#L13",
+      "source": "lib/src/lib/components/form-fields/multi-lang-input/multi-lang-input-field.model.ts#L50",
+      "description": "One value per language. The control value is an object keyed by language code:\n\n```ts\n{ title: { en: 'Welcome', nl: 'Welkom' } }\n```\n\nThe field edits the language in the `language` input of `<lab900-form>` and offers the ones in\n`availableLanguages`; the translate button opens an input for every language at once.\n\nIt renders its own readonly state, so a readonly field keeps showing one value per language\ninstead of collapsing an object into text.",
+      "example": "<lab900-form [schema]=\"schema\" [(data)]=\"page\" language=\"en\"\n             [availableLanguages]=\"[{ value: 'en', label: 'English' }, { value: 'nl', label: 'Nederlands' }]\" />\n\n// and in the schema:\n{ attribute: 'title', title: 'label.title', editType: EditType.MultiLangInput, options: { required: true } }",
       "extends": [
         "FormFieldBase<T, FormFieldMultiLangOptions>"
       ],
@@ -1373,22 +1539,28 @@
         {
           "name": "autofocus",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Focuses the input once it renders.",
+          "default": "false"
         },
         {
           "name": "align",
           "type": "'left' | 'right'",
-          "optional": true
+          "optional": true,
+          "description": "Which way the text in the input is aligned.",
+          "default": "'left'"
         },
         {
           "name": "style",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "Inline CSS on the input element itself."
         },
         {
           "name": "togglePasswordVisibility",
-          "type": "{ disabled: boolean; passwordVisibleIcon?: Icon; passwordHiddenIcon?: Icon }",
-          "optional": true
+          "type": "{ /** Hides the toggle, so the value can never be read back. */ disabled: boolean; /** * The icon shown while the password is readable, which switches back to hidden. * @default { name: 'visibility_off' } */ passwordVisibleIcon?: Icon; /** * The icon shown while the password is masked, which reveals it. * @default { name: 'visibility' } */ passwordHiddenIcon?: Icon }",
+          "optional": true,
+          "description": "The eye icon that switches the input between `password` and `text`. Shown unless `disabled`."
         }
       ]
     },
@@ -1396,7 +1568,9 @@
       "name": "FormFieldPassword",
       "kind": "interface",
       "typeParameters": "T extends string | number = string",
-      "source": "lib/src/lib/components/form-fields/password-field/password-field.model.ts#L15",
+      "source": "lib/src/lib/components/form-fields/password-field/password-field.model.ts#L47",
+      "description": "A masked password input with a toggle that reveals the value.\n\nNothing here validates the strength of a password: add `validators` or `options.pattern` for that.",
+      "example": "{\n  attribute: 'password',\n  title: 'label.password',\n  editType: EditType.Password,\n  options: { required: true, minLength: 12 },\n}",
       "extends": [
         "FormFieldBase<T, FormFieldPasswordOptions>"
       ],
@@ -1408,7 +1582,8 @@
         {
           "name": "icon",
           "type": "Icon & { position?: 'left' | 'right' }",
-          "optional": true
+          "optional": true,
+          "description": "An icon inside the form field, before or after the input."
         }
       ]
     },
@@ -1422,12 +1597,15 @@
       "members": [
         {
           "name": "radioOptions",
-          "type": "ValueLabel[]"
+          "type": "ValueLabel[]",
+          "description": "The options to pick from. Required: without them the group renders empty."
         },
         {
           "name": "color",
           "type": "ThemePalette",
-          "optional": true
+          "optional": true,
+          "description": "The Material palette of the radio buttons.",
+          "default": "'accent'"
         }
       ]
     },
@@ -1435,7 +1613,9 @@
       "name": "FormFieldRadioButtons",
       "kind": "interface",
       "typeParameters": "T extends string | number = string",
-      "source": "lib/src/lib/components/form-fields/radio-buttons-field/radio-buttons-field.model.ts#L10",
+      "source": "lib/src/lib/components/form-fields/radio-buttons-field/radio-buttons-field.model.ts#L37",
+      "description": "A radio group: every option is visible at once and exactly one can be picked. Use\n`EditType.Select` when the list is long, and `EditType.ButtonToggle` for a compact row.\n\nThe options are a plain array, so they cannot be loaded from a server. Use a condition's\n`conditionalOptions`, or an `EditType.Select`, when they depend on something else.",
+      "example": "{\n  attribute: 'shippingMethod',\n  title: 'label.shipping',\n  editType: EditType.RadioButtons,\n  options: {\n    required: true,\n    radioOptions: [\n      { value: 'standard', label: 'label.standard' },\n      { value: 'express', label: 'label.express' },\n      { value: 'pickup', label: 'label.pickup', disabled: true },\n    ],\n  },\n}",
       "extends": [
         "FormFieldBase<T, FormFieldRadioButtonsOptions>"
       ],
@@ -1457,27 +1637,36 @@
         {
           "name": "fromLabel",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "The label of the lower bound. A translation key.",
+          "default": "'From'"
         },
         {
           "name": "toLabel",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "The label of the upper bound. A translation key.",
+          "default": "'To'"
         },
         {
           "name": "enabledInputs",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "No effect: nothing reads this option. The number inputs next to the slider are always rendered.",
+          "deprecated": true
         },
         {
           "name": "steps",
           "type": "number",
-          "optional": true
+          "optional": true,
+          "description": "How far one step of the slider moves. Continuous when it is not set."
         },
         {
           "name": "format",
           "type": "'K-M' | 'DEFAULT'",
-          "optional": true
+          "optional": true,
+          "description": "How the bounds are printed. `'K-M'` shortens thousands to `k` and millions to `m`, and reads them\nback, so `12 k` is 12000.",
+          "default": "'DEFAULT'"
         }
       ]
     },
@@ -1485,7 +1674,9 @@
       "name": "FormFieldRangeSlider",
       "kind": "interface",
       "typeParameters": "T extends string | number = string",
-      "source": "lib/src/lib/components/form-fields/range-slider-field/range-slider-field.model.ts#L12",
+      "source": "lib/src/lib/components/form-fields/range-slider-field/range-slider-field.model.ts#L45",
+      "description": "A slider with a lower and an upper bound. The control value is a `[from, to]` tuple, and it starts\nat `[min, max]` when the data holds nothing.\n\n`options.min` and `options.max` are the ends of the slider here, not only validators, and they\ndefault to 0 and 100.",
+      "example": "{\n  attribute: 'priceRange',\n  title: 'label.price-range',\n  editType: EditType.RangeSlider,\n  options: { min: 0, max: 1000000, steps: 1000, format: 'K-M' },\n}",
       "extends": [
         "FormFieldBase<T, FormFieldRangeSliderOptions>"
       ],
@@ -1507,37 +1698,50 @@
         {
           "name": "fixedList",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Renders the rows without the add, remove and reorder buttons, so the number of rows is whatever\nthe data holds. The controls stay editable; use `readonly` to lock the values too.",
+          "default": "false"
         },
         {
           "name": "removeAll",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Allows the last rows to be removed, down to an empty array. Without it the remove button stops at\n`minRows`.",
+          "default": "false"
         },
         {
           "name": "addLabel",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "The label of the add button. A translation key.",
+          "default": "'Add new'"
         },
         {
           "name": "minRows",
           "type": "number",
-          "optional": true
+          "optional": true,
+          "description": "The number of rows the array starts with and never drops below. `patchValues()` grows the array\nback to it when the data holds fewer rows.",
+          "default": "1"
         },
         {
           "name": "maxRows",
           "type": "number",
-          "optional": true
+          "optional": true,
+          "description": "Hides the add button once the array holds this many rows. Unlimited when it is not set."
         },
         {
           "name": "buttonColor",
           "type": "ThemePalette",
-          "optional": true
+          "optional": true,
+          "description": "The Material palette of the add, remove and reorder buttons.",
+          "default": "'accent'"
         },
         {
           "name": "enableReorder",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Shows the move up and move down buttons on every row.",
+          "default": "false"
         }
       ]
     },
@@ -1545,7 +1749,9 @@
       "name": "FormFieldRepeater",
       "kind": "interface",
       "typeParameters": "T extends string | number = string",
-      "source": "lib/src/lib/components/form-fields/repeater-field/repeater-field.model.ts#L15",
+      "source": "lib/src/lib/components/form-fields/repeater-field/repeater-field.model.ts#L62",
+      "description": "A group of fields repeated over an `UntypedFormArray`. `nestedFields` is the schema of one row, and\nthe control value is an array of objects.\n\n`patchValues()` on `<lab900-form>` grows and shrinks the array to match the data; `setValues()`\nrebuilds it instead.",
+      "example": "{\n  attribute: 'contacts',\n  title: 'label.contacts',\n  editType: EditType.Repeater,\n  options: { minRows: 1, maxRows: 5, addLabel: 'label.add-contact', enableReorder: true },\n  nestedFields: [\n    { attribute: 'name', title: 'label.name', editType: EditType.Input, options: { colspan: 8 } },\n    { attribute: 'email', title: 'label.email', editType: EditType.Input, options: { colspan: 4 } },\n  ],\n}",
       "extends": [
         "FormFieldBase<T, FormFieldRepeaterOptions>"
       ],
@@ -1567,26 +1773,33 @@
       "members": [
         {
           "name": "labelFormatter",
-          "type": "(option: T) => string"
+          "type": "(option: T) => string",
+          "description": "Turns the found object into the text shown in the input. Required."
         },
         {
           "name": "searchFn",
-          "type": "(searchQuery: string) => Observable<T | null>"
+          "type": "(searchQuery: string) => Observable<T | null>",
+          "description": "Looks the typed text up and returns the one match, or `null` when there is none. Required.\nEmitting `null` clears the control and reveals the \"add new\" button."
         },
         {
           "name": "debounceTime",
           "type": "number",
-          "optional": true
+          "optional": true,
+          "description": "How long typing pauses before the search runs.",
+          "default": "500"
         },
         {
           "name": "notFoundLabel",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "The hint shown when the search came back empty. A translation key."
         },
         {
           "name": "addNewLabel",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "The label of the button offered when nothing was found. A translation key.",
+          "default": "'form.field.add_new'"
         },
         {
           "name": "addNewFn",
@@ -1597,22 +1810,29 @@
         {
           "name": "disableSearchOnInput",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Stops the search from running while the user types, so only a paste or a blur triggers it. Use it\nwhen the lookup is expensive and the input is a full code rather than a prefix.",
+          "default": "false"
         },
         {
           "name": "addNewBtnColor",
           "type": "ThemePalette",
-          "optional": true
+          "optional": true,
+          "description": "The Material palette of the \"add new\" button.",
+          "default": "'primary'"
         },
         {
           "name": "hideClearButton",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Hides the clear button on the right of the field.",
+          "default": "false"
         },
         {
           "name": "style",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "Inline CSS on the input element itself."
         }
       ]
     },
@@ -1620,7 +1840,9 @@
       "name": "FormFieldSearch",
       "kind": "interface",
       "typeParameters": "T, R extends string | number = string",
-      "source": "lib/src/lib/components/form-fields/search-field/field-search.model.ts#L23",
+      "source": "lib/src/lib/components/form-fields/search-field/field-search.model.ts#L72",
+      "description": "An input that looks its own value up: the user types, `searchFn` resolves one object, and the\ncontrol holds that object rather than the text.\n\nIt is a lookup for something identified exactly - an order number, a VAT number, a barcode - not a\nlist to browse. Use `EditType.Select` with `search.enabled` when the user should see the options.",
+      "example": "{\n  attribute: 'company',\n  title: 'label.vat-number',\n  editType: EditType.Search,\n  options: {\n    searchFn: query => this.companyService.findByVat(query),\n    labelFormatter: company => `${company.name} (${company.vatNumber})`,\n    debounceTime: 300,\n    addNewLabel: 'label.create-company',\n    addNewFn: query => this.companyService.create(query),\n  },\n}",
       "extends": [
         "FormFieldBase<R, FormFieldSearchOptions<T>>"
       ],
@@ -1634,22 +1856,26 @@
     "FormFieldSelectOptionsFilter": {
       "name": "FormFieldSelectOptionsFilter",
       "kind": "interface",
-      "source": "lib/src/lib/components/form-fields/select-field/field-select.model.ts#L8",
+      "source": "lib/src/lib/components/form-fields/select-field/field-select.model.ts#L9",
+      "description": "What the select asks its `selectOptions` function for. Every field is filled in only when it applies.",
       "members": [
         {
           "name": "page",
           "type": "number",
-          "optional": true
+          "optional": true,
+          "description": "The page to load, counted from 0. Only sent when `infiniteScroll.enabled` is set."
         },
         {
           "name": "searchQuery",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "What the user typed in the search box. Only sent when `search.enabled` is set."
         },
         {
           "name": "getAll",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Set when \"select all\" needs the whole list, not only the page that is loaded."
         }
       ]
     },
@@ -1657,14 +1883,15 @@
       "name": "FormFieldSelectOptionsFn",
       "kind": "type",
       "typeParameters": "T",
-      "source": "lib/src/lib/components/form-fields/select-field/field-select.model.ts#L14",
+      "source": "lib/src/lib/components/form-fields/select-field/field-select.model.ts#L22",
+      "description": "Loads the options of a select. It may return an array or an `Observable`, and it is called again\nwhenever the filter changes, so the search and the paging can be answered by the server.",
       "type": "( filter?: FormFieldSelectOptionsFilter, fieldControl?: AbstractControl, schema?: FormFieldSelect<T> ) => ValueLabel<T>[] | Observable<ValueLabel<T>[]>"
     },
     "FormFieldSelectOptions": {
       "name": "FormFieldSelectOptions",
       "kind": "interface",
       "typeParameters": "T",
-      "source": "lib/src/lib/components/form-fields/select-field/field-select.model.ts#L20",
+      "source": "lib/src/lib/components/form-fields/select-field/field-select.model.ts#L28",
       "extends": [
         "FormFieldBaseOptions"
       ],
@@ -1672,38 +1899,49 @@
         {
           "name": "multiple",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Lets more than one option be picked. The control value becomes an array.",
+          "default": "false"
         },
         {
           "name": "showChipValue",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Renders the picked options as removable chips instead of comma separated text. Needs `multiple`.",
+          "default": "false"
         },
         {
           "name": "selectOptions",
           "type": "FormFieldSelectOptionsFn<T> | ValueLabel<T>[] | Observable<ValueLabel<T>[]>",
-          "optional": true
+          "optional": true,
+          "description": "The options to pick from: an array, an `Observable`, or a function of the current filter. Use the\nfunction form when the server does the searching or the paging."
         },
         {
           "name": "compareWith",
           "type": "(o1: T, o2: T) => boolean",
-          "optional": true
+          "optional": true,
+          "description": "How a value is matched against an option. **Set this whenever the values are objects**: the\ndefault comparison is `===`, so an object that came from the server never equals the one in the\noptions and the select renders empty although the control holds a value.",
+          "example": "compareWith: (a, b) => a?.id === b?.id"
         },
         {
           "name": "displayOptionFn",
           "type": "(option: ValueLabel<T>) => string",
           "optional": true,
+          "description": "Renders the label of an option.",
           "deprecated": "Labels are set in the selectOptions ValueLabels"
         },
         {
           "name": "customTriggerFn",
           "type": "(value: T | undefined) => string",
-          "optional": true
+          "optional": true,
+          "description": "Renders the closed select yourself, instead of the label of the picked option."
         },
         {
           "name": "autoselectOnlyOption",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Picks the only option on its own when the list holds exactly one.",
+          "default": "false"
         },
         {
           "name": "noOptionsIndicator",
@@ -1726,34 +1964,39 @@
         },
         {
           "name": "search",
-          "type": "{ enabled: boolean; placeholder?: string; /** * Label to use to display a not found message based on given search message */ notFoundLabel?: string; addNewLabel?: string; /** * Function to handle the new item creation, can be anything. * Use the select argument to update the select after creation */ addNewFn?: (searchQuery: string, select: SelectFieldComponent<T>) => void; addNewBtnColor?: ThemePalette; /** * Clear the search when the select closes * @default false */ clearOnClose?: boolean; /** * The threshold time before firing the search event */ debounceTime?: number }",
-          "optional": true
+          "type": "{ enabled: boolean; /** A translation key. */ placeholder?: string; /** * Label to use to display a not found message based on given search message */ notFoundLabel?: string; /** The label of the \"add new\" button shown when the search finds nothing. A translation key. */ addNewLabel?: string; /** * Function to handle the new item creation, can be anything. * Use the select argument to update the select after creation */ addNewFn?: (searchQuery: string, select: SelectFieldComponent<T>) => void; addNewBtnColor?: ThemePalette; /** * Clear the search when the select closes * @default false */ clearOnClose?: boolean; /** * The threshold time before firing the search event */ debounceTime?: number }",
+          "optional": true,
+          "description": "A search box at the top of the option list."
         },
         {
           "name": "infiniteScroll",
           "type": "{ enabled: boolean; /** * The threshold distance from the bottom of the options list to call the infiniteScroll output event when scrolled. * The threshold value can be either in percent, or in pixels. * For example, use the value of 10% for the infiniteScroll output event to get called when the user has needs 10% to reach the bottom. */ threshold?: string; /** * The threshold time before firing the infiniteScroll event */ debounceTime?: number }",
-          "optional": true
+          "optional": true,
+          "description": "Loads the options page by page as the user scrolls. The pages come from `selectOptions` as a function."
         },
         {
           "name": "clearFieldButton",
-          "type": "{ enabled: boolean | ((data?: T) => boolean); click?: (fieldControl: AbstractControl, clickEvent: Event) => void }",
+          "type": "{ enabled: boolean | ((data?: T) => boolean); /** Runs instead of clearing the control, when clearing means more than emptying this one field. */ click?: (fieldControl: AbstractControl, clickEvent: Event) => void }",
           "optional": true,
           "description": "Shows a clear button on the right of the field"
         },
         {
           "name": "selectAll",
-          "type": "{ enabled: boolean; label?: string; disabled?: boolean }",
-          "optional": true
+          "type": "{ enabled: boolean; /** * A translation key. * @default 'forms.select-field.selectAllLabel' */ label?: string; disabled?: boolean }",
+          "optional": true,
+          "description": "A \"select all\" row above the options. Needs `multiple`."
         },
         {
           "name": "panelWidth",
           "type": "string | number | null",
-          "optional": true
+          "optional": true,
+          "description": "The width of the option panel. Defaults to the width of the field."
         },
         {
           "name": "panelClass",
           "type": "string | string[]",
-          "optional": true
+          "optional": true,
+          "description": "Extra classes on the option panel, for styling options from outside the field."
         },
         {
           "name": "fetchOptionsOnFocus",
@@ -1767,7 +2010,9 @@
       "name": "FormFieldSelect",
       "kind": "interface",
       "typeParameters": "T, R extends string | number = string",
-      "source": "lib/src/lib/components/form-fields/select-field/field-select.model.ts#L105",
+      "source": "lib/src/lib/components/form-fields/select-field/field-select.model.ts#L171",
+      "description": "A dropdown, optionally searchable, multi-select and paged. It replaces the deprecated\n`EditType.Autocomplete`: set `search.enabled` for the same behaviour.\n\nWith object values always set `compareWith`, or the picked value matches no option and the field\nlooks empty.",
+      "example": "{\n  attribute: 'country',\n  title: 'label.country',\n  editType: EditType.Select,\n  options: {\n    selectOptions: filter => this.countryService.search(filter?.searchQuery),\n    search: { enabled: true, debounceTime: 300 },\n    compareWith: (a, b) => a?.id === b?.id,\n    clearFieldButton: { enabled: true },\n  },\n}",
       "extends": [
         "FormFieldBase<R, FormFieldSelectOptions<T>>"
       ],
@@ -1789,17 +2034,22 @@
         {
           "name": "label",
           "type": "string",
-          "optional": true
+          "optional": true,
+          "description": "The text next to the toggle. A translation key. Falls back to the `title` of the field."
         },
         {
           "name": "labelPosition",
           "type": "MatSlideToggle['labelPosition']",
-          "optional": true
+          "optional": true,
+          "description": "Which side of the toggle the label sits on.",
+          "default": "'after'"
         },
         {
           "name": "color",
           "type": "ThemePalette",
-          "optional": true
+          "optional": true,
+          "description": "The Material palette of the toggle.",
+          "default": "'accent'"
         }
       ]
     },
@@ -1807,7 +2057,9 @@
       "name": "FormFieldSlideToggle",
       "kind": "interface",
       "typeParameters": "T extends string | number = string",
-      "source": "lib/src/lib/components/form-fields/slide-toggle-field/slide-toggle-field.model.ts#L12",
+      "source": "lib/src/lib/components/form-fields/slide-toggle-field/slide-toggle-field.model.ts#L35",
+      "description": "An on/off switch. Use it for a setting that takes effect immediately in the reader's mind; a\ncheckbox reads better for something that is confirmed when the form is submitted.\n\nIt keeps rendering the toggle when the field is readonly instead of collapsing into text, so the\nstate stays recognisable.",
+      "example": "{\n  attribute: 'notificationsEnabled',\n  editType: EditType.SlideToggle,\n  options: { label: 'label.enable-notifications', labelPosition: 'before' },\n}",
       "extends": [
         "FormFieldBase<T, FormFieldSlideToggleOptions>"
       ],
@@ -1829,7 +2081,8 @@
         {
           "name": "showLengthIndicator",
           "type": "boolean",
-          "optional": true
+          "optional": true,
+          "description": "Shows a character counter under the field. It needs a `maxLength` to count against. The\napplication-wide default is `provideLab900Forms({ formField: { showLengthIndicator } })`; this\noption turns it on for one field."
         }
       ]
     },
@@ -1837,7 +2090,9 @@
       "name": "FormFieldTextarea",
       "kind": "interface",
       "typeParameters": "T extends string | number = string",
-      "source": "lib/src/lib/components/form-fields/textarea-field/textarea-field.model.ts#L8",
+      "source": "lib/src/lib/components/form-fields/textarea-field/textarea-field.model.ts#L24",
+      "description": "A multi line text input. The textarea grows with its content.",
+      "example": "{\n  attribute: 'description',\n  title: 'label.description',\n  editType: EditType.TextArea,\n  options: { maxLength: 500, showLengthIndicator: true, colspan: 12 },\n}",
       "extends": [
         "FormFieldBase<T, FormFieldTextareaOptions>"
       ],
@@ -1859,7 +2114,8 @@
         {
           "name": "editorConfig",
           "type": "AngularEditorConfig",
-          "optional": true
+          "optional": true,
+          "description": "The `@kolkov/angular-editor` configuration: toolbar buttons, height, fonts, upload handler. The\nfield fills in `editable` and `placeholder` from the schema; everything else is passed through."
         }
       ]
     },
@@ -1867,7 +2123,9 @@
       "name": "WysiwgFieldModel",
       "kind": "interface",
       "typeParameters": "T extends string | number = string",
-      "source": "lib/src/lib/components/form-fields/wysiwyg-field/wysiwg-field.model.ts#L9",
+      "source": "lib/src/lib/components/form-fields/wysiwyg-field/wysiwg-field.model.ts#L31",
+      "description": "A rich text editor from `@kolkov/angular-editor`. The control value is an HTML string, so treat it\nas untrusted on the way back in and sanitize before rendering it anywhere else.\n\nThe editor's icons are served from the application, not from the library: add the\n`@kolkov/angular-editor` icon glob to the `assets` of `angular.json` or the toolbar renders blank.",
+      "example": "{\n  attribute: 'body',\n  title: 'label.body',\n  editType: EditType.Wysiwyg,\n  options: {\n    colspan: 12,\n    editorConfig: { minHeight: '20rem', toolbarHiddenButtons: [['insertImage', 'insertVideo']] },\n  },\n}",
       "extends": [
         "FormFieldBase<T, FormFieldWysiwgOptions>"
       ],
@@ -1882,7 +2140,7 @@
       "name": "SelectFieldComponent",
       "kind": "component",
       "typeParameters": "T",
-      "source": "lib/src/lib/components/form-fields/select-field/select-field.component.ts#L24",
+      "source": "lib/src/lib/components/form-fields/select-field/select-field.component.ts#L25",
       "selector": "lab900-select-field",
       "extends": [
         "FormComponent<FormFieldSelect<T>>"
@@ -1892,6 +2150,7 @@
           "name": "fieldAttribute",
           "kind": "input",
           "type": "string | undefined",
+          "description": "The name of this field's control inside {@link _group}. `FormFieldDirective` sets it from\n`schema.attribute`, with the path of a dotted attribute already stripped off, so it is the last\nsegment: the `street` of `address.street`.",
           "inheritedFrom": "FormComponent"
         },
         {
@@ -1899,6 +2158,7 @@
           "kind": "input",
           "type": "UntypedFormGroup",
           "required": true,
+          "description": "The group this field's control lives in. For a dotted attribute that is the nested group, not the\ngroup of the whole form.",
           "inheritedFrom": "FormComponent"
         },
         {
@@ -1906,18 +2166,21 @@
           "kind": "input",
           "type": "S",
           "required": true,
+          "description": "The field's own entry from `Lab900FormConfig.fields`, narrowed to this component's edit type.",
           "inheritedFrom": "FormComponent"
         },
         {
           "name": "externalForms",
           "kind": "input",
           "type": "Record<string, UntypedFormGroup> | undefined",
+          "description": "The other forms this field's conditions may reach, keyed by their `formId`. Passed down from the\n`externalForms` input of `<lab900-form>` and resolved by `IFieldConditions.externalFormId`.",
           "inheritedFrom": "FormComponent"
         },
         {
           "name": "language",
           "kind": "input",
           "type": "string | undefined",
+          "description": "The language an `EditType.MultiLangInput` currently edits. Ignored by every other edit type.",
           "inheritedFrom": "FormComponent"
         },
         {
@@ -1925,6 +2188,7 @@
           "kind": "input",
           "type": "ValueLabel[]",
           "default": "[]",
+          "description": "The languages an `EditType.MultiLangInput` offers. Ignored by every other edit type.",
           "inheritedFrom": "FormComponent"
         },
         {
@@ -1932,7 +2196,7 @@
           "kind": "model",
           "type": "boolean",
           "default": "false",
-          "description": "Field state",
+          "description": "Field state.\n\nThese are the way a field changes its own state: an effect writes each one through to the\n`AbstractControl`, so setting the model disables the control or adds `Validators.required`. Never\ncall `disable()` or `setValidators()` on the control from a field component; set the model and\nlet the base class do it, or the next recalculation undoes the change.",
           "inheritedFrom": "FormComponent"
         },
         {
@@ -1940,6 +2204,7 @@
           "kind": "model",
           "type": "boolean",
           "default": "false",
+          "description": "Hides the field and disables its control, so it stops validating.",
           "inheritedFrom": "FormComponent"
         },
         {
@@ -1947,6 +2212,7 @@
           "kind": "model",
           "type": "boolean",
           "default": "false",
+          "description": "Adds or removes `Validators.required` on the control.",
           "inheritedFrom": "FormComponent"
         }
       ]
@@ -1962,24 +2228,28 @@
           "name": "threshold",
           "kind": "input",
           "type": "string",
-          "default": "'15%'"
+          "default": "'15%'",
+          "description": "How close to the bottom of the option list the scroll has to come before the next page is asked\nfor. Either a percentage of the panel height (`'10%'`) or a pixel distance (`'150'`)."
         },
         {
           "name": "debounceTime",
           "kind": "input",
           "type": "number",
-          "default": "150"
+          "default": "150",
+          "description": "How long scrolling settles before `infiniteScroll` fires, so one flick does not ask for three\npages."
         },
         {
           "name": "complete",
           "kind": "model",
           "type": "boolean",
-          "default": "false"
+          "default": "false",
+          "description": "Set it once the last page has been loaded and the directive stops emitting."
         },
         {
           "name": "infiniteScroll",
           "kind": "output",
-          "type": "void"
+          "type": "void",
+          "description": "Asks for the next page."
         }
       ]
     },
@@ -1993,13 +2263,15 @@
           "name": "maxDecimals",
           "kind": "input",
           "type": "number | undefined",
-          "default": "this.settings?.amountField?.maxDecimals"
+          "default": "this.settings?.amountField?.maxDecimals",
+          "description": "The most decimals the value is formatted to. Defaults to\n`provideLab900Forms({ amountField: { maxDecimals } })`."
         },
         {
           "name": "minDecimals",
           "kind": "input",
           "type": "number | undefined",
-          "default": "this.settings?.amountField?.minDecimals"
+          "default": "this.settings?.amountField?.minDecimals",
+          "description": "The fewest decimals the value is padded to. Defaults to\n`provideLab900Forms({ amountField: { minDecimals } })`."
         }
       ]
     },
@@ -2016,6 +2288,7 @@
           "name": "fieldAttribute",
           "kind": "input",
           "type": "string | undefined",
+          "description": "The name of this field's control inside {@link _group}. `FormFieldDirective` sets it from\n`schema.attribute`, with the path of a dotted attribute already stripped off, so it is the last\nsegment: the `street` of `address.street`.",
           "inheritedFrom": "FormComponent"
         },
         {
@@ -2023,6 +2296,7 @@
           "kind": "input",
           "type": "UntypedFormGroup",
           "required": true,
+          "description": "The group this field's control lives in. For a dotted attribute that is the nested group, not the\ngroup of the whole form.",
           "inheritedFrom": "FormComponent"
         },
         {
@@ -2030,18 +2304,21 @@
           "kind": "input",
           "type": "S",
           "required": true,
+          "description": "The field's own entry from `Lab900FormConfig.fields`, narrowed to this component's edit type.",
           "inheritedFrom": "FormComponent"
         },
         {
           "name": "externalForms",
           "kind": "input",
           "type": "Record<string, UntypedFormGroup> | undefined",
+          "description": "The other forms this field's conditions may reach, keyed by their `formId`. Passed down from the\n`externalForms` input of `<lab900-form>` and resolved by `IFieldConditions.externalFormId`.",
           "inheritedFrom": "FormComponent"
         },
         {
           "name": "language",
           "kind": "input",
           "type": "string | undefined",
+          "description": "The language an `EditType.MultiLangInput` currently edits. Ignored by every other edit type.",
           "inheritedFrom": "FormComponent"
         },
         {
@@ -2049,6 +2326,7 @@
           "kind": "input",
           "type": "ValueLabel[]",
           "default": "[]",
+          "description": "The languages an `EditType.MultiLangInput` offers. Ignored by every other edit type.",
           "inheritedFrom": "FormComponent"
         },
         {
@@ -2056,7 +2334,7 @@
           "kind": "model",
           "type": "boolean",
           "default": "false",
-          "description": "Field state",
+          "description": "Field state.\n\nThese are the way a field changes its own state: an effect writes each one through to the\n`AbstractControl`, so setting the model disables the control or adds `Validators.required`. Never\ncall `disable()` or `setValidators()` on the control from a field component; set the model and\nlet the base class do it, or the next recalculation undoes the change.",
           "inheritedFrom": "FormComponent"
         },
         {
@@ -2064,6 +2342,7 @@
           "kind": "model",
           "type": "boolean",
           "default": "false",
+          "description": "Hides the field and disables its control, so it stops validating.",
           "inheritedFrom": "FormComponent"
         },
         {
@@ -2071,6 +2350,7 @@
           "kind": "model",
           "type": "boolean",
           "default": "false",
+          "description": "Adds or removes `Validators.required` on the control.",
           "inheritedFrom": "FormComponent"
         }
       ]
@@ -2079,7 +2359,7 @@
       "name": "Lab900Form",
       "kind": "component",
       "typeParameters": "T",
-      "source": "lib/src/lib/components/form-container/form-container.component.ts#L24",
+      "source": "lib/src/lib/components/form-container/form-container.component.ts#L30",
       "description": "Renders a reactive form from a schema. It builds the `UntypedFormGroup` from\n`Lab900FormConfig.fields` and renders every field, so there is no per-field template.\n\nRead the state through a `viewChild`: `form` is the group, `value` is `getRawValue()` (so\nreadonly and disabled fields are included) and `valid` is true when the group is valid or\nentirely disabled.",
       "example": "<lab900-form [schema]=\"schema\" [(data)]=\"user\" />",
       "selector": "lab900-form",
@@ -2138,54 +2418,62 @@
         {
           "name": "fieldAttribute",
           "kind": "input",
-          "type": "string | undefined"
+          "type": "string | undefined",
+          "description": "The name of this field's control inside {@link _group}. `FormFieldDirective` sets it from\n`schema.attribute`, with the path of a dotted attribute already stripped off, so it is the last\nsegment: the `street` of `address.street`."
         },
         {
           "name": "group",
           "kind": "input",
           "type": "UntypedFormGroup",
-          "required": true
+          "required": true,
+          "description": "The group this field's control lives in. For a dotted attribute that is the nested group, not the\ngroup of the whole form."
         },
         {
           "name": "schema",
           "kind": "input",
           "type": "S",
-          "required": true
+          "required": true,
+          "description": "The field's own entry from `Lab900FormConfig.fields`, narrowed to this component's edit type."
         },
         {
           "name": "externalForms",
           "kind": "input",
-          "type": "Record<string, UntypedFormGroup> | undefined"
+          "type": "Record<string, UntypedFormGroup> | undefined",
+          "description": "The other forms this field's conditions may reach, keyed by their `formId`. Passed down from the\n`externalForms` input of `<lab900-form>` and resolved by `IFieldConditions.externalFormId`."
         },
         {
           "name": "language",
           "kind": "input",
-          "type": "string | undefined"
+          "type": "string | undefined",
+          "description": "The language an `EditType.MultiLangInput` currently edits. Ignored by every other edit type."
         },
         {
           "name": "availableLanguages",
           "kind": "input",
           "type": "ValueLabel[]",
-          "default": "[]"
+          "default": "[]",
+          "description": "The languages an `EditType.MultiLangInput` offers. Ignored by every other edit type."
         },
         {
           "name": "readonly",
           "kind": "model",
           "type": "boolean",
           "default": "false",
-          "description": "Field state"
+          "description": "Field state.\n\nThese are the way a field changes its own state: an effect writes each one through to the\n`AbstractControl`, so setting the model disables the control or adds `Validators.required`. Never\ncall `disable()` or `setValidators()` on the control from a field component; set the model and\nlet the base class do it, or the next recalculation undoes the change."
         },
         {
           "name": "fieldIsHidden",
           "kind": "model",
           "type": "boolean",
-          "default": "false"
+          "default": "false",
+          "description": "Hides the field and disables its control, so it stops validating."
         },
         {
           "name": "fieldIsRequired",
           "kind": "model",
           "type": "boolean",
-          "default": "false"
+          "default": "false",
+          "description": "Adds or removes `Validators.required` on the control."
         }
       ]
     },
@@ -2193,38 +2481,45 @@
       "name": "FormDialogDirective",
       "kind": "directive",
       "typeParameters": "T",
-      "source": "lib/src/lib/directives/form-dialog.directive.ts#L6",
+      "source": "lib/src/lib/directives/form-dialog.directive.ts#L22",
+      "description": "Opens a schema in a `MatDialog` when the host element is clicked, so a form can hang off a button\nor a table row without a dialog component of its own.\n\nEvery input except `disabled` is required, `dialogOptions` included: pass `{}` when the Material\ndefaults will do.",
+      "example": "<button lab900FormDialog\n        [schema]=\"editUserSchema\"\n        [data]=\"user\"\n        [submitFormHandler]=\"saveUser\"\n        [dialogOptions]=\"{ width: '40rem' }\">\n  Edit\n</button>",
       "selector": "[lab900FormDialog]",
       "members": [
         {
           "name": "schema",
           "kind": "input",
           "type": "Lab900FormConfig",
-          "required": true
+          "required": true,
+          "description": "The schema the dialog renders."
         },
         {
           "name": "data",
           "kind": "input",
           "type": "T",
-          "required": true
+          "required": true,
+          "description": "The record the form starts from. It is not mutated; the edited copy reaches `submitFormHandler`."
         },
         {
           "name": "submitFormHandler",
           "kind": "input",
           "type": "(data: T, originalData?: T) => Promise<boolean>",
-          "required": true
+          "required": true,
+          "description": "Saves the edited record. The dialog closes when the promise resolves `true` and stays open on\n`false`, so a failed save keeps what the user typed."
         },
         {
           "name": "dialogOptions",
           "kind": "input",
           "type": "MatDialogConfig",
-          "required": true
+          "required": true,
+          "description": "`MatDialogConfig` for the dialog: width, panel class, and the rest. Pass `{}` for the defaults."
         },
         {
           "name": "disabled",
           "kind": "input",
           "type": "boolean",
-          "default": "false"
+          "default": "false",
+          "description": "Stops the click from opening anything."
         }
       ]
     },
@@ -2238,18 +2533,20 @@
           "name": "image",
           "kind": "model",
           "type": "Lab900File",
-          "required": true
+          "required": true,
+          "description": "The file to render. Two-way: the directive writes the bytes it fetched back into `imageBase64`,\nso the preview dialog does not download the same image again."
         },
         {
           "name": "httpCallback",
           "kind": "input",
           "type": "((image: Lab900File) => Observable<Blob | ArrayBuffer>) | undefined",
-          "description": "`fetchImageBase64` accepts and converts an `ArrayBuffer`, so the callback may return either. The\nshowcase passes a request with `responseType: 'arraybuffer'`, which the old `Observable<Blob>` type\nexcluded."
+          "description": "Fetches the bytes, for an image the browser cannot load on its own - typically because the URL\nneeds an Authorization header. Without it the element just points at `image.imageSrc`.\n\n`fetchImageBase64` accepts and converts an `ArrayBuffer`, so the callback may return either. The\nshowcase passes a request with `responseType: 'arraybuffer'`, which the old `Observable<Blob>` type\nexcluded."
         },
         {
           "name": "defaultImage",
           "kind": "input",
-          "type": "string | undefined"
+          "type": "string | undefined",
+          "description": "Shown when the image has no source or the fetch fails."
         }
       ]
     },
@@ -2262,7 +2559,9 @@
         {
           "name": "autofocus",
           "kind": "input",
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Focuses the `matInput` when it turns true, including later on, so a field revealed by a condition\nstill takes the caret. With more than one on a page the last one to turn true wins.",
+          "default": "false"
         }
       ]
     }

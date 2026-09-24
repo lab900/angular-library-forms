@@ -103,6 +103,7 @@ Without it no field renders. Its settings are `Lab900FormModuleSettings`:
 | `fieldMask`                 | `ngx-mask` defaults (`thousandSeparator`, `decimalMarker`)                |
 | `amountField`               | `locale`, `minDecimals`, `maxDecimals`                                    |
 | `disableBrowserAutocomplete` | sets `autocomplete="off"` on the inputs                                   |
+| `devWarnings`               | console warnings for silent schema mistakes, default `true`               |
 
 Without a `TranslateService` every field fails with `NullInjectorError`.
 
@@ -407,15 +408,32 @@ const fixture = TestBed.createComponent(UserFormComponent);
 fixture.detectChanges();
 ```
 
-Omitting `provideLab900Forms()` makes every field render as `UnknownFieldComponent`, which is easy to
-miss: the test passes but asserts nothing.
+Omitting `provideLab900Forms()` fails with `NullInjectorError: No provider for FormFieldMappingService`,
+because that provider registers the service and the edit type map together.
+
+## Development warnings
+
+In development the library warns, once per problem, about the mistakes that otherwise render a form
+that merely shows the wrong thing:
+
+- an `editType` no component is registered for, which renders `UnknownFieldComponent`,
+- a `Select` holding an object value that matches no option because `compareWith` is missing,
+- a `readonlyDisplay` returning an object or an array instead of one primitive,
+- a schema rebuilt several times a second, which is a schema built in the template or in a getter.
+
+They are stripped from production builds. Silence them with `provideLab900Forms({ devWarnings: false })`,
+or in one spec with `setLab900DevWarnings(false)`.
+
+A warning in a test run is worth reading: a field that renders as `UnknownFieldComponent` still passes
+an assertion that only checks that something rendered.
 
 ## Common mistakes
 
 | Mistake                                                    | Fix                                                                       |
 | ---------------------------------------------------------- | ------------------------------------------------------------------------- |
 | `NullInjectorError: TranslateService`                      | Add `provideTranslateService()` to the app and test providers.            |
-| Every field renders empty or as "unknown"                  | Add `provideLab900Forms()`; it registers the edit type map.               |
+| `NullInjectorError: FormFieldMappingService`               | Add `provideLab900Forms()`; it registers the edit type map.               |
+| A field renders as "unknown"                               | Its `editType` has no component. Read the console warning; it names it.   |
 | Building the schema in the template or a getter            | Keep it in a class field. A new object rebuilds the form and loses values. |
 | Calling `control.disable()` to lock a field                | Set `options.readonly`, `options.hide`, or use a condition.               |
 | Typed `FormGroup` in the field pipeline                    | The schema is dynamic; the library uses untyped forms.                    |
@@ -438,15 +456,15 @@ Selector: `lab900-input-field`
 
 Extends: `FormComponent<FormFieldInput>`
 
-- `fieldAttribute` (input, from FormComponent): `string | undefined`
-- `group` (input, required, from FormComponent): `UntypedFormGroup`
-- `schema` (input, required, from FormComponent): `S`
-- `externalForms` (input, from FormComponent): `Record<string, UntypedFormGroup> | undefined`
-- `language` (input, from FormComponent): `string | undefined`
-- `availableLanguages` (input, default `[]`, from FormComponent): `ValueLabel[]`
-- `readonly` (model, default `false`, from FormComponent): `boolean` — Field state
-- `fieldIsHidden` (model, default `false`, from FormComponent): `boolean`
-- `fieldIsRequired` (model, default `false`, from FormComponent): `boolean`
+- `fieldAttribute` (input, from FormComponent): `string | undefined` — The name of this field's control inside {@link _group}. `FormFieldDirective` sets it from `schema.attribute`, with the path of a dotted attribute already stripped off, so it is the last segment: the `street` of `address.street`.
+- `group` (input, required, from FormComponent): `UntypedFormGroup` — The group this field's control lives in. For a dotted attribute that is the nested group, not the group of the whole form.
+- `schema` (input, required, from FormComponent): `S` — The field's own entry from `Lab900FormConfig.fields`, narrowed to this component's edit type.
+- `externalForms` (input, from FormComponent): `Record<string, UntypedFormGroup> | undefined` — The other forms this field's conditions may reach, keyed by their `formId`. Passed down from the `externalForms` input of `<lab900-form>` and resolved by `IFieldConditions.externalFormId`.
+- `language` (input, from FormComponent): `string | undefined` — The language an `EditType.MultiLangInput` currently edits. Ignored by every other edit type.
+- `availableLanguages` (input, default `[]`, from FormComponent): `ValueLabel[]` — The languages an `EditType.MultiLangInput` offers. Ignored by every other edit type.
+- `readonly` (model, default `false`, from FormComponent): `boolean` — Field state. These are the way a field changes its own state: an effect writes each one through to the `AbstractControl`, so setting the model disables the control or adds `Validators.required`. Never call `disable()` or `setValidators()` on the control from a field component; set the model and let the base class do it, or the next recalculation undoes the change.
+- `fieldIsHidden` (model, default `false`, from FormComponent): `boolean` — Hides the field and disables its control, so it stops validating.
+- `fieldIsRequired` (model, default `false`, from FormComponent): `boolean` — Adds or removes `Validators.required` on the control.
 
 ### Lab900Form<T>
 
@@ -472,15 +490,15 @@ Selector: `lab900-select-field`
 
 Extends: `FormComponent<FormFieldSelect<T>>`
 
-- `fieldAttribute` (input, from FormComponent): `string | undefined`
-- `group` (input, required, from FormComponent): `UntypedFormGroup`
-- `schema` (input, required, from FormComponent): `S`
-- `externalForms` (input, from FormComponent): `Record<string, UntypedFormGroup> | undefined`
-- `language` (input, from FormComponent): `string | undefined`
-- `availableLanguages` (input, default `[]`, from FormComponent): `ValueLabel[]`
-- `readonly` (model, default `false`, from FormComponent): `boolean` — Field state
-- `fieldIsHidden` (model, default `false`, from FormComponent): `boolean`
-- `fieldIsRequired` (model, default `false`, from FormComponent): `boolean`
+- `fieldAttribute` (input, from FormComponent): `string | undefined` — The name of this field's control inside {@link _group}. `FormFieldDirective` sets it from `schema.attribute`, with the path of a dotted attribute already stripped off, so it is the last segment: the `street` of `address.street`.
+- `group` (input, required, from FormComponent): `UntypedFormGroup` — The group this field's control lives in. For a dotted attribute that is the nested group, not the group of the whole form.
+- `schema` (input, required, from FormComponent): `S` — The field's own entry from `Lab900FormConfig.fields`, narrowed to this component's edit type.
+- `externalForms` (input, from FormComponent): `Record<string, UntypedFormGroup> | undefined` — The other forms this field's conditions may reach, keyed by their `formId`. Passed down from the `externalForms` input of `<lab900-form>` and resolved by `IFieldConditions.externalFormId`.
+- `language` (input, from FormComponent): `string | undefined` — The language an `EditType.MultiLangInput` currently edits. Ignored by every other edit type.
+- `availableLanguages` (input, default `[]`, from FormComponent): `ValueLabel[]` — The languages an `EditType.MultiLangInput` offers. Ignored by every other edit type.
+- `readonly` (model, default `false`, from FormComponent): `boolean` — Field state. These are the way a field changes its own state: an effect writes each one through to the `AbstractControl`, so setting the model disables the control or adds `Validators.required`. Never call `disable()` or `setValidators()` on the control from a field component; set the model and let the base class do it, or the next recalculation undoes the change.
+- `fieldIsHidden` (model, default `false`, from FormComponent): `boolean` — Hides the field and disables its control, so it stops validating.
+- `fieldIsRequired` (model, default `false`, from FormComponent): `boolean` — Adds or removes `Validators.required` on the control.
 
 ## Directives
 
@@ -488,46 +506,52 @@ Extends: `FormComponent<FormFieldSelect<T>>`
 
 Selector: `input[lab900AmountInput]`
 
-- `maxDecimals` (input, default `this.settings?.amountField?.maxDecimals`): `number | undefined`
-- `minDecimals` (input, default `this.settings?.amountField?.minDecimals`): `number | undefined`
+- `maxDecimals` (input, default `this.settings?.amountField?.maxDecimals`): `number | undefined` — The most decimals the value is formatted to. Defaults to `provideLab900Forms({ amountField: { maxDecimals } })`.
+- `minDecimals` (input, default `this.settings?.amountField?.minDecimals`): `number | undefined` — The fewest decimals the value is padded to. Defaults to `provideLab900Forms({ amountField: { minDecimals } })`.
 
 ### AuthImageDirective
 
 Selector: `[lab900AuthImage]`
 
-- `image` (model, required): `Lab900File`
-- `httpCallback` (input): `((image: Lab900File) => Observable<Blob | ArrayBuffer>) | undefined` — `fetchImageBase64` accepts and converts an `ArrayBuffer`, so the callback may return either. The showcase passes a request with `responseType: 'arraybuffer'`, which the old `Observable<Blob>` type excluded.
-- `defaultImage` (input): `string | undefined`
+- `image` (model, required): `Lab900File` — The file to render. Two-way: the directive writes the bytes it fetched back into `imageBase64`, so the preview dialog does not download the same image again.
+- `httpCallback` (input): `((image: Lab900File) => Observable<Blob | ArrayBuffer>) | undefined` — Fetches the bytes, for an image the browser cannot load on its own - typically because the URL needs an Authorization header. Without it the element just points at `image.imageSrc`. `fetchImageBase64` accepts and converts an `ArrayBuffer`, so the callback may return either. The showcase passes a request with `responseType: 'arraybuffer'`, which the old `Observable<Blob>` type excluded.
+- `defaultImage` (input): `string | undefined` — Shown when the image has no source or the fetch fails.
 
 ### AutofocusDirective
 
 Selector: `[lab900InputAutofocus]`
 
-- `autofocus` (input): `boolean`
+- `autofocus` (input, default `false`): `boolean` — Focuses the `matInput` when it turns true, including later on, so a field revealed by a condition still takes the caret. With more than one on a page the last one to turn true wins.
 
 ### FormComponent<S extends Lab900FormField = Lab900FormField>
 
 Extends: `SubscriptionBasedDirective`
 
-- `fieldAttribute` (input): `string | undefined`
-- `group` (input, required): `UntypedFormGroup`
-- `schema` (input, required): `S`
-- `externalForms` (input): `Record<string, UntypedFormGroup> | undefined`
-- `language` (input): `string | undefined`
-- `availableLanguages` (input, default `[]`): `ValueLabel[]`
-- `readonly` (model, default `false`): `boolean` — Field state
-- `fieldIsHidden` (model, default `false`): `boolean`
-- `fieldIsRequired` (model, default `false`): `boolean`
+- `fieldAttribute` (input): `string | undefined` — The name of this field's control inside {@link _group}. `FormFieldDirective` sets it from `schema.attribute`, with the path of a dotted attribute already stripped off, so it is the last segment: the `street` of `address.street`.
+- `group` (input, required): `UntypedFormGroup` — The group this field's control lives in. For a dotted attribute that is the nested group, not the group of the whole form.
+- `schema` (input, required): `S` — The field's own entry from `Lab900FormConfig.fields`, narrowed to this component's edit type.
+- `externalForms` (input): `Record<string, UntypedFormGroup> | undefined` — The other forms this field's conditions may reach, keyed by their `formId`. Passed down from the `externalForms` input of `<lab900-form>` and resolved by `IFieldConditions.externalFormId`.
+- `language` (input): `string | undefined` — The language an `EditType.MultiLangInput` currently edits. Ignored by every other edit type.
+- `availableLanguages` (input, default `[]`): `ValueLabel[]` — The languages an `EditType.MultiLangInput` offers. Ignored by every other edit type.
+- `readonly` (model, default `false`): `boolean` — Field state. These are the way a field changes its own state: an effect writes each one through to the `AbstractControl`, so setting the model disables the control or adds `Validators.required`. Never call `disable()` or `setValidators()` on the control from a field component; set the model and let the base class do it, or the next recalculation undoes the change.
+- `fieldIsHidden` (model, default `false`): `boolean` — Hides the field and disables its control, so it stops validating.
+- `fieldIsRequired` (model, default `false`): `boolean` — Adds or removes `Validators.required` on the control.
 
 ### FormDialogDirective<T>
 
 Selector: `[lab900FormDialog]`
 
-- `schema` (input, required): `Lab900FormConfig`
-- `data` (input, required): `T`
-- `submitFormHandler` (input, required): `(data: T, originalData?: T) => Promise<boolean>`
-- `dialogOptions` (input, required): `MatDialogConfig`
-- `disabled` (input, default `false`): `boolean`
+Opens a schema in a `MatDialog` when the host element is clicked, so a form can hang off a button
+or a table row without a dialog component of its own.
+
+Every input except `disabled` is required, `dialogOptions` included: pass `{}` when the Material
+defaults will do.
+
+- `schema` (input, required): `Lab900FormConfig` — The schema the dialog renders.
+- `data` (input, required): `T` — The record the form starts from. It is not mutated; the edited copy reaches `submitFormHandler`.
+- `submitFormHandler` (input, required): `(data: T, originalData?: T) => Promise<boolean>` — Saves the edited record. The dialog closes when the promise resolves `true` and stays open on `false`, so a failed save keeps what the user typed.
+- `dialogOptions` (input, required): `MatDialogConfig` — `MatDialogConfig` for the dialog: width, panel class, and the rest. Pass `{}` for the defaults.
+- `disabled` (input, default `false`): `boolean` — Stops the click from opening anything.
 
 ### SelectInfiniteScrollDirective
 
@@ -535,10 +559,10 @@ Selector: `mat-select[lab900InfiniteScroll]`
 
 Copied from https://github.com/HaidarZ/ng-mat-select-infinite-scroll because they are not updating to the latest Angular versions
 
-- `threshold` (input, default `'15%'`): `string`
-- `debounceTime` (input, default `150`): `number`
-- `complete` (model, default `false`): `boolean`
-- `infiniteScroll` (output): `void`
+- `threshold` (input, default `'15%'`): `string` — How close to the bottom of the option list the scroll has to come before the next page is asked for. Either a percentage of the panel height (`'10%'`) or a pixel distance (`'150'`).
+- `debounceTime` (input, default `150`): `number` — How long scrolling settles before `infiniteScroll` fires, so one flick does not ask for three pages.
+- `complete` (model, default `false`): `boolean` — Set it once the last page has been loaded and the directive stops emitting.
+- `infiniteScroll` (output): `void` — Asks for the next page.
 
 ## Interfaces
 
@@ -546,24 +570,32 @@ Copied from https://github.com/HaidarZ/ng-mat-select-infinite-scroll because the
 
 Extends: `FormFieldBaseOptions`
 
-- `autofocus?`: `boolean`
-- `maxDecimals?` (accepts a signal): `ReactiveNumberOption`
-- `minDecimals?` (accepts a signal): `ReactiveNumberOption`
-- `suffix?` (accepts a signal): `ReactiveStringOption`
-- `prefix?` (accepts a signal): `ReactiveStringOption`
-- `align?`: `'left' | 'right'`
-- `style?`: `string`
+- `autofocus?` (default `false`): `boolean` — Focuses the input once it renders.
+- `maxDecimals?` (accepts a signal, default `2`): `ReactiveNumberOption` — The most decimals the value is formatted to. Overrides `provideLab900Forms({ amountField: { maxDecimals } })` for this field.
+- `minDecimals?` (accepts a signal, default `0`): `ReactiveNumberOption` — The fewest decimals the value is padded to. Overrides `provideLab900Forms({ amountField: { minDecimals } })` for this field.
+- `suffix?` (accepts a signal): `ReactiveStringOption` — Text after the input, typically a currency. A translation key.
+- `prefix?` (accepts a signal): `ReactiveStringOption` — Text before the input, typically a currency. A translation key.
+- `align?` (default `'left'`): `'left' | 'right'` — Which way the number is aligned. Amounts usually read better on the right.
+- `style?`: `string` — Inline CSS on the input element itself.
 
 ### AmountOptions
 
 Extends: `FormFieldBaseOptions`
 
-- `maxDecimals?`: `number`
-- `minDecimals?`: `number`
+The decimal settings on their own, for formatting an amount outside a form: `getAmountFormatter()`
+and the `amount` pipe take these. A field takes {@link AmountFieldInputOptions} instead.
+
+- `maxDecimals?` (default `2`): `number` — The most decimals to print.
+- `minDecimals?` (default `0`): `number` — The fewest decimals to print, padding with zeroes.
 
 ### CheckboxFieldModel<T extends string | number = string>
 
 Extends: `FormFieldBase<T, FormFieldCheckboxOptions>`
+
+A single checkbox. The control value is `true`, `false`, or `null` while it has never been
+answered - which renders as indeterminate unless `disabledIndeterminate` is set.
+
+`options.required` demands a truthy value, so it makes the checkbox one that has to be ticked.
 
 - `editType`: `EditType.Checkbox`
 
@@ -571,11 +603,21 @@ Extends: `FormFieldBase<T, FormFieldCheckboxOptions>`
 
 Extends: `Partial<NgxMaskConfig>`
 
-- `mask`: `string`
+An `ngx-mask` configuration. Only `mask` is required; the rest of `NgxMaskConfig` overrides the
+application defaults from `provideLab900Forms({ fieldMask })` for this one field.
+
+- `mask`: `string` — The mask pattern, for example `'000.000-00'`. See the ngx-mask documentation for the tokens.
 
 ### FormColumn<T extends number | string = string>
 
 Extends: `FormFieldBase<T, FormColumnOptions>`
+
+A column that stacks its `nestedFields` vertically, where a `FormRow` lays them out across the 12
+column grid. Use `options.colspan` to say how wide the column itself is. It holds no value of its
+own.
+
+Like a row, an `attribute` makes it a nested `FormGroup` and no attribute flattens the children
+into the parent group. It renders its own readonly state.
 
 - `editType`: `EditType.Column`
 
@@ -583,19 +625,27 @@ Extends: `FormFieldBase<T, FormColumnOptions>`
 
 Extends: `FormFieldBaseOptions`
 
-- `customClass?`: `string`
-- `customTitleClass?`: `string`
+- `customClass?`: `string` — An extra class on the column element, next to `lab900-form-column`.
+- `customTitleClass?`: `string` — An extra class on the column's title, next to `lab900-form-field-label lab900-form-row-label`.
 
 ### FormFieldAmount<T extends string | number = string>
 
 Extends: `FormFieldBase<T, AmountFieldInputOptions>`
 
+A number input that formats as the user types: thousand separators and a fixed number of decimals,
+in the locale of `provideLab900Forms({ amountField: { locale } })` or of the application.
+
+The control value stays a `number`, so nothing has to be parsed back.
+
 - `editType`: `EditType.Amount`
-- `icon?`: `Icon & { position?: 'left' | 'right' }`
+- `icon?`: `Icon & { position?: 'left' | 'right' }` — An icon inside the form field, before or after the input.
 
 ### FormFieldAutocomplete<T, R extends string | number = string>
 
 Extends: `FormFieldBase<R, FormFieldAutocompleteOptions<T>>`
+
+Deprecated: Use `EditType.Select` with `options.search.enabled`. The select does the same thing and
+also handles multiple values, paging and "select all".
 
 - `editType`: `EditType.Autocomplete`
 
@@ -603,18 +653,22 @@ Extends: `FormFieldBase<R, FormFieldAutocompleteOptions<T>>`
 
 Extends: `FormFieldBase<R, FormFieldAutocompleteOptions<T>>`
 
+Deprecated: Use `EditType.Select` with `options.search.enabled` and `options.multiple`.
+
+The same options as `EditType.Autocomplete`, over an array value.
+
 - `editType`: `EditType.AutocompleteMultiple`
 
 ### FormFieldAutocompleteOptions<T>
 
 Extends: `FormFieldBaseOptions`
 
-- `displayOptionFn?` (deprecated): `(option: ValueLabel<T>) => string`
-- `displayInputFn`: `(option: T) => string`
-- `disabledOptionFn?`: `(option: T) => boolean`
-- `autocompleteOptions?`: `( searchTerm: string, currentControl: AbstractControl ) => ValueLabel<T>[] | Observable<ValueLabel<T>[]>`
-- `debounceTime?`: `number`
-- `requireMatch?`: `boolean`
+- `displayOptionFn?` (deprecated): `(option: ValueLabel<T>) => string` — Renders the label of an option.
+- `displayInputFn`: `(option: T) => string` — Turns the picked value into the text shown in the input. Required.
+- `disabledOptionFn?`: `(option: T) => boolean` — Shows an option but blocks it from being picked.
+- `autocompleteOptions?`: `( searchTerm: string, currentControl: AbstractControl ) => ValueLabel<T>[] | Observable<ValueLabel<T>[]>` — Loads the options for what the user has typed so far. May return an array or an `Observable`.
+- `debounceTime?`: `number` — How long typing pauses before the options are loaded again.
+- `requireMatch?` (default `false`): `boolean` — Adds a validator that rejects text the user typed but never picked from the list, so the control cannot hold a value that is not one of the options. It reports `requireMatch`.
 
 ### FormFieldBase<T extends string | number = string, O extends FormFieldBaseOptions = FormFieldBaseOptions>
 
@@ -640,7 +694,7 @@ library disables it for you.
 - `required?` (accepts a signal): `ReactiveBooleanOption` — Adds or removes `Validators.required`.
 - `readonly?` (accepts a signal): `ReactiveBooleanOption` — Renders the value instead of an editable field, and disables the control.
 - `hint?`: `{ /** A translation key. */ value?: string; /** Hides the hint once the control is valid. */ hideHintOnValidValue?: boolean; /** Interpolation parameters for the translation. */ valueTranslateData?: object }` — Help text under the field.
-- `placeholder?` (accepts a signal): `ReactiveStringOption`
+- `placeholder?` (accepts a signal): `ReactiveStringOption` — The text shown in an empty field. A translation key.
 - `colspan?`: `number` — The width of the field on the 12 column grid: 1 to 12.
 - `mobileCols?`: `boolean` — Keeps the colspan on mobile instead of stacking. Only for form rows.
 - `minLength?`: `number` — Also adds `Validators.minLength`.
@@ -660,26 +714,36 @@ library disables it for you.
 
 Extends: `FormFieldBase<T, FormFieldButtonOptions>`
 
+A button inside the schema, so an action can sit between the fields instead of outside the form.
+
+It holds no value: leave out `attribute`, or the group gains a control that stays empty. It keeps
+rendering when the field is readonly, so guard the action with `options.hide` or `options.readonly`
+on its own terms.
+
 - `editType`: `EditType.Button`
 
 ### FormFieldButtonOptions
 
 Extends: `FormFieldBaseOptions`
 
-- `type`: `Lab900ButtonType`
-- `color?`: `ThemePalette`
-- `onClick?`: `(formGroup: UntypedFormGroup, currentScheme: Readonly<Lab900FormField>, event: Event) => any`
-- `label?` (accepts a signal): `ReactiveStringOption`
-- `tooltip?`: `{ text: string; position?: TooltipPosition }`
-- `prefixIcon?` (accepts a signal): `ReactiveStringOption`
-- `suffixIcon?` (accepts a signal): `ReactiveStringOption`
-- `svgIcon?`: `boolean`
-- `containerClass?`: `string`
-- `buttonId?`: `string`
+- `type`: `Lab900ButtonType` — Which `@lab900/ui` button to render: filled, stroked, icon-only and so on. Required.
+- `color?` (default `'accent'`): `ThemePalette` — The Material palette of the button.
+- `onClick?`: `(formGroup: UntypedFormGroup, currentScheme: Readonly<Lab900FormField>, event: Event) => any` — Runs on click, with the group this button sits in, its own schema, and the DOM event. It is not a submit: the form has no submit of its own, so do the work here.
+- `label?` (accepts a signal): `ReactiveStringOption` — The text on the button. A translation key.
+- `tooltip?`: `{ /** A translation key. */ text: string; position?: TooltipPosition }` — A tooltip, which is also the only description an icon-only button has.
+- `prefixIcon?` (accepts a signal): `ReactiveStringOption` — An icon before the label. A Material ligature, or an svg name when `svgIcon` is set.
+- `suffixIcon?` (accepts a signal): `ReactiveStringOption` — An icon after the label. A Material ligature, or an svg name when `svgIcon` is set.
+- `svgIcon?` (default `false`): `boolean` — Reads `prefixIcon` and `suffixIcon` as svg names registered in `MatIconRegistry` instead of as Material ligatures.
+- `containerClass?`: `string` — An extra class on the element around the button, for spacing it inside the layout.
+- `buttonId?`: `string` — The `id` of the button element, for a test hook or an anchor.
 
 ### FormFieldButtonToggle<T extends string | number = string>
 
 Extends: `FormFieldBase<T, FormFieldButtonToggleOptions>`
+
+A row of connected buttons, one of which is picked: a compact alternative to a radio group for a
+handful of short options. It keeps rendering its buttons when the field is readonly, rather than
+collapsing into text.
 
 - `editType`: `EditType.ButtonToggle`
 
@@ -687,21 +751,24 @@ Extends: `FormFieldBase<T, FormFieldButtonToggleOptions>`
 
 Extends: `FormFieldBaseOptions`
 
-- `buttonOptions`: `{ value: any; label?: string; icon?: Icon & { position?: 'left' | 'right' }; buttonClass?: string; tooltip?: { text: string; position?: TooltipPosition } }[]`
-- `color?`: `ThemePalette`
-- `hideSelection?` (accepts a signal): `ReactiveBooleanOption`
-- `deselectOnClick?`: `boolean`
+- `buttonOptions`: `{ /** What the control holds once this button is picked. */ value: any; /** The text on the button. A translation key. Leave it out for an icon-only button. */ label?: string; icon?: Icon & { position?: 'left' | 'right' }; /** An extra class on this one button, to colour or size it apart from the others. */ buttonClass?: string; /** A tooltip, which is also the only description an icon-only button has. */ tooltip?: { /** A translation key. */ text: string; position?: TooltipPosition } }[]` — The buttons to pick from. Required: without them the field renders an empty row.
+- `color?` (default `'accent'`): `ThemePalette` — The Material palette of the toggle group.
+- `hideSelection?` (accepts a signal, default `false`): `ReactiveBooleanOption` — Hides the checkmark on the picked button, leaving only its highlight.
+- `deselectOnClick?` (default `false`): `boolean` — Clicking the picked button clears the control instead of leaving it as it is, so the field can go back to having no answer.
 
 ### FormFieldCheckboxOptions
 
 Extends: `FormFieldBaseOptions`
 
-- `disabledIndeterminate?`: `boolean`
-- `color?`: `ThemePalette`
+- `disabledIndeterminate?` (default `false`): `boolean` — Renders a `null` value as unchecked instead of indeterminate. By default a checkbox has three visible states, because a control that was never answered holds `null` rather than `false`.
+- `color?` (default `'accent'`): `ThemePalette` — The Material palette of the checkbox.
 
 ### FormFieldDatePicker<T extends string | number = string, D = Date>
 
 Extends: `FormFieldBase<T, FormFieldDatePickerOptions<D>>`
+
+A date picker. The control value is whatever the application's `DateAdapter` produces, so the form
+needs `provideNativeDateAdapter()` or another adapter.
 
 - `editType`: `EditType.Date`
 
@@ -709,9 +776,12 @@ Extends: `FormFieldBase<T, FormFieldDatePickerOptions<D>>`
 
 Extends: `FormFieldBaseOptions`
 
-- `startView?`: `'month' | 'year' | 'multi-year'`
-- `maxDate?`: `T`
-- `minDate?`: `T`
+The options every date field shares. `T` is the date type of the application's `DateAdapter`:
+`Date` with `provideNativeDateAdapter()`, or a Luxon, Moment or date-fns type with theirs.
+
+- `startView?` (default `'month'`): `'month' | 'year' | 'multi-year'` — Which panel the calendar opens on.
+- `maxDate?`: `T` — The latest date that can be picked. It also blocks a later date typed into the input.
+- `minDate?`: `T` — The earliest date that can be picked. It also blocks an earlier date typed into the input.
 - `dateFilter?`: `(date: T | null) => boolean` — Function to filter which dates are selectable in the datepicker
 - `dateClass?`: `MatCalendarCellClassFunction<T>` — Function that can be used to add custom CSS classes to dates
 
@@ -719,20 +789,32 @@ Extends: `FormFieldBaseOptions`
 
 Extends: `FormFieldBase<T, FormFieldDateRangeOptions<D>>`
 
+A start and an end date in one field. Unlike the other date fields it holds a **group** of two
+controls, not one value, so the data for it is an object:
+
+```ts
+{ holiday: { start: new Date('2026-07-01'), end: new Date('2026-07-15') } }
+```
+
+Rename those two keys with `startKey` and `endKey` when the data already uses other names.
+
 - `editType`: `EditType.DateRange`
 
 ### FormFieldDateRangeOptions<T = Date>
 
 Extends: `FormFieldDatePickerOptions<T>`
 
-- `startLabel?`: `string`
-- `endLabel?`: `string`
-- `startKey?`: `string`
-- `endKey?`: `string`
+- `startLabel?` (default `'Start date'`): `string` — The placeholder of the start input. A translation key.
+- `endLabel?` (default `'End date'`): `string` — The placeholder of the end input. A translation key.
+- `startKey?` (default `'start'`): `string` — The name of the control that holds the start date inside the field's group.
+- `endKey?` (default `'end'`): `string` — The name of the control that holds the end date inside the field's group.
 
 ### FormFieldDateTimePicker<T extends string | number = string, D = Date>
 
 Extends: `FormFieldBase<T, FormFieldDateTimePickerOptions<D>>`
+
+A date with a time, from `@ngx-mce/datetime-picker`. The control value is one date, with the time
+set on it.
 
 - `editType`: `EditType.DateTime`
 
@@ -740,14 +822,17 @@ Extends: `FormFieldBase<T, FormFieldDateTimePickerOptions<D>>`
 
 Extends: `FormFieldDatePickerOptions<T>`
 
-- `showSeconds?`: `boolean`
-- `defaultTime?`: `[number, number, number]`
-- `stepMinute?`: `number`
+- `showSeconds?` (default `false`): `boolean` — Adds seconds to the time picker and to the default display format.
+- `defaultTime?`: `[number, number, number]` — The time a freshly picked date starts at, as `[hours, minutes, seconds]`. Midnight when unset.
+- `stepMinute?` (default `1`): `number` — How many minutes one step of the minute picker moves.
 - `displayFormat?`: `DateAdapterDisplayFormat` — Format that the input uses to show the selected date and time. Give a value that the `DateAdapter` of the application accepts. Optional. By default the field takes the date format of the application and adds the time to it, in the shape that the application's own `DateAdapter` reads, with seconds when `showSeconds` is true. Set this option to print a different format, or when the application's own date format already contains a time.
 
 ### FormFieldDateYearMonthPicker<T extends string | number = string, D = Date>
 
 Extends: `FormFieldBase<T, FormFieldDateYearMonthPickerOptions<D>>`
+
+A picker that stops at the month: the calendar closes once a month is chosen and never shows days.
+The control value is still a full date, on the first day of that month.
 
 - `editType`: `EditType.DateYearMonth`
 
@@ -755,20 +840,26 @@ Extends: `FormFieldBase<T, FormFieldDateYearMonthPickerOptions<D>>`
 
 Extends: `FormFieldDatePickerOptions<T>`
 
-- `startView?`: `'year' | 'multi-year'`
+- `startView?` (default `'multi-year'`): `'year' | 'multi-year'` — Which panel the calendar opens on. The month panel is not offered here: picking a month closes the calendar.
 
 ### FormFieldDragNDropFileOptions
 
 Extends: `FormFieldBaseOptions`
 
-- `maxFiles`: `number`
-- `compact?`: `boolean`
-- `dropFilesText?`: `string`
-- `dropFilesButton?`: `string`
+- `maxFiles`: `number` — How many files the field accepts. It also adds a validator, so more than this many files makes the control invalid rather than dropping the extras. `1` renders the field as a single file picker; anything else, or nothing, allows a multiple selection.
+- `compact?` (default `false`): `boolean` — Renders the drop zone at a reduced height once a file has been picked, for a form where the field is not the main subject.
+- `dropFilesText?` (default `'Drop Files'`): `string` — The instruction in the drop zone, which is also its accessible name. A translation key.
+- `dropFilesButton?` (default `'Upload Files'`): `string` — The label of the button that opens the file picker. A translation key.
 
 ### FormFieldDragNDropFilePreview<T extends string | number = string>
 
 Extends: `FormFieldBase<T, FormFieldDragNDropFileOptions>`
+
+A drop zone that takes files by drag and drop or through a file picker. The control value is a
+`File[]`; use `EditType.FilePreview` for files that are already stored and have a preview.
+
+`options.maxFiles` and `options.required` both become validators, so the form is invalid while the
+file count is wrong.
 
 - `editType`: `EditType.DragNDrop`
 
@@ -776,24 +867,37 @@ Extends: `FormFieldBase<T, FormFieldDragNDropFileOptions>`
 
 Extends: `FormFieldBase<T, FormFieldFilePreviewOptions>`
 
+A list of files with a thumbnail each, an upload button, and a preview or metadata dialog per file.
+The control value is a `Lab900File[]`.
+
+Use `EditType.DragNDrop` for files the user is about to upload, and this for files that already
+exist and have to be shown.
+
+It renders its own readonly state, so a readonly field still shows the thumbnails rather than text.
+
 - `editType`: `EditType.FilePreview`
 
 ### FormFieldFilePreviewOptions
 
 Extends: `FormFieldBaseOptions`
 
-- `fileUploadButtonText?`: `string`
-- `canEditFileMetaData?`: `boolean`
-- `fileMetaDataConfig?`: `Lab900FormConfig`
-- `httpCallback?`: `(image: Lab900File) => Observable<Blob | ArrayBuffer>`
-- `showOverlay`: `boolean | ((data?: any) => boolean)`
-- `multiple?`: `boolean`
-- `accept?`: `string`
-- `overlay?`: `{ backgroundColor: string; textColor: string; text: string }`
+- `fileUploadButtonText?` (default `'form.button.upload'`): `string` — The label of the upload button. A translation key.
+- `canEditFileMetaData?` (default `false`): `boolean` — Clicking a file opens `fileMetaDataConfig` in a dialog instead of the image preview, and adds a separate preview icon next to the file name.
+- `fileMetaDataConfig?`: `Lab900FormConfig` — The schema of the metadata dialog. The file itself is the data, so the attributes are its keys.
+- `httpCallback?`: `(image: Lab900File) => Observable<Blob | ArrayBuffer>` — Fetches the bytes of a file that the browser cannot load on its own, typically because the URL needs an Authorization header. The thumbnail and the preview both go through it.
+- `showOverlay`: `boolean | ((data?: any) => boolean)` — Covers the thumbnail with `overlay` instead of the image. Use the function form to cover only some of the files, for example the ones that are still being processed.
+- `multiple?` (default `false`): `boolean` — Allows more than one file. The control value is an array either way.
+- `accept?`: `string` — The `accept` attribute of the file input, for example `'image/*'` or `'.pdf,.docx'`.
+- `overlay?`: `{ backgroundColor: string; textColor: string; /** A translation key. */ text: string }` — What `showOverlay` puts over the thumbnail.
 
 ### FormFieldIcon<T extends string | number = string>
 
 Extends: `FormFieldBase<T, FormFieldIconOptions>`
+
+An icon with a line of text. It reads the form and renders; it holds no value and takes no input,
+so use it for a status or a hint inside the layout rather than for something to fill in.
+
+An `attribute` is not needed. Give it one only when the icon depends on that control's own value.
 
 - `editType`: `EditType.Icon`
 
@@ -801,32 +905,46 @@ Extends: `FormFieldBase<T, FormFieldIconOptions>`
 
 Extends: `FormFieldBaseOptions`
 
-- `icon?` (accepts a signal): `ReactiveOption<Icon>`
-- `text?` (accepts a signal): `ReactiveOption<string>`
+- `icon?` (accepts a signal): `ReactiveOption<Icon>` — The icon to show. Reactive, so it may follow the form value or a signal.
+- `text?` (accepts a signal): `ReactiveOption<string>` — The text next to the icon. A translation key. Reactive, like `icon`.
 
 ### FormFieldInput<T extends string | number = string>
 
 Extends: `FormFieldBase<T, FormFieldInputOptions>`
 
+A single line text input, the default field type.
+
 - `editType`: `EditType.Input`
-- `icon?`: `Icon & { position?: 'left' | 'right' }`
+- `icon?`: `Icon & { position?: 'left' | 'right' }` — An icon inside the form field, before or after the input.
 
 ### FormFieldInputOptions
 
 Extends: `FormFieldBaseOptions`
 
-- `type?`: `InputType`
-- `autofocus?`: `boolean`
-- `suffix?`: `string | ((data?: any) => string)`
-- `prefix?`: `string | ((data?: any) => string)`
-- `align?`: `'left' | 'right'`
-- `fieldMask?`: `FieldMask`
-- `showLengthIndicator?`: `boolean`
-- `style?`: `string`
+- `type?` (default `'text'`): `InputType` — The `type` of the native input. `'number'` also makes the control validate as a number.
+- `autofocus?` (default `false`): `boolean` — Focuses the input once it renders. With more than one on a page the last one wins.
+- `suffix?`: `string | ((data?: any) => string)` — Text after the input, inside the form field. A translation key, or a function of the form value.
+- `prefix?`: `string | ((data?: any) => string)` — Text before the input, inside the form field. A translation key, or a function of the form value.
+- `align?` (default `'left'`): `'left' | 'right'` — Which way the text in the input is aligned.
+- `fieldMask?`: `FieldMask` — Formats what is typed through `ngx-mask`. Requires `provideNgxMask()` in the application.
+- `showLengthIndicator?`: `boolean` — Shows a character counter under the field. It needs a `maxLength` to count against. The application-wide default is `provideLab900Forms({ formField: { showLengthIndicator } })`; this option turns it on for one field.
+- `style?`: `string` — Inline CSS on the input element itself.
 
 ### FormFieldMultiLang<T extends string | number = string>
 
 Extends: `FormFieldBase<T, FormFieldMultiLangOptions>`
+
+One value per language. The control value is an object keyed by language code:
+
+```ts
+{ title: { en: 'Welcome', nl: 'Welkom' } }
+```
+
+The field edits the language in the `language` input of `<lab900-form>` and offers the ones in
+`availableLanguages`; the translate button opens an input for every language at once.
+
+It renders its own readonly state, so a readonly field keeps showing one value per language
+instead of collapsing an object into text.
 
 - `editType`: `EditType.MultiLangInput`
 
@@ -834,30 +952,42 @@ Extends: `FormFieldBase<T, FormFieldMultiLangOptions>`
 
 Extends: `FormFieldInputOptions`
 
-- `buttonColor?`: `ThemePalette`
-- `translateLabel?`: `string`
-- `stopTranslateLabel?`: `string`
-- `useTextAreaField?`: `boolean`
+Every option of {@link FormFieldInputOptions}, plus the ones for the language switch.
+
+- `buttonColor?` (default `'accent'`): `ThemePalette` — The Material palette of the translate button.
+- `translateLabel?` (default `'Translate'`): `string` — The label of the button that opens an input per language. A translation key.
+- `stopTranslateLabel?` (default `'Stop translating'`): `string` — The label of the button that closes them again. A translation key.
+- `useTextAreaField?` (default `false`): `boolean` — Renders a textarea per language instead of a single line input.
 
 ### FormFieldPassword<T extends string | number = string>
 
 Extends: `FormFieldBase<T, FormFieldPasswordOptions>`
 
+A masked password input with a toggle that reveals the value.
+
+Nothing here validates the strength of a password: add `validators` or `options.pattern` for that.
+
 - `editType`: `EditType.Password`
-- `icon?`: `Icon & { position?: 'left' | 'right' }`
+- `icon?`: `Icon & { position?: 'left' | 'right' }` — An icon inside the form field, before or after the input.
 
 ### FormFieldPasswordOptions
 
 Extends: `FormFieldBaseOptions`
 
-- `autofocus?`: `boolean`
-- `align?`: `'left' | 'right'`
-- `style?`: `string`
-- `togglePasswordVisibility?`: `{ disabled: boolean; passwordVisibleIcon?: Icon; passwordHiddenIcon?: Icon }`
+- `autofocus?` (default `false`): `boolean` — Focuses the input once it renders.
+- `align?` (default `'left'`): `'left' | 'right'` — Which way the text in the input is aligned.
+- `style?`: `string` — Inline CSS on the input element itself.
+- `togglePasswordVisibility?`: `{ /** Hides the toggle, so the value can never be read back. */ disabled: boolean; /** * The icon shown while the password is readable, which switches back to hidden. * @default { name: 'visibility_off' } */ passwordVisibleIcon?: Icon; /** * The icon shown while the password is masked, which reveals it. * @default { name: 'visibility' } */ passwordHiddenIcon?: Icon }` — The eye icon that switches the input between `password` and `text`. Shown unless `disabled`.
 
 ### FormFieldRadioButtons<T extends string | number = string>
 
 Extends: `FormFieldBase<T, FormFieldRadioButtonsOptions>`
+
+A radio group: every option is visible at once and exactly one can be picked. Use
+`EditType.Select` when the list is long, and `EditType.ButtonToggle` for a compact row.
+
+The options are a plain array, so they cannot be loaded from a server. Use a condition's
+`conditionalOptions`, or an `EditType.Select`, when they depend on something else.
 
 - `editType`: `EditType.RadioButtons`
 
@@ -865,12 +995,18 @@ Extends: `FormFieldBase<T, FormFieldRadioButtonsOptions>`
 
 Extends: `FormFieldBaseOptions`
 
-- `radioOptions`: `ValueLabel[]`
-- `color?`: `ThemePalette`
+- `radioOptions`: `ValueLabel[]` — The options to pick from. Required: without them the group renders empty.
+- `color?` (default `'accent'`): `ThemePalette` — The Material palette of the radio buttons.
 
 ### FormFieldRangeSlider<T extends string | number = string>
 
 Extends: `FormFieldBase<T, FormFieldRangeSliderOptions>`
+
+A slider with a lower and an upper bound. The control value is a `[from, to]` tuple, and it starts
+at `[min, max]` when the data holds nothing.
+
+`options.min` and `options.max` are the ends of the slider here, not only validators, and they
+default to 0 and 100.
 
 - `editType`: `EditType.RangeSlider`
 
@@ -878,15 +1014,21 @@ Extends: `FormFieldBase<T, FormFieldRangeSliderOptions>`
 
 Extends: `FormFieldBaseOptions`
 
-- `fromLabel?`: `string`
-- `toLabel?`: `string`
-- `enabledInputs?`: `boolean`
-- `steps?`: `number`
-- `format?`: `'K-M' | 'DEFAULT'`
+- `fromLabel?` (default `'From'`): `string` — The label of the lower bound. A translation key.
+- `toLabel?` (default `'To'`): `string` — The label of the upper bound. A translation key.
+- `enabledInputs?` (deprecated): `boolean` — No effect: nothing reads this option. The number inputs next to the slider are always rendered.
+- `steps?`: `number` — How far one step of the slider moves. Continuous when it is not set.
+- `format?` (default `'DEFAULT'`): `'K-M' | 'DEFAULT'` — How the bounds are printed. `'K-M'` shortens thousands to `k` and millions to `m`, and reads them back, so `12 k` is 12000.
 
 ### FormFieldRepeater<T extends string | number = string>
 
 Extends: `FormFieldBase<T, FormFieldRepeaterOptions>`
+
+A group of fields repeated over an `UntypedFormArray`. `nestedFields` is the schema of one row, and
+the control value is an array of objects.
+
+`patchValues()` on `<lab900-form>` grows and shrinks the array to match the data; `setValues()`
+rebuilds it instead.
 
 - `editType`: `EditType.Repeater`
 
@@ -894,17 +1036,23 @@ Extends: `FormFieldBase<T, FormFieldRepeaterOptions>`
 
 Extends: `FormFieldBaseOptions`
 
-- `fixedList?`: `boolean`
-- `removeAll?`: `boolean`
-- `addLabel?`: `string`
-- `minRows?`: `number`
-- `maxRows?`: `number`
-- `buttonColor?`: `ThemePalette`
-- `enableReorder?`: `boolean`
+- `fixedList?` (default `false`): `boolean` — Renders the rows without the add, remove and reorder buttons, so the number of rows is whatever the data holds. The controls stay editable; use `readonly` to lock the values too.
+- `removeAll?` (default `false`): `boolean` — Allows the last rows to be removed, down to an empty array. Without it the remove button stops at `minRows`.
+- `addLabel?` (default `'Add new'`): `string` — The label of the add button. A translation key.
+- `minRows?` (default `1`): `number` — The number of rows the array starts with and never drops below. `patchValues()` grows the array back to it when the data holds fewer rows.
+- `maxRows?`: `number` — Hides the add button once the array holds this many rows. Unlimited when it is not set.
+- `buttonColor?` (default `'accent'`): `ThemePalette` — The Material palette of the add, remove and reorder buttons.
+- `enableReorder?` (default `false`): `boolean` — Shows the move up and move down buttons on every row.
 
 ### FormFieldSearch<T, R extends string | number = string>
 
 Extends: `FormFieldBase<R, FormFieldSearchOptions<T>>`
+
+An input that looks its own value up: the user types, `searchFn` resolves one object, and the
+control holds that object rather than the text.
+
+It is a lookup for something identified exactly - an order number, a VAT number, a barcode - not a
+list to browse. Use `EditType.Select` with `search.enabled` when the user should see the options.
 
 - `editType`: `EditType.Search`
 
@@ -912,20 +1060,26 @@ Extends: `FormFieldBase<R, FormFieldSearchOptions<T>>`
 
 Extends: `FormFieldBaseOptions`
 
-- `labelFormatter`: `(option: T) => string`
-- `searchFn`: `(searchQuery: string) => Observable<T | null>`
-- `debounceTime?`: `number`
-- `notFoundLabel?`: `string`
-- `addNewLabel?`: `string`
+- `labelFormatter`: `(option: T) => string` — Turns the found object into the text shown in the input. Required.
+- `searchFn`: `(searchQuery: string) => Observable<T | null>` — Looks the typed text up and returns the one match, or `null` when there is none. Required. Emitting `null` clears the control and reveals the "add new" button.
+- `debounceTime?` (default `500`): `number` — How long typing pauses before the search runs.
+- `notFoundLabel?`: `string` — The hint shown when the search came back empty. A translation key.
+- `addNewLabel?` (default `'form.field.add_new'`): `string` — The label of the button offered when nothing was found. A translation key.
 - `addNewFn?`: `(searchQuery: string) => Observable<T | null>` — Function to handle the new item creation, can be anything. The field will be updated with the observable response
-- `disableSearchOnInput?`: `boolean`
-- `addNewBtnColor?`: `ThemePalette`
-- `hideClearButton?`: `boolean`
-- `style?`: `string`
+- `disableSearchOnInput?` (default `false`): `boolean` — Stops the search from running while the user types, so only a paste or a blur triggers it. Use it when the lookup is expensive and the input is a full code rather than a prefix.
+- `addNewBtnColor?` (default `'primary'`): `ThemePalette` — The Material palette of the "add new" button.
+- `hideClearButton?` (default `false`): `boolean` — Hides the clear button on the right of the field.
+- `style?`: `string` — Inline CSS on the input element itself.
 
 ### FormFieldSelect<T, R extends string | number = string>
 
 Extends: `FormFieldBase<R, FormFieldSelectOptions<T>>`
+
+A dropdown, optionally searchable, multi-select and paged. It replaces the deprecated
+`EditType.Autocomplete`: set `search.enabled` for the same behaviour.
+
+With object values always set `compareWith`, or the picked value matches no option and the field
+looks empty.
 
 - `editType`: `EditType.Select`
 
@@ -933,33 +1087,41 @@ Extends: `FormFieldBase<R, FormFieldSelectOptions<T>>`
 
 Extends: `FormFieldBaseOptions`
 
-- `multiple?`: `boolean`
-- `showChipValue?`: `boolean`
-- `selectOptions?`: `FormFieldSelectOptionsFn<T> | ValueLabel<T>[] | Observable<ValueLabel<T>[]>`
-- `compareWith?`: `(o1: T, o2: T) => boolean`
-- `displayOptionFn?` (deprecated): `(option: ValueLabel<T>) => string`
-- `customTriggerFn?`: `(value: T | undefined) => string`
-- `autoselectOnlyOption?`: `boolean`
+- `multiple?` (default `false`): `boolean` — Lets more than one option be picked. The control value becomes an array.
+- `showChipValue?` (default `false`): `boolean` — Renders the picked options as removable chips instead of comma separated text. Needs `multiple`.
+- `selectOptions?`: `FormFieldSelectOptionsFn<T> | ValueLabel<T>[] | Observable<ValueLabel<T>[]>` — The options to pick from: an array, an `Observable`, or a function of the current filter. Use the function form when the server does the searching or the paging.
+- `compareWith?`: `(o1: T, o2: T) => boolean` — How a value is matched against an option. **Set this whenever the values are objects**: the default comparison is `===`, so an object that came from the server never equals the one in the options and the select renders empty although the control holds a value.
+- `displayOptionFn?` (deprecated): `(option: ValueLabel<T>) => string` — Renders the label of an option.
+- `customTriggerFn?`: `(value: T | undefined) => string` — Renders the closed select yourself, instead of the label of the picked option.
+- `autoselectOnlyOption?` (default `false`): `boolean` — Picks the only option on its own when the list holds exactly one.
 - `noOptionsIndicator?` (default `false`): `boolean` — Will show an empty option displaying a message that no options could be found
 - `noOptionsLabel?`: `string` — Label to use to display when no options are available noOptionsIndicator needs to be true for this to show
 - `displaySelectedOptionFn?`: `(option: T) => string` — The function to display the current value of the select if this item is not present in the select options.
-- `search?`: `{ enabled: boolean; placeholder?: string; /** * Label to use to display a not found message based on given search message */ notFoundLabel?: string; addNewLabel?: string; /** * Function to handle the new item creation, can be anything. * Use the select argument to update the select after creation */ addNewFn?: (searchQuery: string, select: SelectFieldComponent<T>) => void; addNewBtnColor?: ThemePalette; /** * Clear the search when the select closes * @default false */ clearOnClose?: boolean; /** * The threshold time before firing the search event */ debounceTime?: number }`
-- `infiniteScroll?`: `{ enabled: boolean; /** * The threshold distance from the bottom of the options list to call the infiniteScroll output event when scrolled. * The threshold value can be either in percent, or in pixels. * For example, use the value of 10% for the infiniteScroll output event to get called when the user has needs 10% to reach the bottom. */ threshold?: string; /** * The threshold time before firing the infiniteScroll event */ debounceTime?: number }`
-- `clearFieldButton?`: `{ enabled: boolean | ((data?: T) => boolean); click?: (fieldControl: AbstractControl, clickEvent: Event) => void }` — Shows a clear button on the right of the field
-- `selectAll?`: `{ enabled: boolean; label?: string; disabled?: boolean }`
-- `panelWidth?`: `string | number | null`
-- `panelClass?`: `string | string[]`
+- `search?`: `{ enabled: boolean; /** A translation key. */ placeholder?: string; /** * Label to use to display a not found message based on given search message */ notFoundLabel?: string; /** The label of the "add new" button shown when the search finds nothing. A translation key. */ addNewLabel?: string; /** * Function to handle the new item creation, can be anything. * Use the select argument to update the select after creation */ addNewFn?: (searchQuery: string, select: SelectFieldComponent<T>) => void; addNewBtnColor?: ThemePalette; /** * Clear the search when the select closes * @default false */ clearOnClose?: boolean; /** * The threshold time before firing the search event */ debounceTime?: number }` — A search box at the top of the option list.
+- `infiniteScroll?`: `{ enabled: boolean; /** * The threshold distance from the bottom of the options list to call the infiniteScroll output event when scrolled. * The threshold value can be either in percent, or in pixels. * For example, use the value of 10% for the infiniteScroll output event to get called when the user has needs 10% to reach the bottom. */ threshold?: string; /** * The threshold time before firing the infiniteScroll event */ debounceTime?: number }` — Loads the options page by page as the user scrolls. The pages come from `selectOptions` as a function.
+- `clearFieldButton?`: `{ enabled: boolean | ((data?: T) => boolean); /** Runs instead of clearing the control, when clearing means more than emptying this one field. */ click?: (fieldControl: AbstractControl, clickEvent: Event) => void }` — Shows a clear button on the right of the field
+- `selectAll?`: `{ enabled: boolean; /** * A translation key. * @default 'forms.select-field.selectAllLabel' */ label?: string; disabled?: boolean }` — A "select all" row above the options. Needs `multiple`.
+- `panelWidth?`: `string | number | null` — The width of the option panel. Defaults to the width of the field.
+- `panelClass?`: `string | string[]` — Extra classes on the option panel, for styling options from outside the field.
 - `fetchOptionsOnFocus?`: `boolean` — This will only request to select options once the select opens The current value will be the only option until the select is opened
 
 ### FormFieldSelectOptionsFilter
 
-- `page?`: `number`
-- `searchQuery?`: `string`
-- `getAll?`: `boolean`
+What the select asks its `selectOptions` function for. Every field is filled in only when it applies.
+
+- `page?`: `number` — The page to load, counted from 0. Only sent when `infiniteScroll.enabled` is set.
+- `searchQuery?`: `string` — What the user typed in the search box. Only sent when `search.enabled` is set.
+- `getAll?`: `boolean` — Set when "select all" needs the whole list, not only the page that is loaded.
 
 ### FormFieldSlideToggle<T extends string | number = string>
 
 Extends: `FormFieldBase<T, FormFieldSlideToggleOptions>`
+
+An on/off switch. Use it for a setting that takes effect immediately in the reader's mind; a
+checkbox reads better for something that is confirmed when the form is submitted.
+
+It keeps rendering the toggle when the field is readonly instead of collapsing into text, so the
+state stays recognisable.
 
 - `editType`: `EditType.SlideToggle`
 
@@ -967,13 +1129,15 @@ Extends: `FormFieldBase<T, FormFieldSlideToggleOptions>`
 
 Extends: `FormFieldBaseOptions`
 
-- `label?`: `string`
-- `labelPosition?`: `MatSlideToggle['labelPosition']`
-- `color?`: `ThemePalette`
+- `label?`: `string` — The text next to the toggle. A translation key. Falls back to the `title` of the field.
+- `labelPosition?` (default `'after'`): `MatSlideToggle['labelPosition']` — Which side of the toggle the label sits on.
+- `color?` (default `'accent'`): `ThemePalette` — The Material palette of the toggle.
 
 ### FormFieldTextarea<T extends string | number = string>
 
 Extends: `FormFieldBase<T, FormFieldTextareaOptions>`
+
+A multi line text input. The textarea grows with its content.
 
 - `editType`: `EditType.TextArea`
 
@@ -981,17 +1145,26 @@ Extends: `FormFieldBase<T, FormFieldTextareaOptions>`
 
 Extends: `FormFieldBaseOptions`
 
-- `showLengthIndicator?`: `boolean`
+- `showLengthIndicator?`: `boolean` — Shows a character counter under the field. It needs a `maxLength` to count against. The application-wide default is `provideLab900Forms({ formField: { showLengthIndicator } })`; this option turns it on for one field.
 
 ### FormFieldWysiwgOptions
 
 Extends: `FormFieldBaseOptions`
 
-- `editorConfig?`: `AngularEditorConfig`
+- `editorConfig?`: `AngularEditorConfig` — The `@kolkov/angular-editor` configuration: toolbar buttons, height, fonts, upload handler. The field fills in `editable` and `placeholder` from the schema; everything else is passed through.
 
 ### FormRow<T extends number | string = string>
 
 Extends: `FormFieldBase<T, FormRowOptions>`
+
+A row of the 12 column grid, holding its children in `nestedFields`. It holds no value of its own.
+
+**The `attribute` decides the shape of the data.** With one, the row creates a nested `FormGroup`
+and its children live under that key; without one, the children are flattened into the parent
+group and the row is layout only. A dotted attribute on a field (`address.street`) creates the
+same nesting without a row, so reach for a row when you want the grouping *and* the layout.
+
+It renders its own readonly state, since a single readonly field cannot render children.
 
 - `editType`: `EditType.Row`
 
@@ -999,16 +1172,16 @@ Extends: `FormFieldBase<T, FormRowOptions>`
 
 Extends: `FormFieldBaseOptions`
 
-- `customClass?`: `string`
-- `customTitleClass?`: `string`
+- `customClass?`: `string` — An extra class on the row element, next to `lab900-form-row`.
+- `customTitleClass?`: `string` — An extra class on the row's title, next to `lab900-form-field-label lab900-form-row-label`.
 
 ### Icon
 
 An icon. Use `name` for a Material Icons ligature, or `svgName` for an svg you registered in
 `MatIconRegistry` yourself.
 
-- `name?`: `string`
-- `svgName?`: `string`
+- `name?`: `string` — A Material Icons ligature, for example `'search'`. Needs the Material Icons font.
+- `svgName?`: `string` — The name of an svg registered in `MatIconRegistry`. Takes precedence over `name`.
 
 ### IFieldConditions<T = any>
 
@@ -1041,17 +1214,24 @@ Creating the condition **throws** when `dependOn` names a control that does not 
 
 The defaults of every `EditType.Amount` field. A field can still override them in its options.
 
-- `minDecimals?` (default `0`): `number`
-- `maxDecimals?` (default `2`): `number`
+- `minDecimals?` (default `0`): `number` — The fewest decimals an amount is padded to.
+- `maxDecimals?` (default `2`): `number` — The most decimals an amount is formatted to.
 - `locale?`: `string` — The locale the amount is formatted for. Defaults to the locale of the application.
 
 ### Lab900File
 
 Extends: `File`
 
-- `fileName`: `string`
-- `imageSrc?`: `string`
-- `imageBase64?`: `string`
+A `File` with what `EditType.FilePreview` needs to render it: a name to show, and the image data
+once it is loaded.
+
+A file the user just picked is a real `File` with `fileName` added. A file that already exists on
+the server usually is not: build the object yourself with the fields below, and let
+`options.httpCallback` fetch the bytes when the preview needs them.
+
+- `fileName`: `string` — The name shown under the thumbnail. `File.name` is readonly, so the display name lives here.
+- `imageSrc?`: `string` — The URL the thumbnail loads from. Without it the field shows the overlay or nothing.
+- `imageBase64?`: `string` — The image as a data URL, which the preview dialog renders. `options.httpCallback` fills it in on first open, so a file behind an authenticated URL never has to be public.
 
 ### Lab900FormConfig<R = any, T extends string | number = string, DATE = Date>
 
@@ -1085,19 +1265,26 @@ the map from `EditType` to component. Without it every field renders as `Unknown
 - `fieldMask?`: `Partial<NgxMaskConfig>` — `ngx-mask` defaults, used by the input masks and the amount field.
 - `amountField?`: `Lab900AmountFieldOptions` — Defaults of the amount field.
 - `disableBrowserAutocomplete?` (default `false`): `boolean` — Sets `autocomplete="off"` on the inputs, so the browser does not offer its own suggestions.
+- `devWarnings?` (default `true`): `boolean` — Warns in the console about the schema mistakes the library otherwise fails silently on: an unknown `editType`, a select whose object value never matches its options because `compareWith` is missing, a `readonlyDisplay` that returns something other than a primitive, and a schema that is rebuilt on every change detection run. Development only, and each message is logged once. Set it to `false` when the warnings are noise.
 
 ### ValueLabel<T = any>
 
 One option of a select, autocomplete, radio group or button toggle. The control stores `value`;
 `label` is what the user reads, and it goes through the translate pipe.
 
-- `value`: `T`
+- `value`: `T` — What the control holds once this option is picked. Set `compareWith` when it is an object.
 - `label`: `string` — A translation key, or plain text when no key matches.
 - `disabled?`: `boolean` — Shows the option but blocks it from being picked.
 
 ### WysiwgFieldModel<T extends string | number = string>
 
 Extends: `FormFieldBase<T, FormFieldWysiwgOptions>`
+
+A rich text editor from `@kolkov/angular-editor`. The control value is an HTML string, so treat it
+as untrusted on the way back in and sanitize before rendering it anywhere else.
+
+The editor's icons are served from the application, not from the library: add the
+`@kolkov/angular-editor` icon glob to the `assets` of `angular.json` or the toolbar renders blank.
 
 - `editType`: `EditType.Wysiwyg`
 
@@ -1113,6 +1300,9 @@ type DateAdapterDisplayFormat = Intl.DateTimeFormatOptions | string
 ```
 
 ### FormFieldSelectOptionsFn<T>
+
+Loads the options of a select. It may return an array or an `Observable`, and it is called again
+whenever the filter changes, so the search and the paging can be answered by the server.
 
 ```ts
 type FormFieldSelectOptionsFn = ( filter?: FormFieldSelectOptionsFilter, fieldControl?: AbstractControl, schema?: FormFieldSelect<T> ) => ValueLabel<T>[] | Observable<ValueLabel<T>[]>

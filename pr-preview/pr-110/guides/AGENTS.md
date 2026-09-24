@@ -103,6 +103,7 @@ Without it no field renders. Its settings are `Lab900FormModuleSettings`:
 | `fieldMask`                 | `ngx-mask` defaults (`thousandSeparator`, `decimalMarker`)                |
 | `amountField`               | `locale`, `minDecimals`, `maxDecimals`                                    |
 | `disableBrowserAutocomplete` | sets `autocomplete="off"` on the inputs                                   |
+| `devWarnings`               | console warnings for silent schema mistakes, default `true`               |
 
 Without a `TranslateService` every field fails with `NullInjectorError`.
 
@@ -407,15 +408,32 @@ const fixture = TestBed.createComponent(UserFormComponent);
 fixture.detectChanges();
 ```
 
-Omitting `provideLab900Forms()` makes every field render as `UnknownFieldComponent`, which is easy to
-miss: the test passes but asserts nothing.
+Omitting `provideLab900Forms()` fails with `NullInjectorError: No provider for FormFieldMappingService`,
+because that provider registers the service and the edit type map together.
+
+## Development warnings
+
+In development the library warns, once per problem, about the mistakes that otherwise render a form
+that merely shows the wrong thing:
+
+- an `editType` no component is registered for, which renders `UnknownFieldComponent`,
+- a `Select` holding an object value that matches no option because `compareWith` is missing,
+- a `readonlyDisplay` returning an object or an array instead of one primitive,
+- a schema rebuilt several times a second, which is a schema built in the template or in a getter.
+
+They are stripped from production builds. Silence them with `provideLab900Forms({ devWarnings: false })`,
+or in one spec with `setLab900DevWarnings(false)`.
+
+A warning in a test run is worth reading: a field that renders as `UnknownFieldComponent` still passes
+an assertion that only checks that something rendered.
 
 ## Common mistakes
 
 | Mistake                                                    | Fix                                                                       |
 | ---------------------------------------------------------- | ------------------------------------------------------------------------- |
 | `NullInjectorError: TranslateService`                      | Add `provideTranslateService()` to the app and test providers.            |
-| Every field renders empty or as "unknown"                  | Add `provideLab900Forms()`; it registers the edit type map.               |
+| `NullInjectorError: FormFieldMappingService`               | Add `provideLab900Forms()`; it registers the edit type map.               |
+| A field renders as "unknown"                               | Its `editType` has no component. Read the console warning; it names it.   |
 | Building the schema in the template or a getter            | Keep it in a class field. A new object rebuilds the form and loses values. |
 | Calling `control.disable()` to lock a field                | Set `options.readonly`, `options.hide`, or use a condition.               |
 | Typed `FormGroup` in the field pipeline                    | The schema is dynamic; the library uses untyped forms.                    |
