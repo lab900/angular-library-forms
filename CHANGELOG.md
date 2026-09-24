@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+- Docs: `AGENTS.md` with instructions for AI coding agents. It ships in the package at
+  `node_modules/@lab900/forms/AGENTS.md` and is shown on the new AI agents page of the showcase.
+- Docs: the showcase serves `llms.txt` and `llms-full.txt` (the agent guide plus the full API reference) at its root.
+- Docs: every showcase page has a generated **API** tab. `npm run docs:api` reads every export of
+  `lib/src/public-api.ts` and writes the reference; the descriptions come from the JSDoc in the source.
+- Docs: the changelog is shown in the showcase.
+- Showcase: restyled with the Lab900 design system (tokens, Sofia typeface, new page header and tabs).
+- Showcase fix: the source tab of the search, reactive options and full-width drag-and-drop examples showed the
+  wrong file, or none, because their selector did not match their folder. Every example now resolves its own source.
+
 ## 22.2.1
 
 - **Breaking: reactive options are evaluated against the real form value from the first pass.** `groupValue`

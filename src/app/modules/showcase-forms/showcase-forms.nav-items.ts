@@ -13,6 +13,14 @@ export const showcaseFormsNavItems: NavItemGroup[] = [
             route: 'getting-started',
           },
           {
+            label: 'label.ai-agents',
+            route: 'ai-agents',
+          },
+          {
+            label: 'label.changelog',
+            route: 'changelog',
+          },
+          {
             label: 'Create dynamic forms',
             route: 'form-container',
           },

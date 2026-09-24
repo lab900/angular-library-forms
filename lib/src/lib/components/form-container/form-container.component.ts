@@ -10,6 +10,17 @@ import { LAB900_FORM_MODULE_SETTINGS } from '../../models/Lab900FormModuleSettin
 import { FormFieldDirective } from '../../directives/form-field.directive';
 import { uniqueId } from '../../utils/unique-id.utils';
 
+/**
+ * Renders a reactive form from a schema. It builds the `UntypedFormGroup` from
+ * `Lab900FormConfig.fields` and renders every field, so there is no per-field template.
+ *
+ * Read the state through a `viewChild`: `form` is the group, `value` is `getRawValue()` (so
+ * readonly and disabled fields are included) and `valid` is true when the group is valid or
+ * entirely disabled.
+ *
+ * @example
+ * <lab900-form [schema]="schema" [(data)]="user" />
+ */
 @Component({
   selector: 'lab900-form',
   templateUrl: './form-container.component.html',
@@ -23,22 +34,37 @@ export class Lab900Form<T> {
   private readonly fb = inject(Lab900FormBuilderService);
   public readonly setting = inject(LAB900_FORM_MODULE_SETTINGS);
 
+  /**
+   * The value of the form. Two-way: setting it patches the controls, and the form writes the
+   * current value back.
+   */
   public readonly data = model<T | undefined>(undefined);
+
+  /**
+   * The schema to render. The form builds its `UntypedFormGroup` from `schema.fields`.
+   *
+   * Keep it in a class field: a new object on every change detection rebuilds the form and loses
+   * the values the user has typed.
+   */
   public readonly schema = input.required<Lab900FormConfig>();
   protected readonly fields = computed(() => this.schema().fields);
 
   /**
-   * You can add a object of other form groups which could be used in the conditional fields
+   * Other form groups that the conditions of this form may depend on, keyed by the `formId` of
+   * those forms. A condition reaches them through `IFieldConditions.externalFormId`.
    */
   public readonly externalForms = input<Record<string, UntypedFormGroup> | undefined>(undefined);
 
   /**
-   * Don't trigger the valueChanges event when the data is set
-   * Default: true (because historical reasons, as this was always the case in the past)
+   * Whether patching the `data` input fires `valueChanges` on the controls. Set it to `false` to
+   * load a record without triggering the listeners of your own form.
+   * @default true
    */
   public readonly emitEventOnDataChange = input<boolean>(true);
 
+  /** The language that an `EditType.MultiLangInput` field currently edits. */
   public readonly language = input<string | undefined>(undefined);
+  /** The languages an `EditType.MultiLangInput` field offers. */
   public readonly availableLanguages = input<ValueLabel[]>([]);
   protected readonly _form = computed(() => {
     return this.fb.createFormGroup<T>(

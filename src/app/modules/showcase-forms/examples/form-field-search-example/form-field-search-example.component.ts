@@ -5,7 +5,7 @@ import { tap } from 'rxjs/operators';
 import { JsonPipe } from '@angular/common';
 
 @Component({
-  selector: 'lab900-form-field-select-example',
+  selector: 'lab900-form-field-search-example',
   template: `<lab900-form #f [schema]="formSchema" />
     <hr style="margin-top: 30px" />
     {{ f?.value | json }}`,

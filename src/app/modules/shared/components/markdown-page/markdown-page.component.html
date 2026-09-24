@@ -1,7 +1,7 @@
-@if (filePath) {
+@if (path()) {
   <div class="markdown-page row">
     <div class="page">
-      <markdown lineNumbers [src]="filePath" [start]="0" />
+      <markdown lineNumbers [src]="path()" [start]="0" />
     </div>
   </div>
 }

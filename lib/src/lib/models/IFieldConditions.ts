@@ -8,26 +8,61 @@ import { isDifferent } from '@lab900/ui';
 import { ValueLabel } from './form-field-base';
 import { EditType } from './editType';
 
+/**
+ * Makes a field react to another control. The condition subscribes to the controls named in
+ * `dependOn` and then flips visibility, disabled state, validators or the options of a select.
+ *
+ * Use a condition when a field depends on another **control**; use a reactive option
+ * (`options.hide`, `options.required`, ...) when it only depends on the form value as a whole.
+ *
+ * Creating the condition **throws** when `dependOn` names a control that does not exist, unless
+ * `skipIfNotExists` is set.
+ *
+ * @example
+ * conditions: [{ dependOn: 'reason', showIfEquals: 'other' }]
+ */
 export interface IFieldConditions<T = any> {
+  /** The attribute, or attributes, of the control(s) to watch. */
   dependOn: string | string[];
+  /** Decides whether the watched value really changed. Defaults to a reference comparison. */
   distinctUntilChangedCompareFn?: (a: T, b: T) => boolean;
+  /**
+   * Watch a control in another form instead of this one. The id resolves against the
+   * `externalForms` input of `<lab900-form>`.
+   */
   externalFormId?: string;
+  /** Hides this field while the watched control holds a value. */
   hideIfHasValue?: boolean;
+  /** Shows this field only while the watched control holds a value. */
   showIfHasValue?: boolean;
+  /** Disables this field while the watched control holds a value. */
   disableIfHasValue?: boolean;
+  /** Enables this field only while the watched control holds a value. */
   enableIfHasValue?: boolean;
+  /** Hides this field when the watched value equals this, or when the predicate returns true. */
   hideIfEquals?: ((value: T) => boolean) | T;
+  /** Shows this field only when the watched value equals this, or when the predicate returns true. */
   showIfEquals?: ((value: T) => boolean) | T;
+  /** Disables this field when the watched value equals this, or when the predicate returns true. */
   disableIfEquals?: ((value: T) => boolean) | T;
+  /** Enables this field only when the watched value equals this, or when the predicate returns true. */
   enabledIfEquals?: ((value: T) => boolean) | T;
+  /** Runs whenever the watched value changes. Use it for a side effect, such as patching this control. */
   onChangeFn?: (value: T, currentControl: AbstractControl, currentScheme: Readonly<Lab900FormField>) => void;
+  /** Reloads the options of an `EditType.Select` whenever the watched value changes. */
   conditionalOptions?: (
     value: T,
     currentControl: AbstractControl,
     options?: { page?: number; searchQuery?: string },
     schema?: FormFieldSelect<T>
   ) => ValueLabel[] | Observable<ValueLabel[]>;
+  /**
+   * Ignore the condition when the watched control is missing, instead of throwing. Use it when the
+   * control is only in the schema some of the time.
+   * @default false
+   */
   skipIfNotExists?: boolean;
+  /** The validators this field should have for the current watched value. Recalculated on every change. */
   validators?: (value: T) => ValidatorFn[];
 }
 

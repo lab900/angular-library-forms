@@ -1,0 +1,341 @@
+@use 'lab900.tokens' as lab;
+
+$code-font: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+$toc-width: 220px;
+
+:host {
+  display: block;
+  // the index sits next to the content when the page is wide enough
+  container-type: inline-size;
+}
+
+code,
+pre {
+  font-family: $code-font;
+  font-size: 0.875em;
+}
+
+p code,
+dd code {
+  padding: 1px 5px;
+  border-radius: lab.$radius-sm;
+  background: rgba(lab.$lab-mint, 0.45);
+}
+
+.api-docs {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px;
+  padding-top: 6px;
+
+  @container (min-width: 900px) {
+    grid-template-columns: minmax(0, 1fr) $toc-width;
+  }
+}
+
+.api-docs__message {
+  padding: 16px 0 0;
+  color: lab.$lab-fg-2;
+}
+
+.api-docs__filter {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid lab.$lab-dark;
+  border-radius: lab.$radius-sm;
+  color: lab.$lab-dark;
+  font: inherit;
+
+  &:focus {
+    outline: none;
+    border-color: lab.$lab-light-blue;
+  }
+}
+
+// On this page
+
+.api-toc {
+  display: none;
+
+  @container (min-width: 900px) {
+    display: block;
+    position: sticky;
+    top: calc(var(--showcase-header-height, 0px) + 20px);
+    align-self: start;
+    max-height: calc(100vh - #{lab.$header-height} - 40px);
+    overflow-y: auto;
+    padding-left: 16px;
+    border-left: 1px solid lab.$lab-mint;
+  }
+}
+
+.api-toc__title {
+  margin: 0 0 12px;
+  color: lab.$lab-fg-2;
+  font-size: 0.75rem;
+  font-weight: lab.$font-weight-semibold;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.api-toc__section,
+.api-toc__link {
+  display: block;
+  width: 100%;
+  padding: 3px 0;
+  border: 0;
+  background: none;
+  color: lab.$lab-dark;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    color: lab.$lab-light-blue;
+  }
+}
+
+.api-toc__section {
+  margin-top: 10px;
+  font-weight: lab.$font-weight-semibold;
+}
+
+.api-toc__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.api-toc__link {
+  padding-left: 10px;
+  color: lab.$lab-fg-2;
+  font-size: 0.85rem;
+  // long names like Lab900TableHeaderContentDirective wrap between words, see the <wbr> in the template
+  overflow-wrap: anywhere;
+}
+
+.api-toc__link--active {
+  box-shadow: inset 2px 0 0 lab.$lab-orange;
+  color: lab.$lab-dark;
+  font-weight: lab.$font-weight-semibold;
+}
+
+// Sections and symbols
+
+.api-section {
+  scroll-margin-top: calc(var(--showcase-header-height, 0px) + 20px);
+}
+
+.api-section__title {
+  margin: 48px 0 4px;
+  font-size: 1.6rem;
+  font-weight: lab.$font-weight-semibold;
+}
+
+.api-section__description {
+  margin: 0;
+  color: lab.$lab-fg-2;
+  font-size: 1.05rem;
+}
+
+.api-symbol {
+  margin-top: 24px;
+  padding: 24px;
+  border: 1px solid lab.$lab-mint;
+  border-radius: 8px;
+  // keep the heading in view after scrolling to it
+  scroll-margin-top: calc(var(--showcase-header-height, 0px) + 20px);
+}
+
+.api-symbol__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+}
+
+.api-symbol__name {
+  margin: 0;
+  font-family: $code-font;
+  font-size: 1.2rem;
+  font-weight: lab.$font-weight-semibold;
+  overflow-wrap: anywhere;
+}
+
+.api-symbol__name--nested {
+  font-size: 1rem;
+  scroll-margin-top: calc(var(--showcase-header-height, 0px) + 20px);
+}
+
+.api-symbol__source {
+  margin-left: auto;
+  color: lab.$lab-light-blue;
+  font-size: 0.85rem;
+}
+
+.api-symbol__description {
+  margin: 12px 0 0;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.api-symbol__meta {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 6px 16px;
+  margin: 16px 0 0;
+  font-size: 0.9rem;
+
+  dt {
+    color: lab.$lab-fg-2;
+  }
+
+  dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+.api-code {
+  margin: 16px 0 0;
+  padding: 14px 16px;
+  overflow-x: auto;
+  border-radius: lab.$radius-sm;
+  background: lab.$lab-dark;
+  color: lab.$lab-white;
+  line-height: 1.5;
+
+  .api-type-link {
+    color: lab.$lab-mint;
+  }
+}
+
+.api-deprecated {
+  margin: 12px 0 0;
+  padding: 8px 12px;
+  border-radius: lab.$radius-sm;
+  background: lab.$lab-yellow;
+}
+
+// Members
+
+.api-group__title {
+  margin: 28px 0 0;
+  color: lab.$lab-fg-2;
+  font-size: 0.8rem;
+  font-weight: lab.$font-weight-semibold;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.api-members {
+  margin-top: 8px;
+  border-top: 1px solid lab.$lab-mint;
+}
+
+.api-member {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px 24px;
+  padding: 14px 0;
+  border-bottom: 1px solid lab.$lab-mint;
+
+  @container (min-width: 640px) {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  }
+}
+
+.api-member--deprecated .api-member__name {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.api-member__name-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+}
+
+.api-member__name {
+  font-size: 0.95rem;
+  font-weight: lab.$font-weight-semibold;
+}
+
+.api-member__type {
+  display: block;
+  margin-top: 4px;
+  color: lab.$lab-fg-2;
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+
+.api-member__hint {
+  display: block;
+  margin-top: 4px;
+  color: lab.$lab-light-blue;
+  font-size: 0.8rem;
+}
+
+.api-member__body {
+  font-size: 0.95rem;
+  line-height: 1.5;
+
+  p {
+    margin: 0;
+  }
+
+  p + p {
+    margin-top: 6px;
+  }
+}
+
+.api-member__meta {
+  color: lab.$lab-fg-2;
+  font-size: 0.85rem;
+}
+
+// Options of a renderer or editor, inside the renderer
+
+.api-options {
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: lab.$radius-sm;
+  background: rgba(lab.$lab-mint, 0.2);
+}
+
+// Shared
+
+.api-badge {
+  display: inline-block;
+  padding: 0 8px;
+  border-radius: lab.$radius-pill;
+  background: lab.$lab-mint;
+  color: lab.$lab-dark;
+  font-size: 0.72rem;
+  line-height: 1.7;
+  white-space: nowrap;
+}
+
+.api-badge--required {
+  background: lab.$lab-orange-light;
+  color: lab.$lab-orange;
+  font-weight: lab.$font-weight-semibold;
+}
+
+.api-badge--warn {
+  background: lab.$lab-yellow;
+}
+
+.api-type-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: lab.$lab-light-blue;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}

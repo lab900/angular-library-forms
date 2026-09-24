@@ -1,5 +1,5 @@
 <div class="lab900-showcase">
-  <mat-toolbar class="lab900-showcase__header mat-elevation-z2">
+  <mat-toolbar class="lab900-showcase__header">
     <div>
       <div>
         <div class="menu-button">
@@ -9,16 +9,16 @@
         </div>
         <a [routerLink]="['/']" class="lab900-showcase__header__logo">
           <img
-            [ngSrc]="'assets/images/logo-duo-dark.svg'"
+            [ngSrc]="'assets/images/logo-dark-white.svg'"
+            [priority]="true"
             alt="{{ 'app.title' | translate }}"
-            width="40"
-            height="35"
-            priority="high" />
+            width="44"
+            height="38" />
           <h1>{{ 'app.title' | translate }}</h1>
         </a>
       </div>
       <div>
-        <a href="{{ gitUrl }}" target="_blank" mat-icon-button>
+        <a style="display: block" href="{{ gitUrl }}" target="_blank" mat-icon-button>
           <mat-icon svgIcon="github" />
         </a>
       </div>
