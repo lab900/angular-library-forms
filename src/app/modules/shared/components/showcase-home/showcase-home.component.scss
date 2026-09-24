@@ -1,7 +1,9 @@
-@use 'green.palette' as *;
+@use '@angular/material' as mat;
+@use 'lab900.tokens' as lab;
 
 .showcase-home__header {
-  background: $palette-lab900green-100;
+  position: relative;
+  background: lab.$lab-mint;
   text-align: center;
 
   img {
@@ -12,20 +14,22 @@
 
   h1 {
     margin-top: 0;
-    font-size: 2.5rem;
-    font-weight: 500;
+    font-size: 3rem;
+    line-height: 1.2;
+    font-weight: lab.$font-weight-semibold;
+    letter-spacing: -0.01em;
   }
 
   p {
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 1.25rem;
   }
 
   .mat-icon {
     font-size: 80px;
     width: 80px;
     height: 80px;
-    color: #ff7459;
+    color: lab.$lab-orange;
     margin: 0 auto 20px;
   }
 
@@ -33,11 +37,38 @@
     position: absolute;
     top: 20px;
     right: 20px;
-    font-size: 12px;
-    background: $palette-lab900green-200;
-    padding: 5px 10px 3px;
+    font-size: 0.75rem;
+    background: lab.$lab-white;
+    padding: 5px 12px 3px;
     display: block;
-    border-radius: 10px;
+    border-radius: lab.$radius-pill;
+  }
+}
+
+.showcase-home__links {
+  h2 {
+    font-size: 2rem;
+    font-weight: lab.$font-weight-regular;
+  }
+
+  // Pill CTAs, like the design system's .btn-pill--orange.
+  @include mat.button-overrides(
+    (
+      filled-container-color: lab.$lab-orange,
+      filled-label-text-color: lab.$lab-white,
+      filled-container-shape: lab.$radius-pill,
+      filled-container-height: 48px,
+      filled-horizontal-padding: 28px,
+    )
+  );
+
+  .mat-mdc-unelevated-button {
+    font-size: 1rem;
+    transition: background-color lab.$dur-std lab.$ease-standard;
+
+    &:hover {
+      background-color: lab.$lab-orange-1;
+    }
   }
 }
 

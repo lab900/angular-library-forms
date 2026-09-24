@@ -1,6 +1,6 @@
-@if (data$ | async; as data) {
+@if (data()) {
   <div class="showcase-home">
-    @if (data.config; as config) {
+    @if (data()?.config; as config) {
       <header class="showcase-home__header">
         <span class="showcase-home__header__version">{{ config.version }}</span>
         <div class="row">
@@ -10,15 +10,15 @@
         </div>
       </header>
     }
-    @if (data.nav; as navItemGroups) {
+    @if (data()?.nav; as navItemGroups) {
       <div class="showcase-home__links row">
-        @for (group of navItemGroups; track group) {
+        @for (group of navItemGroups; track group.label) {
           @for (item of group.items; track item.label) {
             <div style="margin-bottom: 30px">
               <h2>{{ item.label | translate }}</h2>
               <div style="display: flex; flex-wrap: wrap">
-                @for (link of item.children; track link) {
-                  <button style="margin-right: 10px" mat-raised-button [routerLink]="['/' + link.route]">
+                @for (link of item.children; track link.label) {
+                  <button style="margin-right: 10px" mat-flat-button [routerLink]="['/' + link.route]">
                     {{ link.label | translate }}
                   </button>
                 }

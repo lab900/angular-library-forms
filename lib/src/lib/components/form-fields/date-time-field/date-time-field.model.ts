@@ -9,8 +9,17 @@ import { FormFieldDatePickerOptions } from '../date-field/date-field.model';
 export type DateAdapterDisplayFormat = Intl.DateTimeFormatOptions | string;
 
 export interface FormFieldDateTimePickerOptions<T = Date> extends FormFieldDatePickerOptions<T> {
+  /**
+   * Adds seconds to the time picker and to the default display format.
+   * @default false
+   */
   showSeconds?: boolean;
+  /** The time a freshly picked date starts at, as `[hours, minutes, seconds]`. Midnight when unset. */
   defaultTime?: [number, number, number];
+  /**
+   * How many minutes one step of the minute picker moves.
+   * @default 1
+   */
   stepMinute?: number;
   /**
    * Format that the input uses to show the selected date and time. Give a value that the
@@ -24,6 +33,18 @@ export interface FormFieldDateTimePickerOptions<T = Date> extends FormFieldDateP
   displayFormat?: DateAdapterDisplayFormat;
 }
 
+/**
+ * A date with a time, from `@ngx-mce/datetime-picker`. The control value is one date, with the time
+ * set on it.
+ *
+ * @example
+ * {
+ *   attribute: 'appointment',
+ *   title: 'label.appointment',
+ *   editType: EditType.DateTime,
+ *   options: { minDate: new Date(), stepMinute: 15, defaultTime: [9, 0, 0] },
+ * }
+ */
 export interface FormFieldDateTimePicker<T extends string | number = string, D = Date>
   extends FormFieldBase<T, FormFieldDateTimePickerOptions<D>> {
   editType: EditType.DateTime;

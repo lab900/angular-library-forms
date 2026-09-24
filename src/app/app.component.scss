@@ -1,13 +1,13 @@
-@use 'green.palette' as *;
+@use 'lab900.tokens' as lab;
 
 .lab900-showcase {
   &__header {
     display: flex;
     align-items: center;
-    background: #fff;
     z-index: 10;
     position: relative;
     padding-left: 0;
+    box-shadow: lab.$shadow-toolbar;
 
     > div {
       display: flex;
@@ -20,17 +20,25 @@
     }
 
     .menu-button {
-      background: $palette-lab900green-50;
-      height: 64px;
-      width: 64px;
+      height: lab.$header-height;
+      width: lab.$header-height;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-right: 16px;
+      margin-right: 8px;
 
       @media screen and (max-width: 599px) {
-        height: 56px;
-        width: 56px;
+        height: lab.$header-height-mobile;
+        width: lab.$header-height-mobile;
+      }
+    }
+
+    .mat-mdc-icon-button {
+      color: lab.$lab-dark;
+      transition: color lab.$dur-std lab.$ease-standard;
+
+      &:hover {
+        color: lab.$lab-orange;
       }
     }
 
@@ -42,16 +50,18 @@
       display: flex;
       align-items: center;
       text-decoration: none;
-      color: $palette-lab900-text;
+      color: lab.$lab-dark;
 
       img {
-        height: 35px;
+        height: 38px;
         margin-right: 15px;
         display: block;
       }
 
       h1 {
         margin-bottom: 0;
+        font-size: 1.25rem;
+        font-weight: lab.$font-weight-semibold;
       }
 
       @media screen and (max-width: 599px) {

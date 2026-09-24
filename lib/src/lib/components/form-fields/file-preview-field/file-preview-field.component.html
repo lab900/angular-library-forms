@@ -17,7 +17,17 @@
         @for (file of files(); track file.name + $index) {
           <mat-card appearance="outlined" class="image-wrapper" (click)="handleImageClick(file)">
             @if (!fieldIsReadonly()) {
-              <mat-icon (click)="$event.stopPropagation(); removeFile(file)" class="delete-image">close</mat-icon>
+              <!-- Destructive and icon-only: it needs a name and a key, not just a click handler. -->
+              <mat-icon
+                (click)="$event.stopPropagation(); removeFile(file)"
+                (keydown.enter)="$event.stopPropagation(); removeFile(file)"
+                (keydown.space)="$event.stopPropagation(); $event.preventDefault(); removeFile(file)"
+                role="button"
+                tabindex="0"
+                [attr.aria-label]="'forms.a11y.remove-file' | translate: { name: file.fileName }"
+                class="delete-image"
+                >close</mat-icon
+              >
             }
             @if (showOverlay(file)) {
               @if (_options()?.overlay; as overlay) {
@@ -40,7 +50,15 @@
                 </p>
               }
               @if (_options()?.canEditFileMetaData && !fieldIsReadonly()) {
-                <mat-icon (click)="$event.stopPropagation(); openPreviewDialog(file)">visibility</mat-icon>
+                <mat-icon
+                  (click)="$event.stopPropagation(); openPreviewDialog(file)"
+                  (keydown.enter)="$event.stopPropagation(); openPreviewDialog(file)"
+                  (keydown.space)="$event.stopPropagation(); $event.preventDefault(); openPreviewDialog(file)"
+                  role="button"
+                  tabindex="0"
+                  [attr.aria-label]="'forms.a11y.preview-file' | translate: { name: file.fileName }"
+                  >visibility</mat-icon
+                >
               }
             </div>
           </mat-card>

@@ -12,6 +12,9 @@ View the [showcase](https://lab900.github.io/angular-library-forms) for guides &
 ## Getting started
 
 - [Forms library](https://lab900.github.io/angular-library-forms/getting-started)
+- [Instructions for AI agents](lib/AGENTS.md): how a coding agent should use the library. The file
+  ships in the package at `node_modules/@lab900/forms/AGENTS.md` and is shown in the
+  [showcase](https://lab900.github.io/angular-library-forms/ai-agents).
 
 ## Run the project locally
 

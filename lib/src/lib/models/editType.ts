@@ -1,3 +1,11 @@
+/**
+ * Picks the component that renders a field. It also discriminates the `Lab900FormField` union, so
+ * setting it narrows `options` to the options interface of that field.
+ *
+ * `FormFieldMappingService` maps a member to a component class, read from the
+ * `LAB900_FORM_FIELD_TYPES` token. A value with no mapping renders `UnknownFieldComponent` instead
+ * of throwing.
+ */
 export enum EditType {
   Checkbox = 'Checkbox',
   TextArea = 'TextArea',

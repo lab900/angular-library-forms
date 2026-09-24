@@ -32,7 +32,7 @@
         @if (showChipValue()) {
           <mat-select-trigger>
             <mat-chip-listbox>
-              @for (item of getOptionsMatchingTheValue(); track item) {
+              @for (item of selectedOptions(); track item) {
                 <mat-chip-row [removable]="!fieldIsReadonly()" (removed)="removeChip(item.value)" [value]="item">
                   <div>{{ item.label | translate }}</div>
                   @if (!fieldIsReadonly()) {
@@ -64,9 +64,18 @@
           </mat-option>
         }
         @if (multiple() && selectAllOptions()?.enabled && selectOptions().length) {
+          <!--
+            Styled as a mat-option but not one, so MatSelect's key manager never reaches it and the row
+            was mouse-only. It announces itself as an option and takes enter and space like the real ones.
+          -->
           <div
             class="mat-mdc-option mdc-list-item mat-mdc-option-multiple select-all"
-            (click)="handleToggleAllSelection()">
+            role="option"
+            tabindex="0"
+            [attr.aria-selected]="selectAllState() === 'checked'"
+            (click)="handleToggleAllSelection()"
+            (keydown.enter)="handleToggleAllSelection()"
+            (keydown.space)="$event.preventDefault(); handleToggleAllSelection()">
             <mat-pseudo-checkbox [state]="selectAllState()" [disabled]="selectAllOptions()?.disabled || loading()" />
             <span class="mdc-list-item__primary-text">
               {{ selectAllOptions()?.label || 'forms.select-field.selectAllLabel' | translate }}

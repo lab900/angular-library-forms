@@ -9,6 +9,7 @@ import { MatPseudoCheckbox, MatPseudoCheckboxState } from '@angular/material/cor
 import { coerceArray } from '@angular/cdk/coercion';
 import { isDifferent } from '@lab900/ui';
 import { debounceTimeAfterFirst, toReadonlyDisplayString } from '../../../utils/helpers';
+import { describeField, devWarnOnce } from '../../../utils/dev-warnings';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { _, TranslatePipe } from '@ngx-translate/core';
 import { SelectInfiniteScrollDirective } from './select-field-infinite-scroll.directive';
@@ -99,6 +100,18 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
     return clearOptions?.enabled;
   });
 
+  /**
+   * The options the control currently holds. Same result as {@link getOptionsMatchingTheValue}, but cached:
+   * the chip trigger renders it, and a method call there re-filters every option on every change detection
+   * pass of the view.
+   */
+  protected readonly selectedOptions = computed<ValueLabel<T>[]>(() => {
+    const fieldValue = this.fieldValue() as T | T[] | undefined;
+    const value: T[] = fieldValue ? coerceArray(fieldValue) : [];
+    const compare = this.compareFn();
+    return this.selectOptions()?.filter(o => value.some(v => compare(o.value, v)));
+  });
+
   public readonly readOnlyDisplay = computed(() => {
     // if no value is set, display a dash
     if (!this.hasValue()) {
@@ -165,18 +178,13 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
 
   public constructor() {
     super();
-    effect(() => {
-      const select = this._select();
-      if (select && select?.multiple) {
-        const allSelected = this.selectOptions()?.length === coerceArray(this.fieldValue())?.length;
-        this.selectAllState.set(allSelected ? 'checked' : 'unchecked');
-
-        select.selectionChange.subscribe(selection => {
-          const allSelected = this.selectOptions()?.length === selection?.value?.length;
-          this.selectAllState.set(allSelected ? 'checked' : 'unchecked');
-        });
-      }
-    });
+    /**
+     * No `selectionChange` subscription here: it was re-subscribed on every option load and every value
+     * change, and never unsubscribed. `mat-select` writes its selection to the control, so the value
+     * subscription in `ngOnInit` covers exactly what it covered, and this effect covers the rest - the
+     * select becoming available, and the options being (re)loaded.
+     */
+    effect(() => this.syncSelectAllState());
   }
 
   public ngOnInit(): void {
@@ -197,6 +205,8 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
         if (value && !this.valueInOptions()) {
           this.selectOptions.set(this.addValueToOptions());
         }
+        // Synchronously, so the state is right for a caller that reads it straight after a selection.
+        this.syncSelectAllState();
       });
     }
 
@@ -346,6 +356,14 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
     }
   }
 
+  private syncSelectAllState(): void {
+    const select = this._select();
+    if (select && select?.multiple) {
+      const allSelected = this.selectOptions()?.length === coerceArray(this.fieldValue())?.length;
+      this.selectAllState.set(allSelected ? 'checked' : 'unchecked');
+    }
+  }
+
   private toggleAllSelection(): void {
     if (this.selectAllState() === 'unchecked') {
       this.select?.options.forEach((item: MatOption) => {
@@ -454,13 +472,50 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
       }));
 
     if (missingOptions?.length) {
+      this.warnOnMissingCompareWith(missingOptions);
       return missingOptions.concat(options ?? []);
     }
     return options ?? [];
   }
 
+  /**
+   * The value is an object, it matches none of the options, and the comparison is the default `===`:
+   * almost always a missing `compareWith` rather than a value that is genuinely not in the list. The
+   * select renders blank, which looks like a loading problem and not like a schema mistake.
+   */
+  private warnOnMissingCompareWith(missingOptions: ValueLabel<T>[]): void {
+    if (this._options()?.compareWith) {
+      return;
+    }
+    if (!missingOptions.some(option => typeof option.value === 'object' && option.value !== null)) {
+      return;
+    }
+    devWarnOnce(
+      `select-compare-with:${this.fieldAttribute}`,
+      `The select ${describeField(this.fieldAttribute, 'Select')} holds an object value that equals none of its ` +
+        `options, and it has no compareWith, so the values are compared by reference. Set ` +
+        `options.compareWith, for example (a, b) => a?.id === b?.id.`
+    );
+  }
+
   private removeDuplicateOptions(items: ValueLabel<T>[]): ValueLabel<T>[] {
     if (items?.length) {
+      /**
+       * Without a `compareWith` the comparison is `===`, so a `Set` decides it and the scan is linear. The
+       * loop below is quadratic, which a list of a few thousand options - an infinite scroll select that
+       * has loaded every page - turns into a freeze. `Set` only parts ways with `===` on `NaN`, which is
+       * not a value an option can meaningfully hold.
+       */
+      if (!this._options()?.compareWith) {
+        const seen = new Set<T>();
+        return items.filter(item => {
+          if (seen.has(item.value)) {
+            return false;
+          }
+          seen.add(item.value);
+          return true;
+        });
+      }
       const compare = this.compareFn();
       return items.filter((item, idx, arr) => arr.findIndex(({ value }) => compare(item.value, value)) === idx);
     }

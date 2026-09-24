@@ -1,7 +1,7 @@
 import { AbstractControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { computed, Directive, effect, inject, input, model, Signal, untracked } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { concat, defer, EMPTY, Observable, of, switchMap } from 'rxjs';
+import { concat, defer, EMPTY, Observable, of, Subscription, switchMap } from 'rxjs';
 import { FieldConditions } from '../models/IFieldConditions';
 import { SubscriptionBasedDirective } from '../directives/subscription-based.directive';
 import { Lab900FormField } from '../models/lab900-form-field.type';
@@ -21,6 +21,7 @@ import {
   computeReactiveStrictStringOption,
   computeReactiveStringOption,
 } from '../utils/helpers';
+import { sharedGroupValue } from '../utils/group-value.utils';
 import { EditType } from '../models/editType';
 
 @Directive()
@@ -28,11 +29,20 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   public readonly setting: Lab900FormModuleSettings = inject(LAB900_FORM_MODULE_SETTINGS);
   protected readonly translateService = inject(TranslateService);
 
+  /**
+   * The name of this field's control inside {@link _group}. `FormFieldDirective` sets it from
+   * `schema.attribute`, with the path of a dotted attribute already stripped off, so it is the last
+   * segment: the `street` of `address.street`.
+   */
   public readonly _fieldAttribute = input<string | undefined>(undefined, { alias: 'fieldAttribute' });
   public get fieldAttribute(): string | undefined {
     return this._fieldAttribute();
   }
 
+  /**
+   * The group this field's control lives in. For a dotted attribute that is the nested group, not the
+   * group of the whole form.
+   */
   public _group = input.required<UntypedFormGroup>({ alias: 'group' });
   public get group(): UntypedFormGroup {
     return this._group();
@@ -77,19 +87,12 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     },
   }).value;
 
-  public readonly groupValue = rxResource({
-    params: () => this._group(),
-    stream: ({ params }) => {
-      if (params) {
-        return concat(
-          defer(() => of(params.getRawValue())),
-          params.valueChanges.pipe(map(() => params.getRawValue()))
-        );
-      }
-      return of(null);
-    },
-  }).value;
+  public readonly groupValue: Signal<any> = computed(() => {
+    const group = this._group();
+    return group ? sharedGroupValue(group)() : null;
+  });
 
+  /** The field's own entry from `Lab900FormConfig.fields`, narrowed to this component's edit type. */
   public readonly _schema = input.required<S>({ alias: 'schema' });
   public readonly _options = computed<S['options']>(() => this._schema().options);
   public readonly label = computed<string | undefined>(() => {
@@ -165,15 +168,28 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     return this._schema();
   }
 
+  /**
+   * The other forms this field's conditions may reach, keyed by their `formId`. Passed down from the
+   * `externalForms` input of `<lab900-form>` and resolved by `IFieldConditions.externalFormId`.
+   */
   public readonly externalForms = input<Record<string, UntypedFormGroup> | undefined>(undefined);
+  /** The language an `EditType.MultiLangInput` currently edits. Ignored by every other edit type. */
   public readonly language = input<string | undefined>(undefined);
+  /** The languages an `EditType.MultiLangInput` offers. Ignored by every other edit type. */
   public readonly availableLanguages = input<ValueLabel[]>([]);
 
   /**
-   * Field state
+   * Field state.
+   *
+   * These are the way a field changes its own state: an effect writes each one through to the
+   * `AbstractControl`, so setting the model disables the control or adds `Validators.required`. Never
+   * call `disable()` or `setValidators()` on the control from a field component; set the model and
+   * let the base class do it, or the next recalculation undoes the change.
    */
   public readonly fieldIsReadonly = model<boolean>(false, { alias: 'readonly' });
+  /** Hides the field and disables its control, so it stops validating. */
   public readonly fieldIsHidden = model<boolean>(false);
+  /** Adds or removes `Validators.required` on the control. */
   public readonly fieldIsRequired = model<boolean>(false);
 
   public get valid(): boolean {
@@ -188,23 +204,27 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
 
   public constructor() {
     super();
-    effect(() => {
+    effect(onCleanup => {
+      // Read the option first: a field without an `onChangeFn` - nearly every field - never subscribes.
+      const onChangeFn = this._options()?.onChangeFn;
+      if (!onChangeFn) {
+        return;
+      }
       const group = this._group();
-      const options = this._options();
       const fieldControl = this._fieldControl();
       if (group && fieldControl) {
-        group.valueChanges.subscribe(() => {
-          if (options?.onChangeFn) {
-            options.onChangeFn(group.getRawValue(), fieldControl);
-          }
-        });
+        const sub = group.valueChanges.subscribe(() => onChangeFn(group.getRawValue(), fieldControl));
+        onCleanup(() => sub.unsubscribe());
       }
     });
-    effect(() => {
+    effect(onCleanup => {
       const editType = untracked(this._schema).editType;
       const fieldControl = editType === EditType.Row ? this._group() : this._fieldControl();
       if (fieldControl && this.conditions()?.length) {
-        this.createConditions();
+        const subs = this.createConditions();
+        // Also covers destruction: without it the conditions keep running, which matters for a condition on
+        // an `externalFormId`, where the control it watches outlives this field.
+        onCleanup(() => subs.forEach(sub => sub.unsubscribe()));
       }
     });
     effect(() => {
@@ -284,20 +304,17 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     }
   }
 
-  private createConditions(): void {
-    (this.conditions() ?? [])
+  private createConditions(): Subscription[] {
+    return (this.conditions() ?? [])
       .filter(c => c.dependOn)
       .map(c => new FieldConditions(this, c))
-      .forEach((conditions: FieldConditions) => {
-        const subs = conditions.start((dependOn: string, value: any, firstRun: boolean | undefined) => {
+      .flatMap((conditions: FieldConditions) =>
+        conditions.start((dependOn: string, value: any, firstRun: boolean | undefined) => {
           if (this.onConditionalChange) {
             this.onConditionalChange(dependOn, value, firstRun);
           }
-        });
-        if (subs?.length) {
-          this.subscriptions.concat(subs);
-        }
-      });
+        })
+      );
   }
 
   protected computeReactiveBooleanOption<O = S['options']>(key: keyof O): Signal<boolean> {

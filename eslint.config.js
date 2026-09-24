@@ -45,8 +45,12 @@ module.exports = tseslint.config(
     files: ['**/*.html'],
     extends: [...angular.configs.templateRecommended, ...angular.configs.templateAccessibility],
     rules: {
-      '@angular-eslint/template/click-events-have-key-events': 'off',
-      '@angular-eslint/template/interactive-supports-focus': 'off',
+      // These two were off while the custom controls - the drop zone, the password toggle, the file
+      // preview icons, the select-all row - were click handlers on non-focusable elements. They are
+      // fixed, so the rules are on to keep them fixed. A deliberate mouse-only shortcut next to a real
+      // control disables the rule on its own line, with a comment saying which control does the work.
+      '@angular-eslint/template/click-events-have-key-events': 'error',
+      '@angular-eslint/template/interactive-supports-focus': 'error',
       '@angular-eslint/template/no-autofocus': 'off',
     },
   },

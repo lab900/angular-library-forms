@@ -12,6 +12,8 @@ export * from './lib/models/IFieldConditions';
 export * from './lib/models/Lab900File';
 export * from './lib/utils/form-field.utils';
 export * from './lib/utils/helpers';
+// Only the switches: devWarnOnce() and describeField() are how the library writes a warning, not API.
+export { setLab900DevWarnings, resetLab900DevWarnings } from './lib/utils/dev-warnings';
 
 /* Field models: every member of the Lab900FormField union, and its options interface. */
 export * from './lib/components/form-row/form-row.model';

@@ -3,13 +3,13 @@ import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'lab900-form-field-drag-n-drop-file-example-full-width',
+  selector: 'lab900-form-field-drag-n-drop-file-full-width-example',
   template:
     '<lab900-form [schema]="formSchema"/><button mat-raised-button color="primary" (click)="submitForm()">Submit</button>',
   imports: [Lab900Form, MatButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormFieldDragNDropFileExampleFullWidthComponent {
+export class FormFieldDragNDropFileFullWidthExampleComponent {
   public readonly form = viewChild<Lab900Form<any>>(Lab900Form);
 
   public formSchema: Lab900FormConfig = {
