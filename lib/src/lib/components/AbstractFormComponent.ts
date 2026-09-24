@@ -29,11 +29,20 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
   public readonly setting: Lab900FormModuleSettings = inject(LAB900_FORM_MODULE_SETTINGS);
   protected readonly translateService = inject(TranslateService);
 
+  /**
+   * The name of this field's control inside {@link _group}. `FormFieldDirective` sets it from
+   * `schema.attribute`, with the path of a dotted attribute already stripped off, so it is the last
+   * segment: the `street` of `address.street`.
+   */
   public readonly _fieldAttribute = input<string | undefined>(undefined, { alias: 'fieldAttribute' });
   public get fieldAttribute(): string | undefined {
     return this._fieldAttribute();
   }
 
+  /**
+   * The group this field's control lives in. For a dotted attribute that is the nested group, not the
+   * group of the whole form.
+   */
   public _group = input.required<UntypedFormGroup>({ alias: 'group' });
   public get group(): UntypedFormGroup {
     return this._group();
@@ -83,6 +92,7 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     return group ? sharedGroupValue(group)() : null;
   });
 
+  /** The field's own entry from `Lab900FormConfig.fields`, narrowed to this component's edit type. */
   public readonly _schema = input.required<S>({ alias: 'schema' });
   public readonly _options = computed<S['options']>(() => this._schema().options);
   public readonly label = computed<string | undefined>(() => {
@@ -158,15 +168,28 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
     return this._schema();
   }
 
+  /**
+   * The other forms this field's conditions may reach, keyed by their `formId`. Passed down from the
+   * `externalForms` input of `<lab900-form>` and resolved by `IFieldConditions.externalFormId`.
+   */
   public readonly externalForms = input<Record<string, UntypedFormGroup> | undefined>(undefined);
+  /** The language an `EditType.MultiLangInput` currently edits. Ignored by every other edit type. */
   public readonly language = input<string | undefined>(undefined);
+  /** The languages an `EditType.MultiLangInput` offers. Ignored by every other edit type. */
   public readonly availableLanguages = input<ValueLabel[]>([]);
 
   /**
-   * Field state
+   * Field state.
+   *
+   * These are the way a field changes its own state: an effect writes each one through to the
+   * `AbstractControl`, so setting the model disables the control or adds `Validators.required`. Never
+   * call `disable()` or `setValidators()` on the control from a field component; set the model and
+   * let the base class do it, or the next recalculation undoes the change.
    */
   public readonly fieldIsReadonly = model<boolean>(false, { alias: 'readonly' });
+  /** Hides the field and disables its control, so it stops validating. */
   public readonly fieldIsHidden = model<boolean>(false);
+  /** Adds or removes `Validators.required` on the control. */
   public readonly fieldIsRequired = model<boolean>(false);
 
   public get valid(): boolean {

@@ -11,13 +11,21 @@ export class AuthImageDirective {
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private renderer = inject(Renderer2);
 
+  /**
+   * The file to render. Two-way: the directive writes the bytes it fetched back into `imageBase64`,
+   * so the preview dialog does not download the same image again.
+   */
   public readonly image = model.required<Lab900File>();
   /**
+   * Fetches the bytes, for an image the browser cannot load on its own - typically because the URL
+   * needs an Authorization header. Without it the element just points at `image.imageSrc`.
+   *
    * `fetchImageBase64` accepts and converts an `ArrayBuffer`, so the callback may return either. The
    * showcase passes a request with `responseType: 'arraybuffer'`, which the old `Observable<Blob>` type
    * excluded.
    */
   public readonly httpCallback = input<((image: Lab900File) => Observable<Blob | ArrayBuffer>) | undefined>(undefined);
+  /** Shown when the image has no source or the fetch fails. */
   public readonly defaultImage = input<string | undefined>(undefined);
 
   public constructor() {

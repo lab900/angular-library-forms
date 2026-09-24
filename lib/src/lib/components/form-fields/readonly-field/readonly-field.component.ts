@@ -3,6 +3,7 @@ import { FormComponent } from '../../AbstractFormComponent';
 
 import { TranslatePipe, TranslationObject } from '@ngx-translate/core';
 import { toReadonlyDisplayStrings } from '../../../utils/helpers';
+import { describeField, devWarnOnce } from '../../../utils/dev-warnings';
 
 @Component({
   selector: 'lab900-readonly',
@@ -23,7 +24,12 @@ export class ReadonlyFieldComponent extends FormComponent {
    */
   private readonly displayKeys = computed<string[]>(() => {
     const readonlyDisplayFn = this._options()?.readonlyDisplay;
-    return toReadonlyDisplayStrings(readonlyDisplayFn ? readonlyDisplayFn(this.groupValue()) : this.controlValue());
+    if (!readonlyDisplayFn) {
+      return toReadonlyDisplayStrings(this.controlValue());
+    }
+    const displayValue = readonlyDisplayFn(this.groupValue());
+    this.warnOnNonPrimitiveDisplayValue(displayValue);
+    return toReadonlyDisplayStrings(displayValue);
   });
 
   /**
@@ -45,4 +51,24 @@ export class ReadonlyFieldComponent extends FormComponent {
   });
 
   protected readonly readonlyContainerClass = this.computeReactiveOptionalStringOption('readonlyContainerClass');
+
+  /**
+   * `readonlyDisplay` has to reduce the field to one primitive. An object renders as nothing at all:
+   * `toReadonlyDisplayStrings()` drops anything that stringifies to `[object ...]`, so the field comes
+   * out empty and looks like missing data. An array is worse, because most edit types then reach the
+   * translate pipe with it and throw. Neither says what went wrong, so name the field here.
+   */
+  private warnOnNonPrimitiveDisplayValue(value: unknown): void {
+    if (value == null || typeof value !== 'object') {
+      return;
+    }
+    const attribute = this.fieldAttribute;
+    devWarnOnce(
+      `readonly-display-not-primitive:${attribute}`,
+      `options.readonlyDisplay of ${describeField(attribute, this._schema().editType)} returned ${
+        Array.isArray(value) ? 'an array' : 'an object'
+      }. It has to return one primitive (string, number, boolean, null or undefined); the field renders ` +
+        `empty otherwise. Join or format the value yourself, or use toReadonlyDisplayString().`
+    );
+  }
 }

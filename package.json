@@ -14,6 +14,7 @@
     "build:forms": "ng build forms",
     "build:forms:prod": "npm run build:forms -- --configuration production",
     "docs:api": "node scripts/generate-api-docs.mjs",
+    "docs:api:check": "node scripts/generate-api-docs.mjs --check",
     "predeploy:showcase": "npm run docs:api",
     "deploy:showcase": "ng deploy",
     "test": "jest",

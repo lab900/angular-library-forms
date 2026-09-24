@@ -22,11 +22,48 @@
 - Performance: an `EditType.Select` deduplicates its options in linear time when it has no `compareWith`,
   instead of comparing every option against every other. A list of a few thousand options - an infinite scroll
   select that has loaded every page - no longer freezes on each load.
+- **Accessibility: the controls the library draws itself are reachable by keyboard and have a name.** The
+  drag-and-drop zone was a focusable `div` with no role and no label, wrapped around a real button; the
+  password visibility toggle was a click handler on an icon that no key could reach; the remove and preview
+  icons of the file preview field had neither a name nor a key; and the "select all" row of a multi select is
+  styled as a `mat-option` but is not one, so `MatSelect`'s key manager never reached it. All four are fixed,
+  the validation error of the drag-and-drop field announces itself, and the two template rules that catch this
+  (`click-events-have-key-events`, `interactive-supports-focus`) are errors again instead of switched off.
+  The drop zone is a labelled region now rather than a tab stop of its own: it keeps its click shortcut for the
+  mouse, and the upload button inside it is the control that takes focus.
+- New translation keys for those labels: `forms.a11y.drop-zone`, `.remove-file`, `.preview-file`,
+  `.show-password` and `.hide-password`, in English and Dutch. `form.field.add_new` gained the Dutch
+  translation it was missing.
+- **Development warnings for the schema mistakes that render a form which merely shows the wrong thing.**
+  None of them throws and none fails to compile, so a test asserting that something rendered passes either
+  way: an `editType` no component is registered for, a `Select` whose object value matches no option because
+  `compareWith` is missing, a `readonlyDisplay` returning an object or an array instead of one primitive, and
+  a schema rebuilt several times a second - the signature of a schema built in the template or in a getter.
+  Each message names the field and the fix, is logged once, and is stripped from production builds. Turn them
+  off with `provideLab900Forms({ devWarnings: false })`, or in a single spec with `setLab900DevWarnings(false)`.
+- **Fix: the error for an edit type that nothing renders told you the wrong thing.** It read "Trying to use an
+  unsupported type", which could never be the cause: an unknown edit type falls back to `UnknownFieldComponent`
+  and never reached that branch. It now fires only for what can actually cause it - a custom
+  `LAB900_FORM_FIELD_TYPES` that leaves out `UnknownFieldComponent` - and says so. Omitting
+  `provideLab900Forms()` fails with `NullInjectorError: FormFieldMappingService`, not with a form full of
+  unknown fields as `AGENTS.md` claimed.
+- Fix: `EditType.File`, deprecated in favour of `EditType.FilePreview`, had no entry in the edit type map and
+  its component key is never registered. It still renders `UnknownFieldComponent`, but now warns and points at
+  its replacement.
+- `FormFieldMappingService` resolves an edit type through one lookup table instead of 28 eagerly read fields
+  and a 26 case switch, and `FormFieldDirective` no longer maps every field twice per evaluation. The
+  `LAB900_FORM_FIELD_TYPES` token keeps its component-class-name keys, so a custom map still works unchanged.
+- `FormFieldRangeSliderOptions.enabledInputs` is marked `@deprecated`: nothing has ever read it.
 - Docs: `AGENTS.md` with instructions for AI coding agents. It ships in the package at
   `node_modules/@lab900/forms/AGENTS.md` and is shown on the new AI agents page of the showcase.
 - Docs: the showcase serves `llms.txt` and `llms-full.txt` (the agent guide plus the full API reference) at its root.
 - Docs: every showcase page has a generated **API** tab. `npm run docs:api` reads every export of
   `lib/src/public-api.ts` and writes the reference; the descriptions come from the JSDoc in the source.
+- **Docs: every public member of the API has a description, and every field model has a complete schema
+  example.** 72 of 268 members had neither. The JSDoc ends up in the published `types/lab900-forms.d.ts`, so
+  the whole contract - including which options are traps, such as a `Select` without `compareWith` - reads
+  out of `node_modules` with no network: the file went from 1222 to 2186 lines and from 3 examples to 31.
+  `npm run docs:api:check` fails on an undocumented member and runs in both Cloud Build pipelines.
 - Docs: the changelog is shown in the showcase.
 - Showcase: restyled with the Lab900 design system (tokens, Sofia typeface, new page header and tabs).
 - Showcase fix: the source tab of the search, reactive options and full-width drag-and-drop examples showed the
