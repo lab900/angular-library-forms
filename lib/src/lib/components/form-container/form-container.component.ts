@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, model, untracked, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, model, untracked } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { DEFAULT_REPEATER_MIN_ROWS } from '../form-fields/repeater-field/repeater-field.component';
 import { Lab900FormConfig } from '../../models/Lab900FormConfig';
@@ -9,6 +9,12 @@ import { EditType } from '../../models/editType';
 import { LAB900_FORM_MODULE_SETTINGS } from '../../models/Lab900FormModuleSettings';
 import { FormFieldDirective } from '../../directives/form-field.directive';
 import { uniqueId } from '../../utils/unique-id.utils';
+import { devWarnOnce } from '../../utils/dev-warnings';
+
+/** How long a burst of form rebuilds is counted over, before the count starts again. */
+const REBUILD_BURST_WINDOW_MS = 1000;
+/** How many rebuilds inside that window mean the schema is being recreated rather than swapped. */
+const REBUILD_BURST_COUNT = 5;
 
 /**
  * Renders a reactive form from a schema. It builds the `UntypedFormGroup` from
@@ -29,10 +35,12 @@ import { uniqueId } from '../../utils/unique-id.utils';
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormFieldDirective, ReactiveFormsModule],
 })
-// eslint-disable-next-line @angular-eslint/component-class-suffix
 export class Lab900Form<T> {
   private readonly fb = inject(Lab900FormBuilderService);
   public readonly setting = inject(LAB900_FORM_MODULE_SETTINGS);
+
+  /** When the form group was last rebuilt, kept for {@link warnOnRepeatedRebuild}. */
+  private recentRebuilds: number[] = [];
 
   /**
    * The value of the form. Two-way: setting it patches the controls, and the form writes the
@@ -67,6 +75,7 @@ export class Lab900Form<T> {
   /** The languages an `EditType.MultiLangInput` field offers. */
   public readonly availableLanguages = input<ValueLabel[]>([]);
   protected readonly _form = computed(() => {
+    this.warnOnRepeatedRebuild();
     return this.fb.createFormGroup<T>(
       this.fields(),
       undefined,
@@ -137,6 +146,29 @@ export class Lab900Form<T> {
         }
       }
     });
+  }
+
+  /**
+   * A schema built in the template or in a getter is a new object on every change detection run, so
+   * `schema` changes identity, the group is rebuilt and whatever the user had typed is gone. The form
+   * still renders, which is why this one is so easy to miss.
+   *
+   * A schema that legitimately swaps - a wizard step, a type picker - rebuilds a few times and spread
+   * out over time, so the signal is a burst: several rebuilds inside a second.
+   */
+  private warnOnRepeatedRebuild(): void {
+    const now = Date.now();
+    this.recentRebuilds = this.recentRebuilds.filter(at => now - at < REBUILD_BURST_WINDOW_MS);
+    this.recentRebuilds.push(now);
+    if (this.recentRebuilds.length >= REBUILD_BURST_COUNT) {
+      devWarnOnce(
+        'schema-rebuilt-repeatedly',
+        `The schema of a <lab900-form> changed identity ${this.recentRebuilds.length} times within a second, so the ` +
+          `form group was rebuilt that often and any value the user had typed was lost. Keep the schema in a ` +
+          `class field instead of building it in the template, in a getter or in a computed that depends on the ` +
+          `form value. Options that have to change may be functions or signals: see ReactiveOption.`
+      );
+    }
   }
 
   public setValues(data: T, emitEvent = true): void {

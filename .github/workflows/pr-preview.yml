@@ -1,5 +1,6 @@
 # Deploys the showcase of every pull request to gh-pages under pr-preview/pr-<number>/
-# and removes it again when the pull request closes.
+# and removes it again when the pull request closes. The removal happens automatically in the
+# `rossjrw/pr-preview-action@v1` step: on the `closed` event it deletes the preview folder instead of deploying.
 # The main showcase deploy (`npm run deploy:showcase`) uses `add: true`, so it keeps these folders.
 name: PR preview
 

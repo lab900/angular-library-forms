@@ -13,14 +13,20 @@
     [class.invalid]="!controlValid()"
     [class.upload-file--compact]="compact()"
     id="upload-file-{{ elementId() }}">
+    <!--
+      The drop zone is a labelled region, not a control. It used to be a focusable div with its own
+      enter/space handlers, which gave screen readers an unnamed tab stop and nested a real button
+      inside an element that behaved like one. The upload button below is the named control, so
+      keyboard users reach the file picker through it; the click shortcut on the zone stays for mouse.
+    -->
+    <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -->
     <div
       lab900DropFile
       class="upload-file__container"
       [class.upload-file__container--compact]="compact() && !!filesSignal().length"
       (fileDropped)="handleFileList($event)"
-      tabindex="0"
-      (keydown.enter)="fileField.click()"
-      (keydown.space)="fileField.click()"
+      role="group"
+      [attr.aria-label]="'forms.a11y.drop-zone' | translate"
       (click)="fileField.click()">
       <div class="instructions">
         <mat-icon class="instructions__upload-icon">upload_file</mat-icon>
@@ -54,7 +60,11 @@
                 {{ file.size | formatBytes }}
               </div>
             </div>
-            <button mat-icon-button (click)="deleteFile(file)" type="button">
+            <button
+              mat-icon-button
+              (click)="deleteFile(file)"
+              type="button"
+              [attr.aria-label]="'forms.a11y.remove-file' | translate: { name: file.name }">
               <mat-icon>delete</mat-icon>
             </button>
           </div>
@@ -74,7 +84,8 @@
           }
         }
         @if (touched && !controlValid()) {
-          <div class="mat-mdc-form-field-error-wrapper">
+          <!-- Outside a mat-form-field nothing points aria-describedby at this, so it announces itself. -->
+          <div class="mat-mdc-form-field-error-wrapper" role="alert">
             <mat-error><span [innerHTML]="errorMessage()"></span></mat-error>
           </div>
         }

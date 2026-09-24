@@ -23,6 +23,7 @@
         [color]="options.addNewBtnColor ?? 'primary'"
         (click)="handleAddNew(inputRef.value)"
         [matTooltip]="options.addNewLabel ?? 'form.field.add_new' | translate: { searchQuery: inputRef.value }"
+        [attr.aria-label]="options.addNewLabel ?? 'form.field.add_new' | translate: { searchQuery: inputRef.value }"
         style="align-items: flex-start">
         <mat-icon>add</mat-icon>
       </button>

@@ -13,7 +13,11 @@
  * It also writes `llms.txt` (an index for AI agents, see https://llmstxt.org) and `llms-full.txt` (`lib/AGENTS.md`
  * followed by the API reference in Markdown). The showcase serves both at its root.
  *
- * Usage: node scripts/generate-api-docs.mjs
+ * Usage: node scripts/generate-api-docs.mjs [--check]
+ *
+ * `--check` writes nothing and exits non-zero when a public member has no description. The JSDoc in
+ * `lib/` is what an agent reads out of `node_modules/@lab900/forms/types/lab900-forms.d.ts`, so an
+ * undocumented option is one an agent has to guess at. CI runs it.
  */
 import ts from 'typescript';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -66,6 +70,10 @@ for (const exported of exports) {
   }
 }
 
+if (process.argv.includes('--check')) {
+  process.exit(reportUndocumented(symbols));
+}
+
 mkdirSync(dirname(outFile), { recursive: true });
 writeFileSync(outFile, JSON.stringify({ symbols }, null, 2) + '\n');
 console.log(`API docs: ${Object.keys(symbols).length} symbols written to ${relative(root, outFile)}`);
@@ -73,6 +81,34 @@ console.log(`API docs: ${Object.keys(symbols).length} symbols written to ${relat
 writeFileSync(llmsFile, llmsIndex());
 writeFileSync(llmsFullFile, readFileSync(agentsGuide, 'utf8').trimEnd() + '\n\n' + apiMarkdown(symbols));
 console.log(`LLM docs: ${relative(root, llmsFile)} and ${relative(root, llmsFullFile)}`);
+
+/**
+ * Lists every public member without a description and returns the exit code.
+ *
+ * `editType` is exempt: it is the discriminant of the `Lab900FormField` union, its value is the name
+ * of the interface it sits on, and the interface's own JSDoc says what the field does. A line of
+ * prose on each of the 24 of them would be noise in the `.d.ts` that agents read.
+ */
+function reportUndocumented(symbols) {
+  const gaps = Object.values(symbols)
+    .map(symbol => ({
+      name: symbol.name,
+      members: (symbol.members ?? []).filter(m => !m.description && m.name !== 'editType' && !m.inheritedFrom),
+    }))
+    .filter(symbol => symbol.members.length)
+    .sort((a, b) => b.members.length - a.members.length);
+  if (!gaps.length) {
+    console.log('API docs: every public member has a description.');
+    return 0;
+  }
+  const count = gaps.reduce((sum, symbol) => sum + symbol.members.length, 0);
+  console.error(`API docs: ${count} public member(s) without a description.\n`);
+  for (const { name, members } of gaps) {
+    console.error(`  ${name}: ${members.map(m => m.name).join(', ')}`);
+  }
+  console.error(`\nDocument them in lib/, or the published .d.ts ships an option nobody can read.`);
+  return 1;
+}
 
 /** The llms.txt index: a title, a summary and links to the Markdown docs */
 function llmsIndex() {

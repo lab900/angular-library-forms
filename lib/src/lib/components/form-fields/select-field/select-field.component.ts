@@ -9,6 +9,7 @@ import { MatPseudoCheckbox, MatPseudoCheckboxState } from '@angular/material/cor
 import { coerceArray } from '@angular/cdk/coercion';
 import { isDifferent } from '@lab900/ui';
 import { debounceTimeAfterFirst, toReadonlyDisplayString } from '../../../utils/helpers';
+import { describeField, devWarnOnce } from '../../../utils/dev-warnings';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { _, TranslatePipe } from '@ngx-translate/core';
 import { SelectInfiniteScrollDirective } from './select-field-infinite-scroll.directive';
@@ -471,9 +472,30 @@ export class SelectFieldComponent<T> extends FormComponent<FormFieldSelect<T>> i
       }));
 
     if (missingOptions?.length) {
+      this.warnOnMissingCompareWith(missingOptions);
       return missingOptions.concat(options ?? []);
     }
     return options ?? [];
+  }
+
+  /**
+   * The value is an object, it matches none of the options, and the comparison is the default `===`:
+   * almost always a missing `compareWith` rather than a value that is genuinely not in the list. The
+   * select renders blank, which looks like a loading problem and not like a schema mistake.
+   */
+  private warnOnMissingCompareWith(missingOptions: ValueLabel<T>[]): void {
+    if (this._options()?.compareWith) {
+      return;
+    }
+    if (!missingOptions.some(option => typeof option.value === 'object' && option.value !== null)) {
+      return;
+    }
+    devWarnOnce(
+      `select-compare-with:${this.fieldAttribute}`,
+      `The select ${describeField(this.fieldAttribute, 'Select')} holds an object value that equals none of its ` +
+        `options, and it has no compareWith, so the values are compared by reference. Set ` +
+        `options.compareWith, for example (a, b) => a?.id === b?.id.`
+    );
   }
 
   private removeDuplicateOptions(items: ValueLabel<T>[]): ValueLabel<T>[] {

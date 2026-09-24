@@ -8,6 +8,7 @@ import { Signal } from '@angular/core';
  * `label` is what the user reads, and it goes through the translate pipe.
  */
 export interface ValueLabel<T = any> {
+  /** What the control holds once this option is picked. Set `compareWith` when it is an object. */
   value: T;
   /** A translation key, or plain text when no key matches. */
   label: string;
@@ -20,7 +21,9 @@ export interface ValueLabel<T = any> {
  * `MatIconRegistry` yourself.
  */
 export interface Icon {
+  /** A Material Icons ligature, for example `'search'`. Needs the Material Icons font. */
   name?: string;
+  /** The name of an svg registered in `MatIconRegistry`. Takes precedence over `name`. */
   svgName?: string;
 }
 
@@ -120,6 +123,7 @@ export interface FormFieldBaseOptions {
     /** Interpolation parameters for the translation. */
     valueTranslateData?: object;
   };
+  /** The text shown in an empty field. A translation key. */
   placeholder?: ReactiveStringOption;
   /** The width of the field on the 12 column grid: 1 to 12. */
   colspan?: number;

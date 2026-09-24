@@ -15,9 +15,15 @@ export interface Lab900FormFieldOptions extends MatFormFieldDefaultOptions {
 
 /** The defaults of every `EditType.Amount` field. A field can still override them in its options. */
 export interface Lab900AmountFieldOptions {
-  /** @default 0 */
+  /**
+   * The fewest decimals an amount is padded to.
+   * @default 0
+   */
   minDecimals?: number;
-  /** @default 2 */
+  /**
+   * The most decimals an amount is formatted to.
+   * @default 2
+   */
   maxDecimals?: number;
   /** The locale the amount is formatted for. Defaults to the locale of the application. */
   locale?: string;
@@ -41,6 +47,16 @@ export interface Lab900FormModuleSettings {
    * @default false
    */
   disableBrowserAutocomplete?: boolean;
+  /**
+   * Warns in the console about the schema mistakes the library otherwise fails silently on: an
+   * unknown `editType`, a select whose object value never matches its options because `compareWith`
+   * is missing, a `readonlyDisplay` that returns something other than a primitive, and a schema that
+   * is rebuilt on every change detection run.
+   *
+   * Development only, and each message is logged once. Set it to `false` when the warnings are noise.
+   * @default true
+   */
+  devWarnings?: boolean;
 }
 
 export const defaultFormModuleSettings: Lab900FormModuleSettings = {

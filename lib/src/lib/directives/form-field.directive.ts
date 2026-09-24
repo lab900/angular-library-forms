@@ -109,12 +109,21 @@ export class FormFieldDirective {
 
   public readonly externalForms = input<Record<string, UntypedFormGroup> | undefined>(undefined);
   public readonly componentType = computed(() => {
-    this.validateType();
     const schema = this.schema();
     if (this.fieldIsReadonly() && !this.rendersOwnReadonlyState(schema)) {
       return ReadonlyFieldComponent;
     }
-    return this.formFieldMappingService.mapToComponent(schema);
+    const component = this.formFieldMappingService.mapToComponent(schema);
+    if (!component) {
+      // An unknown edit type resolves to UnknownFieldComponent and warns. Getting nothing back means
+      // that fallback is missing too, so LAB900_FORM_FIELD_TYPES was replaced with an incomplete map.
+      throw new Error(
+        `@lab900/forms: nothing renders editType "${schema.editType}", and no UnknownFieldComponent is ` +
+          `registered to fall back on. A custom LAB900_FORM_FIELD_TYPES value has to carry every key that ` +
+          `provideLab900Forms() registers.`
+      );
+    }
+    return component;
   });
   public readonly component = signal<ComponentRef<FormComponent> | undefined>(undefined);
 
@@ -202,16 +211,6 @@ export class FormFieldDirective {
   private createComponent(): void {
     this.container.clear();
     this.component.set(this.container.createComponent(this.componentType()));
-  }
-
-  private validateType(): void {
-    if (!this.formFieldMappingService.mapToComponent(this.schema())) {
-      const supportedTypes = Object.keys(EditType).join(', ');
-      throw new Error(
-        `Trying to use an unsupported type (${this.schema().editType}).
-        Supported types: ${supportedTypes}`
-      );
-    }
   }
 
   private rendersOwnReadonlyState(schema: Lab900FormField): boolean {
