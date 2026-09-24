@@ -1,0 +1,2270 @@
+{
+  "symbols": {
+    "Lab900FormConfig": {
+      "name": "Lab900FormConfig",
+      "kind": "interface",
+      "typeParameters": "R = any, T extends string | number = string, DATE = Date",
+      "source": "lib/src/lib/models/Lab900FormConfig.ts#L10",
+      "description": "The schema of a form. Pass it to the `schema` input of `<lab900-form>`: the form builds its\n`UntypedFormGroup` from `fields` and renders every field, so there is no template to write.\n\nKeep the config in a class field. A new object on every change detection rebuilds the form and\nloses the values the user has typed.",
+      "members": [
+        {
+          "name": "title",
+          "type": "string",
+          "optional": true,
+          "description": "Heading above the fields. A translation key."
+        },
+        {
+          "name": "fields",
+          "type": "Lab900FormField<R, T, DATE>[]",
+          "description": "The fields of the form, in render order. Each one is a member of the `Lab900FormField` union."
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "optional": true,
+          "description": "Makes every field of the form readonly. A readonly control is disabled, so it leaves\n`form.value` of a plain `FormGroup`; `Lab900Form.value` uses `getRawValue()` and keeps it."
+        },
+        {
+          "name": "formId",
+          "type": "string",
+          "optional": true,
+          "description": "Identifies this form to the conditions of another one. Pass the form under this key in the\n`externalForms` input of the other form and reference it with `IFieldConditions.externalFormId`.\nDefaults to a generated id."
+        }
+      ]
+    },
+    "Lab900FormFieldOptions": {
+      "name": "Lab900FormFieldOptions",
+      "kind": "interface",
+      "source": "lib/src/lib/models/Lab900FormModuleSettings.ts#L11",
+      "description": "The Material form field defaults of every field, plus the library's own additions.",
+      "extends": [
+        "MatFormFieldDefaultOptions"
+      ],
+      "members": [
+        {
+          "name": "showLengthIndicator",
+          "type": "boolean",
+          "optional": true,
+          "description": "Shows a character counter on the fields that have a `maxLength`."
+        }
+      ]
+    },
+    "Lab900AmountFieldOptions": {
+      "name": "Lab900AmountFieldOptions",
+      "kind": "interface",
+      "source": "lib/src/lib/models/Lab900FormModuleSettings.ts#L17",
+      "description": "The defaults of every `EditType.Amount` field. A field can still override them in its options.",
+      "members": [
+        {
+          "name": "minDecimals",
+          "type": "number",
+          "optional": true,
+          "default": "0"
+        },
+        {
+          "name": "maxDecimals",
+          "type": "number",
+          "optional": true,
+          "default": "2"
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "optional": true,
+          "description": "The locale the amount is formatted for. Defaults to the locale of the application."
+        }
+      ]
+    },
+    "Lab900FormModuleSettings": {
+      "name": "Lab900FormModuleSettings",
+      "kind": "interface",
+      "source": "lib/src/lib/models/Lab900FormModuleSettings.ts#L32",
+      "description": "The application-wide defaults of the library. Pass them to `provideLab900Forms()`.\n\n`provideLab900Forms()` is required: besides these settings it registers `LAB900_FORM_FIELD_TYPES`,\nthe map from `EditType` to component. Without it every field renders as `UnknownFieldComponent`.",
+      "members": [
+        {
+          "name": "formField",
+          "type": "Lab900FormFieldOptions",
+          "optional": true,
+          "description": "Material form field defaults: `appearance`, `floatLabel`, `hideRequiredMarker`, ..."
+        },
+        {
+          "name": "fieldMask",
+          "type": "Partial<NgxMaskConfig>",
+          "optional": true,
+          "description": "`ngx-mask` defaults, used by the input masks and the amount field."
+        },
+        {
+          "name": "amountField",
+          "type": "Lab900AmountFieldOptions",
+          "optional": true,
+          "description": "Defaults of the amount field."
+        },
+        {
+          "name": "disableBrowserAutocomplete",
+          "type": "boolean",
+          "optional": true,
+          "description": "Sets `autocomplete=\"off\"` on the inputs, so the browser does not offer its own suggestions.",
+          "default": "false"
+        }
+      ]
+    },
+    "Lab900FormField": {
+      "name": "Lab900FormField",
+      "kind": "type",
+      "typeParameters": "R = any, T extends string | number = string, DATE = Date",
+      "source": "lib/src/lib/models/lab900-form-field.type.ts#L35",
+      "description": "Every kind of field a schema may hold. `editType` discriminates the union, so setting it narrows\n`options` to the options interface of that field and TypeScript checks the rest for you.",
+      "example": "const field: Lab900FormField = { attribute: 'email', editType: EditType.Input, options: { required: true } };",
+      "type": "| FormFieldInput<T> | FormFieldPassword<T> | FormFieldMultiLang<T> | WysiwgFieldModel<T> | FormFieldSearch<R, T> | FormFieldSelect<R, T> | CheckboxFieldModel<T> | FormFieldRadioButtons<T> | FormFieldFilePreview<T> | FormFieldDragNDropFilePreview<T> | FormFieldIcon<T> | FormRow<T> | FormColumn<T> | FormFieldButtonToggle<T> | FormFieldButton<T> | FormFieldSlideToggle<T> | FormFieldRangeSlider<T> | FormFieldDatePicker<T, DATE> | FormFieldDateYearMonthPicker<T, DATE> | FormFieldDateTimePicker<T, DATE> | FormFieldDateRange<T, DATE> | FormFieldAutocomplete<R, T> | FormFieldAutocompleteMulti<R, T> | FormFieldRepeater<T> | FormFieldTextarea<T> | FormFieldAmount<T>"
+    },
+    "ValueLabel": {
+      "name": "ValueLabel",
+      "kind": "interface",
+      "typeParameters": "T = any",
+      "source": "lib/src/lib/models/form-field-base.ts#L10",
+      "description": "One option of a select, autocomplete, radio group or button toggle. The control stores `value`;\n`label` is what the user reads, and it goes through the translate pipe.",
+      "members": [
+        {
+          "name": "value",
+          "type": "T"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "A translation key, or plain text when no key matches."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "optional": true,
+          "description": "Shows the option but blocks it from being picked."
+        }
+      ]
+    },
+    "Icon": {
+      "name": "Icon",
+      "kind": "interface",
+      "source": "lib/src/lib/models/form-field-base.ts#L22",
+      "description": "An icon. Use `name` for a Material Icons ligature, or `svgName` for an svg you registered in\n`MatIconRegistry` yourself.",
+      "members": [
+        {
+          "name": "name",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "svgName",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    "ReactiveOption": {
+      "name": "ReactiveOption",
+      "kind": "type",
+      "typeParameters": "T",
+      "source": "lib/src/lib/models/form-field-base.ts#L40",
+      "description": "An option that may change while the form is in use. It accepts three forms:\n\n- a plain value: `readonly: true`\n- a function of the raw value of the form group: `hide: data => data.type !== 'company'`\n- a signal: `required: this.vatRequired`\n\nThe function may also return a signal. Prefer a signal for state that changes over time: the field\nreads it inside a `computed`, so the view follows without a new schema object.\n\nInside a field component, resolve these with the `computeReactive*Option()` helpers, never by\nreading the raw option.",
+      "type": "T | ((data?: any) => T | Signal<T>) | Signal<T>"
+    },
+    "ReactiveBooleanOption": {
+      "name": "ReactiveBooleanOption",
+      "kind": "type",
+      "source": "lib/src/lib/models/form-field-base.ts#L42",
+      "description": "A {@link ReactiveOption} that resolves to a boolean.",
+      "type": "ReactiveOption<boolean>"
+    },
+    "ReactiveStringOption": {
+      "name": "ReactiveStringOption",
+      "kind": "type",
+      "source": "lib/src/lib/models/form-field-base.ts#L44",
+      "description": "A {@link ReactiveOption} that resolves to a string.",
+      "type": "ReactiveOption<string>"
+    },
+    "ReactiveNumberOption": {
+      "name": "ReactiveNumberOption",
+      "kind": "type",
+      "source": "lib/src/lib/models/form-field-base.ts#L46",
+      "description": "A {@link ReactiveOption} that resolves to a number.",
+      "type": "ReactiveOption<number>"
+    },
+    "ReadonlyDisplayValue": {
+      "name": "ReadonlyDisplayValue",
+      "kind": "type",
+      "source": "lib/src/lib/models/form-field-base.ts#L54",
+      "description": "What a readonly field is able to render. A readonly value ends up in the translate pipe, and that pipe\nonly guards on `!query || !query.length`: an array reaches `TranslateService.instant()`, which calls\n`key.split('.')` on every item and throws on the first item that is not a string. So `readonlyDisplay`\nhas to reduce the field to a single primitive; use {@link toReadonlyDisplayString } to render anything else.",
+      "type": "string | number | boolean | null | undefined"
+    },
+    "ReadonlyDisplayFn": {
+      "name": "ReadonlyDisplayFn",
+      "kind": "type",
+      "source": "lib/src/lib/models/form-field-base.ts#L68",
+      "description": "Renders a readonly field. The result is treated as a translation key first, and rendered as is when no\ntranslation matches.\n\nThe result reaches the template through `[innerHTML]`, so basic formatting tags such as `<br>` work.\nAngular sanitizes the result and strips scripts and event handlers.\n\n**`data` is not the same value for every edit type.** Most fields pass the raw value of the whole form\ngroup, so read the attribute you need off it. `EditType.Select` passes the value of the field itself,\nbecause it resolves the option labels on its own. Check which one you are writing for; the parameter is\n`any`, so a mismatch fails at runtime and not at compile time.",
+      "type": "(data?: any) => ReadonlyDisplayValue"
+    },
+    "FormFieldBase": {
+      "name": "FormFieldBase",
+      "kind": "interface",
+      "typeParameters": "T extends string | number = string, O extends FormFieldBaseOptions = FormFieldBaseOptions",
+      "source": "lib/src/lib/models/form-field-base.ts#L74",
+      "description": "What every field of the `Lab900FormField` union has in common. A concrete field adds its\n`editType` and narrows `options` to its own options interface.",
+      "members": [
+        {
+          "name": "attribute",
+          "type": "T",
+          "optional": true,
+          "description": "The name of the control in the form group. A dotted value (`address.street`) creates the\nintermediate groups on its own. A layout field without an attribute flattens its\n`nestedFields` into the parent group."
+        },
+        {
+          "name": "title",
+          "type": "ReactiveStringOption",
+          "optional": true,
+          "reactive": "signal",
+          "description": "The label of the field. A translation key."
+        },
+        {
+          "name": "validators",
+          "type": "ValidatorFn[]",
+          "optional": true,
+          "description": "Validators on top of the ones the builder derives from `options`."
+        },
+        {
+          "name": "errorMessages",
+          "type": "Record<string, string>",
+          "optional": true,
+          "description": "Overrides the message of an error key, for example `{ email: 'label.email-error' }`. A key that\nis not here falls back to the built-in `forms.error.*` message."
+        },
+        {
+          "name": "conditions",
+          "type": "IFieldConditions[]",
+          "optional": true,
+          "description": "Rules that watch another control and flip this field's state, options or validators."
+        },
+        {
+          "name": "options",
+          "type": "O",
+          "optional": true,
+          "description": "The configuration of the field. Which interface applies follows from `editType`."
+        },
+        {
+          "name": "nestedFields",
+          "type": "Lab900FormField[]",
+          "optional": true,
+          "description": "The children of a `Row`, a `Column` or a `Repeater`."
+        }
+      ]
+    },
+    "FormFieldBaseOptions": {
+      "name": "FormFieldBaseOptions",
+      "kind": "interface",
+      "source": "lib/src/lib/models/form-field-base.ts#L107",
+      "description": "The options every field accepts. Each edit type extends this with its own.\n\nDo not disable a control yourself to lock or hide a field: set `readonly` or `hide` and the\nlibrary disables it for you.",
+      "members": [
+        {
+          "name": "hide",
+          "type": "ReactiveBooleanOption",
+          "optional": true,
+          "reactive": "signal",
+          "description": "Hides the field and disables its control, so it no longer validates."
+        },
+        {
+          "name": "required",
+          "type": "ReactiveBooleanOption",
+          "optional": true,
+          "reactive": "signal",
+          "description": "Adds or removes `Validators.required`."
+        },
+        {
+          "name": "readonly",
+          "type": "ReactiveBooleanOption",
+          "optional": true,
+          "reactive": "signal",
+          "description": "Renders the value instead of an editable field, and disables the control."
+        },
+        {
+          "name": "hint",
+          "type": "{ /** A translation key. */ value?: string; /** Hides the hint once the control is valid. */ hideHintOnValidValue?: boolean; /** Interpolation parameters for the translation. */ valueTranslateData?: object }",
+          "optional": true,
+          "description": "Help text under the field."
+        },
+        {
+          "name": "placeholder",
+          "type": "ReactiveStringOption",
+          "optional": true,
+          "reactive": "signal"
+        },
+        {
+          "name": "colspan",
+          "type": "number",
+          "optional": true,
+          "description": "The width of the field on the 12 column grid: 1 to 12."
+        },
+        {
+          "name": "mobileCols",
+          "type": "boolean",
+          "optional": true,
+          "description": "Keeps the colspan on mobile instead of stacking. Only for form rows."
+        },
+        {
+          "name": "minLength",
+          "type": "number",
+          "optional": true,
+          "description": "Also adds `Validators.minLength`."
+        },
+        {
+          "name": "maxLength",
+          "type": "number",
+          "optional": true,
+          "description": "Also adds `Validators.maxLength`."
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "optional": true,
+          "description": "Also adds `Validators.min`."
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "optional": true,
+          "description": "Also adds `Validators.max`."
+        },
+        {
+          "name": "defaultValue",
+          "type": "any",
+          "optional": true,
+          "description": "The value the control starts with when the data holds nothing for this attribute."
+        },
+        {
+          "name": "pattern",
+          "type": "RegExp",
+          "optional": true,
+          "description": "Also adds `Validators.pattern`."
+        },
+        {
+          "name": "readonlyContainerClass",
+          "type": "ReactiveStringOption",
+          "optional": true,
+          "reactive": "signal",
+          "description": "Extra class on the container of the readonly field."
+        },
+        {
+          "name": "readonlyLabel",
+          "type": "string",
+          "optional": true,
+          "description": "Replaces `title` when the field is readonly. A translation key."
+        },
+        {
+          "name": "readonlyDisplay",
+          "type": "ReadonlyDisplayFn",
+          "optional": true,
+          "description": "Renders the value when the field is readonly."
+        },
+        {
+          "name": "onChangeFn",
+          "type": "(value: any, currentControl?: AbstractControl) => void",
+          "optional": true,
+          "description": "Runs whenever the value of this control changes."
+        },
+        {
+          "name": "infoTooltip",
+          "type": "| { text: string; icon?: string; class?: string } | ((data?: any) => { text: string; icon?: string; class?: string } | null)",
+          "optional": true,
+          "description": "An icon next to the label with a tooltip. Return `null` from the function to hide it."
+        },
+        {
+          "name": "elementId",
+          "type": "string",
+          "optional": true,
+          "description": "Overrides the element id, which defaults to the attribute name."
+        }
+      ]
+    },
+    "EditType": {
+      "name": "EditType",
+      "kind": "enum",
+      "source": "lib/src/lib/models/editType.ts#L9",
+      "description": "Picks the component that renders a field. It also discriminates the `Lab900FormField` union, so\nsetting it narrows `options` to the options interface of that field.\n\n`FormFieldMappingService` maps a member to a component class, read from the\n`LAB900_FORM_FIELD_TYPES` token. A value with no mapping renders `UnknownFieldComponent` instead\nof throwing.",
+      "type": "{ Checkbox = 'Checkbox', TextArea = 'TextArea', Date = 'Date', DateYearMonth = 'DateYearMonth', Wysiwyg = 'Wysiwyg', Input = 'Input', Password = 'Password', File = 'File', FilePreview = 'FilePreview', DragNDrop = 'DragNDrop', Search = 'Search', Select = 'Select', Repeater = 'Repeater', RadioButtons = 'RadioButtons', RangeSlider = 'RangeSlider', Row = 'Row', Column = 'Column', Autocomplete = 'Autocomplete', AutocompleteMultiple = 'AutocompleteMultiple', Icon = 'Icon', ButtonToggle = 'ButtonToggle', Button = 'Button', SlideToggle = 'SlideToggle', DateRange = 'DateRange', DateTime = 'DateTime', MultiLangInput = 'MultiLangInput', Amount = 'Amount' }"
+    },
+    "IFieldConditions": {
+      "name": "IFieldConditions",
+      "kind": "interface",
+      "typeParameters": "T = any",
+      "source": "lib/src/lib/models/IFieldConditions.ts#L24",
+      "description": "Makes a field react to another control. The condition subscribes to the controls named in\n`dependOn` and then flips visibility, disabled state, validators or the options of a select.\n\nUse a condition when a field depends on another **control**; use a reactive option\n(`options.hide`, `options.required`, ...) when it only depends on the form value as a whole.\n\nCreating the condition **throws** when `dependOn` names a control that does not exist, unless\n`skipIfNotExists` is set.",
+      "example": "conditions: [{ dependOn: 'reason', showIfEquals: 'other' }]",
+      "members": [
+        {
+          "name": "dependOn",
+          "type": "string | string[]",
+          "description": "The attribute, or attributes, of the control(s) to watch."
+        },
+        {
+          "name": "distinctUntilChangedCompareFn",
+          "type": "(a: T, b: T) => boolean",
+          "optional": true,
+          "description": "Decides whether the watched value really changed. Defaults to a reference comparison."
+        },
+        {
+          "name": "externalFormId",
+          "type": "string",
+          "optional": true,
+          "description": "Watch a control in another form instead of this one. The id resolves against the\n`externalForms` input of `<lab900-form>`."
+        },
+        {
+          "name": "hideIfHasValue",
+          "type": "boolean",
+          "optional": true,
+          "description": "Hides this field while the watched control holds a value."
+        },
+        {
+          "name": "showIfHasValue",
+          "type": "boolean",
+          "optional": true,
+          "description": "Shows this field only while the watched control holds a value."
+        },
+        {
+          "name": "disableIfHasValue",
+          "type": "boolean",
+          "optional": true,
+          "description": "Disables this field while the watched control holds a value."
+        },
+        {
+          "name": "enableIfHasValue",
+          "type": "boolean",
+          "optional": true,
+          "description": "Enables this field only while the watched control holds a value."
+        },
+        {
+          "name": "hideIfEquals",
+          "type": "((value: T) => boolean) | T",
+          "optional": true,
+          "description": "Hides this field when the watched value equals this, or when the predicate returns true."
+        },
+        {
+          "name": "showIfEquals",
+          "type": "((value: T) => boolean) | T",
+          "optional": true,
+          "description": "Shows this field only when the watched value equals this, or when the predicate returns true."
+        },
+        {
+          "name": "disableIfEquals",
+          "type": "((value: T) => boolean) | T",
+          "optional": true,
+          "description": "Disables this field when the watched value equals this, or when the predicate returns true."
+        },
+        {
+          "name": "enabledIfEquals",
+          "type": "((value: T) => boolean) | T",
+          "optional": true,
+          "description": "Enables this field only when the watched value equals this, or when the predicate returns true."
+        },
+        {
+          "name": "onChangeFn",
+          "type": "(value: T, currentControl: AbstractControl, currentScheme: Readonly<Lab900FormField>) => void",
+          "optional": true,
+          "description": "Runs whenever the watched value changes. Use it for a side effect, such as patching this control."
+        },
+        {
+          "name": "conditionalOptions",
+          "type": "( value: T, currentControl: AbstractControl, options?: { page?: number; searchQuery?: string }, schema?: FormFieldSelect<T> ) => ValueLabel[] | Observable<ValueLabel[]>",
+          "optional": true,
+          "description": "Reloads the options of an `EditType.Select` whenever the watched value changes."
+        },
+        {
+          "name": "skipIfNotExists",
+          "type": "boolean",
+          "optional": true,
+          "description": "Ignore the condition when the watched control is missing, instead of throwing. Use it when the\ncontrol is only in the schema some of the time.",
+          "default": "false"
+        },
+        {
+          "name": "validators",
+          "type": "(value: T) => ValidatorFn[]",
+          "optional": true,
+          "description": "The validators this field should have for the current watched value. Recalculated on every change."
+        }
+      ]
+    },
+    "Lab900File": {
+      "name": "Lab900File",
+      "kind": "interface",
+      "source": "lib/src/lib/models/Lab900File.ts#L1",
+      "extends": [
+        "File"
+      ],
+      "members": [
+        {
+          "name": "fileName",
+          "type": "string"
+        },
+        {
+          "name": "imageSrc",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "imageBase64",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    "FormRowOptions": {
+      "name": "FormRowOptions",
+      "kind": "interface",
+      "source": "lib/src/lib/components/form-row/form-row.model.ts#L4",
+      "extends": [
+        "FormFieldBaseOptions"
+      ],
+      "members": [
+        {
+          "name": "customClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "customTitleClass",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    "FormRow": {
+      "name": "FormRow",
+      "kind": "interface",
+      "typeParameters": "T extends number | string = string",
+      "source": "lib/src/lib/components/form-row/form-row.model.ts#L9",
+      "extends": [
+        "FormFieldBase<T, FormRowOptions>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.Row"
+        }
+      ]
+    },
+    "FormColumnOptions": {
+      "name": "FormColumnOptions",
+      "kind": "interface",
+      "source": "lib/src/lib/components/form-column/form-column.model.ts#L4",
+      "extends": [
+        "FormFieldBaseOptions"
+      ],
+      "members": [
+        {
+          "name": "customClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "customTitleClass",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    "FormColumn": {
+      "name": "FormColumn",
+      "kind": "interface",
+      "typeParameters": "T extends number | string = string",
+      "source": "lib/src/lib/components/form-column/form-column.model.ts#L9",
+      "extends": [
+        "FormFieldBase<T, FormColumnOptions>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.Column"
+        }
+      ]
+    },
+    "AmountOptions": {
+      "name": "AmountOptions",
+      "kind": "interface",
+      "source": "lib/src/lib/components/form-fields/amount-field/amount-field.model.ts#L10",
+      "extends": [
+        "FormFieldBaseOptions"
+      ],
+      "members": [
+        {
+          "name": "maxDecimals",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "minDecimals",
+          "type": "number",
+          "optional": true
+        }
+      ]
+    },
+    "AmountFieldInputOptions": {
+      "name": "AmountFieldInputOptions",
+      "kind": "interface",
+      "source": "lib/src/lib/components/form-fields/amount-field/amount-field.model.ts#L15",
+      "extends": [
+        "FormFieldBaseOptions"
+      ],
+      "members": [
+        {
+          "name": "autofocus",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "maxDecimals",
+          "type": "ReactiveNumberOption",
+          "optional": true,
+          "reactive": "signal"
+        },
+        {
+          "name": "minDecimals",
+          "type": "ReactiveNumberOption",
+          "optional": true,
+          "reactive": "signal"
+        },
+        {
+          "name": "suffix",
+          "type": "ReactiveStringOption",
+          "optional": true,
+          "reactive": "signal"
+        },
+        {
+          "name": "prefix",
+          "type": "ReactiveStringOption",
+          "optional": true,
+          "reactive": "signal"
+        },
+        {
+          "name": "align",
+          "type": "'left' | 'right'",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    "FormFieldAmount": {
+      "name": "FormFieldAmount",
+      "kind": "interface",
+      "typeParameters": "T extends string | number = string",
+      "source": "lib/src/lib/components/form-fields/amount-field/amount-field.model.ts#L25",
+      "extends": [
+        "FormFieldBase<T, AmountFieldInputOptions>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.Amount"
+        },
+        {
+          "name": "icon",
+          "type": "Icon & { position?: 'left' | 'right' }",
+          "optional": true
+        }
+      ]
+    },
+    "FormFieldAutocompleteOptions": {
+      "name": "FormFieldAutocompleteOptions",
+      "kind": "interface",
+      "typeParameters": "T",
+      "source": "lib/src/lib/components/form-fields/autocomplete-field/autocomplete-field.model.ts#L6",
+      "extends": [
+        "FormFieldBaseOptions"
+      ],
+      "members": [
+        {
+          "name": "displayOptionFn",
+          "type": "(option: ValueLabel<T>) => string",
+          "optional": true,
+          "deprecated": "Labels are set in the autocompleteOptions"
+        },
+        {
+          "name": "displayInputFn",
+          "type": "(option: T) => string"
+        },
+        {
+          "name": "disabledOptionFn",
+          "type": "(option: T) => boolean",
+          "optional": true
+        },
+        {
+          "name": "autocompleteOptions",
+          "type": "( searchTerm: string, currentControl: AbstractControl ) => ValueLabel<T>[] | Observable<ValueLabel<T>[]>",
+          "optional": true
+        },
+        {
+          "name": "debounceTime",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "requireMatch",
+          "type": "boolean",
+          "optional": true
+        }
+      ]
+    },
+    "FormFieldAutocomplete": {
+      "name": "FormFieldAutocomplete",
+      "kind": "interface",
+      "typeParameters": "T, R extends string | number = string",
+      "source": "lib/src/lib/components/form-fields/autocomplete-field/autocomplete-field.model.ts#L22",
+      "extends": [
+        "FormFieldBase<R, FormFieldAutocompleteOptions<T>>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.Autocomplete"
+        }
+      ]
+    },
+    "FormFieldAutocompleteMulti": {
+      "name": "FormFieldAutocompleteMulti",
+      "kind": "interface",
+      "typeParameters": "T, R extends string | number",
+      "source": "lib/src/lib/components/form-fields/autocomplete-multiple-field/autocomplete-multiple-field.model.ts#L5",
+      "extends": [
+        "FormFieldBase<R, FormFieldAutocompleteOptions<T>>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.AutocompleteMultiple"
+        }
+      ]
+    },
+    "FormFieldButtonOptions": {
+      "name": "FormFieldButtonOptions",
+      "kind": "interface",
+      "source": "lib/src/lib/components/form-fields/button-field/button-field.model.ts#L9",
+      "extends": [
+        "FormFieldBaseOptions"
+      ],
+      "members": [
+        {
+          "name": "type",
+          "type": "Lab900ButtonType"
+        },
+        {
+          "name": "color",
+          "type": "ThemePalette",
+          "optional": true
+        },
+        {
+          "name": "onClick",
+          "type": "(formGroup: UntypedFormGroup, currentScheme: Readonly<Lab900FormField>, event: Event) => any",
+          "optional": true
+        },
+        {
+          "name": "label",
+          "type": "ReactiveStringOption",
+          "optional": true,
+          "reactive": "signal"
+        },
+        {
+          "name": "tooltip",
+          "type": "{ text: string; position?: TooltipPosition }",
+          "optional": true
+        },
+        {
+          "name": "prefixIcon",
+          "type": "ReactiveStringOption",
+          "optional": true,
+          "reactive": "signal"
+        },
+        {
+          "name": "suffixIcon",
+          "type": "ReactiveStringOption",
+          "optional": true,
+          "reactive": "signal"
+        },
+        {
+          "name": "svgIcon",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "containerClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "buttonId",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    "FormFieldButton": {
+      "name": "FormFieldButton",
+      "kind": "interface",
+      "typeParameters": "T extends string | number = string",
+      "source": "lib/src/lib/components/form-fields/button-field/button-field.model.ts#L25",
+      "extends": [
+        "FormFieldBase<T, FormFieldButtonOptions>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.Button"
+        }
+      ]
+    },
+    "FormFieldButtonToggleOptions": {
+      "name": "FormFieldButtonToggleOptions",
+      "kind": "interface",
+      "source": "lib/src/lib/components/form-fields/button-toggle-field/button-toggle-field.model.ts#L6",
+      "extends": [
+        "FormFieldBaseOptions"
+      ],
+      "members": [
+        {
+          "name": "buttonOptions",
+          "type": "{ value: any; label?: string; icon?: Icon & { position?: 'left' | 'right' }; buttonClass?: string; tooltip?: { text: string; position?: TooltipPosition } }[]"
+        },
+        {
+          "name": "color",
+          "type": "ThemePalette",
+          "optional": true
+        },
+        {
+          "name": "hideSelection",
+          "type": "ReactiveBooleanOption",
+          "optional": true,
+          "reactive": "signal"
+        },
+        {
+          "name": "deselectOnClick",
+          "type": "boolean",
+          "optional": true
+        }
+      ]
+    },
+    "FormFieldButtonToggle": {
+      "name": "FormFieldButtonToggle",
+      "kind": "interface",
+      "typeParameters": "T extends string | number = string",
+      "source": "lib/src/lib/components/form-fields/button-toggle-field/button-toggle-field.model.ts#L22",
+      "extends": [
+        "FormFieldBase<T, FormFieldButtonToggleOptions>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.ButtonToggle"
+        }
+      ]
+    },
+    "FormFieldCheckboxOptions": {
+      "name": "FormFieldCheckboxOptions",
+      "kind": "interface",
+      "source": "lib/src/lib/components/form-fields/checkbox-field/checkbox-field.model.ts#L5",
+      "extends": [
+        "FormFieldBaseOptions"
+      ],
+      "members": [
+        {
+          "name": "disabledIndeterminate",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "color",
+          "type": "ThemePalette",
+          "optional": true
+        }
+      ]
+    },
+    "CheckboxFieldModel": {
+      "name": "CheckboxFieldModel",
+      "kind": "interface",
+      "typeParameters": "T extends string | number = string",
+      "source": "lib/src/lib/components/form-fields/checkbox-field/checkbox-field.model.ts#L10",
+      "extends": [
+        "FormFieldBase<T, FormFieldCheckboxOptions>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.Checkbox"
+        }
+      ]
+    },
+    "FormFieldDatePickerOptions": {
+      "name": "FormFieldDatePickerOptions",
+      "kind": "interface",
+      "typeParameters": "T = Date",
+      "source": "lib/src/lib/components/form-fields/date-field/date-field.model.ts#L5",
+      "extends": [
+        "FormFieldBaseOptions"
+      ],
+      "members": [
+        {
+          "name": "startView",
+          "type": "'month' | 'year' | 'multi-year'",
+          "optional": true
+        },
+        {
+          "name": "maxDate",
+          "type": "T",
+          "optional": true
+        },
+        {
+          "name": "minDate",
+          "type": "T",
+          "optional": true
+        },
+        {
+          "name": "dateFilter",
+          "type": "(date: T | null) => boolean",
+          "optional": true,
+          "description": "Function to filter which dates are selectable in the datepicker"
+        },
+        {
+          "name": "dateClass",
+          "type": "MatCalendarCellClassFunction<T>",
+          "optional": true,
+          "description": "Function that can be used to add custom CSS classes to dates"
+        }
+      ]
+    },
+    "FormFieldDatePicker": {
+      "name": "FormFieldDatePicker",
+      "kind": "interface",
+      "typeParameters": "T extends string | number = string, D = Date",
+      "source": "lib/src/lib/components/form-fields/date-field/date-field.model.ts#L19",
+      "extends": [
+        "FormFieldBase<T, FormFieldDatePickerOptions<D>>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.Date"
+        }
+      ]
+    },
+    "FormFieldDateRangeOptions": {
+      "name": "FormFieldDateRangeOptions",
+      "kind": "interface",
+      "typeParameters": "T = Date",
+      "source": "lib/src/lib/components/form-fields/date-range-field/date-range-field.model.ts#L5",
+      "extends": [
+        "FormFieldDatePickerOptions<T>"
+      ],
+      "members": [
+        {
+          "name": "startLabel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "endLabel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "startKey",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "endKey",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    "FormFieldDateRange": {
+      "name": "FormFieldDateRange",
+      "kind": "interface",
+      "typeParameters": "T extends string | number = string, D = Date",
+      "source": "lib/src/lib/components/form-fields/date-range-field/date-range-field.model.ts#L12",
+      "extends": [
+        "FormFieldBase<T, FormFieldDateRangeOptions<D>>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.DateRange"
+        }
+      ]
+    },
+    "DateAdapterDisplayFormat": {
+      "name": "DateAdapterDisplayFormat",
+      "kind": "type",
+      "source": "lib/src/lib/components/form-fields/date-time-field/date-time-field.model.ts#L9",
+      "description": "Display format that a `DateAdapter` accepts: `Intl.DateTimeFormat` options for the native adapter,\na format string for the Luxon, Moment and date-fns adapters.",
+      "type": "Intl.DateTimeFormatOptions | string"
+    },
+    "FormFieldDateTimePickerOptions": {
+      "name": "FormFieldDateTimePickerOptions",
+      "kind": "interface",
+      "typeParameters": "T = Date",
+      "source": "lib/src/lib/components/form-fields/date-time-field/date-time-field.model.ts#L11",
+      "extends": [
+        "FormFieldDatePickerOptions<T>"
+      ],
+      "members": [
+        {
+          "name": "showSeconds",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "defaultTime",
+          "type": "[number, number, number]",
+          "optional": true
+        },
+        {
+          "name": "stepMinute",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "displayFormat",
+          "type": "DateAdapterDisplayFormat",
+          "optional": true,
+          "description": "Format that the input uses to show the selected date and time. Give a value that the\n`DateAdapter` of the application accepts.\n\nOptional. By default the field takes the date format of the application and adds the time to it,\nin the shape that the application's own `DateAdapter` reads, with seconds when `showSeconds` is\ntrue. Set this option to print a different format, or when the application's own date format\nalready contains a time."
+        }
+      ]
+    },
+    "FormFieldDateTimePicker": {
+      "name": "FormFieldDateTimePicker",
+      "kind": "interface",
+      "typeParameters": "T extends string | number = string, D = Date",
+      "source": "lib/src/lib/components/form-fields/date-time-field/date-time-field.model.ts#L27",
+      "extends": [
+        "FormFieldBase<T, FormFieldDateTimePickerOptions<D>>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.DateTime"
+        }
+      ]
+    },
+    "FormFieldDateYearMonthPickerOptions": {
+      "name": "FormFieldDateYearMonthPickerOptions",
+      "kind": "interface",
+      "typeParameters": "T = Date",
+      "source": "lib/src/lib/components/form-fields/date-year-month-field/date-year-month-field.model.ts#L5",
+      "extends": [
+        "FormFieldDatePickerOptions<T>"
+      ],
+      "members": [
+        {
+          "name": "startView",
+          "type": "'year' | 'multi-year'",
+          "optional": true
+        }
+      ]
+    },
+    "FormFieldDateYearMonthPicker": {
+      "name": "FormFieldDateYearMonthPicker",
+      "kind": "interface",
+      "typeParameters": "T extends string | number = string, D = Date",
+      "source": "lib/src/lib/components/form-fields/date-year-month-field/date-year-month-field.model.ts#L9",
+      "extends": [
+        "FormFieldBase<T, FormFieldDateYearMonthPickerOptions<D>>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.DateYearMonth"
+        }
+      ]
+    },
+    "FormFieldDragNDropFileOptions": {
+      "name": "FormFieldDragNDropFileOptions",
+      "kind": "interface",
+      "source": "lib/src/lib/components/form-fields/drag-n-drop-file-field/drag-n-drop-file-field.model.ts#L4",
+      "extends": [
+        "FormFieldBaseOptions"
+      ],
+      "members": [
+        {
+          "name": "maxFiles",
+          "type": "number"
+        },
+        {
+          "name": "compact",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "dropFilesText",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "dropFilesButton",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    "FormFieldDragNDropFilePreview": {
+      "name": "FormFieldDragNDropFilePreview",
+      "kind": "interface",
+      "typeParameters": "T extends string | number = string",
+      "source": "lib/src/lib/components/form-fields/drag-n-drop-file-field/drag-n-drop-file-field.model.ts#L11",
+      "extends": [
+        "FormFieldBase<T, FormFieldDragNDropFileOptions>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.DragNDrop"
+        }
+      ]
+    },
+    "FormFieldFilePreviewOptions": {
+      "name": "FormFieldFilePreviewOptions",
+      "kind": "interface",
+      "source": "lib/src/lib/components/form-fields/file-preview-field/file-preview-field.model.ts#L7",
+      "extends": [
+        "FormFieldBaseOptions"
+      ],
+      "members": [
+        {
+          "name": "fileUploadButtonText",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "canEditFileMetaData",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "fileMetaDataConfig",
+          "type": "Lab900FormConfig",
+          "optional": true
+        },
+        {
+          "name": "httpCallback",
+          "type": "(image: Lab900File) => Observable<Blob | ArrayBuffer>",
+          "optional": true
+        },
+        {
+          "name": "showOverlay",
+          "type": "boolean | ((data?: any) => boolean)"
+        },
+        {
+          "name": "multiple",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "accept",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "overlay",
+          "type": "{ backgroundColor: string; textColor: string; text: string }",
+          "optional": true
+        }
+      ]
+    },
+    "FormFieldFilePreview": {
+      "name": "FormFieldFilePreview",
+      "kind": "interface",
+      "typeParameters": "T extends string | number = string",
+      "source": "lib/src/lib/components/form-fields/file-preview-field/file-preview-field.model.ts#L22",
+      "extends": [
+        "FormFieldBase<T, FormFieldFilePreviewOptions>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.FilePreview"
+        }
+      ]
+    },
+    "FormFieldIconOptions": {
+      "name": "FormFieldIconOptions",
+      "kind": "interface",
+      "source": "lib/src/lib/components/form-fields/icon-field/icon-field.model.ts#L4",
+      "extends": [
+        "FormFieldBaseOptions"
+      ],
+      "members": [
+        {
+          "name": "icon",
+          "type": "ReactiveOption<Icon>",
+          "optional": true,
+          "reactive": "signal"
+        },
+        {
+          "name": "text",
+          "type": "ReactiveOption<string>",
+          "optional": true,
+          "reactive": "signal"
+        }
+      ]
+    },
+    "FormFieldIcon": {
+      "name": "FormFieldIcon",
+      "kind": "interface",
+      "typeParameters": "T extends string | number = string",
+      "source": "lib/src/lib/components/form-fields/icon-field/icon-field.model.ts#L9",
+      "extends": [
+        "FormFieldBase<T, FormFieldIconOptions>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.Icon"
+        }
+      ]
+    },
+    "FieldMask": {
+      "name": "FieldMask",
+      "kind": "interface",
+      "source": "lib/src/lib/components/form-fields/input-field/input-field.model.ts#L5",
+      "extends": [
+        "Partial<NgxMaskConfig>"
+      ],
+      "members": [
+        {
+          "name": "mask",
+          "type": "string"
+        }
+      ]
+    },
+    "InputType": {
+      "name": "InputType",
+      "kind": "type",
+      "source": "lib/src/lib/components/form-fields/input-field/input-field.model.ts#L12",
+      "type": "| 'color' | 'date' | 'datetime-local' | 'email' | 'month' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'time' | 'url' | 'week'"
+    },
+    "FormFieldInputOptions": {
+      "name": "FormFieldInputOptions",
+      "kind": "interface",
+      "source": "lib/src/lib/components/form-fields/input-field/input-field.model.ts#L27",
+      "extends": [
+        "FormFieldBaseOptions"
+      ],
+      "members": [
+        {
+          "name": "type",
+          "type": "InputType",
+          "optional": true
+        },
+        {
+          "name": "autofocus",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "suffix",
+          "type": "string | ((data?: any) => string)",
+          "optional": true
+        },
+        {
+          "name": "prefix",
+          "type": "string | ((data?: any) => string)",
+          "optional": true
+        },
+        {
+          "name": "align",
+          "type": "'left' | 'right'",
+          "optional": true
+        },
+        {
+          "name": "fieldMask",
+          "type": "FieldMask",
+          "optional": true
+        },
+        {
+          "name": "showLengthIndicator",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    "FormFieldInput": {
+      "name": "FormFieldInput",
+      "kind": "interface",
+      "typeParameters": "T extends string | number = string",
+      "source": "lib/src/lib/components/form-fields/input-field/input-field.model.ts#L38",
+      "extends": [
+        "FormFieldBase<T, FormFieldInputOptions>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.Input"
+        },
+        {
+          "name": "icon",
+          "type": "Icon & { position?: 'left' | 'right' }",
+          "optional": true
+        }
+      ]
+    },
+    "FormFieldMultiLangOptions": {
+      "name": "FormFieldMultiLangOptions",
+      "kind": "interface",
+      "source": "lib/src/lib/components/form-fields/multi-lang-input/multi-lang-input-field.model.ts#L6",
+      "extends": [
+        "FormFieldInputOptions"
+      ],
+      "members": [
+        {
+          "name": "buttonColor",
+          "type": "ThemePalette",
+          "optional": true
+        },
+        {
+          "name": "translateLabel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "stopTranslateLabel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "useTextAreaField",
+          "type": "boolean",
+          "optional": true
+        }
+      ]
+    },
+    "FormFieldMultiLang": {
+      "name": "FormFieldMultiLang",
+      "kind": "interface",
+      "typeParameters": "T extends string | number = string",
+      "source": "lib/src/lib/components/form-fields/multi-lang-input/multi-lang-input-field.model.ts#L13",
+      "extends": [
+        "FormFieldBase<T, FormFieldMultiLangOptions>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.MultiLangInput"
+        }
+      ]
+    },
+    "FormFieldPasswordOptions": {
+      "name": "FormFieldPasswordOptions",
+      "kind": "interface",
+      "source": "lib/src/lib/components/form-fields/password-field/password-field.model.ts#L4",
+      "extends": [
+        "FormFieldBaseOptions"
+      ],
+      "members": [
+        {
+          "name": "autofocus",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "align",
+          "type": "'left' | 'right'",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "togglePasswordVisibility",
+          "type": "{ disabled: boolean; passwordVisibleIcon?: Icon; passwordHiddenIcon?: Icon }",
+          "optional": true
+        }
+      ]
+    },
+    "FormFieldPassword": {
+      "name": "FormFieldPassword",
+      "kind": "interface",
+      "typeParameters": "T extends string | number = string",
+      "source": "lib/src/lib/components/form-fields/password-field/password-field.model.ts#L15",
+      "extends": [
+        "FormFieldBase<T, FormFieldPasswordOptions>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.Password"
+        },
+        {
+          "name": "icon",
+          "type": "Icon & { position?: 'left' | 'right' }",
+          "optional": true
+        }
+      ]
+    },
+    "FormFieldRadioButtonsOptions": {
+      "name": "FormFieldRadioButtonsOptions",
+      "kind": "interface",
+      "source": "lib/src/lib/components/form-fields/radio-buttons-field/radio-buttons-field.model.ts#L5",
+      "extends": [
+        "FormFieldBaseOptions"
+      ],
+      "members": [
+        {
+          "name": "radioOptions",
+          "type": "ValueLabel[]"
+        },
+        {
+          "name": "color",
+          "type": "ThemePalette",
+          "optional": true
+        }
+      ]
+    },
+    "FormFieldRadioButtons": {
+      "name": "FormFieldRadioButtons",
+      "kind": "interface",
+      "typeParameters": "T extends string | number = string",
+      "source": "lib/src/lib/components/form-fields/radio-buttons-field/radio-buttons-field.model.ts#L10",
+      "extends": [
+        "FormFieldBase<T, FormFieldRadioButtonsOptions>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.RadioButtons"
+        }
+      ]
+    },
+    "FormFieldRangeSliderOptions": {
+      "name": "FormFieldRangeSliderOptions",
+      "kind": "interface",
+      "source": "lib/src/lib/components/form-fields/range-slider-field/range-slider-field.model.ts#L4",
+      "extends": [
+        "FormFieldBaseOptions"
+      ],
+      "members": [
+        {
+          "name": "fromLabel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "toLabel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "enabledInputs",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "steps",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "format",
+          "type": "'K-M' | 'DEFAULT'",
+          "optional": true
+        }
+      ]
+    },
+    "FormFieldRangeSlider": {
+      "name": "FormFieldRangeSlider",
+      "kind": "interface",
+      "typeParameters": "T extends string | number = string",
+      "source": "lib/src/lib/components/form-fields/range-slider-field/range-slider-field.model.ts#L12",
+      "extends": [
+        "FormFieldBase<T, FormFieldRangeSliderOptions>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.RangeSlider"
+        }
+      ]
+    },
+    "FormFieldRepeaterOptions": {
+      "name": "FormFieldRepeaterOptions",
+      "kind": "interface",
+      "source": "lib/src/lib/components/form-fields/repeater-field/repeater-field.model.ts#L5",
+      "extends": [
+        "FormFieldBaseOptions"
+      ],
+      "members": [
+        {
+          "name": "fixedList",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "removeAll",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "addLabel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "minRows",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "maxRows",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "buttonColor",
+          "type": "ThemePalette",
+          "optional": true
+        },
+        {
+          "name": "enableReorder",
+          "type": "boolean",
+          "optional": true
+        }
+      ]
+    },
+    "FormFieldRepeater": {
+      "name": "FormFieldRepeater",
+      "kind": "interface",
+      "typeParameters": "T extends string | number = string",
+      "source": "lib/src/lib/components/form-fields/repeater-field/repeater-field.model.ts#L15",
+      "extends": [
+        "FormFieldBase<T, FormFieldRepeaterOptions>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.Repeater"
+        }
+      ]
+    },
+    "FormFieldSearchOptions": {
+      "name": "FormFieldSearchOptions",
+      "kind": "interface",
+      "typeParameters": "T",
+      "source": "lib/src/lib/components/form-fields/search-field/field-search.model.ts#L6",
+      "extends": [
+        "FormFieldBaseOptions"
+      ],
+      "members": [
+        {
+          "name": "labelFormatter",
+          "type": "(option: T) => string"
+        },
+        {
+          "name": "searchFn",
+          "type": "(searchQuery: string) => Observable<T | null>"
+        },
+        {
+          "name": "debounceTime",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "notFoundLabel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "addNewLabel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "addNewFn",
+          "type": "(searchQuery: string) => Observable<T | null>",
+          "optional": true,
+          "description": "Function to handle the new item creation, can be anything.\nThe field will be updated with the observable response"
+        },
+        {
+          "name": "disableSearchOnInput",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "addNewBtnColor",
+          "type": "ThemePalette",
+          "optional": true
+        },
+        {
+          "name": "hideClearButton",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    "FormFieldSearch": {
+      "name": "FormFieldSearch",
+      "kind": "interface",
+      "typeParameters": "T, R extends string | number = string",
+      "source": "lib/src/lib/components/form-fields/search-field/field-search.model.ts#L23",
+      "extends": [
+        "FormFieldBase<R, FormFieldSearchOptions<T>>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.Search"
+        }
+      ]
+    },
+    "FormFieldSelectOptionsFilter": {
+      "name": "FormFieldSelectOptionsFilter",
+      "kind": "interface",
+      "source": "lib/src/lib/components/form-fields/select-field/field-select.model.ts#L8",
+      "members": [
+        {
+          "name": "page",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "searchQuery",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "getAll",
+          "type": "boolean",
+          "optional": true
+        }
+      ]
+    },
+    "FormFieldSelectOptionsFn": {
+      "name": "FormFieldSelectOptionsFn",
+      "kind": "type",
+      "typeParameters": "T",
+      "source": "lib/src/lib/components/form-fields/select-field/field-select.model.ts#L14",
+      "type": "( filter?: FormFieldSelectOptionsFilter, fieldControl?: AbstractControl, schema?: FormFieldSelect<T> ) => ValueLabel<T>[] | Observable<ValueLabel<T>[]>"
+    },
+    "FormFieldSelectOptions": {
+      "name": "FormFieldSelectOptions",
+      "kind": "interface",
+      "typeParameters": "T",
+      "source": "lib/src/lib/components/form-fields/select-field/field-select.model.ts#L20",
+      "extends": [
+        "FormFieldBaseOptions"
+      ],
+      "members": [
+        {
+          "name": "multiple",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "showChipValue",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "selectOptions",
+          "type": "FormFieldSelectOptionsFn<T> | ValueLabel<T>[] | Observable<ValueLabel<T>[]>",
+          "optional": true
+        },
+        {
+          "name": "compareWith",
+          "type": "(o1: T, o2: T) => boolean",
+          "optional": true
+        },
+        {
+          "name": "displayOptionFn",
+          "type": "(option: ValueLabel<T>) => string",
+          "optional": true,
+          "deprecated": "Labels are set in the selectOptions ValueLabels"
+        },
+        {
+          "name": "customTriggerFn",
+          "type": "(value: T | undefined) => string",
+          "optional": true
+        },
+        {
+          "name": "autoselectOnlyOption",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "noOptionsIndicator",
+          "type": "boolean",
+          "optional": true,
+          "description": "Will show an empty option displaying a message that no options could be found",
+          "default": "false"
+        },
+        {
+          "name": "noOptionsLabel",
+          "type": "string",
+          "optional": true,
+          "description": "Label to use to display when no options are available\nnoOptionsIndicator needs to be true for this to show"
+        },
+        {
+          "name": "displaySelectedOptionFn",
+          "type": "(option: T) => string",
+          "optional": true,
+          "description": "The function to display the current value of the select if this item is not present in the select options."
+        },
+        {
+          "name": "search",
+          "type": "{ enabled: boolean; placeholder?: string; /** * Label to use to display a not found message based on given search message */ notFoundLabel?: string; addNewLabel?: string; /** * Function to handle the new item creation, can be anything. * Use the select argument to update the select after creation */ addNewFn?: (searchQuery: string, select: SelectFieldComponent<T>) => void; addNewBtnColor?: ThemePalette; /** * Clear the search when the select closes * @default false */ clearOnClose?: boolean; /** * The threshold time before firing the search event */ debounceTime?: number }",
+          "optional": true
+        },
+        {
+          "name": "infiniteScroll",
+          "type": "{ enabled: boolean; /** * The threshold distance from the bottom of the options list to call the infiniteScroll output event when scrolled. * The threshold value can be either in percent, or in pixels. * For example, use the value of 10% for the infiniteScroll output event to get called when the user has needs 10% to reach the bottom. */ threshold?: string; /** * The threshold time before firing the infiniteScroll event */ debounceTime?: number }",
+          "optional": true
+        },
+        {
+          "name": "clearFieldButton",
+          "type": "{ enabled: boolean | ((data?: T) => boolean); click?: (fieldControl: AbstractControl, clickEvent: Event) => void }",
+          "optional": true,
+          "description": "Shows a clear button on the right of the field"
+        },
+        {
+          "name": "selectAll",
+          "type": "{ enabled: boolean; label?: string; disabled?: boolean }",
+          "optional": true
+        },
+        {
+          "name": "panelWidth",
+          "type": "string | number | null",
+          "optional": true
+        },
+        {
+          "name": "panelClass",
+          "type": "string | string[]",
+          "optional": true
+        },
+        {
+          "name": "fetchOptionsOnFocus",
+          "type": "boolean",
+          "optional": true,
+          "description": "This will only request to select options once the select opens\nThe current value will be the only option until the select is opened"
+        }
+      ]
+    },
+    "FormFieldSelect": {
+      "name": "FormFieldSelect",
+      "kind": "interface",
+      "typeParameters": "T, R extends string | number = string",
+      "source": "lib/src/lib/components/form-fields/select-field/field-select.model.ts#L105",
+      "extends": [
+        "FormFieldBase<R, FormFieldSelectOptions<T>>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.Select"
+        }
+      ]
+    },
+    "FormFieldSlideToggleOptions": {
+      "name": "FormFieldSlideToggleOptions",
+      "kind": "interface",
+      "source": "lib/src/lib/components/form-fields/slide-toggle-field/slide-toggle-field.model.ts#L6",
+      "extends": [
+        "FormFieldBaseOptions"
+      ],
+      "members": [
+        {
+          "name": "label",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "labelPosition",
+          "type": "MatSlideToggle['labelPosition']",
+          "optional": true
+        },
+        {
+          "name": "color",
+          "type": "ThemePalette",
+          "optional": true
+        }
+      ]
+    },
+    "FormFieldSlideToggle": {
+      "name": "FormFieldSlideToggle",
+      "kind": "interface",
+      "typeParameters": "T extends string | number = string",
+      "source": "lib/src/lib/components/form-fields/slide-toggle-field/slide-toggle-field.model.ts#L12",
+      "extends": [
+        "FormFieldBase<T, FormFieldSlideToggleOptions>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.SlideToggle"
+        }
+      ]
+    },
+    "FormFieldTextareaOptions": {
+      "name": "FormFieldTextareaOptions",
+      "kind": "interface",
+      "source": "lib/src/lib/components/form-fields/textarea-field/textarea-field.model.ts#L4",
+      "extends": [
+        "FormFieldBaseOptions"
+      ],
+      "members": [
+        {
+          "name": "showLengthIndicator",
+          "type": "boolean",
+          "optional": true
+        }
+      ]
+    },
+    "FormFieldTextarea": {
+      "name": "FormFieldTextarea",
+      "kind": "interface",
+      "typeParameters": "T extends string | number = string",
+      "source": "lib/src/lib/components/form-fields/textarea-field/textarea-field.model.ts#L8",
+      "extends": [
+        "FormFieldBase<T, FormFieldTextareaOptions>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.TextArea"
+        }
+      ]
+    },
+    "FormFieldWysiwgOptions": {
+      "name": "FormFieldWysiwgOptions",
+      "kind": "interface",
+      "source": "lib/src/lib/components/form-fields/wysiwyg-field/wysiwg-field.model.ts#L5",
+      "extends": [
+        "FormFieldBaseOptions"
+      ],
+      "members": [
+        {
+          "name": "editorConfig",
+          "type": "AngularEditorConfig",
+          "optional": true
+        }
+      ]
+    },
+    "WysiwgFieldModel": {
+      "name": "WysiwgFieldModel",
+      "kind": "interface",
+      "typeParameters": "T extends string | number = string",
+      "source": "lib/src/lib/components/form-fields/wysiwyg-field/wysiwg-field.model.ts#L9",
+      "extends": [
+        "FormFieldBase<T, FormFieldWysiwgOptions>"
+      ],
+      "members": [
+        {
+          "name": "editType",
+          "type": "EditType.Wysiwyg"
+        }
+      ]
+    },
+    "SelectFieldComponent": {
+      "name": "SelectFieldComponent",
+      "kind": "component",
+      "typeParameters": "T",
+      "source": "lib/src/lib/components/form-fields/select-field/select-field.component.ts#L24",
+      "selector": "lab900-select-field",
+      "extends": [
+        "FormComponent<FormFieldSelect<T>>"
+      ],
+      "members": [
+        {
+          "name": "fieldAttribute",
+          "kind": "input",
+          "type": "string | undefined",
+          "inheritedFrom": "FormComponent"
+        },
+        {
+          "name": "group",
+          "kind": "input",
+          "type": "UntypedFormGroup",
+          "required": true,
+          "inheritedFrom": "FormComponent"
+        },
+        {
+          "name": "schema",
+          "kind": "input",
+          "type": "S",
+          "required": true,
+          "inheritedFrom": "FormComponent"
+        },
+        {
+          "name": "externalForms",
+          "kind": "input",
+          "type": "Record<string, UntypedFormGroup> | undefined",
+          "inheritedFrom": "FormComponent"
+        },
+        {
+          "name": "language",
+          "kind": "input",
+          "type": "string | undefined",
+          "inheritedFrom": "FormComponent"
+        },
+        {
+          "name": "availableLanguages",
+          "kind": "input",
+          "type": "ValueLabel[]",
+          "default": "[]",
+          "inheritedFrom": "FormComponent"
+        },
+        {
+          "name": "readonly",
+          "kind": "model",
+          "type": "boolean",
+          "default": "false",
+          "description": "Field state",
+          "inheritedFrom": "FormComponent"
+        },
+        {
+          "name": "fieldIsHidden",
+          "kind": "model",
+          "type": "boolean",
+          "default": "false",
+          "inheritedFrom": "FormComponent"
+        },
+        {
+          "name": "fieldIsRequired",
+          "kind": "model",
+          "type": "boolean",
+          "default": "false",
+          "inheritedFrom": "FormComponent"
+        }
+      ]
+    },
+    "SelectInfiniteScrollDirective": {
+      "name": "SelectInfiniteScrollDirective",
+      "kind": "directive",
+      "source": "lib/src/lib/components/form-fields/select-field/select-field-infinite-scroll.directive.ts#L13",
+      "description": "Copied from https://github.com/HaidarZ/ng-mat-select-infinite-scroll because they are not updating to the latest Angular versions",
+      "selector": "mat-select[lab900InfiniteScroll]",
+      "members": [
+        {
+          "name": "threshold",
+          "kind": "input",
+          "type": "string",
+          "default": "'15%'"
+        },
+        {
+          "name": "debounceTime",
+          "kind": "input",
+          "type": "number",
+          "default": "150"
+        },
+        {
+          "name": "complete",
+          "kind": "model",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "infiniteScroll",
+          "kind": "output",
+          "type": "void"
+        }
+      ]
+    },
+    "AmountInputDirective": {
+      "name": "AmountInputDirective",
+      "kind": "directive",
+      "source": "lib/src/lib/components/form-fields/amount-field/amount-input.directive.ts#L22",
+      "selector": "input[lab900AmountInput]",
+      "members": [
+        {
+          "name": "maxDecimals",
+          "kind": "input",
+          "type": "number | undefined",
+          "default": "this.settings?.amountField?.maxDecimals"
+        },
+        {
+          "name": "minDecimals",
+          "kind": "input",
+          "type": "number | undefined",
+          "default": "this.settings?.amountField?.minDecimals"
+        }
+      ]
+    },
+    "InputFieldComponent": {
+      "name": "InputFieldComponent",
+      "kind": "component",
+      "source": "lib/src/lib/components/form-fields/input-field/input-field.component.ts#L12",
+      "selector": "lab900-input-field",
+      "extends": [
+        "FormComponent<FormFieldInput>"
+      ],
+      "members": [
+        {
+          "name": "fieldAttribute",
+          "kind": "input",
+          "type": "string | undefined",
+          "inheritedFrom": "FormComponent"
+        },
+        {
+          "name": "group",
+          "kind": "input",
+          "type": "UntypedFormGroup",
+          "required": true,
+          "inheritedFrom": "FormComponent"
+        },
+        {
+          "name": "schema",
+          "kind": "input",
+          "type": "S",
+          "required": true,
+          "inheritedFrom": "FormComponent"
+        },
+        {
+          "name": "externalForms",
+          "kind": "input",
+          "type": "Record<string, UntypedFormGroup> | undefined",
+          "inheritedFrom": "FormComponent"
+        },
+        {
+          "name": "language",
+          "kind": "input",
+          "type": "string | undefined",
+          "inheritedFrom": "FormComponent"
+        },
+        {
+          "name": "availableLanguages",
+          "kind": "input",
+          "type": "ValueLabel[]",
+          "default": "[]",
+          "inheritedFrom": "FormComponent"
+        },
+        {
+          "name": "readonly",
+          "kind": "model",
+          "type": "boolean",
+          "default": "false",
+          "description": "Field state",
+          "inheritedFrom": "FormComponent"
+        },
+        {
+          "name": "fieldIsHidden",
+          "kind": "model",
+          "type": "boolean",
+          "default": "false",
+          "inheritedFrom": "FormComponent"
+        },
+        {
+          "name": "fieldIsRequired",
+          "kind": "model",
+          "type": "boolean",
+          "default": "false",
+          "inheritedFrom": "FormComponent"
+        }
+      ]
+    },
+    "Lab900Form": {
+      "name": "Lab900Form",
+      "kind": "component",
+      "typeParameters": "T",
+      "source": "lib/src/lib/components/form-container/form-container.component.ts#L24",
+      "description": "Renders a reactive form from a schema. It builds the `UntypedFormGroup` from\n`Lab900FormConfig.fields` and renders every field, so there is no per-field template.\n\nRead the state through a `viewChild`: `form` is the group, `value` is `getRawValue()` (so\nreadonly and disabled fields are included) and `valid` is true when the group is valid or\nentirely disabled.",
+      "example": "<lab900-form [schema]=\"schema\" [(data)]=\"user\" />",
+      "selector": "lab900-form",
+      "members": [
+        {
+          "name": "data",
+          "kind": "model",
+          "type": "T | undefined",
+          "description": "The value of the form. Two-way: setting it patches the controls, and the form writes the\ncurrent value back."
+        },
+        {
+          "name": "schema",
+          "kind": "input",
+          "type": "Lab900FormConfig",
+          "required": true,
+          "description": "The schema to render. The form builds its `UntypedFormGroup` from `schema.fields`.\n\nKeep it in a class field: a new object on every change detection rebuilds the form and loses\nthe values the user has typed."
+        },
+        {
+          "name": "externalForms",
+          "kind": "input",
+          "type": "Record<string, UntypedFormGroup> | undefined",
+          "description": "Other form groups that the conditions of this form may depend on, keyed by the `formId` of\nthose forms. A condition reaches them through `IFieldConditions.externalFormId`."
+        },
+        {
+          "name": "emitEventOnDataChange",
+          "kind": "input",
+          "type": "boolean",
+          "default": "true",
+          "description": "Whether patching the `data` input fires `valueChanges` on the controls. Set it to `false` to\nload a record without triggering the listeners of your own form."
+        },
+        {
+          "name": "language",
+          "kind": "input",
+          "type": "string | undefined",
+          "description": "The language that an `EditType.MultiLangInput` field currently edits."
+        },
+        {
+          "name": "availableLanguages",
+          "kind": "input",
+          "type": "ValueLabel[]",
+          "default": "[]",
+          "description": "The languages an `EditType.MultiLangInput` field offers."
+        }
+      ]
+    },
+    "FormComponent": {
+      "name": "FormComponent",
+      "kind": "directive",
+      "typeParameters": "S extends Lab900FormField = Lab900FormField",
+      "source": "lib/src/lib/components/AbstractFormComponent.ts#L27",
+      "abstract": true,
+      "extends": [
+        "SubscriptionBasedDirective"
+      ],
+      "members": [
+        {
+          "name": "fieldAttribute",
+          "kind": "input",
+          "type": "string | undefined"
+        },
+        {
+          "name": "group",
+          "kind": "input",
+          "type": "UntypedFormGroup",
+          "required": true
+        },
+        {
+          "name": "schema",
+          "kind": "input",
+          "type": "S",
+          "required": true
+        },
+        {
+          "name": "externalForms",
+          "kind": "input",
+          "type": "Record<string, UntypedFormGroup> | undefined"
+        },
+        {
+          "name": "language",
+          "kind": "input",
+          "type": "string | undefined"
+        },
+        {
+          "name": "availableLanguages",
+          "kind": "input",
+          "type": "ValueLabel[]",
+          "default": "[]"
+        },
+        {
+          "name": "readonly",
+          "kind": "model",
+          "type": "boolean",
+          "default": "false",
+          "description": "Field state"
+        },
+        {
+          "name": "fieldIsHidden",
+          "kind": "model",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "fieldIsRequired",
+          "kind": "model",
+          "type": "boolean",
+          "default": "false"
+        }
+      ]
+    },
+    "FormDialogDirective": {
+      "name": "FormDialogDirective",
+      "kind": "directive",
+      "typeParameters": "T",
+      "source": "lib/src/lib/directives/form-dialog.directive.ts#L6",
+      "selector": "[lab900FormDialog]",
+      "members": [
+        {
+          "name": "schema",
+          "kind": "input",
+          "type": "Lab900FormConfig",
+          "required": true
+        },
+        {
+          "name": "data",
+          "kind": "input",
+          "type": "T",
+          "required": true
+        },
+        {
+          "name": "submitFormHandler",
+          "kind": "input",
+          "type": "(data: T, originalData?: T) => Promise<boolean>",
+          "required": true
+        },
+        {
+          "name": "dialogOptions",
+          "kind": "input",
+          "type": "MatDialogConfig",
+          "required": true
+        },
+        {
+          "name": "disabled",
+          "kind": "input",
+          "type": "boolean",
+          "default": "false"
+        }
+      ]
+    },
+    "AuthImageDirective": {
+      "name": "AuthImageDirective",
+      "kind": "directive",
+      "source": "lib/src/lib/directives/auth-image.directive.ts#L7",
+      "selector": "[lab900AuthImage]",
+      "members": [
+        {
+          "name": "image",
+          "kind": "model",
+          "type": "Lab900File",
+          "required": true
+        },
+        {
+          "name": "httpCallback",
+          "kind": "input",
+          "type": "((image: Lab900File) => Observable<Blob | ArrayBuffer>) | undefined",
+          "description": "`fetchImageBase64` accepts and converts an `ArrayBuffer`, so the callback may return either. The\nshowcase passes a request with `responseType: 'arraybuffer'`, which the old `Observable<Blob>` type\nexcluded."
+        },
+        {
+          "name": "defaultImage",
+          "kind": "input",
+          "type": "string | undefined"
+        }
+      ]
+    },
+    "AutofocusDirective": {
+      "name": "AutofocusDirective",
+      "kind": "directive",
+      "source": "lib/src/lib/directives/auto-focus.directive.ts#L4",
+      "selector": "[lab900InputAutofocus]",
+      "members": [
+        {
+          "name": "autofocus",
+          "kind": "input",
+          "type": "boolean"
+        }
+      ]
+    }
+  }
+}
