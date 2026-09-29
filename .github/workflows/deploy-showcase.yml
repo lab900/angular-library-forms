@@ -1,0 +1,36 @@
+# Deploys the showcase to gh-pages on every push to main (so also on every merged pull request).
+# It runs the same `npm run deploy:showcase` as a manual deploy: `angular-cli-ghpages` builds the app
+# with the `deploy` target in angular.json and pushes it to the gh-pages branch.
+name: Deploy showcase
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# One deploy at a time; a newer push to main cancels a deploy that has not finished.
+concurrency:
+  group: deploy-showcase
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Deploy showcase
+        run: npm run deploy:showcase
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
