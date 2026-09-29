@@ -1,26 +1,32 @@
-@if (data && currentTab && navItems.length) {
-  <div class="showcase-page row">
-    @if (navItems.length === 1) {
-      <h1>{{ data.title }}</h1>
-    } @else {
-      <lab900-page-header [pageTitle]="data.title" [navItems]="navItems" [tabPanel]="tabNavPanel" />
-    }
-    <mat-tab-nav-panel #tabNavPanel>
-      @switch (currentTab) {
+@if (data() && currentTab()) {
+  <div class="showcase-page">
+    <header class="showcase-page__header">
+      <h1 class="showcase-page__title">{{ data()?.title }}</h1>
+      <nav class="showcase-page__tabs" mat-tab-nav-bar mat-stretch-tabs="false" [tabPanel]="tabNavPanel">
+        @for (tab of tabs(); track tab) {
+          <a mat-tab-link [routerLink]="[]" [queryParams]="{ tab }" [active]="currentTab() === tab">
+            {{ tabLabels[tab] }}
+          </a>
+        }
+      </nav>
+    </header>
+    <mat-tab-nav-panel #tabNavPanel class="showcase-page__content">
+      @switch (currentTab()) {
         @case ('guide') {
-          <lab900-markdown-page [filePath]="data.docFile" />
+          <lab900-markdown-page [filePath]="data()?.docFile" />
         }
         @case ('examples') {
-          @for (example of data.examples; track example) {
-            <div style="padding: 30px 0 0">
-              <lab900-example-viewer
-                [extensions]="example.extensions"
-                [fileDir]="example?.fileFolder"
-                [exampleTitle]="example.title ?? ''">
-                <ng-container [ngComponentOutlet]="example.component" />
-              </lab900-example-viewer>
-            </div>
+          @for (example of data()?.examples; track example) {
+            <lab900-example-viewer
+              [extensions]="example.extensions"
+              [exampleTitle]="example.title ?? ''"
+              [exampleDescription]="example.description">
+              <ng-container [ngComponentOutlet]="example.component" />
+            </lab900-example-viewer>
           }
+        }
+        @case ('api') {
+          <lab900-api-docs [sections]="data()?.api ?? []" />
         }
       }
     </mat-tab-nav-panel>

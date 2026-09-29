@@ -9,6 +9,10 @@ steps:
     args: ['run', 'lint']
   - name: 'node:24'
     entrypoint: 'npm'
+    id: Check API Docs
+    args: ['run', 'docs:api:check']
+  - name: 'node:24'
+    entrypoint: 'npm'
     id: Test Library
     args: ['run', 'test:silent']
   - name: 'node:24'

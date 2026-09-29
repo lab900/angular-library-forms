@@ -1,4 +1,14 @@
-import { ComponentRef, computed, Directive, effect, inject, input, signal, ViewContainerRef } from '@angular/core';
+import {
+  ComponentRef,
+  computed,
+  Directive,
+  effect,
+  inject,
+  input,
+  Signal,
+  signal,
+  ViewContainerRef,
+} from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { FormComponent } from '../components/AbstractFormComponent';
 import { ReadonlyFieldComponent } from '../components/form-fields/readonly-field/readonly-field.component';
@@ -7,9 +17,7 @@ import { FormFieldBaseOptions, ValueLabel } from '../models/form-field-base';
 import { Lab900FormField } from '../models/lab900-form-field.type';
 import { FormFieldMappingService } from '../services/form-field-mapping.service';
 import { computeReactiveBooleanOption } from '../utils/helpers';
-import { rxResource } from '@angular/core/rxjs-interop';
-import { concat, defer, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { sharedGroupValue } from '../utils/group-value.utils';
 
 /**
  * Edit types that render their own readonly state, so they keep their own component when the field or the
@@ -73,18 +81,10 @@ export class FormFieldDirective {
     return this.group();
   });
 
-  public readonly groupValue = rxResource({
-    params: () => this.fieldGroup(),
-    stream: ({ params }) => {
-      if (params) {
-        return concat(
-          defer(() => of(params.getRawValue())),
-          params.valueChanges.pipe(map(() => params.getRawValue()))
-        );
-      }
-      return of(null);
-    },
-  }).value;
+  public readonly groupValue: Signal<any> = computed(() => {
+    const group = this.fieldGroup();
+    return group ? sharedGroupValue(group)() : null;
+  });
 
   public readonly language = input<string | undefined>(undefined);
   public readonly availableLanguages = input<ValueLabel[]>([]);
@@ -109,12 +109,21 @@ export class FormFieldDirective {
 
   public readonly externalForms = input<Record<string, UntypedFormGroup> | undefined>(undefined);
   public readonly componentType = computed(() => {
-    this.validateType();
     const schema = this.schema();
     if (this.fieldIsReadonly() && !this.rendersOwnReadonlyState(schema)) {
       return ReadonlyFieldComponent;
     }
-    return this.formFieldMappingService.mapToComponent(schema);
+    const component = this.formFieldMappingService.mapToComponent(schema);
+    if (!component) {
+      // An unknown edit type resolves to UnknownFieldComponent and warns. Getting nothing back means
+      // that fallback is missing too, so LAB900_FORM_FIELD_TYPES was replaced with an incomplete map.
+      throw new Error(
+        `@lab900/forms: nothing renders editType "${schema.editType}", and no UnknownFieldComponent is ` +
+          `registered to fall back on. A custom LAB900_FORM_FIELD_TYPES value has to carry every key that ` +
+          `provideLab900Forms() registers.`
+      );
+    }
+    return component;
   });
   public readonly component = signal<ComponentRef<FormComponent> | undefined>(undefined);
 
@@ -202,16 +211,6 @@ export class FormFieldDirective {
   private createComponent(): void {
     this.container.clear();
     this.component.set(this.container.createComponent(this.componentType()));
-  }
-
-  private validateType(): void {
-    if (!this.formFieldMappingService.mapToComponent(this.schema())) {
-      const supportedTypes = Object.keys(EditType).join(', ');
-      throw new Error(
-        `Trying to use an unsupported type (${this.schema().editType}).
-        Supported types: ${supportedTypes}`
-      );
-    }
   }
 
   private rendersOwnReadonlyState(schema: Lab900FormField): boolean {

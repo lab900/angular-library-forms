@@ -1,32 +1,22 @@
-import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { filter, take } from 'rxjs/operators';
-import { SubscriptionBasedDirective } from '../../directives/subscription-based.directive';
-import { MarkdownModule } from 'ngx-markdown';
+import { map } from 'rxjs/operators';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { MarkdownComponent } from 'ngx-markdown';
 
 @Component({
   selector: 'lab900-markdown-page',
   templateUrl: './markdown-page.component.html',
   styleUrls: ['./markdown-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MarkdownModule],
+  imports: [MarkdownComponent],
 })
-export default class MarkdownPageComponent extends SubscriptionBasedDirective {
-  private activatedRoute = inject(ActivatedRoute);
+export default class MarkdownPageComponent {
+  private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+  public readonly filePath = input<string | undefined>(undefined);
+  protected routeFilePath = toSignal(
+    this.activatedRoute.data.pipe(map((data: { filePath?: string }) => data?.filePath))
+  );
 
-  @Input()
-  public filePath?: string;
-
-  public constructor() {
-    super();
-    this.addSubscription(
-      this.activatedRoute.data.pipe(
-        filter(data => !!data?.filePath),
-        take(1)
-      ),
-      data => {
-        this.filePath = data.filePath;
-      }
-    );
-  }
+  protected readonly path = computed(() => this.routeFilePath() ?? this.filePath());
 }

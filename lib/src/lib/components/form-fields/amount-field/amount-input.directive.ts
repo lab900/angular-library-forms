@@ -36,7 +36,15 @@ export class AmountInputDirective implements ControlValueAccessor {
   private readonly renderer = inject(Renderer2);
   private readonly elementRef: ElementRef<HTMLInputElement> = inject(ElementRef<HTMLInputElement>);
 
+  /**
+   * The most decimals the value is formatted to. Defaults to
+   * `provideLab900Forms({ amountField: { maxDecimals } })`.
+   */
   public readonly maxDecimals = input<number | undefined>(this.settings?.amountField?.maxDecimals);
+  /**
+   * The fewest decimals the value is padded to. Defaults to
+   * `provideLab900Forms({ amountField: { minDecimals } })`.
+   */
   public readonly minDecimals = input<number | undefined>(this.settings?.amountField?.minDecimals);
   public readonly focused = signal(false);
 

@@ -3,7 +3,7 @@ import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'lab900-form-conditionals-example',
+  selector: 'lab900-form-reactive-options-example',
   template: `
     <lab900-form #lab900FormContainer [schema]="formFields" />
     <div>

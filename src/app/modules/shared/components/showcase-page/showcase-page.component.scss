@@ -1,14 +1,72 @@
+@use 'lab900.tokens' as lab;
+
+$gutter: 30px;
+$gutter-mobile: 15px;
+
 .showcase-page {
-  ::ng-deep {
-    .lab900-page-header__nav {
+  // the sticky header's height, so sticky content and scroll targets below it stay visible
+  --showcase-header-height: 64px;
+  box-sizing: border-box;
+  max-width: 1000px + 2 * $gutter;
+  margin: auto;
+  padding: 0 $gutter 50px;
+
+  @media screen and (max-width: 599px) {
+    --showcase-header-height: 105px;
+    padding: 0 $gutter-mobile 30px;
+  }
+}
+
+// Title and tabs share one row, and the bar stays on top while the examples scroll under it.
+.showcase-page__header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  column-gap: 32px;
+  padding-top: 16px;
+  border-bottom: 1px solid rgba(lab.$lab-dark, 0.15);
+  background: lab.$lab-white;
+}
+
+.showcase-page__title {
+  flex: 0 0 auto;
+  margin: 0;
+  padding-bottom: 12px;
+  font-size: 1.5rem;
+  font-weight: lab.$font-weight-semibold;
+  line-height: 1.2;
+}
+
+.showcase-page__tabs {
+  flex: 1 1 auto;
+  // the header border already separates the tabs from the content
+  --mat-tab-divider-height: 0;
+
+  @media screen and (max-width: 599px) {
+    flex-basis: 100%;
+  }
+}
+
+.showcase-page__content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 24px;
+
+  ::ng-deep .markdown-page {
+    max-width: 100%;
+    padding: 0;
+
+    .page {
       padding: 0;
     }
-    .lab900-page-header__main {
-      padding: 0 0 30px;
-    }
-    .markdown-page {
-      max-width: 100%;
-      padding: 0;
-    }
+  }
+
+  // an example card adds its own bottom margin; the gap already spaces the cards
+  ::ng-deep .lab900-card {
+    margin-bottom: 0;
   }
 }

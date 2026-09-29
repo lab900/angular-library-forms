@@ -17,9 +17,24 @@ export class SelectInfiniteScrollDirective {
   private readonly matSelect = inject(MatSelect, { optional: false });
   private readonly ngZone = inject(NgZone);
 
+  /**
+   * How close to the bottom of the option list the scroll has to come before the next page is asked
+   * for. Either a percentage of the panel height (`'10%'`) or a pixel distance (`'150'`).
+   * @default '15%'
+   */
   public readonly threshold = input<string>('15%');
+  /**
+   * How long scrolling settles before `infiniteScroll` fires, so one flick does not ask for three
+   * pages.
+   * @default 150
+   */
   public readonly debounceTime = input<number>(150);
+  /**
+   * Set it once the last page has been loaded and the directive stops emitting.
+   * @default false
+   */
   public readonly complete = model<boolean>(false);
+  /** Asks for the next page. */
   public readonly infiniteScroll = output<void>();
 
   private readonly panel = signal<Element | undefined>(undefined);

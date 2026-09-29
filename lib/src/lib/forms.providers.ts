@@ -36,6 +36,7 @@ import { AmountFieldComponent } from './components/form-fields/amount-field/amou
 import { FormColumnComponent } from './components/form-column/form-column.component';
 import { SearchFieldComponent } from './components/form-fields/search-field/search-field.component';
 import { FormFieldMappingService } from './services/form-field-mapping.service';
+import { setLab900DevWarnings } from './utils/dev-warnings';
 
 export function provideLab900Forms(
   settings: Lab900FormModuleSettings = defaultFormModuleSettings
@@ -54,7 +55,9 @@ export function provideLab900Forms(
       ...(settings?.amountField ?? {}),
     },
     disableBrowserAutocomplete: settings?.disableBrowserAutocomplete ?? false,
+    devWarnings: settings?.devWarnings ?? true,
   };
+  setLab900DevWarnings(formSetting.devWarnings ?? true);
   return makeEnvironmentProviders([
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,

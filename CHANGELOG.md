@@ -1,313 +1,550 @@
 # Changelog
 
-## 22.2.1
-
-- **Breaking: reactive options are evaluated against the real form value from the first pass.** `groupValue`
-  and `controlValue` seeded their stream with the `getRawValue` **method** instead of its result, so the first
-  evaluation of a reactive `hide`, `readonly`, `required`, `title` or `placeholder` handed your function the
-  method. A function such as `data => data.type === 'B'` silently returned the wrong answer and the field was
-  rendered hidden or readonly before correcting itself; a function such as `data => data.items.length === 0`
-  threw `Cannot read properties of undefined`. Both are fixed. If one of your option functions was quietly
-  returning the wrong value on that first pass, it now returns the right one, so a field can start out hidden,
-  readonly or required where it previously did not. Present since `19.1.10`; unrelated to the Angular upgrade.
-- **Breaking: a readonly field renders `-` instead of `[object Object]`.** A value that has no string form of
-  its own is no longer printed: a plain object, a `Date` range, a `File`. Set `readonlyDisplay` on those
-  fields. This supersedes the note in `22.1.0` that said such values keep rendering `[object Object]`.
-- **Breaking: each item of an array value is translated on its own and the items are joined with `, `.** A
-  readonly field holding `['PENDING', 'DONE']` renders both translations, where 22.0.4 rendered
-  `[object Object]` and 22.1.0 rendered the raw keys joined. The value is translated in TypeScript now instead
-  of through `TranslatePipe` in the template, so a language change still updates the field.
-- **Breaking: `readonlyDisplay` recomputes when any control in its form group changes,** not only when the
-  field's own control changes. It receives the raw group value, so it was under-reacting. A function that
-  reads sibling attributes updates now, and one with a side effect runs more often.
-- Fix: `EditType.DateTime` shows the selected time on every date adapter without setting `displayFormat`. The
-  default format was always `Intl.DateTimeFormat` options, which only the native adapter reads, so on the
-  Luxon, Moment and date-fns adapters the input printed a date without a time until you set `displayFormat`
-  yourself. The field now derives the format from the date format of your own application and adds the time in
-  the shape that your adapter reads: the time parts merged in for the native adapter, ` HH:mm:ss` appended for
-  the three that take a format string. `displayFormat` keeps working and still wins, so it is optional now.
-  Two knock-on effects: the input follows the date style of your application instead of always printing
-  `9/8/2026`, so an application that customised `MAT_DATE_FORMATS.display.dateInput` sees its own style in the
-  date-time field; and an application whose `dateInput` already prints a time gets it twice on a string
-  adapter, which `displayFormat` fixes.
+All notable changes to `@lab900/forms` are documented in this file. The format is based on
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The major version follows the Angular major version.
+Breaking changes are marked **BREAKING**.
+
+## [22.3.0] - 2026-09-29
+
+### Added
+
+- Development warnings for schema mistakes that render a form that shows the wrong thing without failing: an
+  `editType` with no registered component, a `Select` with object values but no `compareWith`, a
+  `readonlyDisplay` that returns an object or an array, and a schema rebuilt several times a second (built in a
+  template or a getter). Each is logged once, names the field and the fix, and is stripped from production
+  builds. Turn them off with `provideLab900Forms({ devWarnings: false })`, or in a spec with
+  `setLab900DevWarnings(false)`.
+- Translation keys `forms.a11y.drop-zone`, `.remove-file`, `.preview-file`, `.show-password` and
+  `.hide-password` (en + nl), and the missing Dutch translation of `form.field.add_new`.
+- JSDoc on every public member and a schema example on every field model, so the published
+  `types/lab900-forms.d.ts` documents the whole API. `npm run docs:api:check` fails CI on an undocumented member.
+- `AGENTS.md` for AI coding agents, shipped at `node_modules/@lab900/forms/AGENTS.md` and shown on the showcase AI
+  agents page.
+- Showcase serves `llms.txt` and `llms-full.txt` (agent guide + full API reference) at its root.
+- Showcase: a generated **API** tab on every page, and the changelog.
+
+### Changed
+
+- Performance: the cost of a keystroke no longer grows with the number of fields. Each form group shares one
+  lazily computed value signal, instead of three subscriptions and a `getRawValue()` per field per change. A form
+  whose options are all static never walks the control tree.
+- Performance: a field without `options.onChangeFn` no longer subscribes to its group.
+- Performance: `EditType.Select` deduplicates its options in linear time when there is no `compareWith`, so large
+  infinite scroll selects no longer freeze on each load. The chips of a multi select filter once per value
+  change, and a select no longer adds a `selectionChange` listener on every option load.
+- `FormFieldMappingService` resolves an edit type through one lookup table. Custom `LAB900_FORM_FIELD_TYPES`
+  maps keep working unchanged.
+- The error for an edit type that nothing renders now only fires when a custom `LAB900_FORM_FIELD_TYPES` leaves
+  out `UnknownFieldComponent`, and says so.
+- Showcase restyled with the Lab900 design system.
 
-## 22.1.0
+### Deprecated
 
-Only the changes that need action from a consumer are listed. They all come out of the fix for the
-`TypeError: key.split is not a function` crash in a readonly form containing a repeater.
+- `FormFieldRangeSliderOptions.enabledInputs`: it was never read.
 
-- **Breaking: `options.readonlyDisplay` is typed `ReadonlyDisplayFn`**, which is
-  `(data?: any) => string | number | boolean | null | undefined` instead of `(data?: any) => any`. Returning an
-  array or an object is a compile error now, so reduce the value to one primitive inside the function.
-- **Breaking: a readonly `EditType.Repeater` renders its own rows** instead of collapsing into one
-  `ReadonlyFieldComponent`. Its rows render readonly, and add, remove and reorder are suppressed without
-  setting `fixedList`. Two consequences: the markup of a readonly repeater changes from a single
-  `.lab900-readonly-field` to the repeater with its rows, so adjust any CSS or DOM test that relied on the old
-  output; and a readonly repeater shows `options.readonlyLabel` when it is set, instead of `title`.
-  `readonlyDisplay` still wins over the rows, so the 22.0.4 workaround of setting it on every repeater keeps
-  working and can be dropped.
-- **Breaking: a readonly `EditType.AutocompleteMultiple` or `EditType.MultiLangInput` renders its own readonly
-  state** instead of collapsing into a `ReadonlyFieldComponent`, with the same markup consequence as the
-  repeater.
-- **Breaking: a readonly field stringifies its value before it reaches the translate pipe.** An array value
-  renders as its items joined with `, `, where it used to throw or render `[object Object]`. A plain object
-  still renders `[object Object]`; set `readonlyDisplay` on those fields. Use the exported
-  `toReadonlyDisplayString()` helper to get the same conversion elsewhere.
+### Fixed
 
-## 22.0.4
+- A field with `validators` but no `options` lost its validators.
+- A repeater multiplied the validators derived from `options` (`minLength`, `max`, `pattern`, ...) with every
+  row, and wrote them into the shared schema.
+- The subscriptions of `schema.conditions`, including those on an `externalFormId`, are released when the field
+  is destroyed.
+- `EditType.File` (deprecated) warns and points at `EditType.FilePreview` instead of silently rendering
+  `UnknownFieldComponent`.
+- Accessibility:
+  - the drag-and-drop zone is a labelled region, the upload button inside it takes focus, and its validation
+    error is announced.
+  - the password visibility toggle is reachable by keyboard and has a name.
+  - the remove and preview icons of the file preview field are reachable by keyboard and have a name.
+  - the "select all" row of a multi select is reachable by keyboard.
+- Showcase: the source tab of the search, reactive options and full-width drag-and-drop examples showed the wrong
+  file.
 
-- Security and pipeline fixes, no changes
-- Upgrade to Angular 22. See [angular upgrade document](ANGULAR-UPGRADE-19.2-TO-22.1.md) for all changes done
-  - **Breaking: the date-time picker package changed.** `@ngxmc/datetime-picker` stopped releasing after Angular 20, so it is replaced by `@ngx-mce/datetime-picker` (`~22.2.3`), the maintained fork of the same project. Its public API is identical.
-  - Fix: button toggle no longer renders an empty icon element for options without an icon.
-  - Fix: button toggle element id rendered the `elementId` function instead of its value.
-  - Fix: range slider inputs show an empty value instead of the text `undefined` when no value is set.
-  - Fix: the file upload input sets an empty `accept` when no `accept` option is given, instead of a stringified empty value.
-  - Fix: form rows, form columns and the search field no longer render when the form group or the field options they need are missing, instead of rendering a broken field.
-  - updated the [cloudbuild.yaml](cloudbuild.yaml) file to use `npm stage publish` instead of `npm publish`
+## [22.2.1] - 2026-09-09
 
-## 19.1.38, 19.1.39, 19.1.40
+### Changed
 
-- Fix: error alignment issue
+- **BREAKING:** reactive options (`hide`, `readonly`, `required`, `title`, `placeholder`) receive the real form
+  value on their first evaluation. They used to receive the `getRawValue` method, so a function returned a wrong
+  result or threw on the first pass. A field can now start out hidden, readonly or required where it did not
+  before. Present since 19.1.10.
+- **BREAKING:** a readonly field renders `-` instead of `[object Object]` for a value without a string form (a
+  plain object, a `Date` range, a `File`). Set `readonlyDisplay` on those fields. This replaces the 22.1.0 note on
+  objects.
+- **BREAKING:** each item of an array value in a readonly field is translated on its own, and the items are joined
+  with `, `.
+- **BREAKING:** `readonlyDisplay` recomputes when any control in its form group changes, not only its own control.
 
-## 19.1.37
+### Fixed
 
-- Fix: Drag&Drop not showing validation errors
+- `EditType.DateTime` shows the selected time on every date adapter without `displayFormat`. The format follows
+  your application's `MAT_DATE_FORMATS.display.dateInput`; if that already prints a time, a string adapter
+  (Luxon, Moment, date-fns) shows it twice, which `displayFormat` fixes. `displayFormat` still wins.
 
-## 19.1.36
+## [22.1.0] - 2026-09-07
 
-- Feat: add reordering option in repeater field
+All changes come from the fix for `TypeError: key.split is not a function` in a readonly form with a repeater.
 
-## 19.1.35
+### Added
 
-- Fix: selected option showing empty when searching and option not in search results
+- `toReadonlyDisplayString()` helper, the conversion a readonly field uses.
 
-## 19.1.34 - Broken
+### Changed
 
-- Broken due to new version of @kolkov/angular-editor which is only supported from Angular 20.
+- **BREAKING:** `options.readonlyDisplay` is typed `ReadonlyDisplayFn` and must return one primitive
+  (`string | number | boolean | null | undefined`).
+- **BREAKING:** a readonly `EditType.Repeater` renders its own readonly rows, without add, remove or reorder,
+  instead of one `.lab900-readonly-field`. Update CSS and DOM tests that relied on the old markup. It shows
+  `options.readonlyLabel` instead of `title` when set, and `readonlyDisplay` still wins over the rows.
+- **BREAKING:** a readonly `EditType.AutocompleteMultiple` or `EditType.MultiLangInput` renders its own readonly
+  state, with the same markup change.
+- **BREAKING:** a readonly field stringifies its value before translating it: an array renders its items joined
+  with `, `.
 
-## 19.1.33
+## [22.0.4] - 2026-09-01
 
-- Fix: file preview opening file select when hitting enter
+Upgrade to Angular 22 (22.0.0 - 22.0.4). See [ANGULAR-UPGRADE-19.2-TO-22.1.md](ANGULAR-UPGRADE-19.2-TO-22.1.md)
+for details.
 
-## 19.1.32
+### Changed
 
-- Fix: remove chip on autocomplete multiselect not working
-- Feat: add option to show selected options as chips in multiselect
+- **BREAKING:** `@ngxmc/datetime-picker` is replaced by `@ngx-mce/datetime-picker` (`~22.2.3`), the maintained
+  fork with the same API.
+- [cloudbuild.yaml](cloudbuild.yaml) uses `npm stage publish`.
 
-## 19.1.31
+### Fixed
 
-- Fix: hide checkbox in no options indicator for multiselects.
+- Button toggle: no empty icon element for options without an icon, and the element id no longer renders the
+  `elementId` function instead of its value.
+- Range slider inputs show an empty value instead of `undefined`.
+- The file upload input sets an empty `accept` when no `accept` option is given.
+- Form rows, form columns and the search field no longer render when their form group or options are missing.
 
-## 19.1.30
+### Security
 
-- Feat: support a no options indicator when a select has no initial options to show.
+- Updated npm packages and pipelines.
 
-## 19.1.29
+## [19.1.40] - 2026-03-03
 
-- Chore: update vulnerable package, still one left (angular-cli-ghpages, waiting on an update)
+### Fixed
 
-## 19.1.28
+- Error alignment (also in 19.1.38 and 19.1.39).
 
-- Fix: make edit metadata of file preview reactive
+## [19.1.37] - 2026-03-03
 
-## 19.1.27
+### Fixed
 
-- Fix: repeater dirty/touched state
+- Drag-and-drop not showing validation errors.
 
-## 19.1.26
+## [19.1.36] - 2025-12-16
 
-- Fix: form dialog loading signal
+### Added
 
-## 19.1.25
+- Reordering option on the repeater field.
 
-- Fix: file preview not showing files correctly
+## [19.1.35] - 2025-11-25
 
-## 19.1.24
+### Fixed
 
-- Fix: fix visibility check for button toggle
+- Selected option showing empty when searching and the option is not in the search results.
 
-## 19.1.23
+## [19.1.34] - 2025-11-25
 
-- Fix: icon positioning in password input field
-- Add possibility to hide selected option indicator on toggle
+**Broken:** depends on a version of `@kolkov/angular-editor` that needs Angular 20. Use 19.1.35 instead.
 
-## 19.1.22
+## [19.1.33] - 2025-10-30
 
-- Fix: alignment bug with readonly and editable checkboxes
+### Fixed
 
-## 19.1.21
+- File preview opening the file select on Enter.
 
-- Fix: infinite scroll selects kept on requesting data when all data was already loaded
+## [19.1.32] - 2025-10-21
 
-## 19.1.20
+### Added
 
-- Fix: conditionals on rows not working
+- Option to show the selected options of a multi select as chips.
 
-## 19.1.19
+### Fixed
 
-- Fix: ngx-mask issues introduced in 19.1.15 (related to https://github.com/JsDaddy/ngx-mask/issues/1305)
+- Removing a chip in the autocomplete multi select.
 
-## 19.1.18
+## [19.1.31] - 2025-10-15
 
-- Fix: search field ignoring same input after clearing
+### Fixed
 
-## 19.1.17
+- Checkbox shown in the no options indicator of a multi select.
 
-- Fix: some labels where not being translated
+## [19.1.30] - 2025-10-14
 
-## 19.1.16
+### Added
 
-- Feat: reactive form field title
-- Fix: validators when field is required
+- No options indicator when a select has no initial options.
 
-## 19.1.15
+## [19.1.29] - 2025-09-09
 
-- Fix: NgxMask having issues with the focus state (https://github.com/JsDaddy/ngx-mask/issues/1305)
-- Fix: general focus state issues if parent components are on push
+### Security
 
-## 19.1.14
+- Updated vulnerable packages (`angular-cli-ghpages` still pending).
 
-- Fix: amount field triggering the patchValues
+## [19.1.28] - 2025-09-02
 
-## 19.1.13
+### Fixed
 
-- Added translate logic to Icon field text option
+- Edit metadata of the file preview is reactive.
 
-## 19.1.11
+## [19.1.27] - 2025-09-01
 
-- Added text functionality to icon
+### Fixed
 
-## 19.1.10
+- Repeater dirty and touched state.
 
-- Fix: column hidden state
+## [19.1.26] - 2025-09-01
 
-## 19.1.9
+### Fixed
 
-- Fix: row labels
+- Form dialog loading signal.
 
-## 19.1.8
+## [19.1.25] - 2025-09-01
 
-- Feat: reactive form field icon
+### Fixed
 
-## 19.1.7
+- File preview not showing files.
 
-- Bug fix: hidden form-col class
+## [19.1.24] - 2025-08-28
 
-## 19.1.6
+### Fixed
 
-- Bug fix: fix tooltips showing for conditional hidden fields
+- Visibility check of the button toggle.
 
-## 19.1.5
+## [19.1.23] - 2025-08-12
 
-- Bug fix: fix tooltips showing for hidden fields
-- Feat: reactive button labels
+### Added
 
-## 19.1.4
+- Option to hide the selected option indicator on a toggle.
 
-- Bug fix: reactive options based on form group values
-- Bug fix: hidden fields
+### Fixed
 
-## 19.1.3
+- Icon position in the password field.
 
-- Feat: hide/readonly/required can now handle signals
+## [19.1.22] - 2025-08-06
 
-## 19.1.2
+### Fixed
 
-- Bug fix: select readonly state not working
-- Bug fix: make sure raw values are checked
+- Alignment of readonly and editable checkboxes.
 
-## 19.1.0
+## [19.1.21] - 2025-07-31
 
-- Readonly, hidden and required states are reactive
-- Bug fix: issue with error messages not showing
-- Bug fix: this disabled/enabled form controls warnings should be gone as this is now done as it should
-- Bug fix: issue with unique ids not always being unique
+### Fixed
 
-## 19.0.5
+- Infinite scroll selects kept requesting data after everything was loaded.
 
-- Bug fix: issue with amount field not showing the correct value
+## [19.1.20] - 2025-07-11
 
-## 19.0.4
+### Fixed
 
-- Bug fix: title of text area field is now properly translated
+- Conditions on rows.
 
-## 19.0.3
+## [19.1.19] - 2025-07-11
 
-- Bug fix: conditional fields throwing errors
+### Fixed
 
-## 19.0.2
+- `ngx-mask` issues introduced in 19.1.15 ([ngx-mask#1305](https://github.com/JsDaddy/ngx-mask/issues/1305)).
 
-- Bug fix: repeater issues
+## [19.1.18] - 2025-06-10
 
-## 19.0.1
+### Fixed
 
-- Bug fix: date picker toggle not appearing
-- Bug fix: select giving nativeElement not found error
+- Search field ignoring the same input after clearing.
 
-## 19.0.0
+## [19.1.17] - 2025-06-10
 
-- Angular 19 update
+### Fixed
 
-### Breaking changes
+- Some labels were not translated.
 
-Since `@angular-material-components/datetime-picker` has not been updated the last major version it is replaced by `@ngxmc/datetime-picker`.
+## [19.1.16] - 2025-05-28
 
-## 18.2.1
+### Added
 
-- Fix broken colspan for form rows
+- Reactive field title.
 
-## 18.2.0
+### Fixed
 
-- Adding possibility for the usage of custom Id's to form: columns, rows, fields and buttons.
+- Validators of a required field.
 
-## 18.1.1/18.1.2
+## [19.1.15] - 2025-05-13
 
-- fixes for displaying error messages
+### Fixed
 
-## 18.1.0
+- `ngx-mask` focus state ([ngx-mask#1305](https://github.com/JsDaddy/ngx-mask/issues/1305)).
+- Focus state when parent components are `OnPush`.
 
-- More signals to solve change detection issues.
+## [19.1.14] - 2025-05-06
 
-## 18.0.5
+### Fixed
 
-- Fix select reopening with fetch on focus option
+- Amount field triggering `patchValues`.
 
-## 18.0.4
+## [19.1.13] - 2025-04-24
 
-- Fix masking issues
+### Added
 
-## 18.0.3
+- The text option of the icon field is translated.
 
-- Fix issues with MultiLang inputs
+## [19.1.11] - 2025-04-22
 
-## 18.0.0
+### Added
 
-- Angular 18 update
+- Text option on the icon field.
 
-## 17.0.4
+## [19.1.10] - 2025-04-17
 
-- Fix masking issues
+### Fixed
 
-## 17.0.1
+- Hidden state of columns.
 
-- Fix disabled state of SlideToggle component
-- Configuration is now visible in examples
-- Prop selectedDisplayFn error is adjusted
+## [19.1.9] - 2025-04-09
 
-### Breaking changes
+### Fixed
 
-- Functionality of displayOptionFn prop on Selectors is removed
+- Row labels.
 
-## 17.0.0
+## [19.1.8] - 2025-04-08
 
-- Upgrade to Angular 17
+### Added
 
-### Breaking changes
+- Reactive field icon.
 
-The way the forms are imported and provided has changed completely as everything is standalone now.
-See the [getting started guide](https://lab900.github.io/angular-library-forms/getting-started) for more information.
+## [19.1.7] - 2025-04-08
 
-## older version
+### Fixed
 
-Sorry no changelog available :(
+- Hidden `form-col` class.
+
+## [19.1.6] - 2025-04-07
+
+### Fixed
+
+- Tooltips showing on fields hidden by a condition.
+
+## [19.1.5] - 2025-04-07
+
+### Added
+
+- Reactive button labels.
+
+### Fixed
+
+- Tooltips showing on hidden fields.
+
+## [19.1.4] - 2025-04-04
+
+### Fixed
+
+- Reactive options based on form group values.
+- Hidden fields.
+
+## [19.1.3] - 2025-04-04
+
+### Added
+
+- `hide`, `readonly` and `required` accept signals.
+
+## [19.1.2] - 2025-04-03
+
+### Fixed
+
+- Readonly state of the select.
+- Raw values are checked.
+
+## [19.1.0] - 2025-04-03
+
+### Changed
+
+- Readonly, hidden and required states are reactive.
+
+### Fixed
+
+- Error messages not showing.
+- Warnings about disabling and enabling form controls.
+- Ids that were not always unique.
+
+## [19.0.5] - 2025-04-02
+
+### Fixed
+
+- Amount field showing the wrong value.
+
+## [19.0.4] - 2025-04-02
+
+### Fixed
+
+- Title of the text area field is translated.
+
+## [19.0.3] - 2025-04-01
+
+### Fixed
+
+- Conditional fields throwing errors.
+
+## [19.0.2] - 2025-04-01
+
+### Fixed
+
+- Repeater issues.
+
+## [19.0.1] - 2025-03-19
+
+### Fixed
+
+- Date picker toggle not appearing.
+- Select throwing a nativeElement not found error.
+
+## [19.0.0] - 2025-03-11
+
+### Changed
+
+- Upgrade to Angular 19.
+- **BREAKING:** `@angular-material-components/datetime-picker` is replaced by `@ngxmc/datetime-picker`, because
+  the former was not updated for the last major version.
+
+## [18.2.1] - 2024-12-03
+
+### Fixed
+
+- `colspan` of form rows.
+
+## [18.2.0] - 2024-12-03
+
+### Added
+
+- Custom ids on form columns, rows, fields and buttons.
+
+## [18.1.2] - 2024-08-30
+
+### Fixed
+
+- Displaying error messages (also in 18.1.1).
+
+## [18.1.0] - 2024-08-26
+
+### Changed
+
+- More signals, to solve change detection issues.
+
+## [18.0.5] - 2024-08-26
+
+### Fixed
+
+- Select reopening with the fetch on focus option.
+
+## [18.0.4] - 2024-08-20
+
+### Fixed
+
+- Masking issues.
+
+## [18.0.3] - 2024-08-05
+
+### Fixed
+
+- Multi language inputs.
+
+## [18.0.0] - 2024-07-23
+
+### Changed
+
+- Upgrade to Angular 18.
+
+## [17.0.4] - 2024-08-20
+
+### Fixed
+
+- Masking issues.
+
+## [17.0.1] - 2024-05-13
+
+### Added
+
+- The configuration is visible in the showcase examples.
+
+### Fixed
+
+- Disabled state of the slide toggle.
+- `selectedDisplayFn` error.
+
+### Removed
+
+- **BREAKING:** `displayOptionFn` on selects.
+
+## [17.0.0] - 2024-04-19
+
+### Changed
+
+- Upgrade to Angular 17.
+- **BREAKING:** everything is standalone, so forms are imported and provided differently. See the
+  [getting started guide](https://lab900.github.io/angular-library-forms/getting-started).
+
+## Older versions
+
+No changelog available.
+
+[Unreleased]: https://github.com/lab900/angular-library-forms/compare/22.3.0...HEAD
+[22.3.0]: https://github.com/lab900/angular-library-forms/compare/22.2.1...22.3.0
+[22.2.1]: https://github.com/lab900/angular-library-forms/compare/22.1.0...22.2.1
+[22.1.0]: https://github.com/lab900/angular-library-forms/compare/22.0.4...22.1.0
+[22.0.4]: https://github.com/lab900/angular-library-forms/compare/19.1.40...22.0.4
+[19.1.40]: https://github.com/lab900/angular-library-forms/compare/19.1.37...19.1.40
+[19.1.37]: https://github.com/lab900/angular-library-forms/compare/19.1.36...19.1.37
+[19.1.36]: https://www.npmjs.com/package/@lab900/forms/v/19.1.36
+[19.1.35]: https://www.npmjs.com/package/@lab900/forms/v/19.1.35
+[19.1.34]: https://www.npmjs.com/package/@lab900/forms/v/19.1.34
+[19.1.33]: https://github.com/lab900/angular-library-forms/compare/19.1.32...19.1.33
+[19.1.32]: https://github.com/lab900/angular-library-forms/compare/19.1.31...19.1.32
+[19.1.31]: https://github.com/lab900/angular-library-forms/compare/19.1.30...19.1.31
+[19.1.30]: https://github.com/lab900/angular-library-forms/compare/19.1.29...19.1.30
+[19.1.29]: https://github.com/lab900/angular-library-forms/compare/19.1.28...19.1.29
+[19.1.28]: https://github.com/lab900/angular-library-forms/compare/19.1.27...19.1.28
+[19.1.27]: https://github.com/lab900/angular-library-forms/compare/19.1.26...19.1.27
+[19.1.26]: https://github.com/lab900/angular-library-forms/compare/19.1.25...19.1.26
+[19.1.25]: https://github.com/lab900/angular-library-forms/compare/19.1.24...19.1.25
+[19.1.24]: https://github.com/lab900/angular-library-forms/compare/19.1.23...19.1.24
+[19.1.23]: https://github.com/lab900/angular-library-forms/compare/19.1.22...19.1.23
+[19.1.22]: https://github.com/lab900/angular-library-forms/compare/19.1.21...19.1.22
+[19.1.21]: https://github.com/lab900/angular-library-forms/compare/19.1.20...19.1.21
+[19.1.20]: https://github.com/lab900/angular-library-forms/compare/19.1.19...19.1.20
+[19.1.19]: https://github.com/lab900/angular-library-forms/compare/19.1.17...19.1.19
+[19.1.18]: https://www.npmjs.com/package/@lab900/forms/v/19.1.18
+[19.1.17]: https://github.com/lab900/angular-library-forms/compare/19.1.16...19.1.17
+[19.1.16]: https://github.com/lab900/angular-library-forms/compare/19.1.15...19.1.16
+[19.1.15]: https://github.com/lab900/angular-library-forms/compare/19.1.14...19.1.15
+[19.1.14]: https://github.com/lab900/angular-library-forms/compare/19.1.13...19.1.14
+[19.1.13]: https://github.com/lab900/angular-library-forms/compare/19.1.10...19.1.13
+[19.1.11]: https://www.npmjs.com/package/@lab900/forms/v/19.1.11
+[19.1.10]: https://github.com/lab900/angular-library-forms/compare/19.1.9...19.1.10
+[19.1.9]: https://github.com/lab900/angular-library-forms/compare/19.1.8...19.1.9
+[19.1.8]: https://github.com/lab900/angular-library-forms/compare/19.1.7...19.1.8
+[19.1.7]: https://github.com/lab900/angular-library-forms/compare/19.1.6...19.1.7
+[19.1.6]: https://github.com/lab900/angular-library-forms/compare/19.1.5...19.1.6
+[19.1.5]: https://github.com/lab900/angular-library-forms/compare/19.1.4...19.1.5
+[19.1.4]: https://github.com/lab900/angular-library-forms/compare/19.1.3...19.1.4
+[19.1.3]: https://github.com/lab900/angular-library-forms/compare/19.1.2...19.1.3
+[19.1.2]: https://github.com/lab900/angular-library-forms/compare/19.1.0...19.1.2
+[19.1.0]: https://github.com/lab900/angular-library-forms/compare/19.0.5...19.1.0
+[19.0.5]: https://github.com/lab900/angular-library-forms/compare/19.0.4...19.0.5
+[19.0.4]: https://github.com/lab900/angular-library-forms/compare/19.0.3...19.0.4
+[19.0.3]: https://github.com/lab900/angular-library-forms/compare/19.0.2...19.0.3
+[19.0.2]: https://github.com/lab900/angular-library-forms/compare/19.0.1...19.0.2
+[19.0.1]: https://github.com/lab900/angular-library-forms/compare/19.0.0...19.0.1
+[19.0.0]: https://github.com/lab900/angular-library-forms/compare/18.2.1...19.0.0
+[18.2.1]: https://github.com/lab900/angular-library-forms/compare/18.2.0...18.2.1
+[18.2.0]: https://github.com/lab900/angular-library-forms/compare/18.1.2...18.2.0
+[18.1.2]: https://github.com/lab900/angular-library-forms/compare/18.1.0...18.1.2
+[18.1.0]: https://github.com/lab900/angular-library-forms/compare/18.0.5...18.1.0
+[18.0.5]: https://github.com/lab900/angular-library-forms/compare/18.0.4...18.0.5
+[18.0.4]: https://github.com/lab900/angular-library-forms/compare/18.0.3...18.0.4
+[18.0.3]: https://github.com/lab900/angular-library-forms/compare/18.0.0...18.0.3
+[18.0.0]: https://www.npmjs.com/package/@lab900/forms/v/18.0.0
+[17.0.4]: https://www.npmjs.com/package/@lab900/forms/v/17.0.4
+[17.0.1]: https://www.npmjs.com/package/@lab900/forms/v/17.0.1
+[17.0.0]: https://www.npmjs.com/package/@lab900/forms/v/17.0.0

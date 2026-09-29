@@ -25,6 +25,13 @@ import { FormFieldAmount } from '../components/form-fields/amount-field/amount-f
 import { FormFieldSearch } from '../components/form-fields/search-field/field-search.model';
 import { FormColumn } from '../components/form-column/form-column.model';
 
+/**
+ * Every kind of field a schema may hold. `editType` discriminates the union, so setting it narrows
+ * `options` to the options interface of that field and TypeScript checks the rest for you.
+ *
+ * @example
+ * const field: Lab900FormField = { attribute: 'email', editType: EditType.Input, options: { required: true } };
+ */
 export type Lab900FormField<R = any, T extends string | number = string, DATE = Date> =
   | FormFieldInput<T>
   | FormFieldPassword<T>

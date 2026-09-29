@@ -135,3 +135,14 @@ To serve the icons file, ensure that your angular.json contains the following as
   "output": "assets/ae-icons/"
 }
 ```
+
+## Using an AI coding agent
+
+The package contains `AGENTS.md` with instructions for coding agents. Add this line to the
+`AGENTS.md` or `CLAUDE.md` of your project:
+
+```md
+Forms come from `@lab900/forms`. Read `node_modules/@lab900/forms/AGENTS.md` before you build one.
+```
+
+The same content is on the [AI agents](ai-agents) page.

@@ -13,6 +13,14 @@ export const showcaseFormsNavItems: NavItemGroup[] = [
             route: 'getting-started',
           },
           {
+            label: 'label.ai-agents',
+            route: 'ai-agents',
+          },
+          {
+            label: 'label.changelog',
+            route: 'changelog',
+          },
+          {
             label: 'Create dynamic forms',
             route: 'form-container',
           },
@@ -54,8 +62,12 @@ export const showcaseFormsNavItems: NavItemGroup[] = [
             route: 'form-field-button',
           },
           {
-            label: 'Slide Toggle',
+            label: 'Slide Toggle & Checkbox',
             route: 'form-field-slide-toggle',
+          },
+          {
+            label: 'Icon',
+            route: 'form-field-icon',
           },
           {
             label: 'Search',

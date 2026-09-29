@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Lab900Form, Lab900FormConfig } from '@lab900/forms';
-import { formFieldsExample } from './config/form-fields-example';
-import { formDataExample } from './config/form-data-example';
+import { formFieldsExample } from '../form-container-example/config/form-fields-example';
+import { formDataExample } from '../form-container-example/config/form-data-example';
 
 @Component({
   selector: 'lab900-form-container-readonly-example',

@@ -1,0 +1,202 @@
+@if (docs.error()) {
+  <p class="api-docs__message">
+    The API reference is missing. Run <code>npm run docs:api</code> to generate it from the library source.
+  </p>
+} @else if (view(); as view) {
+  <div class="api-docs">
+    <div class="api-docs__main">
+      <input
+        type="search"
+        class="api-docs__filter"
+        placeholder="Filter by name, for example sortable"
+        aria-label="Filter the API by name"
+        [value]="filter()"
+        (input)="onFilter($event)" />
+
+      @if (view.missing.length) {
+        <p class="api-docs__message">Not found in the generated API reference: {{ view.missing.join(', ') }}</p>
+      }
+
+      @for (section of view.sections; track section.title) {
+        <section class="api-section" [id]="section.anchor">
+          <h2 class="api-section__title">{{ section.title }}</h2>
+          @if (section.description.length) {
+            <p class="api-section__description">
+              <ng-container *ngTemplateOutlet="textTpl; context: { $implicit: section.description }" />
+            </p>
+          }
+          @for (symbol of section.symbols; track symbol.name) {
+            <article class="api-symbol" [id]="symbol.anchor" #symbolElement>
+              <ng-container *ngTemplateOutlet="symbolTpl; context: { $implicit: symbol }" />
+            </article>
+          }
+        </section>
+      } @empty {
+        <p class="api-docs__message">Nothing matches "{{ filter() }}".</p>
+      }
+    </div>
+
+    <nav class="api-toc" aria-label="On this page">
+      <p class="api-toc__title">On this page</p>
+      @for (section of view.sections; track section.title) {
+        <button type="button" class="api-toc__section" (click)="scrollTo(section.anchor)">{{ section.title }}</button>
+        <ul class="api-toc__list">
+          @for (symbol of section.symbols; track symbol.name) {
+            <li>
+              <button
+                type="button"
+                class="api-toc__link"
+                [class.api-toc__link--active]="activeAnchor() === symbol.anchor"
+                (click)="scrollTo(symbol.anchor)">
+                <!-- a break opportunity before each word, so a long name wraps between words -->
+                @for (word of symbol.nameWords; track $index) {
+                  <wbr /><ng-container>{{ word }}</ng-container>
+                }
+              </button>
+            </li>
+          }
+        </ul>
+      }
+    </nav>
+  </div>
+}
+
+<ng-template #symbolTpl let-symbol let-nested="nested">
+  <header class="api-symbol__header">
+    @if (nested) {
+      <h4 class="api-symbol__name api-symbol__name--nested" [attr.id]="symbol.elementId">Options: {{ symbol.name }}</h4>
+    } @else {
+      <h3 class="api-symbol__name">{{ symbol.name }}</h3>
+      <span class="api-badge">{{ symbol.kind }}</span>
+    }
+    @if (symbol.deprecated) {
+      <span class="api-badge api-badge--warn">deprecated</span>
+    }
+    @if (!nested) {
+      <a class="api-symbol__source" [href]="symbol.sourceUrl" target="_blank" rel="noopener">View source</a>
+    }
+  </header>
+
+  @if (symbol.deprecated?.length) {
+    <p class="api-deprecated">
+      Deprecated: <ng-container *ngTemplateOutlet="textTpl; context: { $implicit: symbol.deprecated }" />
+    </p>
+  }
+  @if (symbol.description.length) {
+    <p class="api-symbol__description">
+      <ng-container *ngTemplateOutlet="textTpl; context: { $implicit: symbol.description }" />
+    </p>
+  }
+
+  @if (symbol.selector || symbol.extendsTokens.length) {
+    <dl class="api-symbol__meta">
+      @if (symbol.selector) {
+        <dt>Selector</dt>
+        <dd>
+          <code>{{ symbol.selector }}</code>
+        </dd>
+      }
+      @for (tokens of symbol.extendsTokens; track $index) {
+        <dt>Extends</dt>
+        <dd>
+          <code><ng-container *ngTemplateOutlet="typeTpl; context: { $implicit: tokens }" /></code>
+        </dd>
+      }
+    </dl>
+  }
+
+  @if (symbol.usage) {
+    <pre class="api-code"><code>{{ symbol.usage }}</code></pre>
+  }
+  @if (symbol.example) {
+    <pre class="api-code"><code>{{ symbol.example }}</code></pre>
+  }
+  @if (symbol.typeTokens.length) {
+    @if (symbol.kind === 'enum') {
+      <pre
+        class="api-code"><code>enum {{ symbol.name }} <ng-container *ngTemplateOutlet="typeTpl; context: { $implicit: symbol.typeTokens }" /></code></pre>
+    } @else {
+      <pre
+        class="api-code"><code>type {{ symbol.name }} = <ng-container *ngTemplateOutlet="typeTpl; context: { $implicit: symbol.typeTokens }" /></code></pre>
+    }
+  }
+
+  @for (group of symbol.groups; track $index) {
+    @if (group.title) {
+      <h4 class="api-group__title">{{ group.title }}</h4>
+    }
+    <div class="api-members">
+      @for (member of group.members; track member.name) {
+        <div class="api-member" [class.api-member--deprecated]="member.deprecated">
+          <div class="api-member__signature">
+            <div class="api-member__name-row">
+              <code class="api-member__name">{{ member.binding }}</code>
+              @if (member.required) {
+                <span class="api-badge api-badge--required">required</span>
+              }
+              @if (member.deprecated) {
+                <span class="api-badge api-badge--warn">deprecated</span>
+              }
+            </div>
+            <code class="api-member__type"
+              ><ng-container *ngTemplateOutlet="typeTpl; context: { $implicit: member.typeTokens }"
+            /></code>
+            @if (member.reactiveHint) {
+              <span class="api-member__hint">{{ member.reactiveHint }}</span>
+            }
+          </div>
+          <div class="api-member__body">
+            @if (member.deprecated?.length) {
+              <p class="api-deprecated">
+                Deprecated: <ng-container *ngTemplateOutlet="textTpl; context: { $implicit: member.deprecated }" />
+              </p>
+            }
+            @if (member.description.length) {
+              <p><ng-container *ngTemplateOutlet="textTpl; context: { $implicit: member.description }" /></p>
+            }
+            @if (member.default) {
+              <p class="api-member__meta">
+                Default: <code>{{ member.default }}</code>
+              </p>
+            }
+            @if (member.example) {
+              <p class="api-member__meta">
+                Example: <code>{{ member.example }}</code>
+              </p>
+            }
+            @if (member.inheritedFrom) {
+              <p class="api-member__meta">Inherited from {{ member.inheritedFrom }}</p>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  @if (symbol.options) {
+    <div class="api-options">
+      <ng-container *ngTemplateOutlet="symbolTpl; context: { $implicit: symbol.options, nested: true }" />
+    </div>
+  }
+</ng-template>
+
+<ng-template #typeTpl let-tokens>
+  @for (token of tokens; track $index) {
+    @if (token.link) {
+      <button type="button" class="api-type-link" (click)="scrollTo(token.link)">{{ token.text }}</button>
+    } @else {
+      <!-- the ng-container keeps the template whitespace out of the type -->
+      <ng-container>{{ token.text }}</ng-container>
+    }
+  }
+</ng-template>
+
+<ng-template #textTpl let-parts>
+  @for (part of parts; track $index) {
+    @if (part.code) {
+      <code>{{ part.text }}</code>
+    } @else {
+      <ng-container>{{ part.text }}</ng-container>
+    }
+  }
+</ng-template>

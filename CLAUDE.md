@@ -128,6 +128,26 @@ Touch every one of these, in order:
 - Register the example in `showcase-forms.routes.ts` (`ShowcaseRoute` + `ShowcaseExample`) and add the
   route to `showcase-forms.nav-items.ts`.
 - Long-form docs are markdown in `src/guides/`, rendered through `markdown-page.component`.
+  `CHANGELOG.md` and `lib/AGENTS.md` are served the same way, at `/changelog` and `/ai-agents`
+  (see the `assets` globs in `angular.json`).
+- A `ShowcaseExample` resolves its source files from the component's **selector**: the source of
+  `lab900-x-example` must be at `examples/x-example/x-example.component.*`. Folder, file name and
+  selector must match, or the source tab shows the wrong file or nothing at all.
+
+### The API tab
+
+`npm run docs:api` (`scripts/generate-api-docs.mjs`) reads every export of `lib/src/public-api.ts`
+with the TypeScript compiler API and writes `src/assets/api/api.json`: inputs, models and outputs of
+components and directives, interface properties, enum members and the JSDoc of each. The file is
+git-ignored; `prestart`, `prebuild` and `predeploy:showcase` regenerate it. A page gets the tab by
+passing `ShowcaseApiSection[]` (from `showcase-forms.api.ts`) as the fifth `ShowcaseRoute` argument.
+
+Descriptions come from the JSDoc in `lib/`, so document a new public field there. A section with
+`fieldUsage: true` holds members of the `Lab900FormField` union: the tab then renders a schema
+snippet per field and inlines its options interface, so list only the field model itself.
+
+The same script writes `llms.txt` and `llms-full.txt` (`lib/AGENTS.md` plus the API reference in
+Markdown); the showcase serves both at its root.
 
 ## Conventions
 
@@ -155,5 +175,8 @@ Touch every one of these, in order:
 - Flow: update `CHANGELOG.md`, `cd lib && npm version <v>`, tag, push the tag. Cloud Build
   (`cloudbuild.yaml`, `cloudbuild-alpha.yaml`) lints, tests, builds and runs `npm stage publish`. A
   maintainer then approves the staged version with 2FA (`npm stage approve <id>`).
+- `lib/AGENTS.md` is the usage guide for coding agents in consumer apps. ng-packagr ships it in the
+  package (`assets` in `lib/ng-package.json`), and the showcase shows it at `/ai-agents`. Update it
+  when a public input, output, edit type or config field changes.
 - `ANGULAR-UPGRADE-19.2-TO-22.1.md` records the v22 upgrade and an open follow-up list (change detection,
   known defects, declined migrations). Read section 5 before you touch those areas.

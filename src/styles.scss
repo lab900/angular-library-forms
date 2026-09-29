@@ -1,35 +1,56 @@
-// Custom Theming for Angular Material
+// Custom Theming for Angular Material, based on the Lab900 design system (see src/assets/styles/_lab900.tokens.scss).
 // For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
 @use '@lab900/ui/theming' as ui;
+// The showcase uses the library sources, so this points at lib/ and not at the build output.
 @use '../lib/theming' as forms;
+@use 'lab900.tokens' as lab;
 
-@use 'green.palette' as *;
-@use 'grey.palette' as *;
+// Sofia's ascent is much taller than its cap height, so its glyphs sit low in the line box and
+// text ends up below icons in flex rows (buttons, chips, tabs). The overrides keep the same total
+// height but set ascent - descent = cap height (689 units), which centers capitals in the line box.
+@font-face {
+  font-family: 'Sofia';
+  src: url('./assets/fonts/Sofia-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  ascent-override: 102%;
+  descent-override: 33%;
+}
 
-// Plus imports for other components in your app.
+@font-face {
+  font-family: 'Sofia';
+  src: url('./assets/fonts/Sofia-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  ascent-override: 103%;
+  descent-override: 34%;
+}
+
+$lab900-typography: mat.m2-define-typography-config(
+  $font-family: lab.$font-sans,
+);
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
 @include mat.elevation-classes();
 @include mat.app-background();
-@include mat.typography-hierarchy(mat.m2-define-typography-config());
+@include mat.typography-hierarchy($lab900-typography);
 
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://material.io/design/color/
-$angular-libraries-primary: mat.m2-define-palette($mat-lab900green);
-$angular-libraries-accent: mat.m2-define-palette($mat-lab900grey);
+// Orange is the brand's primary accent, the light blue its secondary accent.
+$angular-libraries-primary: mat.m2-define-palette(lab.$mat-lab900orange);
+$angular-libraries-accent: mat.m2-define-palette(lab.$mat-lab900lightblue);
 
-// Create the theme object. A theme consists of configurations for individual
-// theming systems such as "color" or "typography".
 $angular-libraries-theme: mat.m2-define-light-theme(
   (
     color: (
       primary: $angular-libraries-primary,
       accent: $angular-libraries-accent,
     ),
+    typography: $lab900-typography,
   )
 );
 
@@ -40,6 +61,17 @@ $angular-libraries-theme: mat.m2-define-light-theme(
 @include ui.lab900-ui($angular-libraries-theme);
 @include forms.lab900-forms($angular-libraries-theme);
 
+:root {
+  @include mat.toolbar-overrides(
+    (
+      container-background-color: lab.$lab-mint,
+      container-text-color: lab.$lab-dark,
+      standard-height: lab.$header-height,
+      mobile-height: lab.$header-height-mobile,
+    )
+  );
+}
+
 /* You can add global styles to this file, and also import other style files */
 html,
 body {
@@ -48,48 +80,88 @@ body {
 
 body {
   margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
-  color: $palette-lab900-text;
+  font-family: lab.$font-sans;
+  line-height: 1.4;
+  color: lab.$lab-dark;
 }
 
 p {
   a {
-    color: $palette-lab900green-500;
+    color: lab.$lab-orange;
   }
 }
 
 .mat-drawer-content {
-  background: rgba($palette-lab900green-100, 0.1);
-  height: calc(100vh - 64px) !important;
-  color: $palette-lab900-text;
+  background: lab.$lab-white;
+  height: calc(100vh - #{lab.$header-height}) !important;
+  color: lab.$lab-dark;
+  // reserve the scrollbar's width, so centered pages do not shift when the scrollbar comes and goes
+  scrollbar-gutter: stable;
 
   @media screen and (max-width: 599px) {
-    height: calc(100vh - 56px) !important;
+    height: calc(100vh - #{lab.$header-height-mobile}) !important;
   }
 }
 
+// The sidenav uses the dark brand band, like the footer and sidenav of lab900.com.
 .mat-drawer {
   min-width: 340px;
+
+  @include mat.sidenav-overrides(
+    (
+      container-background-color: lab.$lab-dark,
+      container-text-color: lab.$lab-white,
+    )
+  );
+  @include mat.list-overrides(
+    (
+      list-item-label-text-color: lab.$lab-white,
+      list-item-hover-label-text-color: lab.$lab-orange-2,
+      list-item-focus-label-text-color: lab.$lab-orange-2,
+      list-item-leading-icon-color: lab.$lab-white,
+      list-item-trailing-icon-color: lab.$lab-white,
+      list-item-hover-leading-icon-color: lab.$lab-orange-2,
+      list-item-hover-trailing-icon-color: lab.$lab-orange-2,
+      list-item-hover-state-layer-color: lab.$lab-white,
+      list-item-focus-state-layer-color: lab.$lab-white,
+    )
+  );
+
+  .nav-list-group__label {
+    font-weight: lab.$font-weight-semibold;
+  }
+
+  .nav-item-btn.active {
+    --mat-list-list-item-label-text-color: #{lab.$lab-orange-2};
+    --mat-list-list-item-trailing-icon-color: #{lab.$lab-orange-2};
+    font-weight: lab.$font-weight-semibold;
+    background: rgba(lab.$lab-white, 0.08) !important;
+  }
+
+  .nav-item-btn.expanded {
+    font-weight: lab.$font-weight-semibold;
+    background: rgba(lab.$lab-white, 0.04) !important;
+  }
 }
 
 .mat-drawer-side {
-  border-right: solid 2px $palette-lab900green-100;
-  color: $palette-lab900-text;
+  border-right: none;
 }
 
-.mat-mdc-list-base .mat-mdc-list-item {
-  color: $palette-lab900-text;
-}
-
+// Cards get their weight from a border and background contrast, not from a shadow.
 .mat-mdc-card.lab900-card {
   display: flex;
   flex-direction: column;
   margin-bottom: 32px;
   padding: 0;
+  border: 2px solid lab.$lab-dark;
+  border-radius: lab.$radius-sm;
+  box-shadow: none;
+  overflow: hidden;
 
   .mat-mdc-card-header {
     padding: 8px;
-    background: $palette-lab900green-100;
+    background: lab.$lab-mint;
 
     .mat-mdc-card-title {
       margin: 0;
@@ -97,7 +169,7 @@ p {
 
       h3 {
         margin: 0;
-        font-weight: bold;
+        font-weight: lab.$font-weight-semibold;
       }
     }
   }
@@ -109,7 +181,7 @@ pre[class*='language-'] {
 }
 
 .table-footer-highlight {
-  background-color: #03ada5;
+  background-color: lab.$lab-light-blue;
   padding: 0 !important;
   text-align: center !important;
 }
