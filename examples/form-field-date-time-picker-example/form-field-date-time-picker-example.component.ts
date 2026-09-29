@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 
 @Component({
@@ -12,6 +12,7 @@ import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
     `,
   ],
   imports: [Lab900Form],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldDateTimePickerExampleComponent {
   public data = { test: new Date() };

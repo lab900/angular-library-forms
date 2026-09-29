@@ -1,4 +1,4 @@
-import { Component, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { formFieldsExample } from './config/form-fields-example';
 import { formDataExample } from './config/form-data-example';
@@ -11,6 +11,7 @@ import { MatButton } from '@angular/material/button';
     <button mat-stroked-button (click)="submitForm()">Submit Form</button>
   `,
   imports: [Lab900Form, MatButton],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormContainerExampleComponent {
   public formFields: Lab900FormConfig = formFieldsExample;

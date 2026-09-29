@@ -1,0 +1,19 @@
+# @lab900/forms
+
+> Schema driven reactive forms for Angular 22+, built on Angular Material. You describe the form as a
+> `Lab900FormConfig` of typed fields and `<lab900-form>` builds the `FormGroup` and renders every field.
+
+Fields are config objects from the `Lab900FormField` union, picked by their `editType`. Titles, placeholders
+and most options are reactive: a value, a function of the form value, or a signal. Labels are
+`@ngx-translate/core` translation keys. Import every symbol from `@lab900/forms`.
+
+## Docs
+
+- [Instructions for AI agents](https://lab900.github.io/angular-library-forms/guides/AGENTS.md): setup, rules, every edit type with examples, common mistakes
+- [Getting started](https://lab900.github.io/angular-library-forms/guides/getting-started.md): installation and theming
+- [Creating forms](https://lab900.github.io/angular-library-forms/guides/creating-forms.md): the schema, nesting, conditions and validation
+- [Changelog](https://lab900.github.io/angular-library-forms/CHANGELOG.md): changes per version, breaking changes included
+
+## Optional
+
+- [Full reference](https://lab900.github.io/angular-library-forms/llms-full.txt): the agent instructions plus the inputs, outputs and config fields of every public symbol

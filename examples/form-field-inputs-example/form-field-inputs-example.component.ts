@@ -1,4 +1,4 @@
-import { Component, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
@@ -8,6 +8,7 @@ import { MatButton } from '@angular/material/button';
   template:
     '<lab900-form [schema]="formSchema"/><button mat-raised-button color="primary" (click)="validate()">Submit</button>',
   imports: [Lab900Form, MatButton],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldInputsExampleComponent {
   public readonly form = viewChild<Lab900Form<any>>(Lab900Form);
@@ -22,6 +23,7 @@ export class FormFieldInputsExampleComponent {
             editType: EditType.Input,
             options: {
               readonly: true,
+              required: true,
               readonlyContainerClass: 'readonlyInputCustomContainerClass',
               defaultValue: 'MANUAL',
               elementId: 'ExampleOfCustomId',
@@ -96,6 +98,24 @@ export class FormFieldInputsExampleComponent {
         errorMessages: {
           pattern: 'Does not match pattern',
         },
+        icon: { name: 'lock', position: 'left' },
+      },
+      {
+        attribute: 'passwordInput2',
+        title: 'Password Input',
+        editType: EditType.Password,
+        options: {
+          required: true,
+          togglePasswordVisibility: {
+            disabled: false,
+            passwordVisibleIcon: { name: 'visibility_off' },
+            passwordHiddenIcon: { name: 'visibility' },
+          },
+        },
+        validators: [Validators.pattern(/^(?=\D*\d)(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z]).{12,}$/)],
+        errorMessages: {
+          pattern: 'Does not match pattern',
+        },
       },
       {
         attribute: 'mask',
@@ -134,6 +154,21 @@ export class FormFieldInputsExampleComponent {
             showMaskTyped: true,
             shownMaskExpression: '__|__|__',
             mask: '00|00|00',
+            specialCharacters: ['|'],
+          },
+        },
+      },
+      {
+        attribute: 'masPrefix',
+        title: 'masPrefix',
+        editType: EditType.Input,
+        options: {
+          style: 'letter-spacing: 4px',
+          fieldMask: {
+            prefix: '11111111',
+            shownMaskExpression: '__',
+            mask: '00',
+            showMaskTyped: true,
             specialCharacters: ['|'],
           },
         },

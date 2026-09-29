@@ -11,11 +11,12 @@ const languages: ValueLabel[] = [
   selector: 'lab900-form-field-multi-language-example',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    @if (formSchema() && languages()) {
+    @let schema = formSchema();
+    @if (schema && languages()) {
       <lab900-form
         language="nl"
         [availableLanguages]="languages()"
-        [schema]="formSchema()"
+        [schema]="schema"
         [data]="data()"
         [emitEventOnDataChange]="false" />
     }

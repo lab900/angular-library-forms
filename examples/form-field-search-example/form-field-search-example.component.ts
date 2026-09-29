@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 import { of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { JsonPipe } from '@angular/common';
 
 @Component({
-  selector: 'lab900-form-field-select-example',
+  selector: 'lab900-form-field-search-example',
   template: `<lab900-form #f [schema]="formSchema" />
     <hr style="margin-top: 30px" />
     {{ f?.value | json }}`,
   imports: [Lab900Form, JsonPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldSearchExampleComponent {
   public readonly formSchema: Lab900FormConfig = {

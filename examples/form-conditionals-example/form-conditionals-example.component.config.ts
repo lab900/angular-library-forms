@@ -1,5 +1,4 @@
-import { EditType, Lab900FormConfig } from '@lab900/forms';
-import { ValueLabel } from '../../../../../../lib/src/lib/models/form-field-base';
+import { EditType, Lab900FormConfig, ValueLabel } from '@lab900/forms';
 
 export const formConditionalsData = {
   country: 'BEL',

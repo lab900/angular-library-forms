@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { EditType, Lab900Form, Lab900FormConfig } from '@lab900/forms';
 
 @Component({
   selector: 'lab900-form-field-repeater-advanced-example',
   template: '<lab900-form [schema]="formSchema"/>',
   imports: [Lab900Form],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldRepeaterAdvancedExampleComponent {
   public formSchema: Lab900FormConfig = {
@@ -31,20 +32,11 @@ export class FormFieldRepeaterAdvancedExampleComponent {
             editType: EditType.Row,
             options: {
               colspan: 12,
-              visibleFn: (item: any) => {
-                if (
-                  (item.group.parent.controls as any[]).indexOf(item.group) ===
-                  (item.group.parent.controls as any[]).length - 1
-                ) {
-                  return false;
-                }
-                return true;
-              },
             },
             nestedFields: [
               {
                 editType: EditType.Icon,
-                options: { icon: { name: 'arrow_downward' }, colspan: 12 },
+                options: { icon: { name: 'arrow_downward' }, text: 'arrow down', colspan: 12 },
               },
             ],
           },
