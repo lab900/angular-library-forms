@@ -94,6 +94,30 @@ bootstrapApplication(AppComponent, {
 });
 ```
 
+With a `DateAdapter` that takes a format string (Moment, Luxon, date-fns) instead of the native one, the
+`EditType.DateTime` field parses typed text with the application's `MAT_DATE_FORMATS.parse.dateInput`. That
+value must accept a time, with and without seconds, and then the date alone. With a date-only format, Moment
+sets a typed time to 00:00 and Luxon and date-fns reject the text. Luxon and date-fns take the first format that
+parses, so put the most specific one first:
+
+```ts
+export const DATE_FORMATS: MatDateFormats = {
+  parse: {
+    /**
+     * A `@lab900/forms` date-time field parses typed text with this format, so it must accept a time,
+     * with or without seconds. Moment picks the closest match, so a typed date alone still parses.
+     */
+    dateInput: ['DD/MM/YYYY HH:mm:ss', 'DD/MM/YYYY HH:mm', 'DD/MM/YYYY'],
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
+```
+
 `provideLab900Forms()` also registers `LAB900_FORM_FIELD_TYPES`, the map from `EditType` to component.
 Without it no field renders. Its settings are `Lab900FormModuleSettings`:
 

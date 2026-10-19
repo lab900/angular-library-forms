@@ -37,6 +37,17 @@ export class DateTimeFieldDateFormats implements MatDateFormats {
   private showSeconds: () => boolean = () => true;
   private displayFormat: () => DateAdapterDisplayFormat | undefined = () => undefined;
 
+  /**
+   * The picker input parses typed text with `parse.dateInput`, and this field passes the application's
+   * value through unchanged. With a `DateAdapter` that takes a format string (Moment, Luxon, date-fns),
+   * the application must therefore put formats with a time in `parse.dateInput`, with and without
+   * seconds, followed by the date alone. With a date-only format, Moment sets a typed time to 00:00 and
+   * Luxon and date-fns reject the text. The native adapter ignores the parse format. For example:
+   *
+   * ```ts
+   * parse: { dateInput: ['DD/MM/YYYY HH:mm:ss', 'DD/MM/YYYY HH:mm', 'DD/MM/YYYY'] }
+   * ```
+   */
   public get parse(): MatDateFormats['parse'] {
     return this.appFormats.parse;
   }
