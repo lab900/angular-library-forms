@@ -158,6 +158,67 @@ describe('RepeaterFieldComponent', () => {
     });
   });
 
+  describe('fields sharing one control', () => {
+    // One `content` control per row, one field per key; only the matching field is visible.
+    // Rows put the visible field first, middle and last, so field order can't mask the bug.
+    const sharedControlSchema = (required = false): Lab900FormConfig => ({
+      fields: [
+        {
+          editType: EditType.Repeater,
+          attribute: 'settings',
+          options: { fixedList: true },
+          nestedFields: [
+            {
+              editType: EditType.Row,
+              nestedFields: [
+                { editType: EditType.Input, attribute: 'key', options: { hide: true } },
+                ...['A', 'B', 'C'].map(key => ({
+                  editType: EditType.Input,
+                  attribute: 'content',
+                  title: key,
+                  options: { hide: (data: { key?: string }) => data?.key !== key, required },
+                })),
+              ],
+            },
+          ],
+        },
+      ],
+    });
+    const settings = {
+      settings: [
+        { key: 'A', content: 'a' },
+        { key: 'B', content: 'b' },
+        { key: 'C', content: 'c' },
+      ],
+    };
+    const contentControl = (row: number) => component.form.get(['settings', row, 'content'])!;
+
+    it('keeps the control enabled while one of its fields is visible', () => {
+      render(sharedControlSchema(), settings);
+
+      expect([0, 1, 2].map(row => contentControl(row).enabled)).toEqual([true, true, true]);
+      expect(component.form.value.settings.map((row: { content?: string }) => row.content)).toEqual(['a', 'b', 'c']);
+    });
+
+    it('keeps the required validator of the visible field', () => {
+      render(sharedControlSchema(true), { settings: settings.settings.map(row => ({ ...row, content: '' })) });
+
+      expect([0, 1, 2].map(row => contentControl(row).hasError('required'))).toEqual([true, true, true]);
+    });
+
+    it('follows the visible field when the key changes', () => {
+      render(sharedControlSchema(), settings);
+
+      component.form.get(['settings', 0, 'key'])!.setValue('Z');
+      fixture.detectChanges();
+      expect(contentControl(0).disabled).toBe(true);
+
+      component.form.get(['settings', 0, 'key'])!.setValue('C');
+      fixture.detectChanges();
+      expect(contentControl(0).enabled).toBe(true);
+    });
+  });
+
   describe('readonly fields holding a single value', () => {
     it('still resolves the value as a translation key', () => {
       const translate = TestBed.inject(TranslateService);
