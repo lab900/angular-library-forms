@@ -34,7 +34,8 @@ steps:
         npm install -g npm@12.0.2
         npm config set -- '//registry.npmjs.org/:_authToken' "$$NPM_TOKEN"
         cd dist/@lab900/forms
-        npm stage publish
+        # Maintenance line: must not take `latest` from the current minor.
+        npm stage publish --tag v22.2-lts
         # Print the stage id, so the maintainer can approve the version.
         npm stage list @lab900/forms || true
 availableSecrets:
