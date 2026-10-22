@@ -159,8 +159,8 @@ describe('RepeaterFieldComponent', () => {
   });
 
   describe('fields sharing one control', () => {
-    // One `content` control per row, one field per setting key: only the field matching the row's key is
-    // visible. The visible field is placed first and last, so the order the fields run in cannot hide a bug.
+    // One `content` control per row, one field per key; only the matching field is visible.
+    // Rows put the visible field first, middle and last, so field order can't mask the bug.
     const sharedControlSchema = (required = false): Lab900FormConfig => ({
       fields: [
         {
