@@ -1,5 +1,15 @@
 # Changelog
 
+## 22.2.2
+
+- Fix: fields bound to the same control no longer disable each other. A hidden or readonly field disabled its
+  control, so when several fields shared one control and only one of them was visible, the field that ran last
+  decided. For example, a repeater row with one `content` field per setting key, where `hide` shows only the field
+  matching the row's key, ended up with a disabled control. The disabled control was then also missing from
+  `form.value`. The control now stays enabled while at least one of its fields is visible and not readonly, and
+  keeps `Validators.required` while one of those fields is required. Before 22.2.1 the `getRawValue` bug
+  started every such field out hidden and masked this.
+
 ## 22.2.1
 
 - **Breaking: reactive options are evaluated against the real form value from the first pass.** `groupValue`
