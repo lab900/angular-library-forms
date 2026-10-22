@@ -1,4 +1,4 @@
-import { AbstractControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, ValidationErrors } from '@angular/forms';
 import { computed, Directive, effect, inject, input, model, Signal, untracked } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { concat, defer, EMPTY, Observable, of, Subscription, switchMap } from 'rxjs';
@@ -23,6 +23,7 @@ import {
 } from '../utils/helpers';
 import { sharedGroupValue } from '../utils/group-value.utils';
 import { EditType } from '../models/editType';
+import { claimControlState, releaseControlState } from '../utils/shared-control-state';
 
 @Directive()
 export abstract class FormComponent<S extends Lab900FormField = Lab900FormField> extends SubscriptionBasedDirective {
@@ -227,36 +228,15 @@ export abstract class FormComponent<S extends Lab900FormField = Lab900FormField>
         onCleanup(() => subs.forEach(sub => sub.unsubscribe()));
       }
     });
-    effect(() => {
-      const readonly = this.fieldIsReadonly();
-      const hidden = this.fieldIsHidden();
+    effect(onCleanup => {
       const control = this._fieldControl();
       if (control) {
-        if (readonly || hidden) {
-          control.disable();
-        } else {
-          control.enable();
-        }
-      }
-    });
-    effect(() => {
-      const control = this._fieldControl();
-      if (control) {
-        const readonly = this.fieldIsReadonly();
-        const hidden = this.fieldIsHidden();
-        const required = this.fieldIsRequired();
-        if (!readonly && !hidden) {
-          if (required && !control.hasValidator(Validators.required)) {
-            control.addValidators(Validators.required);
-            control.updateValueAndValidity();
-          } else if (!required && control.hasValidator(Validators.required)) {
-            control.removeValidators(Validators.required);
-            control.updateValueAndValidity();
-          }
-        } else if (control.hasValidator(Validators.required)) {
-          control.removeValidators(Validators.required);
-          control.updateValueAndValidity();
-        }
+        // Other fields can be bound to the same control, so the combined state of all of them is applied.
+        claimControlState(control, this, {
+          enabled: !this.fieldIsReadonly() && !this.fieldIsHidden(),
+          required: this.fieldIsRequired(),
+        });
+        onCleanup(() => releaseControlState(control, this));
       }
     });
   }

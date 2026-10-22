@@ -4,6 +4,15 @@ All notable changes to `@lab900/forms` are documented in this file. The format i
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The major version follows the Angular major version.
 Breaking changes are marked **BREAKING**.
 
+## [22.3.1] - unreleased
+
+### Fixed
+
+- Fields bound to the same control no longer disable each other. With several fields on one control and only one
+  visible (e.g. one repeater field per setting key), the field that ran last decided, so the control ended up
+  disabled and missing from `form.value`. The control now stays enabled while any of its fields is visible and not
+  readonly, and required while one of those is required. Also released as 22.2.2.
+
 ## [22.3.0] - 2026-09-29
 
 ### Added
@@ -59,6 +68,12 @@ Breaking changes are marked **BREAKING**.
   - the "select all" row of a multi select is reachable by keyboard.
 - Showcase: the source tab of the search, reactive options and full-width drag-and-drop examples showed the wrong
   file.
+
+## [22.2.2] - 2026-10-22
+
+### Fixed
+
+- Fields bound to the same control no longer disable each other. See 22.3.1.
 
 ## [22.2.1] - 2026-09-09
 
