@@ -1,0 +1,117 @@
+// Lab900 design system tokens (from colors_and_type.css in the Lab900 Design System project).
+// The palette is small and flat on purpose: no extra tints beyond these.
+$lab-mint: #c0eae8;
+$lab-dark: #343c57;
+$lab-orange: #ff5126;
+$lab-orange-1: #ff6039;
+$lab-orange-2: #ff704d;
+$lab-orange-light: #fff0ed;
+$lab-yellow: #fff3ab;
+$lab-light-blue: #03ada5;
+$lab-white: #ffffff;
+$lab-fg-2: #6a7089;
+
+$font-sans: 'Sofia, Arial, sans-serif';
+$font-weight-regular: 400;
+$font-weight-semibold: 600;
+
+$radius-sm: 4px;
+$radius-pill: 28px;
+
+$header-height: 70px;
+$header-height-mobile: 56px;
+
+$shadow-toolbar: 0 4px 4px 0 rgba(0, 0, 0, 0.1);
+$ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+$dur-std: 300ms;
+
+// Angular Material needs full palettes. 500 is the brand color; the other hues are derived from it.
+$mat-lab900orange: (
+  50: #ffeae5,
+  100: #ffcbbe,
+  200: #ffa893,
+  300: #ff8567,
+  400: #ff6b47,
+  500: $lab-orange,
+  600: #ff4a22,
+  700: #ff401c,
+  800: #ff3717,
+  900: #ff270d,
+  A100: #ffffff,
+  A200: #fff7f6,
+  A400: #ffcac3,
+  A700: #ffb3aa,
+  contrast: (
+    50: $lab-dark,
+    100: $lab-dark,
+    200: $lab-dark,
+    300: $lab-dark,
+    400: $lab-dark,
+    500: $lab-white,
+    600: $lab-white,
+    700: $lab-white,
+    800: $lab-white,
+    900: $lab-white,
+    A100: $lab-dark,
+    A200: $lab-dark,
+    A400: $lab-dark,
+    A700: $lab-dark,
+  ),
+);
+
+$mat-lab900lightblue: (
+  50: #e1f5f4,
+  100: #b3e6e4,
+  200: #81d6d2,
+  300: #4fc6c0,
+  400: #29b9b3,
+  500: $lab-light-blue,
+  600: #03a69d,
+  700: #029c93,
+  800: #02938a,
+  900: #018379,
+  A100: #b0fff8,
+  A200: #7dfff3,
+  A400: #4affee,
+  A700: #30ffec,
+  contrast: (
+    50: $lab-dark,
+    100: $lab-dark,
+    200: $lab-dark,
+    300: $lab-dark,
+    400: $lab-dark,
+    500: $lab-white,
+    600: $lab-white,
+    700: $lab-white,
+    800: $lab-white,
+    900: $lab-white,
+    A100: $lab-dark,
+    A200: $lab-dark,
+    A400: $lab-dark,
+    A700: $lab-dark,
+  ),
+);
+
+// Animated underline that slides in from the left (the design system's .hover-underline).
+@mixin hover-underline($color) {
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  color: $color;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 100%;
+    background: $color;
+    transform: translateX(-100%);
+    transition: transform $dur-std $ease-standard;
+  }
+
+  &:hover::after {
+    transform: translateX(0);
+  }
+}
