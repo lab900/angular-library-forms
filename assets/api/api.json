@@ -2409,7 +2409,7 @@
       "name": "FormComponent",
       "kind": "directive",
       "typeParameters": "S extends Lab900FormField = Lab900FormField",
-      "source": "lib/src/lib/components/AbstractFormComponent.ts#L27",
+      "source": "lib/src/lib/components/AbstractFormComponent.ts#L28",
       "abstract": true,
       "extends": [
         "SubscriptionBasedDirective"
