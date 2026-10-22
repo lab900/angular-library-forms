@@ -4,7 +4,7 @@ All notable changes to `@lab900/forms` are documented in this file. The format i
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The major version follows the Angular major version.
 Breaking changes are marked **BREAKING**.
 
-## [22.3.1] - unreleased
+## [22.3.1] - 2026-10-22
 
 ### Fixed
 
